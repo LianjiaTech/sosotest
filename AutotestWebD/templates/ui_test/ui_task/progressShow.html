@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <!-- Title and other stuffs -->
+    <title>{{ pageTitle }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" href="/static/style/publicKey.css">
+
+     <!-- Bootstrap -->
+    <link href="/static/new_template/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="/static/new_template/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="/static/new_template/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="/static/new_template/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+    <!-- bootstrap-progressbar -->
+    <link href="/static/new_template/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
+    <!-- JQVMap -->
+    <link href="/static/new_template/vendors/jqvmap/dist/jqvmap.min.css" rel="stylesheet"/>
+    <!-- bootstrap-daterangepicker -->
+    <link href="/static/new_template/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="/static/new_template/build/css/custom.min.css" rel="stylesheet">
+    <link href="/static/new_template/style/commonStyle.css?v={{ static_version }}" rel="stylesheet">
+    <link href="/static/style/publicKey.css" rel="stylesheet">
+
+    <!--loading-->
+    <link href="/static/style/loading.css" rel="stylesheet">
+
+    <!-- HTML5 Support for IE -->
+    <!--[if lt IE 9]>
+    <script src="/static/js/html5shim.js"></script>
+    <![endif]-->
+    <!-- Favicon -->
+
+    <script src="/static/new_template/vendors/jquery/dist/jquery.min.js"></script>
+    <script src="/static/js/jquery-cookie/jquery.cookie.js"></script>
+    <link rel="stylesheet" href="/static/datetime-picker/bootstrap-datetimepicker.min.css">
+    <!--<script type="text/javascript" src="/s/js/bootstrap.js"></script>-->
+    <script type="text/javascript" src="/static/datetime-picker/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="/static/datetime-picker/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script type="text/javascript" src="/static/datetime-picker/moment-with-local.js"></script>
+
+     <!--这个是jquery发送post的js文件-->
+    <script type="text/javascript" src="/static/frame_work/jQueryPOST.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="/static/new_template/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+</head>
+<body class="nav-md">
+    <div style="width: 100%;margin-bottom: 20px;">
+        <h2 id="progressBar"></h2>
+        <h2 id="status"></h2>
+        <h2 id="currentExecuteInfo"></h2>
+    </div>
+    <div id="screenShot" style="float: left;width: 1366px;height: 768px;"></div>
+    <div style="width:465px ;height:768px;float:left;margin-left: 10px;">
+        <h2>执行LOG如下：</h2>
+        <div id="log" style="overflow-y:auto;overflow-x:hidden;  height:768px;"></div>
+    </div>
+
+<script type="text/javascript">
+    function isJSON(str) {
+        if (typeof str == 'string') {
+            try {
+                var obj=JSON.parse(str);
+                if(typeof obj == 'object' && obj ){
+                    return true;
+                }else{
+                    return false;
+                }
+
+            } catch(e) {
+                console.log('error：'+str+'!!!'+e);
+                return false;
+            }
+        }
+        console.log('It is not a string!')
+    }
+    var lastScreenShot = ""
+    var lastCaseId = ""
+    var lastStepId = ""
+    var lastLogStr = ""
+    var lastRealNotRun = 0
+    function showProgressData(execId){
+        var uiProgressData = $.ajax({
+            url: '{% url "ui_uiGetTaskProgressData" %}?id='+execId,
+            type: 'GET',
+            async: true,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function () {
+                if (isJSON(uiProgressData.responseText)) {
+                    var retDict = JSON.parse(uiProgressData.responseText);
+                    var currentScreenShot = retDict['currentScreenShot'] ;
+                    var currentCaseId = retDict['currentCaseId'] ;
+                    var currentStepId = retDict['currentStepId'] ;
+                    var currentRealNotRun = retDict['currentRealNotRun'];
+                    var totalStepCount = retDict['totalStepCount'];
+                    var currentLogStr = retDict['currentLogStr'];
+                    var execStatus = retDict['execStatus'];
+
+                    if(currentScreenShot != lastScreenShot){
+                        $("#screenShot").html("<img style='width: auto;height: auto;max-width: 100%;max-height: 100%;' src='"+currentScreenShot+"' />");
+                        lastScreenShot = currentScreenShot;
+                    }
+
+                    if ((currentCaseId == lastCaseId & currentStepId == lastStepId) == false){
+                        $("#currentExecuteInfo").html(currentCaseId+"<br>--------"+currentStepId);
+                        lastCaseId = currentCaseId;
+                        lastStepId = currentStepId;
+                    }
+                    //$("#progressBar").html("任务执行进度：");
+                    var logDiv = $("#log");
+                    if (lastLogStr == ""){
+                        logDiv.html(currentLogStr);
+                        lastLogStr = currentLogStr;
+                    }else{
+                        appendLogStr = currentLogStr.replace(lastLogStr,"");
+                        lastLogStr = currentLogStr;
+                        logDiv.append(appendLogStr);
+                    }
+                    var logDiv = document.getElementById('log');
+                    logDiv.scrollTop = logDiv.scrollHeight;
+
+                    if(execStatus == 3){
+                        $("#status").html("任务执行状态：已经执行结束");
+                    }else if (execStatus == 4){
+                        $("#status").html("任务执行状态：执行异常");
+                    }else if (execStatus == 11){
+                        $("#status").html("任务执行状态：已取消");
+                    }else if (execStatus == 1){
+                        $("#status").html("任务执行状态：排队中......");
+                        showProgressData(execId);
+                    }else if (execStatus == 2){
+                        $("#status").html("任务执行状态：执行中......");
+                        showProgressData(execId);
+                    }
+
+                } else {
+                    alert(uiProgressData.responseText);
+                }
+            }
+        });
+    }
+showProgressData({{ id }});
+</script>
+</body>
+</html>

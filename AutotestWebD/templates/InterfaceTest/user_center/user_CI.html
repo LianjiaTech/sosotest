@@ -1,0 +1,337 @@
+{% include 'InterfaceTest/head.html'%}
+<!-- Main content starts -->
+<div class="content">
+    <!-- Sidebar -->
+    {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Sidebar ends -->
+    <!-- Main bar -->
+    <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>持续集成：jenkins CI shell 脚本示例</h2>
+
+                      <h2 class="subNavH2Style">
+                        <a href="{% url 'HTTP_UserToken' %}">
+                            <button class="btn btn-info">
+                               token管理
+                              </button>
+                        </a>
+                    </h2>
+                      <h2 class="subNavH2Style">
+                        <a href="{% url 'HTTP_UserInvoke' %}">
+                            <button class="btn btn-info">
+                               invoke接口说明
+                              </button>
+                        </a>
+                    </h2>
+                      <h2 class="subNavH2Style">
+                        <a href="{% url 'JenkinsPluginPage' %}">
+                            <button class="btn btn-info">
+                               Jenkins插件
+                              </button>
+                        </a>
+                    </h2>
+
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                {% if token %}
+<div class="x_content">
+   <pre>#/bin/bash
+#这是执行http任务的示例demo，copy到jenkins job中，修改头部变量即可
+
+domain="http://{{ host }}/invoke"
+token="{{ token }}"
+testEnv="test1"
+comments="http任务执行CI示例"
+executeTaskId="HTTP_TASK_12"
+isSendMail="1"
+{% if menu.StatisticTask %}
+ciType="daily"
+statisticTaskId="1"
+codeCoverage="0.0"
+{% endif %}
+startTime=$(date "+%Y-%m-%d %H:%M:%S")
+timeStampStart=`date -d "$startTime" +%s`
+result=`curl "${domain}?opt=runtask&token=${token}&taskId=${executeTaskId}&httpConfKey=${testEnv}&execPlatform=2&comments=${comments}&isSendEmail=${isSendMail}"`
+echo "Invoke return json is : ${result} \n"
+
+while true
+do
+
+    code=`echo $result | sed -r 's/.*"code": ([^,]*).*/\1/'`
+    echo "code:[${code}] \n"
+
+    if [ $code == 10000 ]; then
+        endTime=$(date "+%Y-%m-%d %H:%M:%S")
+        timeStampEnd=`date -d "$endTime" +%s`
+        let taketime=timeStampEnd-timeStampStart
+        echo "Invoke shell Success!"
+
+        aatestResult=`echo $result | sed -r 's/.*"testResultMsgForShell": "([^"]*).*/\1/'`
+        OLD_IFS="$IFS"
+        IFS="|"
+        arr=($aatestResult)
+        IFS="$OLD_IFS"
+        echo "TestResult:[${arr[0]}] \n"
+        testResult=${arr[0]}
+        {% if menu.StatisticTask %}
+        total=${arr[1]}
+        pass=${arr[2]}
+        fail=${arr[3]}
+        error=${arr[4]}
+        invokeStatisUrl="${domain}?opt=addStatis&taskId=${statisticTaskId}&taskDetail=%7B\"total\":${total},\"pass\":${pass},\"fail\":${fail},\"error\":${error}%7D&testResult=${testResult}&codeCoverage=${codeCoverage}&startTime=${startTime// /%20}&taketime=${taketime}&httpConfKey=${testEnv}&type=${ciType}&comments=${comments// /%20}&token=${token}"
+        resultPushInvoke=`curl ${invokeStatisUrl}`
+        {% endif %}
+        if [ ${testResult} == PASS ]; then
+            exit 0
+        else
+            exit 1
+        fi
+    elif [ $code == 10001 ]; then
+        echo "Invoke shell timeout, callback needed!"
+        callbacktaskUrl=`echo $result | sed -r 's/.*"callbacktaskUrl": "([^"]*).*/\1/'`
+        repCallbackUrl=${callbacktaskUrl//\\/}
+        echo "CallbackURL:[${repCallbackUrl}]"
+        sleep 10s
+        result=`curl "${repCallbackUrl}"`
+        echo "Callback result: ${result}"
+    else
+        echo "Invoke shell Failure!"
+        exit 1
+    fi
+
+done
+        </pre>
+
+                  </div>
+
+<div class="x_content">
+                   <pre>#/bin/bash
+#这是执行http任务集的示例demo，copy到jenkins job中，修改头部变量即可
+
+domain="http://{{ host }}/invoke"
+token="{{ token }}"
+testEnv="test1"
+comments="HTTP task suite jenkins调用示例"
+taskSuiteId="HTTP_TASK_SUITE_1"
+isSendMail="0"
+{% if menu.StatisticTask %}
+statisticTaskId="2"
+codeCoverage="0.8"
+ciType="daily"
+{% endif %}
+
+startTime=$(date "+%Y-%m-%d %H:%M:%S")
+timeStampStart=`date -d "$startTime" +%s`
+result=`curl "${domain}?opt=runtasksuite&token=${token}&taskSuiteId=${taskSuiteId}&httpConfKey=${testEnv}&execPlatform=2&comments=${comments}&isSendEmail=${isSendMail}"`
+echo "Invoke return json is : ${result} \n"
+
+while true
+do
+
+    code=`echo $result | sed -r 's/.*"code": ([^,]*).*/\1/'`
+    echo "code:[${code}] \n"
+
+    if [ $code == 10000 ]; then
+        endTime=$(date "+%Y-%m-%d %H:%M:%S")
+        timeStampEnd=`date -d "$endTime" +%s`
+        let taketime=timeStampEnd-timeStampStart
+        echo "Invoke shell Success!"
+        aatestResult=`echo $result | sed -r 's/.*"testResultMsgForShell": "([^"]*).*/\1/'`
+        OLD_IFS="$IFS"
+        IFS="|"
+        arr=($aatestResult)
+        IFS="$OLD_IFS"
+        echo "TestResult:[${arr[0]}] \n"
+        testResult=${arr[0]}
+        {% if menu.StatisticTask %}
+        total=${arr[1]}
+        pass=${arr[2]}
+        fail=${arr[3]}
+        error=${arr[4]}
+        invokeStatisUrl="${domain}?opt=addStatis&taskId=${statisticTaskId}&taskDetail=%7B\"total\":${total},\"pass\":${pass},\"fail\":${fail},\"error\":${error}%7D&testResult=${testResult}&codeCoverage=${codeCoverage}&startTime=${startTime// /%20}&taketime=${taketime}&httpConfKey=${testEnv}&type=${ciType}&comments=${comments// /%20}&token=${token}"
+        resultPushInvoke=`curl ${invokeStatisUrl}`
+        {% endif %}
+        if [ ${testResult} == PASS ]; then
+            exit 0
+        else
+            exit 1
+        fi
+    elif [ $code == 10001 ]; then
+        echo "Invoke shell timeout, callback needed!"
+        callbacktaskUrl=`echo $result | sed -r 's/.*"callbacktaskUrl": "([^"]*).*/\1/'`
+        repCallbackUrl=${callbacktaskUrl//\\/}
+        echo "CallbackURL:[${repCallbackUrl}]"
+        sleep 10s
+        result=`curl "${repCallbackUrl}"`
+        echo "Callback result: ${result}"
+    else
+        echo "Invoke shell Failure!"
+        exit 1
+    fi
+
+done
+        </pre>
+
+                  </div>
+                    {% if menu.DubboInterface == 1 %}
+<div class="x_content">
+                   <pre>#/bin/bash
+#这是执行dubbo任务的示例demo，copy到jenkins job中，修改头部变量即可
+
+domain="http://{{ host }}/invoke"
+token="{{ token }}"
+testEnv="test1"
+comments="dubbo 任务执行CI示例"
+executeTaskId="DUBBO_TASK_12"
+isSendMail="1"
+{% if menu.StatisticTask %}
+statisticTaskId="1"
+codeCoverage="0.0"
+ciType="daily"
+{% endif %}
+
+startTime=$(date "+%Y-%m-%d %H:%M:%S")
+timeStampStart=`date -d "$startTime" +%s`
+result=`curl "${domain}?opt=rundubbotask&token=${token}&taskId=${executeTaskId}&httpConfKey=${testEnv}&execPlatform=2&comments=${comments}&isSendEmail=${isSendMail}"`
+echo "Invoke return json is : ${result} \n"
+
+while true
+do
+
+    code=`echo $result | sed -r 's/.*"code": ([^,]*).*/\1/'`
+    echo "code:[${code}] \n"
+
+    if [ $code == 10000 ]; then
+        endTime=$(date "+%Y-%m-%d %H:%M:%S")
+        timeStampEnd=`date -d "$endTime" +%s`
+        let taketime=timeStampEnd-timeStampStart
+        echo "Invoke shell Success!"
+        aatestResult=`echo $result | sed -r 's/.*"testResultMsgForShell": "([^"]*).*/\1/'`
+        OLD_IFS="$IFS"
+        IFS="|"
+        arr=($aatestResult)
+        IFS="$OLD_IFS"
+        echo "TestResult:[${arr[0]}] \n"
+        testResult=${arr[0]}
+        {% if menu.StatisticTask %}
+        total=${arr[1]}
+        pass=${arr[2]}
+        fail=${arr[3]}
+        error=${arr[4]}
+        invokeStatisUrl="${domain}?opt=addStatis&taskId=${statisticTaskId}&taskDetail=%7B\"total\":${total},\"pass\":${pass},\"fail\":${fail},\"error\":${error}%7D&testResult=${testResult}&codeCoverage=${codeCoverage}&startTime=${startTime// /%20}&taketime=${taketime}&httpConfKey=${testEnv}&type=${ciType}&comments=${comments// /%20}&token=${token}"
+        resultPushInvoke=`curl ${invokeStatisUrl}`
+        {% endif %}
+        if [ ${testResult} == PASS ]; then
+            exit 0
+        else
+            exit 1
+        fi
+    elif [ $code == 10001 ]; then
+        echo "Invoke shell timeout, callback needed!"
+        callbacktaskUrl=`echo $result | sed -r 's/.*"callbacktaskUrl": "([^"]*).*/\1/'`
+        repCallbackUrl=${callbacktaskUrl//\\/}
+        echo "CallbackURL:[${repCallbackUrl}]"
+        sleep 10s
+        result=`curl "${repCallbackUrl}"`
+        echo "Callback result: ${result}"
+    else
+        echo "Invoke shell Failure!"
+        exit 1
+    fi
+
+done
+        </pre>
+
+                  </div>
+
+<div class="x_content">
+                   <pre>#/bin/bash
+#这是执行dubbo任务集的示例demo，copy到jenkins job中，修改头部变量即可
+
+domain="http://{{ host }}/invoke"
+token="{{ token }}"
+testEnv="test1"
+comments="DUBBO task suite jenkins调用示例"
+taskSuiteId="HTTP_TASK_SUITE_1"
+isSendMail="0"
+{% if menu.StatisticTask %}
+statisticTaskId="2"
+codeCoverage="0.8"
+ciType="daily"
+{% endif %}
+
+startTime=$(date "+%Y-%m-%d %H:%M:%S")
+timeStampStart=`date -d "$startTime" +%s`
+result=`curl "${domain}?opt=rundubbotasksuite&token=${token}&taskSuiteId=${taskSuiteId}&httpConfKey=${testEnv}&execPlatform=2&comments=${comments}&isSendEmail=${isSendMail}"`
+echo "Invoke return json is : ${result} \n"
+
+while true
+do
+
+    code=`echo $result | sed -r 's/.*"code": ([^,]*).*/\1/'`
+    echo "code:[${code}] \n"
+
+    if [ $code == 10000 ]; then
+        endTime=$(date "+%Y-%m-%d %H:%M:%S")
+        timeStampEnd=`date -d "$endTime" +%s`
+        let taketime=timeStampEnd-timeStampStart
+        echo "Invoke shell Success!"
+        aatestResult=`echo $result | sed -r 's/.*"testResultMsgForShell": "([^"]*).*/\1/'`
+        OLD_IFS="$IFS"
+        IFS="|"
+        arr=($aatestResult)
+        IFS="$OLD_IFS"
+        echo "TestResult:[${arr[0]}] \n"
+        testResult=${arr[0]}
+        {% if menu.StatisticTask %}
+        total=${arr[1]}
+        pass=${arr[2]}
+        fail=${arr[3]}
+        error=${arr[4]}
+        invokeStatisUrl="${domain}?opt=addStatis&taskId=${statisticTaskId}&taskDetail=%7B\"total\":${total},\"pass\":${pass},\"fail\":${fail},\"error\":${error}%7D&testResult=${testResult}&codeCoverage=${codeCoverage}&startTime=${startTime// /%20}&taketime=${taketime}&httpConfKey=${testEnv}&type=${ciType}&comments=${comments// /%20}&token=${token}"
+        resultPushInvoke=`curl ${invokeStatisUrl}`
+        {% endif %}
+        if [ ${testResult} == PASS ]; then
+            exit 0
+        else
+            exit 1
+        fi
+    elif [ $code == 10001 ]; then
+        echo "Invoke shell timeout, callback needed!"
+        callbacktaskUrl=`echo $result | sed -r 's/.*"callbacktaskUrl": "([^"]*).*/\1/'`
+        repCallbackUrl=${callbacktaskUrl//\\/}
+        echo "CallbackURL:[${repCallbackUrl}]"
+        sleep 10s
+        result=`curl "${repCallbackUrl}"`
+        echo "Callback result: ${result}"
+    else
+        echo "Invoke shell Failure!"
+        exit 1
+    fi
+
+done
+        </pre>
+
+                  </div>
+                    {% endif %}
+                {% else %}
+                    <h1>请先<a href="/interfaceTest/HTTP_UserToken" style="color: red">设置token</a></h1>
+                {% endif %}
+                </div>
+              </div>
+            </div>
+
+          </div>
+    </div>
+
+    <!-- Content ends -->
+{% include 'InterfaceTest/foot.html'%}

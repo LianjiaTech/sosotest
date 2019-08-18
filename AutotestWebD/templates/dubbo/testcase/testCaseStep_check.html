@@ -1,0 +1,508 @@
+{% include 'InterfaceTest/head.html' %}
+<!-- Main content starts -->
+
+<script type="text/javascript">
+    var checkVals = {
+        "caseFounder": "{{ request.session.userName }}",
+        "caseId": "",
+        "title": "",
+        "casedesc": "",
+        "module": "",
+        "businessLine": "",
+        "url":""
+    };
+
+
+    function clearChecked() {
+        $("#caseFounderInput").val('');
+        $("#interfaceIdInput").val('');
+        $("#caseNameInput").val('');
+        $("#caseDescribeInput").val('');
+        $("#caseModuleInput").val('');
+        $("#businessLineCheckTab").click();
+        $("#urlInput").val("");
+        editCheckVal();
+    }
+
+    function editCheckVal() {
+
+        //用例创建人
+        if ($("#caseFounderInput").val() == '') {
+            checkVals['caseFounder'] = '{{ request.session.userName }}';
+        } else if ($("#caseFounderInput").val() == 'all') {
+            checkVals['caseFounder'] = '';
+        } else {
+            checkVals['caseFounder'] = $("#caseFounderInput").val();
+        }
+
+        //用例Id
+        if ($("#interfaceIdInput").val() == '') {
+            checkVals['caseId'] = '';
+        } else {
+            checkVals['caseId'] = $("#interfaceIdInput").val();
+        }
+
+        //用例名称
+        if ($("#caseNameInput").val() == '') {
+            checkVals['title'] = '';
+        } else {
+            checkVals['title'] = $("#caseNameInput").val();
+        }
+
+        //用例描述
+        if ($("#caseDescribeInput").val() == '') {
+            checkVals['casedesc'] = '';
+        } else {
+            checkVals['casedesc'] = $("#caseDescribeInput").val();
+        }
+
+
+        if ($("#caseModuleInput").val() == '') {
+            checkVals['module'] = '';
+        } else {
+            checkVals['module'] = $("#caseModuleInput").val();
+        }
+
+        if($("#urlInput").val() === ""){
+            checkVals["url"] = ""
+        }else {
+            checkVals["url"] = $("#urlInput").val();
+        }
+
+        selected();
+    }
+
+
+    function inputVal(val) {
+        $("#caseFounderInput").val(val);
+        editCheckVal();
+
+    }
+
+    function setState(id) {
+        var Name = $('#name' + id).text();
+        //删除
+        if (confirm("确定要删除用例\"" + Name + "\"吗？")) {
+            var deleteTestCase = $.ajax({url: "{% url 'HTTP_testCaseDel' %}?id=" + id, async: false});
+            if (JSON.parse(deleteTestCase.responseText)["code"] == 10000) {
+                location.reload();
+            } else {
+                alert("删除失败，请重试！");
+            }
+        }
+    }
+
+    function editBusinessLineCheckTab(name) {
+        checkVals["businessLine"] = name;
+        editCheckVal();
+    }
+
+
+    function checkOptions() {
+
+        var htmls = ' <span class="cat-text"style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>';
+
+        for (var item in checkVals) {
+            if (checkVals[item] != '' && typeof(checkVals[item]) != 'undefined') {
+                var key = '';
+
+                switch (item) {
+                    case "caseFounder":
+                        key = '用例创建人';
+                        break;
+                    case "caseId":
+                        key = '用例编号';
+                        break;
+                    case "title":
+                        key = '用例名称';
+                        break;
+                    case "casedesc":
+                        key = '用例描述';
+                        break;
+                    case "module":
+                        key = '{{ groupLevel2 }}';
+                        break;
+                    case "businessLine":
+                        key = "{{ groupLevel1 }}";
+                        break;
+                    case "url":
+                        key = "url";
+                        break;
+
+                }
+
+                htmls = htmls + '<span class="tag"><span>' + key + '：' + checkVals[item] + '&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delCheckOptions(\'' + item + '\')">x</a></span> '
+
+            }
+        }
+        htmls = htmls + '<span class="tag" style="float: right;background-color: #ff7575"><span>默认筛选&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="clearChecked()">x</a></span>';
+        $('#checkOption').html(htmls);
+    }
+
+
+    function EnterPress(event) { //传入 event
+        var e = event || window.event;
+        if (e.keyCode == 13) {
+            editCheckVal();
+        }
+    }
+
+    function delCheckOptions(key) {
+        switch (key) {
+            case "caseFounder":
+                $("#caseFounderInput").val('all');
+                break;
+            case "caseId":
+                $("#interfaceIdInput").val('');
+                break;
+            case "title":
+                $("#caseNameInput").val('');
+                break;
+            case "casedesc":
+                $("#caseDescribeInput").val('');
+                break;
+            case "module":
+                $("#caseModuleInput").val('');
+                break;
+            case "businessLine":
+                $("#businessLineCheckTab").click();
+                break;
+            case "url":
+                $("#urlInput").val("")
+                break;
+        }
+
+
+        editCheckVal();
+    }
+
+
+    //弹出隐藏层
+    function ShowDiv() {
+        obshowdiv = $("#taskList");
+        offtop = obshowdiv.offset().top - 60;
+        offleft = obshowdiv.offset().left;
+        obshowdiv.show();
+        docheight = $(document).height();
+        $('html,body').animate({scrollTop: offtop}, 200);
+    };
+
+
+    //创建时间排序
+    var orderBy = "t.modTime desc , t.id desc";
+    var addTimeFlag = '-1';
+    var testCaseNameFlag = "-1";
+
+    function orderByName() {
+        if (testCaseNameFlag == '-1' || testCaseNameFlag == '0') {
+            testCaseNameFlag = '1';
+            addTimeFlag = '-1';
+            modTimeFlag = '-1';
+            //用例名称正序查
+            orderBy = 't.title asc';
+        } else if (testCaseNameFlag == '1') {
+            testCaseNameFlag = '0';
+            //用例名称倒序查
+            orderBy = 't.title desc';
+        }
+        selected();
+    }
+
+    function orderByAddTime() {
+        if (addTimeFlag == '-1' || addTimeFlag == '0') {
+            addTimeFlag = '1';
+            modTimeFlag = '-1';
+            //创建时间正序查
+            orderBy = 't.id asc';
+        } else if (addTimeFlag == '1') {
+            addTimeFlag = '0';
+            //创建时间倒序查
+            orderBy = 't.id desc';
+        }
+        selected();
+    }
+
+    var modTimeFlag = '-1';
+
+    //修改时间排序
+    function orderByModTime() {
+        if (modTimeFlag == '-1' || modTimeFlag == '0') {
+            modTimeFlag = '1';
+            addTimeFlag = '-1';
+            //修改时间正序查
+            orderBy = 't.modTime asc , t.id asc';
+        } else if (modTimeFlag == '1') {
+            modTimeFlag = '0';
+            //修改时间倒序查
+            orderBy = "t.modTime desc , t.id desc";
+        }
+        selected();
+    }
+
+    //排序样式显示
+    function orderByShow() {
+        if (addTimeFlag == '0') {
+            $("#addTimeBtn").text('创建时间▼');
+        } else if (addTimeFlag == '1') {
+            $("#addTimeBtn").text('创建时间▲');
+        }
+
+        if (modTimeFlag == '0') {
+            $("#modTimeBtn").text('修改时间▼');
+        } else if (modTimeFlag == '1') {
+            $("#modTimeBtn").text('修改时间▲');
+        }
+        if (testCaseNameFlag == '0') {
+            $("#testCaseNameBtn").text('用例名称▼');
+        } else if (testCaseNameFlag == '1') {
+            $("#testCaseNameBtn").text('用例名称▲');
+        }
+    }
+
+
+    function createPeople(num) {
+        htmlobj = $.ajax({url: '{% url 'queryPeopleTestCase' %}?num=' + num, async: false});
+        var value = JSON.parse(htmlobj.responseText).body;
+
+        var nameVal = "";
+        for (var i = 0; i < value.length; i++) {
+            nameVal = nameVal + ' &nbsp <a href="javascript:void(0);" id="hover-a" onclick="inputVal(\'' + value[i].userName + '\')"  style="font-size: 15px;text-decoration:none">[' + value[i].userName + '(' + value[i].count + ')]</a>'
+        }
+        if (value.length < 3) {
+            $("#names").html(nameVal);
+            $("#hover-a").attr('onclick', 'createPeople(' + (0) + ')');
+            $("#names").show();
+            return;
+        } else {
+            $("#names").html(nameVal);
+        }
+
+        $("#hover-a").attr('onclick', 'createPeople(' + (num + 1) + ')');
+        $("#names").show();
+    }
+
+</script>
+<div class="content">
+    {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Main bar -->
+    <div class="mainbar">
+        <!-- Page heading -->
+        <!-- Page heading ends -->
+        <!-- Matter -->
+        <div class="right_col" role="main" style="min-height: 1657px;">
+            <div class="">
+                <div class="page-title">
+                    <div class="title_left">
+                        <div class="col-xs-12 form-group pull-right top_search">
+                            <h3>{{ text.pageTitle }}</h3>
+                        </div>
+                    </div>
+
+
+                </div>
+                <div class="clearfix"></div>
+                <div class="row">
+                    <div class="col-md-12 col-sm-12 col-xs-12">
+                        <div class="x_panel">
+                            <div class="x_title">
+                                <h2>选择用例</h2>
+                                <ul class="nav navbar-right panel_toolbox">
+                                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                    </li>
+
+                                </ul>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="x_content">
+
+                                <div class="form-group">
+                                    <div id="checkOption">
+                                        <span class="cat-text" style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                                    <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist">
+                                        <li role="presentation" class="active"><a href="#caseFounder" role="tab"
+                                                                                  data-toggle="tab"
+                                                                                  aria-expanded="true">用例创建人</a>
+                                        </li>
+                                        <li role="presentation" class=""><a href="#caseId" role="tab" id="profile-tab"
+                                                                            data-toggle="tab"
+                                                                            aria-expanded="false">用例编号</a>
+                                        </li>
+                                        <li role="presentation" class=""><a href="#caseName" role="tab" id="profile-tab"
+                                                                            data-toggle="tab"
+                                                                            aria-expanded="false">用例名称</a>
+                                        </li>
+                                        <li role="presentation" class=""><a href="#caseDescribe" role="tab"
+                                                                            id="profile-tab2" data-toggle="tab"
+                                                                            aria-expanded="false">用例描述</a>
+                                        </li>
+                                        <li class="dropdown">
+                                            <a href="#" class="dropdown-toggle"
+                                               data-toggle="dropdown"> {{ groupLevel1 }} <b
+                                                    class="caret"></b></a>
+                                            <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1">
+                                                <li><a href="#businessLineTab" id="businessLineCheckTab" tabindex="-1"
+                                                       name="tabExecResult" data-toggle="tab"
+                                                       onclick="editBusinessLineCheckTab('')">&nbsp;</a></li>
+                                                {% for bl in checkBusinessLine %}
+                                                    <li><a href="#{{ bl.bussinessLineName }}tab" tabindex="-1"
+                                                           name="tabExecResult" data-toggle="tab"
+                                                           onclick="editBusinessLineCheckTab('{{ bl.bussinessLineName }}')">{{ bl.bussinessLineName }}</a>
+                                                    </li>
+                                                {% endfor %}
+                                            </ul>
+                                        </li>
+                                        <li role="presentation" class=""><a href="#moduleTab" role="tab"
+                                                                            id="profile-tab" data-toggle="tab"
+                                                                            aria-expanded="false">{{ groupLevel2 }}</a>
+                                        </li>
+                                        <li role="presentation" class=""><a href="#urlTab" role="tab" id="profile-tab"
+                                                                            data-toggle="tab"
+                                                                            aria-expanded="false">URL</a>
+                                        </li>
+                                    </ul>
+                                    <div id="myTabContent" class="tab-content">
+                                        <div role="tabpanel" class="tab-pane fade active in" id="caseFounder"
+                                             aria-labelledby="home-tab">
+                                            <div class="form-group">
+                                                <div class="col-lg-8">
+                                                    <input type="text" class="form-control" id="caseFounderInput"
+                                                           onkeypress="EnterPress(event)" placeholder="请输入用例创建人">
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <span style="font-size: 15px;margin-top: 5px">快捷条件: </span>
+                                                    <button type="button" class="btn btn-success btn-xs"
+                                                            style="margin-bottom: -1px" onclick="inputVal('all')">所有
+                                                    </button>
+                                                    <button type="button" class="btn btn-success btn-xs"
+                                                            style="margin-bottom: -1px"
+                                                            onclick="inputVal('{{ userName }}')">{{ userName }}</button>
+                                                    <button id="hover-a" type="button" class="btn btn-success btn-xs"
+                                                            style="margin-bottom: -1px" onclick="createPeople(0)">其他
+                                                    </button>
+                                                    <div id="names" style="margin-top: 10px">
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane fade" id="caseName"
+                                             aria-labelledby="profile-tab">
+                                            <div class="form-group">
+                                                <div class="col-lg-8">
+                                                    <input type="text" class="form-control" id="caseNameInput"
+                                                           onkeypress="EnterPress(event)" placeholder="请输入用例名称">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane fade" id="caseId"
+                                             aria-labelledby="profile-tab">
+                                            <div class="form-group">
+                                                <div class="col-lg-8">
+                                                    <input type="text" class="form-control" id="interfaceIdInput"
+                                                           onkeypress="EnterPress(event)" placeholder="请输入用例编号">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div role="tabpanel" class="tab-pane fade" id="caseDescribe"
+                                             aria-labelledby="profile-tab">
+                                            <div class="form-group">
+                                                <div class="col-lg-8">
+                                                    <input type="text" class="form-control" id="caseDescribeInput"
+                                                           onkeypress="EnterPress(event)" placeholder="请输入用例描述">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div role="tabpanel" class="tab-pane fade" id="businessLineTab"
+                                             aria-labelledby="profile-tab">
+                                            <div class="form-group">
+                                                <div class="col-lg-8">
+                                                    <input type="text" class="form-control"
+                                                           onkeypress="EnterPress(event)"
+                                                           placeholder="请选择{{ groupLevel1 }}" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {% for bl in checkBusinessLine %}
+                                            <div role="tabpanel" class="tab-pane fade"
+                                                 id="{{ bl.bussinessLineName }}tab" aria-labelledby="profile-tab">
+                                                <div class="form-group">
+                                                    <div class="col-lg-8">
+                                                        <input type="text" class="form-control"
+                                                               onkeypress="EnterPress(event)"
+                                                               value="{{ bl.bussinessLineName }}" disabled>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                        <div role="tabpanel" class="tab-pane fade" id="moduleTab"
+                                             aria-labelledby="profile-tab">
+                                            <div class="form-group">
+                                                <div class="col-lg-3">
+                                                    <select class="form-control"
+                                                            onchange="$('#caseModuleInput').val($(this).val()).change()">
+                                                        <option>&nbsp;</option>
+                                                        {% for m in checkModules %}
+                                                            <option>{{ m.moduleName }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="col-lg-5">
+                                                    <input type="text" class="form-control" id="caseModuleInput"
+                                                           onchange="editCheckVal()" onkeypress="EnterPress(event)"
+                                                           placeholder="请选择或输入{{ groupLevel2 }}">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div role="tabpanel" class="tab-pane fade" id="urlTab"
+                                             aria-labelledby="profile-tab">
+                                            <div class="form-group">
+                                                <div class="col-lg-8">
+                                                    <input type="text" class="form-control" id="urlInput"
+                                                           onkeypress="EnterPress(event)" placeholder="请输入URL">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                </div>
+                                <div id="taskList" class="form-group"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <!-- Matter ends -->
+    </div>
+</div>
+<script type="text/javascript">
+    var page = {{ page }}
+        function pageCall(pageNum) {
+            page = pageNum;
+            selected();
+        };
+
+    function selected() {
+        checkOptions();
+        var data = {checkVal: encodeURI(JSON.stringify(checkVals)), orderBy: orderBy, page: page};
+        htmlobj = $.ajax({url: "{% url 'HTTP_TestCaseStepListCheck' %}", async: false, data: data, type: "POST"});
+        $("#taskList").html(htmlobj.responseText);
+        orderByShow();
+    }
+
+    selected();
+    window.onload = function () {
+        $("#surprise").click();
+    };
+</script>
+
+<!-- Content ends -->
+{% include 'InterfaceTest/foot.html' %}

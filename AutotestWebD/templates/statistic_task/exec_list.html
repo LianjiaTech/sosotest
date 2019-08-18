@@ -1,0 +1,383 @@
+{% include 'InterfaceTest/head.html'%}
+<!-- Main content starts -->
+<script type="text/javascript">
+    var checkVals = {"caseFounder":"{{ request.session.userName }}","title":"","descText":"","statisticTaskId":"","testResult":"",};
+    var page = {{ page }};
+    var clock;
+    function clearChecked() {
+        $("#statisTaskIdInput").val('');
+        $("#testResultSelect").val('');
+        $("#caseFounderInput").val('');
+        $("#titleInput").val('') ;
+        $("#descTextInput").val('') ;
+        editCheckVal();
+    }
+    function editCheckVal() {
+
+        if($("#statisTaskIdInput").val()==''){
+            checkVals['statisticTaskId'] = "";
+        }else{
+            checkVals['statisticTaskId'] = $("#statisTaskIdInput").val();
+        }
+        if($("#testResultSelect").val()==''){
+            checkVals['testResult'] = "";
+        }else{
+            checkVals['testResult'] = $("#testResultSelect").val();
+        }
+        //接口创建人
+        if($("#caseFounderInput").val()==''){
+            checkVals['caseFounder'] = "{{ userName }}";
+        }else if($("#caseFounderInput").val()=='all'){
+            checkVals['caseFounder'] = '';
+        }else{
+            checkVals['caseFounder'] =$("#caseFounderInput").val() ;
+        }
+
+        //接口
+        if($("#titleInput").val()==''){
+            checkVals['title'] = '';
+        }else {
+            checkVals['title'] =$("#titleInput").val() ;
+        }
+
+        //描述
+        if ($("#descTextInput").val()==''){
+            checkVals['descText']='';
+        }else {
+            checkVals['descText']=$("#descTextInput").val();
+        }
+
+        selected();
+    }
+
+
+    function inputVal(val) {
+        $("#caseFounderInput").val(val);
+        editCheckVal();
+    }
+    function setState(id) {
+        clearTimeout(clock);
+          clock = setTimeout(function () {
+              setTimeState(id);
+          },300);
+    }
+    function setDblClickState(id) {
+        clearTimeout(clock);
+    }
+    function setTimeState(id) {
+        //删除
+        if(confirm("确定要删除id["+id+"]自定义关键字吗？")) {
+            var delData=$.ajax({url:"{% url 'statistictask_delData' %}?id="+id,async:false});
+            if(JSON.parse(delData.responseText)["code"] == 10000){
+                location.reload();
+            }else{
+                alert(JSON.parse(delData.responseText)["message"]);
+            }
+        }
+    }
+
+    function checkOptions() {
+        var htmls = ' <span class="cat-text"style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>';
+        for(var item in checkVals){
+            if(checkVals[item] != '' && typeof(checkVals[item]) != 'undefined'){
+                var key = '';
+                switch(item){
+                    case "statisticTaskId":
+                        key = '统计任务ID';
+                        break;
+                    case "testResult":
+                        key = '执行结果';
+                        break;
+                    case "caseFounder":
+                        key = '创建人';
+                        break;
+                    case "title":
+                        key = '标题';
+                        break;
+                    case "descText":
+                        key = '详情';
+                        break;
+                }
+                htmls = htmls+'<span class="tag"><span>'+key+'：'+checkVals[item]+'&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delCheckOptions(\''+item+'\')">x</a></span> '
+            }
+        }
+        htmls = htmls +'<span class="tag" style="float: right;background-color: #ff7575"><span>默认筛选&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="clearChecked()">x</a></span>';
+        $('#checkOption').html(htmls);
+    }
+
+
+    function EnterPress(event){ //传入 event
+        var e = event || window.event;
+        if(e.keyCode == 13){
+            editCheckVal();
+        }
+    }
+    function delCheckOptions(key) {
+        switch (key){
+            case "statisticTaskId":
+                $("#statisTaskIdInput").val('');
+                break;
+            case "testResult":
+                $("#testResultSelect").val('');
+                break;
+            case "caseFounder":
+                $("#caseFounderInput").val('all');
+                break;
+            case "title":
+                $("#titleInput").val('');
+                break;
+            case "descText":
+                $("#descTextInput").val('');
+                break;
+        }
+        editCheckVal();
+    }
+
+    function pageCall(pageNum) {
+        page = pageNum;
+        selected();
+    }
+
+    //创建时间排序
+    var orderBy = "i.modTime desc , i.id desc";
+    var addTimeFlag = '-1';
+    var interfaceNameFlag = "-1";
+
+    function orderByName() {
+        if (interfaceNameFlag == '-1' || interfaceNameFlag == '0') {
+            interfaceNameFlag = '1';
+            addTimeFlag = '-1';
+              modTimeFlag = '-1';
+            //用例正序查
+            orderBy = 'i.keywordKey asc';
+        } else if (interfaceNameFlag == '1') {
+            interfaceNameFlag = '0';
+            //用例倒序查
+            orderBy = 'i.keywordKey desc';
+        }
+        selected();
+    }
+
+    function orderByAddTime() {
+        if (addTimeFlag == '-1' || addTimeFlag == '0') {
+            addTimeFlag = '1';
+            modTimeFlag = '-1';
+            interfaceNameFlag = "-1";
+            //创建时间正序查
+            orderBy = 'i.id asc';
+        } else if (addTimeFlag == '1') {
+            addTimeFlag = '0';
+            //创建时间倒序查
+            orderBy = 'i.id desc';
+        }
+        selected();
+    }
+    var modTimeFlag = '-1';
+    //修改时间排序
+    function orderByModTime() {
+        if(modTimeFlag == '-1' || modTimeFlag == '0'){
+            modTimeFlag = '1';
+            addTimeFlag = '-1';
+            interfaceNameFlag = "-1";
+            //修改时间正序查
+            orderBy = 'i.modTime asc , i.id asc';
+        }else if(modTimeFlag == '1' ){
+            modTimeFlag = '0';
+            //修改时间倒序查
+            orderBy = "i.modTime desc , i.id desc";
+        }
+        selected();
+    }
+
+    //排序样式显示
+    function orderByShow() {
+        if(addTimeFlag == '0'){
+            $("#addTimeBtn").text('创建时间▼');
+        }else if(addTimeFlag == '1'){
+            $("#addTimeBtn").text('创建时间▲');
+        }
+
+        if(modTimeFlag == '0'){
+            $("#modTimeBtn").text('修改时间▼');
+        }else if(modTimeFlag == '1'){
+            $("#modTimeBtn").text('修改时间▲');
+        }
+
+    }
+
+    function createPeople(num) {
+        htmlobj=$.ajax({url:'{% url 'queryPeopleInterface' %}?num='+num,async:false});
+        var value = JSON.parse(htmlobj.responseText).body;
+        var nameVal = "";
+        for(var i = 0;i<value.length;i++){
+            nameVal = nameVal + ' &nbsp <a href="javascript:void(0);" id="hover-a" onclick="inputVal(\''+value[i].userName+'\')"  style="font-size: 15px;text-decoration:none">['+value[i].userName+'('+value[i].count+')]</a>'
+        }
+        if(value.length<3){
+            $("#names").html(nameVal);
+            $("#hover-a").attr('onclick','createPeople('+(0)+')');
+            $("#names").show();
+            return;
+        }else {
+            $("#names").html(nameVal);
+        }
+        $("#hover-a").attr('onclick','createPeople('+(num+1)+')');
+        $("#names").show();
+    }
+
+</script>
+<div class="content">
+    <!-- Sidebar -->
+    {% include 'InterfaceTest/HTTPMenu.html' %}    <!-- Sidebar ends -->
+    <!-- Main bar -->
+    <!-- Main bar -->
+    <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>统计任务上报结果</h2>
+                        <h2 class="subNavH2Style">
+                                    <a href="{% url 'statistictask_listPage' %}">
+                                        <button class="btn btn-info">
+                                           查看统计任务
+                                          </button>
+                                    </a>
+                                </h2>
+
+                        <h2 class="subNavH2Style">
+                                    <a href="{% url 'statistictask_addPage' %}"  target="_blank">
+                                        <button class="btn btn-warning">
+                                           添加统计任务
+                                          </button>
+                                    </a>
+                                </h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <div class="form-group">
+                        <div  id="checkOption">
+                            <span class="cat-text" style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>
+                        </div>
+
+
+                    </div>
+                      <br>
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist" style="margin-bottom: 0px">
+                        <li role="presentation" class="active"><a href="#statisTaskId" role="tab" data-toggle="tab" aria-expanded="true">统计任务ID</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#testResult" role="tab" data-toggle="tab" aria-expanded="true">执行结果</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#caseFounder" role="tab" data-toggle="tab" aria-expanded="true">创建人</a>
+                        </li>
+                          <li role="presentation" class=""><a href="#title" role="tab" data-toggle="tab" aria-expanded="true">标题</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#descText" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">描述</a>
+                        </li>
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+
+                        <div role="tabpanel" class="tab-pane fade active in" id="statisTaskId" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="statisTaskIdInput" onkeypress="EnterPress(event)" placeholder="统计任务id" >
+                            </div>
+                          </div>
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane fade" id="testResult" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <select class="form-control" id="testResultSelect" onchange="editCheckVal();" placeholder="测试结果" >
+                                    <option value="">请选择执行结果</option>
+                                    <option value="PASS">PASS</option>
+                                    <option value="FAIL">FAIL</option>
+                                    <option value="ERROR">ERROR</option>
+                                </select>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane fade" id="caseFounder" aria-labelledby="home-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="caseFounderInput" onkeypress="EnterPress(event)" placeholder="请输入接口创建人">
+                            </div>
+                              <div class="col-lg-4" >
+                                  <span style="font-size: 15px;margin-top: 5px">快捷条件: </span>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="inputVal('all')">所有</button>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="inputVal('{{ userName }}')">{{ userName }}</button>
+                              <button id="hover-a" type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="createPeople(0)">其他</button>
+                                  <div id="names" style="margin-top: 10px">
+                            </div>
+                                  </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="title" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="titleInput" onkeypress="EnterPress(event)" placeholder="标题" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="descText" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="descTextInput" onkeypress="EnterPress(event)" placeholder="描述" >
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="taskList" class="form-group"></div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+    </div>
+
+</div>
+<script type="text/javascript">
+
+    function selected() {
+        checkOptions();
+        var data = {checkArr : encodeURI(JSON.stringify(checkVals)),orderBy : orderBy,page:page};
+        var ajax=$.ajax({url:"{% url 'statistictask_execlistData' %}",async:false,data:data,type:"POST"});
+        $("#taskList").html(ajax.responseText);
+        orderByShow();
+    }
+    selected();
+    window.onload = function() {
+        $("#surprise").click();
+    };
+    function setReason(executeId) {
+        var reason = window.prompt("请输入原因","")
+        var bln = window.confirm("确定添加原因"+reason+"吗?");
+        if(bln){
+            var ajaxobj = $.ajax({
+                url: "{% url 'statistictask_execSetReason' %}?id="+executeId+"&reason="+reason,
+                type: "GET",
+                success: function (result) {
+                    var data = JSON.parse(ajaxobj.responseText);
+                    if(data['code'] == 10000){
+                        window.location.href = "{% url 'statistictask_execlistPage' %}"
+                    }else{
+                        alert(data['message']);
+                    }
+                }
+            })
+        }
+    }
+</script>
+<!-- Content ends -->
+{% include 'InterfaceTest/foot.html'%}

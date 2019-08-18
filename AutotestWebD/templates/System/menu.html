@@ -1,0 +1,23 @@
+<div class="sidebar">
+    <!-- If the main navigation has sub navigation, then add the class "has_sub" to "li" of main navigation. -->
+
+    <ul id="nav">
+        <h2 style="background-color: #ffc31b;">用户管理</h2>
+        <li><a href="/System/audit" class="{$open=='audit'?'open':''}"><i class="icon-calendar"></i><span style="font-size: 20px">用户权限审核</span></a></li>
+        <li><a href="/System/sysuserrel" class="{$open=='sysuserrel'?'open':''}"><i class="icon-calendar"></i><span style="font-size: 20px">系统开发管理</span></a></li>
+        <li><a href="/System/UserManage" class="{$open=='usermanage'?'open':''}"><i class="icon-calendar"></i><span style="font-size: 20px">用户信息管理</span></a></li>
+
+        <h2 style="background-color: #ffc31b;">系统操作</h2>
+        <li><a href="/System/SystemOpt/" class="{$open=='syscheck'?'open':''}"><i class="icon-calendar"></i><span style="font-size: 20px">系统状态</span></a></li>
+        <li><a href="/System/SystemOpt/sysrestart" class="{$open=='sysrestart'?'open':''}"><i class="icon-calendar"></i><span style="font-size: 20px">系统监听</span></a></li>
+        <h2 style="background-color: #ffc31b;">系统配置</h2>
+        <!--<li><a href="/System/protocol" class="{$open=='protocol'?'open':''}"><i class="icon-calendar"></i><span style="font-size: 20px">协议配置</span></a></li>-->
+        <li><a href="/System/env"  class="{$open=='env'?'open':''}" ><i class="icon-calendar"></i><span style="font-size: 20px">环境配置</span></a></li>
+        <li><a href="/System/dubbosys" class="{$open=='dubbosys'?'open':''}" ><i class="icon-calendar"></i><span style="font-size: 20px">DUBBO配置</span></a></li>
+        <li><a href="/System/httpsys" class="{$open=='httpsys'?'open':''}" ><i class="icon-calendar"></i><span style="font-size: 20px">HTTP配置</span></a></li>
+        <li><a href="/System/configfile" class="{$open=='configfile'?'open':''}"><i class="icon-calendar"></i><span style="font-size: 20px">配置文件管理</span></a></li>
+        <!--<li><a href="/System/syspara" class="{$open=='syspara'?'open':''}"><i class="icon-calendar"></i><span style="font-size: 20px">系统参数配置</span></a></li>-->
+        <li><a href="/System/thirdapi" class="{$open=='thirdapi'?'open':''}"><i class="icon-calendar"></i><span style="font-size: 20px">第三方API配置</span></a></li>
+
+    </ul>
+</div>

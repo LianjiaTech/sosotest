@@ -1,0 +1,79 @@
+<div class="box-body no-padding" >
+
+
+
+    <div class="box-header with-border">
+          <h3 class="box-title">管理员列表</h3>
+
+{#          <div class="box-tools pull-right">#}
+{#            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>#}
+{#            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>#}
+{#          </div>#}
+        <button style="margin: auto; float: right;margin-right: 30px" onclick="addAdminUserBtn()" type="button" class="btn bg-olive margin">添加管理员</button>
+        </div>
+    <table class="table table-striped table-bordered">
+        <tbody>
+        <tr>
+            <th style="width: 2%">#</th>
+            <th style="width: 10%">用户名</th>
+            <th style="width: 10%">登录名</th>
+            <th style="width: 10%">Email</th>
+            <th style="width: 10%">超级管理员</th>
+            <th style="width: 10%">是否有效</th>
+            <th style="width: 25%;">操作</th>
+        </tr>
+         {% if pageCount == 0 %}
+        <td colspan="8" align="center" >没有符合条件的搜索结果</td>
+    {% else %}
+        {% for pageData in pageDatas %}
+            <tr>
+                <td>{{ pageData.id }}</td>
+                <td id="userName_{{ pageData.id }}">{{ pageData.userName }}</td>
+                <td>{{ pageData.loginName }}</td>
+                <td>{{ pageData.email }}</td>
+                {% if pageData.superManager == 0 %}
+                <td>否</td>
+                {% else %}
+                <td>是</td>
+                {% endif %}
+
+                {% if pageData.state == 1 %}
+                <td>有效</td>
+                {% else %}
+                <td>无效</td>
+                {% endif %}
+
+                <td>
+                    {% if pageData.state == 1 %}
+                    <button type="button" class="btn bg-olive"
+                            onclick="editAdminUserBtn('{{ pageData.id }}')">编辑
+                    </button>
+                        {% if pageData.superManager == 0 %}
+                    <button  type="button" class="btn bg-primary "
+                            onclick="authorizeBtn('{{ pageData.loginName }}')">授权
+                    </button>
+                            {% endif %}
+                    <button  type="button" class="btn bg-red"
+                            onclick="deleteAdminUserBtn($(this), '{{ pageData.id }}')">删除
+                    </button>
+                    {% else %}
+                     <button  type="button" class="btn bg-red"
+                            onclick="resetAdminUserBtn($(this), '{{ pageData.id }}')">启用
+                    </button>
+                    {% endif %}
+
+                </td>
+
+            </tr>
+
+        {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+
+</div>
+<div class="box-footer clearfix">
+  <ul class="pagination pagination-sm no-margin pull-right">
+    {% include "myadmin/pagination.html" %}
+  </ul>
+</div>

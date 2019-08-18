@@ -1,0 +1,460 @@
+{% include 'InterfaceTest/head.html'%}
+<!-- Main content starts -->
+
+<div class="content">
+    <!-- Sidebar -->
+     {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Sidebar ends -->
+    <!-- Main bar -->
+     <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                  <div class="col-xs-12 form-group pull-right top_search">
+                    <h3>{{ text.pageTitle }}</h3>
+                  </div>
+              </div>
+
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>标准接口</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <div class="form-group">
+                        <div  id="checkOption">
+                            <span class="cat-text" style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>
+                        </div>
+                    </div>
+                      <br>
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist" style="margin-bottom: 0px">
+                        <li class="dropdown active">
+                            <a href="#"  class="dropdown-toggle" data-toggle="dropdown"> {{ groupLevel1 }} <b class="caret"></b></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1"  id="businessLineCheckTab">
+                             <li><a href="#caseBusinessLine_"  onclick="editBusinessLineCheckTab('')" tabindex="-1" name="tabExecResult" data-toggle="tab" >&nbsp;</a></li>
+                                {% for bl in checkBusinessLine %}
+                                    <li role="presentation"><a href="#caseBusinessLine_{{ bl.id }}" name="tabExecResult" onclick="editBusinessLineCheckTab($(this).text())" role="tab" data-toggle="tab" aria-expanded="true" >{{ bl.bussinessLineName }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li role="presentation" class=""><a href="#moduleTab" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">{{ groupLevel2 }}</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#fileRealPathTab" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">文件路径</a>
+                        </li>
+                          <li role="presentation" class=""><a href="#interfaceUrlTab" role="tab" id="profile-tab3" data-toggle="tab" aria-expanded="false">接口URL</a>
+                        </li>
+
+                          <li class="dropdown active">
+                            <a href="#"  class="dropdown-toggle" data-toggle="dropdown"> 状态 <b class="caret"></b></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1"  id="apiStatusTab">
+                             <li><a href="#apiStatusTab_nores"  onclick="editApiStatus('')" tabindex="-1" name="tabExecResult" data-toggle="tab" >&nbsp;</a></li>
+                                    <li role="presentation"><a href="#apiStatusTab_1" name="tabExecResult" onclick="editApiStatus('有效')" role="tab" data-toggle="tab" aria-expanded="true" >有效</a></li>
+                                    <li role="presentation"><a href="#apiStatusTab_0" name="tabExecResult" onclick="editApiStatus('废弃')" role="tab" data-toggle="tab" aria-expanded="true" >废弃</a></li>
+                                    <li role="presentation"><a href="#apiStatusTab_3" name="tabExecResult" onclick="editApiStatus('未发现注释')" role="tab" data-toggle="tab" aria-expanded="true" >未发现注释</a></li>
+                                    <li role="presentation"><a href="#apiStatusTab_4" name="tabExecResult" onclick="editApiStatus('注释不合法')" role="tab" data-toggle="tab" aria-expanded="true" >注释不合法</a></li>
+                            </ul>
+                        </li>
+
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+                         <div role="tabpanel" class="tab-pane fade" id="apiStatusTab_nores" aria-labelledby="profile-tab">
+                            <div class="form-group">
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control"  onkeypress="EnterPress(event)" value="请选择状态" disabled>
+                                </div>
+                            </div>
+                         </div>
+                          <div role="tabpanel" class="tab-pane fade" id="apiStatusTab_1" aria-labelledby="profile-tab">
+                            <div class="form-group">
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control"  onkeypress="EnterPress(event)" value="有效" disabled>
+                                </div>
+                            </div>
+                         </div>
+                          <div role="tabpanel" class="tab-pane fade" id="apiStatusTab_0" aria-labelledby="profile-tab">
+                            <div class="form-group">
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control"  onkeypress="EnterPress(event)" value="废弃" disabled>
+                                </div>
+                            </div>
+                         </div>
+                          <div role="tabpanel" class="tab-pane fade" id="apiStatusTab_3" aria-labelledby="profile-tab">
+                            <div class="form-group">
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control"  onkeypress="EnterPress(event)" value="未发现注释" disabled>
+                                </div>
+                            </div>
+                         </div>
+                          <div role="tabpanel" class="tab-pane fade" id="apiStatusTab_4" aria-labelledby="profile-tab">
+                            <div class="form-group">
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control"  onkeypress="EnterPress(event)" value="注释不合法" disabled>
+                                </div>
+                            </div>
+                         </div>
+                        <div role="tabpanel" class="tab-pane fade" id="fileRealPathTab" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="fileRealPathInput" onkeypress="EnterPress(event)" placeholder="请输入文件路径" >
+                            </div>
+                          </div>
+                        </div>
+                         <div role="tabpanel" class="tab-pane fade" id="interfaceUrlTab" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="interfaceUrlInput" onkeypress="EnterPress(event)" placeholder="请输入接口URL" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade active in" id="caseBusinessLine_" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control"  onkeypress="EnterPress(event)" placeholder="请选择{{ groupLevel1 }}" disabled>
+                            </div>
+                          </div>
+                        </div>
+                             {% for bl in checkBusinessLine %}
+                                 <div role="tabpanel" class="tab-pane fade" id="caseBusinessLine_{{ bl.id }}" aria-labelledby="profile-tab">
+                                    <div class="form-group">
+                                        <div class="col-lg-8">
+                                            <input type="text" class="form-control"  onkeypress="EnterPress(event)" value="{{ bl.bussinessLineName }}" disabled>
+                                        </div>
+                                    </div>
+                                 </div>
+                            {% endfor %}
+                        <div role="tabpanel" class="tab-pane fade" id="moduleTab" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                              <div class="col-lg-3">
+                                <select class="form-control" onchange="$('#caseModuleInput').val($(this).val());editQueryData()">
+                                    <option value="">&nbsp;</option>
+                                    {% for m in checkModules %}
+                                        <option value="{{ m.moduleName }}" >{{ m.moduleName }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-lg-5">
+                                <input type="text" class="form-control" id="caseModuleInput"  onkeypress="EnterPress(event)" placeholder="请输入接口{{ groupLevel2 }}" >
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                    <div id="EditVars" class="form-group" style="margin-top: 50px"></div>
+                    <div id="fileDetail" class="form-group" style="margin-top: 50px"></div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+    </div>
+    <!--jquery弹出层显示层DIV-->
+<div id="showLogDiv" class="white_content"></div>
+<!--jquery弹出层时背景层DIV-->
+<div id="fade" class="black_overlay"></div>
+    <!--jquery弹出层 css-->
+<style>
+.black_overlay{
+  display: none;
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  z-index:1001;
+  -moz-opacity: 0.8;
+  opacity:.80;
+  filter: alpha(opacity=80);
+}
+.white_content {
+  display: none;
+  position: absolute;
+  top: 10%;
+  left: 10%;
+  width: 80%;
+  height: 80%;
+  border: 16px solid lightblue;
+  background-color: white;
+  z-index:1002;
+  overflow: auto;
+}
+.white_content_small {
+  display: none;
+  position: absolute;
+  top: 20%;
+  left: 30%;
+  width: 40%;
+  height: 50%;
+  border: 16px solid lightblue;
+  background-color: white;
+  z-index:1002;
+  overflow: auto;
+}
+</style>
+    <script type="text/javascript">
+        var queryArr = {"apiStatus":"未发现注释"};
+        //创建时间排序
+        var orderBy = "g.id desc";
+        var page = {{ page }};
+
+
+        var interfaceNumFlag = -1;
+        function interfaceNum() {
+            if (interfaceNumFlag == '-1' || interfaceNumFlag == '0') {
+                //创建时间正序查
+                orderBy = 'g.interfaceNum asc';
+                interfaceNumFlag = 1;
+            } else if (interfaceNumFlag == '1') {
+                //创建时间倒序查
+                orderBy = 'g.interfaceNum desc';
+                interfaceNumFlag = 0;
+            }
+            selected();
+        }
+
+
+//g.interfaceNum asc
+        //排序样式显示
+        function interfaceNumShow() {
+            if(interfaceNumFlag == '0'){
+                $("#interfaceNumBtn").text('接口数量▼');
+            }else if(interfaceNumFlag == '1'){
+                $("#interfaceNumBtn").text('接口数量▲');
+            }
+
+        }
+
+
+        function queryDataInit() {
+
+            //查询条件
+            editQueryData();
+        }
+
+        queryDataInit();
+
+
+        //搜索条件出的回车事件监听
+        function EnterPress(event){ //传入 event
+            var e = event || window.event;
+            if(e.keyCode == 13){
+                editQueryData();
+            }
+        }
+
+        function editBusinessLineCheckTab(name) {
+            queryArr["businessLine"] = name;
+            editQueryData();
+        }
+
+        function editApiStatus(apiStatus) {
+            queryArr["apiStatus"] = apiStatus;
+            editQueryData();
+        }
+
+        function queryUserConf(data) {
+            editQueryData();
+        }
+
+        //编辑查询条件
+        function editQueryData() {
+            if ($("#caseModuleInput").val()==''){
+                queryArr['module']='';
+            }else {
+                queryArr['module']=$("#caseModuleInput").val();
+            }
+            if($("#fileRealPathInput").val() == ""){
+                queryArr["fileRealPath"] = "";
+            }else {
+                queryArr["fileRealPath"] = $("#fileRealPathInput").val();
+            }
+
+            if($("#interfaceUrlInput").val() == ""){
+                queryArr["interfaceUrl"] = "";
+            }else {
+                queryArr["interfaceUrl"] = $("#interfaceUrlInput").val();
+            }
+            selected();
+        }
+
+        //清空查询条件
+        function CleanQueryData() {
+            $("#caseModuleInput").val("");
+            $("#fileRealPathInput").val("");
+            $("#interfaceUrlInput").val("");
+             $("#businessLineCheckTab").children().eq(0).children().eq(0).click();
+             $("#apiStatusTab").children().eq(0).children().eq(0).click();
+            editQueryData();
+        }
+
+        function delQueryOptions(key) {
+            if(key=='module'){
+               $("#caseModuleInput").val('');
+            }
+            if(key=='businessLine'){
+                $("#businessLineCheckTab").children().eq(0).children().eq(0).click();
+            }
+            if(key=='apiStatus'){
+                $("#apiStatusTab").children().eq(0).children().eq(0).click();
+            }
+            if(key=='fileRealPath'){
+                $("#fileRealPathInput").val('');
+            }
+            if(key=='interfaceUrl'){
+                $("#interfaceUrlInput").val('');
+            }
+            editQueryData();
+        }
+
+        //查询条件
+        function QueryOption(){
+        var htmls = ' <span class="cat-text" style="font-size: 15px;float: left;">搜索条件:</span>';
+            var num =0;
+            var writeNum = 0;
+            for(var item in queryArr){
+                if(queryArr[item] != '' ){
+                    num ++;
+                }
+            }
+
+            for(var item in queryArr){
+                if(queryArr[item] != ''){
+                    var key = '';
+                    if(item == 'module'){
+                        key = '{{ groupLevel2 }}';
+                    }
+                    if(item == 'businessLine'){
+                        key = '{{ groupLevel1 }}';
+                    }
+                    if(item == 'fileRealPath'){
+                        key = '文件路径';
+                    }
+                    if(item == 'interfaceUrl'){
+                        key = '接口URL';
+                    }
+                    if (item == 'apiStatus'){
+                        key = '状态';
+                    }
+                    writeNum ++ ;
+
+                    htmls = htmls+'<span class="tag"><span>'+key+'：'+queryArr[item]+'&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delQueryOptions(\''+item+'\')">x</a></span> ';
+
+                }
+            }
+            htmls = htmls +'<span class="tag" style="float: right;background-color: #ff7575"><span>默认筛选&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="CleanQueryData()">x</a></span>';
+
+            $('#checkOption').html(htmls);
+        }
+
+
+        //查询条件处的其他人员按钮
+        function QueryPeopleConf(num) {
+
+            htmlobj=$.ajax({url:'/Config/GlobalVarsConf/queryPeopleConf?num='+num,async:false});
+
+            if(htmlobj.responseText == "[]"){
+                alert("暂无其他用户");
+                return;
+            }
+            var value = JSON.parse(htmlobj.responseText);
+
+            var nameVal = "";
+            for(var i = 0;i<value.length;i++){
+                nameVal = nameVal + ' &nbsp <a href="#" id="hover-a" onclick="queryUserConf(\''+value[i].userName+'\')"  style="font-size: 15px;text-decoration:none">['+value[i].userName+'('+value[i].count+')]</a>'
+            }
+            if(value.length<3){
+                $("#names").html(nameVal);
+                $("#hover-a").attr('onclick','createPeople('+(1)+')');
+                $("#names").show();
+                return;
+            }else {
+                $("#names").html(nameVal);
+            }
+
+            $("#hover-a").attr('onclick','createPeople('+(num+1)+')');
+            $("#names").show();
+        }
+
+        //翻页
+        function pageCall(pageNum) {
+            page = pageNum;
+            selected();
+        }
+        //弹出隐藏层
+        function ShowDiv(){
+            obshowdiv =  $("#EditVars");
+            offtop=obshowdiv.offset().top-60;
+            offleft=obshowdiv.offset().left;
+            obshowdiv.show();
+            docheight = $(document).height();
+            $('html,body').animate({scrollTop:offtop}, 200);
+        }
+
+        function selected() {
+            QueryOption();
+            var data = {queryArr : encodeURI(JSON.stringify(queryArr)),orderBy:orderBy,page:page};
+            htmlobj=$.ajax({url:"{% url 'HTTP_SrcFileAnalyzeList' %}",async:false,data:data,type:"POST"});
+            $("#EditVars").html(htmlobj.responseText);
+            interfaceNumShow();
+        }
+
+         function refreshSrcFile(id) {
+            var htmlobj = $.ajax({
+                url: "{% url 'HTTP_SrcFileRefresh' %}",
+                data: {"id": id},
+                async: false,
+                type:"GET"
+            });
+            if(JSON.parse(htmlobj.responseText)["code"] == 10000){
+                selected();
+            }else{
+               alert(JSON.parse(htmlobj.responseText)["message"]);
+            }
+        }
+        function ShowDiv(show_div,bg_div){
+            obshowdiv =  $('#'+show_div);
+            //整行颜色加深
+            trobj = obshowdiv.parent().parent();
+            trobj.attr('class','result_select');
+            //弹出详情层
+            objclosediv = $('#'+show_div+'> label');
+            obbgdiv = $('#'+bg_div);
+            offtop=obshowdiv.offset().top;
+            offleft=obshowdiv.offset().left;
+            obshowdiv.css("top",offtop+40+"px");
+            objclosediv.css("top","40px");
+            objclosediv.css("left","90%");
+            obshowdiv.show();
+            obbgdiv.show();
+            docheight = $(document).height();
+            obbgdiv.height(docheight);
+            $('html,body').animate({scrollTop:offtop}, 800);
+        }
+        //关闭弹出层
+        function CloseDiv(show_div,bg_div){
+            $('#'+show_div).hide();
+            $('#'+bg_div).hide();
+        }
+
+        window.onload = function() {
+            $("#surprise").click();
+            $("#surprise2").click();
+        };
+
+    </script>
+    <!-- Content ends -->
+{% include 'InterfaceTest/foot.html'%}

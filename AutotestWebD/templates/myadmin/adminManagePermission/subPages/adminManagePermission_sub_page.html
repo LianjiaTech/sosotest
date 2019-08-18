@@ -1,0 +1,73 @@
+<div class="box-body no-padding" >
+    <div class="box-header with-border">
+          <h3 class="box-title">权限列表</h3>
+
+{#          <div class="box-tools pull-right">#}
+{#            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>#}
+{#            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>#}
+{#          </div>#}
+        <button style="margin: auto;float: right;margin-right: 30px" onclick="addPermissionBtn()" type="button" class="btn bg-olive margin">添加权限</button>
+        </div>
+    <table class="table table-striped table-bordered">
+        <tbody>
+        <tr>
+            <th style="width: 2%">#</th>
+            <th style="width: 25%">权限名称</th>
+            <th style="width: 25%">权限key</th>
+            <th style="width: 10%">权限值</th>
+            <th style="width: 10%">默认权限</th>
+            <th style="width: 10%">是否有效</th>
+            <th style="width: 15%;">操作</th>
+        </tr>
+        {% for pageData in pageDatas %}
+            <tr>
+                <td>{{ pageData.id }}</td>
+                <td id="permissionName_{{ pageData.id }}">{{ pageData.permissionName }}</td>
+                <td>{{ pageData.permissionKey }}</td>
+                <td>{{ pageData.permissionValue }}</td>
+                {% if pageData.isDefaultPermission == 1 %}
+                <td>是</td>
+                {% else %}
+                <td>否</td>
+                {% endif %}
+
+                {% if pageData.state == 1 %}
+                <td>有效</td>
+                {% else %}
+                <td>无效</td>
+                {% endif %}
+
+
+                <td>
+                    {% if pageData.state == 1 %}
+                    <button type="button" class="btn bg-olive"
+                            onclick="editPermissionBtn('{{ pageData.id }}')">编辑
+                    </button>
+                    <button  type="button" class="btn bg-red"
+                            onclick="deletePermissionBtn($(this), '{{ pageData.id }}')">删除
+                    </button>
+                    <button  type="button" class="btn bg-red" style="display:none"
+                            onclick="resetPermissionBtn($(this), '{{ pageData.id }}')">启用
+                    </button>
+                    {% else %}
+                    <button  type="button" class="btn bg-red" style="display:none"
+                            onclick="deletePermissionBtn($(this), '{{ pageData.id }}')">删除
+                    </button>
+                    <button  type="button" class="btn bg-red"
+                            onclick="resetPermissionBtn($(this), '{{ pageData.id }}')">启用
+                    </button>
+                    {% endif %}
+                </td>
+
+            </tr>
+
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+<div class="box-footer clearfix">
+  <ul class="pagination pagination-sm no-margin pull-right">
+    {% include "myadmin/pagination.html" %}
+  </ul>
+</div>

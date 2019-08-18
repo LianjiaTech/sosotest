@@ -1,0 +1,75 @@
+<div class="col-lg-12">
+    <span class="pagination" style="font-size: 15px;"> &nbsp;&nbsp;排序: &nbsp;&nbsp; </span>
+    <button id="interfaceNameBtn" class="btn btn-primary" onclick="orderByName()" style="font-size: 10px;">KEYWORD</button>
+    <button id="addTimeBtn" class="btn btn-primary" onclick="orderByAddTime()" style="font-size: 10px;">创建时间</button>
+    <button id="modTimeBtn" class="btn btn-primary" onclick="orderByModTime()" style="font-size: 10px;">修改时间</button>
+    {#    <div class="pagination" style="float:right;" ></div>#}
+    <div class="pagination" style="float:right;">
+        {% include 'InterfaceTest/pagination.html' %}
+    </div>
+</div>
+<table class="table table-bordered " style="table-layout:fixed;width:100%;word-break:break-all;">
+    <thead>
+    <tr style="color: snow" bgcolor="#2A3F54">
+        <th style="width:4%;">ID</th>
+        <th style="width:8%;">类型</th>
+        <th style="width:12%;">KEY</th>
+        <th style="width:12%;">标题</th>
+        <th style="width:28%;">描述</th>
+        <th style="width:15%;">创建时间/创建人</th>
+        <th style="width:15%;">修改时间/修改人</th>
+        <th style="width:10%;">编辑操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% if pageCount == 0 %}
+        <td colspan="9" align="center" >没有符合条件的搜索结果</td>
+    {% else %}
+        {% for pageData in pageDatas %}
+            <tr>
+                <td>{{ pageData.id }}</td>
+                <td>{{ pageData.type }}</td>
+                <td>{{ pageData.keywordKey }}</td>
+                <td>{{ pageData.title }}</td>
+                <td><textarea class="list_textarea" disabled>{{ pageData.descText }}</textarea></td>
+                <td>{{ pageData.addTime }}/{{ pageData.userName }}</td>
+                <td>{{ pageData.modTime }}/{% if pageData.modByName %}                        {{ pageData.modByName }}                    {% else %}                        {{ pageData.userName }}                    {% endif %}</td>
+                <td style="text-align: center">
+
+                <div style="margin-top: -10px">
+                    {% if "check" in pageData.permissions %}
+                        <a href="{% url 'DATAKEYWORD_operationCheck' %}?id={{ pageData.id }}&option=check&type={{ pageData.type }}&addBy={{ pageData.addBy }}" target="_blank">
+                            <button class="btn btn-primary optionButtionSize" title="查看"><i class="fa fa-info-circle"></i></button>
+                        </a>
+                    {% endif %}
+                {% if "copy" in pageData.permissions %}
+                        <a href="{% url 'DATAKEYWORD_operationCheck' %}?id={{ pageData.id }}&option=copy&type={{ pageData.type }}&addBy={{ pageData.addBy }}" target="_blank">
+                            <button class="btn btn-info optionButtionSize" title="拷贝"><i class="fa fa-copy"></i></button>
+                        </a>
+                {% endif %}
+                {% if "edit" in pageData.permissions %}
+                         <a href="{% url 'DATAKEYWORD_operationCheck' %}?id={{ pageData.id }}&option=edit&type={{ pageData.type }}&addBy={{ pageData.addBy }}" target="_blank">
+                            <button class="btn btn-success optionButtionSize" title="编辑"><i class="fa fa-edit"></i></button>
+                        </a>
+                {% endif %}
+                {% if "delete" in pageData.permissions %}
+                        <button class="btn btn-danger optionButtionSize" onclick="setState('{{ pageData.id }}');" title="删除">
+                            <i class="fa fa-trash"></i>
+                        </button>
+                {% endif %}
+                </div>
+                </td>
+
+            </tr>
+
+        {% endfor %}
+    {% endif %}
+    </tbody>
+</table>
+<div>
+    <button type="button" value="save" class="button blue " style="margin-top:8px;visibility:hidden"
+            onclick="debugCase('save')"><p style="font-size: 20px;">批量执行</p></button>
+    <div class="pagination" style="float:right;">
+          {% include 'InterfaceTest/pagination.html' %}
+    </div>
+</div>

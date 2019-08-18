@@ -1,0 +1,49 @@
+<php> echo file_get_contents("http://localhost".(C('SERVER_PORT')==80?'':":".C('SERVER_PORT'))."/System/main/inithead");</php>
+<div style="height: 18px"></div>
+<!-- Main content starts -->
+<link rel="stylesheet" href="/platform_resource/style/useraudit.css">
+
+<div class="content">
+    <!-- Sidebar -->
+    <php> echo file_get_contents("http://localhost".(C('SERVER_PORT')==80?'':":".C('SERVER_PORT'))."/System/main/initmenu?open=sysrestart");</php>
+    <!-- Sidebar ends -->
+    <!-- Main bar -->
+    <div class="mainbar">
+        <!-- Page heading -->
+        <div class="page-head">
+            <h2 class="pull-left"><i class="icon-home"></i> 系统重启</a>
+            </h2>
+            <div class="clearfix"></div>
+        </div>
+        <!-- Page heading ends -->
+        <!-- Matter -->
+        <div class="matter">
+            <div class="container">
+                <button type="button" class="button {$isSuccess==1?'green':'red'} ">
+                    <p style="font-size: 25px">
+                        所有系统运行情况<br>
+                        {$isSuccess==1?'任务正常':'任务异常'}
+                    </p>
+                    <a href='/System/SystemOpt/exec_sysrestart_all' style="font-size: 18px">重启</a>
+                    &nbsp;&nbsp;
+                    <a href='/System/SystemOpt/stop_sysrestart_all' style="font-size: 18px">停止</a>
+
+                </button>
+
+                <button type="button" class="button {$isListen==1?'green':'red'} ">
+                    <p style="font-size: 25px">
+                        任务监听系统<br>
+                        {$isListen==1?'正常':'已关闭'}
+                    </p>
+                    <a href='/System/SystemOpt/openListener' style="font-size: 18px">打开</a>
+                    &nbsp;&nbsp;
+                    <a href='/System/SystemOpt/closeListener' style="font-size: 18px">关闭</a>
+                </button>
+
+            </div>
+        </div>
+        <!-- Matter ends -->
+    </div>
+</div>
+<!-- Content ends -->
+<php> echo file_get_contents("http://localhost".(C('SERVER_PORT')==80?'':":".C('SERVER_PORT'))."/System/main/initfoot");</php>

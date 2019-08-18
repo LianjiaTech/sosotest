@@ -1,0 +1,182 @@
+{% include "myadmin/header.html" %}
+{% include "myadmin/menu.html" %}
+
+<div class="content-wrapper">
+      <style>
+        .ue-container {
+            width: 60%;
+            margin: 0 auto;
+            margin-top: 3%;
+            padding: 20px 40px;
+            border: 1px solid #ddd;
+            background: #fff;
+        }
+
+        .black_overlay {
+
+            display: none;
+            position: absolute;
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 1001;
+            -moz-opacity: 0.8;
+            opacity: .80;
+            filter: alpha(opacity=80);
+        }
+
+        .white_content {
+            display: none;
+            position: absolute;
+            top: 15%;
+            left: 20%;
+            width: 60%;
+            height: auto;
+            border: 16px solid lightblue;
+            background-color: white;
+            z-index: 1002;
+
+        }
+
+        .gray_content {
+            width: 100%;
+            height: 100%;
+            z-index: 1001;
+            background-color: grey;
+        }
+
+        .white_content_small {
+            display: none;
+            position: absolute;
+            top: 20%;
+            left: 30%;
+            width: 40%;
+            height: 50%;
+            border: 16px solid lightblue;
+            background-color: white;
+            z-index: 1002;
+            overflow: auto;
+        }
+    </style>
+    <section class="content-header">
+        <h1>
+            jira业务线与平台关联关系管理
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard">Home</i></a></li>
+            <li class="active">jira业务线与平台关联关系管理</li>
+        </ol>
+    </section>
+
+    <section class="content" style="padding-bottom: 0px">
+        <div class="row">
+            <div class="box" style="margin-bottom: auto">
+            <section class="content-header" style="padding-bottom: 15px;">
+                <div style="height: 30px" id="queryStyle">
+                    <span>搜素条件：</span>
+                </div>
+
+                <div class="nav-tabs-custom" style="cursor: move;margin-top: 10px">
+                        <!-- Tabs within a box -->
+                        <ul style="margin-left: 20px;" class="nav nav-tabs  ui-sortable-handle">
+                            <li class="active" style="margin-top: 10px"><a href="#userNameTab"
+                                                                           style="padding: 5px 15px 5px 15px;"
+                                                                           data-toggle="tab"
+                                                                           aria-expanded="true">jira业务线</a>
+                            </li>
+
+                        </ul>
+
+
+                        <div class="tab-content no-padding">
+                            <!-- Morris chart - Sales -->
+                            <div class="chart tab-pane active" id="userNameTab">
+                                <div class="box-body">
+                                    <div class="form-horizontal">
+                                        <div class="box-body">
+                                            <div class="form-group">
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="queryJiraBusinessLine"
+                                                           placeholder="jiraBusinessLine" onkeypress="EnterPress(event)">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /.box-footer -->
+                                    </div>
+                                    <!-- /.row -->
+                                </div>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+            </section>
+           </div>
+
+            <div class="box" id="jiraBusinessLinePlatformSubPage">
+                <!-- /.box-header -->
+
+                <!-- /.box-body -->
+            </div>
+
+            <div id="fade" class="black_overlay" style="display: none; height: 974px;"></div>
+            <div class="box white_content" style="display: none;" id="adminAddJiraBusinessLinePlatformSubPage">
+                <div class="box-header with-border">
+                    <h3 class="box-title" id="supPageTitle"></h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" onclick="CloseDiv('adminAddJiraBusinessLinePlatformSubPage','bgdiv')"><i
+                                class="fa fa-remove"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="form-horizontal">
+                        <form action="" method="post" target="id_iframe">
+                            {% csrf_token %}
+                            <div class="box-body">
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">jira业务线</label>
+                                    <div class="col-sm-9">
+                                    <select id="jiraBusinessLine" class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                    </select>
+                                        </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">平台业务线</label>
+                                    <div class="col-sm-9">
+                                    <select id="platformBusinessLine" class="form-control select2 select2-hidden-accessible" style="width: 100%;" tabindex="-1" aria-hidden="true">
+                                    </select>
+                                        </div>
+                                </div>
+
+                            </div>
+
+                            <!-- /.box-body -->
+                            <div class="box-footer">
+                                <button type="button" class="btn btn-default" onclick="CloseDiv('adminAddJiraBusinessLinePlatformSubPage','bgdiv')">取消</button>
+                                <input type="submit" id="submit" class="btn btn-info pull-right" onclick="addJiraBusinessLinePlatform()"
+                                       value="保存">
+                            </div>
+                        </form>
+                        <iframe id="id_iframe" name="id_iframe" style="display: none;"></iframe>
+                        <!-- /.box-footer -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+
+{% include "myadmin/footer.html" %}
+<script src="/static/myadmin/js/jiraBusinessLinePlatform/jiraBusinessLinePlatform_check.js"></script>

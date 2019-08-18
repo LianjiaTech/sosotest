@@ -1,0 +1,5 @@
+UPDATE `tb_http_testcase_step` SET caseType=0 WHERE addBy IN ("liyc","wangjl01"); #设置步骤不统计
+UPDATE `tb_http_interface` SET caseType=0 WHERE addBy IN ("liyc","wangjl01"); #设置接口不统计
+
+UPDATE `tb_http_testcase_step` SET caseType=0 WHERE caseId IN ("HTTP_TESTCASE_",""); #设置步骤不统计
+UPDATE `tb_http_interface` SET caseType=0 WHERE interfaceId IN ("HTTP_INTERFACE_",""); #设置接口不统计

@@ -1,0 +1,84 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+   	<title>关键字变色示例</title>
+			<script src="/static/codeEditor/codemirror.min.js"></script>
+		    <link rel="stylesheet" href="/static/codeEditor/codemirror.min.css">
+			<script src="/static/codeEditor/soso.js"></script>
+			<link href="/static/codeEditor/normalize.min.css" rel="stylesheet">
+    <!-- Bootstrap Core CSS -->
+    <link href="/static/assets/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+        <script src="//apps.bdimg.com/libs/html5shiv/3.7/html5shiv.min.js"></script>
+        <script src="//apps.bdimg.com/libs/respond.js/1.4.2/respond.js"></script>
+    <![endif]-->
+<!-- jQuery -->
+<script src="/static/js/jquery.js"></script>
+</head>
+<body>
+<div class="container">
+<style>
+.CodeMirror {
+	    height: 374px;
+}
+</style>
+<br>
+<div class="row">
+	<div class="col-md-12">
+		<div class="panel panel-default">
+					<div id="compiler" class="panel-heading">
+			<form class="form-inline" role="form">
+				 <button type="button" class="btn btn-success" id="submitBTN"><i class="fa fa-send-o"></i> 点击运行</button>
+				 <button type="button" class="btn btn-default" id="clearCode" ><i class="fa fa-eraser" aria-hidden="true"></i> 清空</button>
+			</form>
+			</div>
+			<div class="panel-body">
+			<form role="form" id="compiler-form">
+              <div class="form-group">
+                <div class="row">
+                  <div class="col-md-7">
+                    <textarea class="form-control"  id="code" name="code" rows="5">DATETIME_FORMAT(asdfafd,asdfasdf);
+JSON_GET(asdfafd,asdfasdf);
+a=1;
+b=abc;
+c=$GVAR[a];
+d=$VAR[c];</textarea>
+                  </div>
+                </div>
+              </div>
+            </form>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+	lineNumbers: true,
+	matchBrackets: true,
+	mode: "text/x-python",
+	indentUnit: 4,
+	indentWithTabs: true,
+});
+btn = $("#submitBTN");
+editor.on("change",function(editor,change){
+	btn.prop('disabled', false);
+});
+btn.click(function() {
+	code = editor.getValue();
+	alert(code);
+});
+$("#clearCode").click(function() {
+	var r=confirm("确认清空？");
+	if (r==true){
+		editor.setValue(editor.getValue()+"a=1;\nb=$VAR[a];");
+		editor.clearHistory();
+	}
+});
+</script>
+</div>
+</body>
+</html>

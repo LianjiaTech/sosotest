@@ -1,0 +1,19 @@
+    @API_START@
+    @title 工作圈首页我的关注
+    @desc 工作犬首页我的关注的详细描述
+    @attribute 业务线 SFA
+    @attribute 模块 合同
+
+    @uri crmDomain OR https://test.domain.com
+    @url get/post /json/sns_feed_index/index_feeds.action
+    @param name demoValue 说明 {}
+    @param id demoValue 说明 {json限制条件}
+    @bodytype form-data/urlencoded/raw/binary
+    @bodycontent text/file key demoValue 说明 {json限制条件}
+    @bodycontent text/file key demoValue 说明 {json限制条件}
+
+    @response code 200
+    @response header key demoValue 说明 {json限制条件}
+    @response body html/json/text/binary responseContent
+
+    @API_END@

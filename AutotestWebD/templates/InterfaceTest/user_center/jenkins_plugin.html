@@ -1,0 +1,59 @@
+{% include 'InterfaceTest/head.html'%}
+<!-- Main content starts -->
+<div class="content">
+    <!-- Sidebar -->
+    {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Sidebar ends -->
+    <!-- Main bar -->
+    <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Jenkins插件介绍</h2>
+                      <h2 class="subNavH2Style">
+                        <a href="{% url 'HTTP_UserCI' %}">
+                            <button class="btn btn-info">
+                               CI脚本示例
+                              </button>
+                        </a>
+                    </h2>
+                      <h2 class="subNavH2Style">
+                        <a href="{% url 'HTTP_UserToken' %}">
+                            <button class="btn btn-info">
+                               token管理
+                              </button>
+                        </a>
+                    </h2>
+                    <h2 class="subNavH2Style">
+                        <a href="{% url 'HTTP_UserInvoke' %}">
+                            <button class="btn btn-info">
+                               invoke接口说明
+                              </button>
+                        </a>
+                    </h2>
+
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                      <h1>第一步：在构建部分增加构建步骤 sosotest execute plugin</h1>
+                    <img src="/static/jenkins/jenkinsplugin01.png" /><br>
+                    <h1>第二步：配置sosotest任务执行需要的信息</h1>
+                    <img src="/static/jenkins/jenkinsplugin02.png" />
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+    </div>
+
+    <!-- Content ends -->
+{% include 'InterfaceTest/foot.html'%}

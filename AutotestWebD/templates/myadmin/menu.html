@@ -1,0 +1,195 @@
+<!-- Left side column. contains the logo and sidebar -->
+<aside class="main-sidebar">
+    <!-- sidebar: style can be found in sidebar.less -->
+    <section class="sidebar">
+        <!-- Sidebar user panel -->
+        <ul class="sidebar-menu" data-widget="tree">
+        <li class="header">MAIN NAVIGATION</li>
+
+        {% if isSuperManager == 1 or "AdminUser" in permissionKeys or "AdminTeam" in permissionKeys or "AdminRole" in permissionKeys %}
+            <li class="{{ user_check }} {{ team_check }} {{ role_check }} {{userRole_check}} treeview">
+          <a href="#">
+            <i class="fa fa-dashboard"></i> <span>用户小组管理</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+          {% if isSuperManager == 1 or "AdminUser" in permissionKeys %}
+              {% if isSuperManager == 1 or isTeamLeader == 1 %}
+                    <li class="{{ user_check }}"><a href="{% url 'admin_user_check' %}"><i class="fa fa-circle-o"></i>用户管理</a></li>
+              {% endif %}
+          {% endif %}
+          {% if isSuperManager == 1 or "AdminTeam" in permissionKeys %}
+              {% if isSuperManager == 1 or isTeamLeader == 1 %}
+                    <li class="{{ team_check }}  {{userRole_check}}" ><a href="{% url 'admin_team_check' %}"><i class="fa fa-circle-o"></i>小组管理</a></li>
+              {% endif %}
+          {% endif %}
+{#          {% if isSuperManager == 1 or "AdminRole" in permissionKeys %}#}
+{#              <li class="{{ role_check }}"><a href="{% url 'admin_role_check' %}"><i class="fa fa-circle-o"></i>角色管理</a></li>#}
+{#          {% endif %}#}
+          </ul>
+        </li>
+        {% endif %}
+
+
+         {% if isSuperManager == 1 or isTeamLeader != 1 %}
+            {% if isSuperManager == 1 or "AdminPermission" in permissionKeys or "AdminInterfaceModule" in permissionKeys or "AdminInterfacePermission" in permissionKeys or "AdminManagePermission" in permissionKeys  %}
+                <li class="{{ permission_check }} {{ interfaceModule_check }} {{ interfacePermission_check }} {{ adminManagePermission_check }} treeview">
+                <a href="#">
+                    <i class="fa fa-dashboard"></i> <span>权限管理</span>
+                    <span class="pull-right-container">
+
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+                </a>
+                <ul class="treeview-menu">
+{#                    {% if "AdminPermission" in permissionKeys %}#}
+{#                        <li class="{{ permission_check }}"><a href="{% url 'admin_permission_check' %}"><i class="fa fa-circle-o"></i>权限管理</a>#}
+{#                        </li>#}
+{#                    {% endif %}#}
+{#                    {% if "AdminInterfaceModule" in permissionKeys %}#}
+{#                        <li class="{{ interfaceModule_check }}"><a href="{% url 'admin_interface_module_check' %}"><i class="fa fa-circle-o"></i>接口页面管理</a>#}
+{#                        </li>#}
+{#                    {% endif %}#}
+                    {% if "AdminInterfacePermission" in permissionKeys %}
+                        <li class="{{ interfacePermission_check }}"><a href="{% url 'admin_interface_permission_check' %}"><i class="fa fa-circle-o"></i>接口权限管理</a></li>
+                        </li>
+                    {% endif %}
+                    {% if "AdminManagePermission" in permissionKeys %}
+                         <li class="{{ adminManagePermission_check }}"><a href="{% url 'admin_adminManagePermission_check' %}"><i class="fa fa-circle-o"></i>后台权限管理</a></li>
+                        </li>
+                    {% endif %}
+                </ul>
+            </li>
+            {% endif %}
+        {% endif %}
+
+        {% if isSuperManager == 1 or "AdminManager" in permissionKeys %}
+             <li class="{{ adminUser_check }} treeview">
+                <a href="#">
+                    <i class="fa fa-dashboard"></i> <span>管理员管理</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li class="{{ adminUser_check }}"><a href="{% url 'admin_admin_user_check' %}"><i class="fa fa-circle-o"></i>管理员管理</a>
+                    </li>
+                </ul>
+            </li>
+        {% endif %}
+
+            {% if isSuperManager == 1 or "AdminBusinessLine" in permissionKeys or "AdminModuleManage" in permissionKeys or "AdminBusinessLineModule" in permissionKeys or "AdminSource" in permissionKeys or "AdminConfigService" in permissionKeys or "AdminConfigURI" in permissionKeys or "AdminJiraModule" in permissionKeys or "AdminModulePlatform" in permissionKeys or "AdminJiraBusinessLine" in permissionKeys or "AdminJiraBusinessLinePlatform" in permissionKeys or "AdminConfigHttp" in permissionKeys or "AdminExePython" in permissionKeys or "AdminStandardTask" in permissionKeys or "AdminOpenApiBusinessLine" in permissionKeys or "AdminOpenApiUri" in permissionKeys or "AdminUnitTestService" in permissionKeys or "AdminUiMobileServer" in permissionKeys or "AdminVersionManage" in permissionKeys or "AdminStandardEnv" in permissionKeys or "AdminCacheManage" in permissionKeys or "AdminWebportalBusinessLine" in permissionKeys %}
+            <li class="{{ businessLine_check }} {{ moduleManage_check }} {{ businessLine_module_check }} {{ source_check }} {{ configService_check }} {{ configURI_check }} {{ jiraModule_check }} {{ modulePlatform_check }} {{ jiraBusinessLine_check }} {{ jiraBusinessLinePlatform_check }} {{ configHttp_check }} {{ exePython_check }} {{ standardTask_check }} {{ openApiBusinessLine_check }} {{ openApiUri_check }} {{ unitTestService_check }} {{ uiMobileServer_check }} {{ versionManage_check }} {{ standardEnv_check }} {{ cacheManage_check }} {{ webportalBusinessLine_check }} {{ adminServerConf_check }} treeview">
+                <a href="#">
+                    <i class="fa fa-dashboard"></i> <span>平台配置管理</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    {% if "AdminBusinessLine" in permissionKeys %}
+                        <li class="{{ businessLine_check }}"><a href="{% url 'admin_business_line_check' %}"><i class="fa fa-circle-o"></i>业务线管理</a></li>
+                    {% endif %}
+                    {% if "AdminModuleManage" in permissionKeys %}
+                        <li class="{{ moduleManage_check }}"><a href="{% url 'admin_module_manage_check' %}"><i class="fa fa-circle-o"></i>模块管理</a></li>
+                    {% endif %}
+                    {% if "AdminBusinessLineModule" in permissionKeys %}
+                        <li class="{{ businessLine_module_check }}"><a href="{% url 'admin_businessLine_module_check' %}"><i class="fa fa-circle-o"></i>业务线模块管理</a></li>
+                    {% endif %}
+                    {% if "AdminSource" in permissionKeys %}
+                        <li class="{{ source_check }}"><a href="{% url 'admin_source_check' %}"><i class="fa fa-circle-o"></i>来源管理</a></li>
+                    {% endif %}
+                    <hr style="margin: 0px 0px 0px 0px "/>
+                    {% if "AdminConfigService" in permissionKeys %}
+                        <li class="{{ configService_check }}"><a href="{% url 'admin_configService_check' %}"><i class="fa fa-circle-o"></i>数据服务器管理</a></li>
+                    {% endif %}
+                    {% if "AdminConfigHttp" in permissionKeys %}
+                        <li class="{{ configHttp_check }}"><a href="{% url 'admin_configHttp_check' %}"><i class="fa fa-circle-o"></i>环境配置管理</a></li>
+                    {% endif %}
+                    {% if "AdminConfigURI" in permissionKeys %}
+                        <li class="{{ configURI_check }}"><a href="{% url 'admin_configURI_check' %}"><i class="fa fa-circle-o"></i>服务URI管理</a></li>
+                    {% endif %}
+                    <hr style="margin: 0px 0px 0px 0px "/>
+                    {% if isSuperManager == 1 %}
+                        <li class="{{ adminServerConf_check }}"><a href="{% url 'admin_service_conf_page' %}"><i class="fa fa-circle-o"></i>执行服务管理</a></li>
+                    {% endif %}
+
+
+
+                    {% if "AdminExePython" in permissionKeys %}
+                        <li class="{{ exePython_check }}"><a href="{% url 'admin_exePython_check' %}"><i class="fa fa-circle-o"></i>执行python代码管理</a></li>
+                    {% endif %}
+                    {% if "AdminStandardTask" in permissionKeys %}
+                        <li class="{{ standardTask_check }}"><a href="{% url 'admin_standardTask_check' %}"><i class="fa fa-circle-o"></i>标准任务版本管理</a></li>
+                    {% endif %}
+
+
+                    {% if "AdminUiMobileServer" in permissionKeys %}
+                        <li class="{{ uiMobileServer_check }}"><a href="{% url 'admin_uiMobileServer_check' %}"><i class="fa fa-circle-o"></i>ui移动端服务管理</a></li>
+                    {% endif %}
+                    {% if "AdminVersionManage" in permissionKeys %}
+                        <li class="{{ versionManage_check }}"><a href="{% url 'admin_versionManage_check' %}"><i class="fa fa-circle-o"></i>版本管理</a></li>
+                    {% endif %}
+
+{#                    {% if "AdminCacheManage" in permissionKeys %}#}
+{#                        <li class="{{ cacheManage_check }}"><a href="{% url 'admin_cacheManage_check' %}"><i class="fa fa-circle-o"></i>缓存管理</a></li>#}
+{#                    {% endif %}#}
+                    <hr style="margin: 0px 0px 0px 0px "/>
+
+                    {% if "AdminJiraModule" in permissionKeys %}
+                        <li class="{{ jiraModule_check }}"><a href="{% url 'admin_jiraModule_check' %}"><i class="fa fa-circle-o"></i>jira模块管理</a></li>
+                    {% endif %}
+                    {% if "AdminModulePlatform" in permissionKeys %}
+                        <li class="{{ modulePlatform_check }}"><a href="{% url 'admin_modulePlatform_check' %}"><i class="fa fa-circle-o"></i>jira模块和平台关联管理</a></li>
+                    {% endif %}
+                    {% if "AdminJiraBusinessLine" in permissionKeys %}
+                        <li class="{{ jiraBusinessLine_check }}"><a href="{% url 'admin_jiraBusinessLine_check' %}"><i class="fa fa-circle-o"></i>jira业务线管理</a></li>
+                    {% endif %}
+                    {% if "AdminJiraBusinessLinePlatform" in permissionKeys %}
+                        <li class="{{ jiraBusinessLinePlatform_check }}"><a href="{% url 'admin_jiraBusinessLinePlatform_check' %}"><i class="fa fa-circle-o"></i>jira业务线和平台关联管理</a></li>
+                    {% endif %}
+                    {% if "AdminOpenApiBusinessLine" in permissionKeys %}
+                        <li class="{{ openApiBusinessLine_check }}"><a href="{% url 'admin_openApiBusinessLine_check' %}"><i class="fa fa-circle-o"></i>openApi业务线管理</a></li>
+                    {% endif %}
+                    {% if "AdminOpenApiUri" in permissionKeys %}
+                        <li class="{{ openApiUri_check }}"><a href="{% url 'admin_openApiUri_check' %}"><i class="fa fa-circle-o"></i>openApi_Uri管理</a></li>
+                    {% endif %}
+                    {% if "AdminUnitTestService" in permissionKeys %}
+                        <li class="{{ unitTestService_check }}"><a href="{% url 'admin_unitTestService_check' %}"><i class="fa fa-circle-o"></i>unitTestService管理</a></li>
+                    {% endif %}
+                    {% if "AdminWebportalBusinessLine" in permissionKeys %}
+                        <li class="{{ webportalBusinessLine_check }}"><a href="{% url 'admin_webportalBusinessLine_line_check' %}"><i class="fa fa-circle-o"></i>webportal业务线管理</a></li>
+                    {% endif %}
+                    {% if "AdminStandardEnv" in permissionKeys %}
+                        <li class="{{ standardEnv_check }}"><a href="{% url 'admin_standardEnv_check' %}"><i class="fa fa-circle-o"></i>通过率环境版本配置管理</a></li>
+                    {% endif %}
+                    </ul>
+                </li>
+            {% endif %}
+
+
+
+         <li class="{{ adminUserChangeLog_check }} {{ userLog_check }} {{dataStorage_check}} treeview">
+                <a href="#">
+                    <i class="fa fa-dashboard"></i> <span>操作记录管理</span>
+                    <span class="pull-right-container">
+                        <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+
+                <ul class="treeview-menu">
+                <li class="{{ adminUserChangeLog_check }}"><a href="{% url 'admin_changeLog_check' %}"><i class="fa fa-circle-o"></i>操作记录管理</a></li>
+                <li class="{{ userLog_check }}"><a href="{% url 'admin_userLog_check' %}"><i class="fa fa-circle-o"></i>用户操作日志管理</a></li>
+                </ul>
+
+            </li>
+      </ul>
+
+
+    </section>
+
+    <!-- /.sidebar -->
+
+</aside>

@@ -1,0 +1,43 @@
+<php> echo file_get_contents("http://localhost".(C('SERVER_PORT')==80?'':":".C('SERVER_PORT'))."/System/main/inithead"); </php>
+<div style="height: 18px"></div>
+<!-- Main content starts -->
+<link rel="stylesheet" href="/platform_resource/style/useraudit.css">
+
+<div class="content">
+    <!-- Sidebar -->
+    <php> echo file_get_contents("http://localhost".(C('SERVER_PORT')==80?'':":".C('SERVER_PORT'))."/System/main/initmenu?open=audit"); </php>
+    <!-- Sidebar ends -->
+    <!-- Main bar -->
+    <div class="mainbar">
+        <!-- Page heading -->
+        <div class="page-head">
+            <h2 class="pull-left"><i class="icon-home"></i> <a href="/System/audit">用户管理</a>&nbsp;&nbsp;用户恢复 </h2>
+            <div class="clearfix"></div>
+        </div>
+        <!-- Page heading ends -->
+        <!-- Matter -->
+        <div class="matter">
+            <div class="container">
+                <foreach name="data" item="vo" >
+                    <if condition="$vo['state'] == 0 ">
+                        <a href="/System/audit/recoverUser?loginName={$vo['loginName']}">
+                            <button type="button" class="button red ">
+                                <p style="font-size: 30px">
+                                    {$vo['userName']}
+
+                                </p>
+                                {$vo['type']==0?'无角色':''}{$vo['type']==1?'开发人员':''}{$vo['type']==2?'测试人员':''}
+
+                            </button>
+                        </a>
+                    </if>
+                </foreach>
+
+
+            </div>
+        </div>
+        <!-- Matter ends -->
+    </div>
+</div>
+<!-- Content ends -->
+<php> echo file_get_contents("http://localhost".(C('SERVER_PORT')==80?'':":".C('SERVER_PORT'))."/System/main/initfoot"); </php>

@@ -1,0 +1,1759 @@
+{% include 'InterfaceTest/head.html'%}
+<!-- Main content starts -->
+<style>
+    tr{cursor: pointer;}
+    .black_overlay{
+        display: none;
+        position: absolute;
+        top: 0%%;
+        left: 0%%;
+        width: 100%%;
+        height: 100%%;
+        background-color: black;
+        z-index:1001;
+        -moz-opacity: 0.8;
+        opacity:.80;
+        filter: alpha(opacity=80);
+    }
+    .white_content {
+        display: none;
+        position: absolute;
+        top: 10%%;
+        left: 10%%;
+        width: 80%%;
+        height: 80%%;
+        border: 10px solid ;
+        background-color: white;
+        z-index:1002;
+        overflow: auto;
+    }
+
+</style>
+    <!-- Sidebar ends -->
+    <!-- Main bar -->
+<div class="content">
+    <!-- Sidebar -->
+   {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Sidebar ends -->
+    <!-- Main bar -->
+    <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <div class="col-xs-12 form-group pull-right top_search">
+                    <h3>{{ text.pageTitle }}</h3>
+                  </div>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                <!--基本信息 -->
+                  <div class="x_panel">
+                  <div class="x_title">
+                    <h2>基本信息</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <div  data-parsley-validate class="form-horizontal form-label-left">
+                      <div>
+                      </div>
+                        {% if option != "add" %}
+                            {% if option != "copy" %}
+                                <div class="form-group" >
+                                    <label class="control-label col-md-min-1">任务编号</label>
+                                    <div class="col-lg-8">
+                                        <input type="text" id="taskId" class="form-control col-md-7 col-xs-12" disabled value="">
+                                    </div>
+                                </div>
+                                {% else %}
+                            {% endif %}
+                        {% endif %}
+                      <div class="form-group">
+                        <label class="control-label col-md-min-1">任务名称<span class="required">*</span>
+                        </label>
+                        <div class="col-lg-8">
+                          <input  id="name" placeholder="请输入任务名称" type="text"  required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-min-1"  for="last-name">任务描述 <span class="required">*</span>
+                        </label>
+                        <div class="col-lg-8">
+                            <textarea type="text" id="describe" required="required" class="form-control col-md-7 col-xs-12 Fixed-width"
+                            placeholder="请输入任务描述"
+                            ></textarea>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-min-1"  for="last-name">优先级 <span class="required">*</span>
+                        </label>
+                        <div class="col-lg-3" style="width:29.9%;">
+                            <select class="form-control" id="taskLevel">
+                                    <option value="0">高</option>
+                                    <option value="5" selected="selected">中</option>
+                                    <option value="9">低</option>
+                            </select>
+                        </div>
+                        <label class="control-label col-md-min-1"  for="last-name">持续集成<span class="required">*</span>
+                        </label>
+                        <div class="col-lg-3" style="width:29.9%;">
+                            <select class="form-control" id="isCI">
+                                    <option value="1">是</option>
+                                    <option value="0">否</option>
+                            </select>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-min-1">默认邮件列表<span class="required"></span>
+                        </label>
+                        <div class="col-lg-8">
+                          <input id="emailList" placeholder="请输入默认邮件列表" type="text" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="ln_solid"></div>
+
+                  </div>
+                </div>
+                <!--优先变量-->
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>优先变量</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <div  data-parsley-validate class="form-horizontal form-label-left">
+                      <div class="form-group">
+                           <ul class="nav nav-tabs bar_tabs" style="margin-bottom: 5px">
+                                                <li role="presentation" class="active">
+                                                    <a href="#commonPriorityVal" role="tab" data-toggle="tab" aria-expanded="true">
+                                                        通用变量
+                                                    </a>
+                                                </li>
+                                                {% for sc in service %}
+                                                    {% if forloop.counter0  < 5 %}
+                                                        <li><a href="#PriorityHREF_{{ sc.serviceConfKey }}"
+                                                               title="{{ sc.serviceIncludeHTTPConf }}"
+                                                               role="tab" data-toggle="tab" aria-expanded="true">{{ sc.alias }}</a>
+                                                        </li>
+                                                    {% endif %}
+                                                {% endfor %}
+
+                                                <li class="dropdown">
+                                                    <a href="#" class="dropdown-toggle"
+                                                       data-toggle="dropdown"> 变量环境 <b
+                                                            class="caret"></b></a>
+                                                    <ul class="dropdown-menu" role="menu"
+                                                        aria-labelledby="myTabDrop1">
+                                                        {% for sc in service %}
+                                                            {% if forloop.counter0 >= 5 %}
+                                                                <li>
+                                                                    <a href="#PriorityHREF_{{ sc.serviceConfKey }}"
+                                                                       title="{{ sc.serviceIncludeHTTPConf }}"
+                                                                       data-toggle="tab">{{ sc.alias }}</a>
+                                                                </li>
+                                                            {% endif %}
+                                                        {% endfor %}
+                                                    </ul>
+                                                </li>
+                                            </ul>
+                                            <div class="tab-content">
+                                                <div class="tab-pane fade active in"
+                                                     id="commonPriorityVal">
+                                                        <textarea type="text"
+                                                                  style="height: 100px;max-width: 100%"
+                                                                  class="form-control"
+                                                                  id="commonPriorityInput"
+                                                                  placeholder="请输入通用优先变量"></textarea>
+                                                </div>
+                                                {% for s in service %}
+                                                    <div class="tab-pane fade"
+                                                         id="PriorityHREF_{{ s.serviceConfKey }}">
+                                                            <textarea type="text"
+                                                                      style="height: 100px;max-width: 100%"
+                                                                      class="form-control"
+                                                                      id="priorityVal_{{ s.serviceConfKey }}"
+                                                                      name="PriorityValInput"
+                                                                      placeholder="请输{{ s.alias }}优先变量"></textarea>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                      </div>
+
+                    </div>
+                    <div class="ln_solid"></div>
+
+                  </div>
+                </div>
+               <!--接口页面-->
+                <div id="getCaseList" class="white_content x_panel" style="display: none;width:85%;margin-top: -35px" >
+                  <div class="x_title">
+                    <h2>选择单接口</h2>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <div class="x_content">
+
+                    <div class="form-group">
+                        <div  id="checkOption">
+                            <span class="cat-text" style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>
+                        </div>
+
+
+{#                        <span class="tag"><span>sales&nbsp;&nbsp;</span><a href="#" title="Removing tag">x</a></span>#}
+{#                        <span class="tag"><span>sales&nbsp;&nbsp;</span><a href="#" title="Removing tag">x</a></span>#}
+                    </div>
+                      <br>
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist" style="margin-bottom: 0px">
+                        <li role="presentation" class="active"><a href="#caseFounder" role="tab" data-toggle="tab" aria-expanded="true">接口创建人</a>
+                        </li>
+                          <li role="presentation" class=""><a href="#caseId" role="tab" data-toggle="tab" aria-expanded="true">接口编号</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#caseName" role="tab" id="profile-tab1" data-toggle="tab" aria-expanded="false">接口名称</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#caseDescribe" role="tab" id="profile-tab21" data-toggle="tab" aria-expanded="false">接口描述</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#uri" role="tab"  data-toggle="tab" aria-expanded="false">请求URI</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#caseInterFace" role="tab" id="profile-tab3" data-toggle="tab" aria-expanded="false">接口URL</a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#"  class="dropdown-toggle" data-toggle="dropdown"> {{ groupLevel1 }} <b class="caret"></b></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1">
+                                 <li><a href="#caseBusinessLineTab" id="caseBusinessLineCheckTab"  tabindex="-1" name="tabExecResult" data-toggle="tab" onclick="editBusinessLineCheckTab('')">&nbsp;</a></li>
+                                {% for bl in checkBusinessLine %}
+                                    <li><a href="#case{{ bl.bussinessLineName }}tab"  tabindex="-1" name="tabExecResult" data-toggle="tab" onclick="editBusinessLineCheckTab('{{ bl.bussinessLineName }}')">{{ bl.bussinessLineName }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li role="presentation" class=""><a href="#caseModuleTab" role="tab" id="profile-tab4" data-toggle="tab" aria-expanded="false">{{ groupLevel2 }}</a>
+                        </li>
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="caseFounder" aria-labelledby="home-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="caseFounderInput" onkeypress="EnterPress(event)" placeholder="请输入接口创建人">
+                            </div>
+                              <div class="col-lg-4" >
+                                  <span style="font-size: 15px;margin-top: 5px">快捷条件: </span>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="inputVal('all')">所有</button>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="inputVal('{{ request.session.userName }}')">{{ request.session.userName }}</button>
+                              <button id="hover-a" type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="createPeople(0)">其他</button>
+                                  <div id="names" style="margin-top: 10px">
+                            </div>
+                                  </div>
+
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="caseName" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="caseNameInput" onkeypress="EnterPress(event)" placeholder="请输入接口名称" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="caseId" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="interfaceIdInput" onkeypress="EnterPress(event)" placeholder="请输入接口编号" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="caseDescribe" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="caseDescribeInput" onkeypress="EnterPress(event)" placeholder="请输入接口描述">
+                            </div>
+                          </div>
+                        </div>
+                          <div role="tabpanel" class="tab-pane fade" id="uri" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="uriInput" onkeypress="EnterPress(event)" placeholder="请输入请求的URI">
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="caseInterFace" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="caseInterFaceInput"  onkeypress="EnterPress(event)" placeholder="请输入接口URL" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="caseBusinessLineTab" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control"   onkeypress="EnterPress(event)" placeholder="请选择{{ groupLevel1 }}"  disabled >
+                            </div>
+                          </div>
+                        </div>
+                          {% for bl in checkBusinessLine %}
+                             <div role="tabpanel" class="tab-pane fade" id="case{{ bl.bussinessLineName }}tab" aria-labelledby="profile-tab">
+                              <div class="form-group">
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control"   onkeypress="EnterPress(event)" value="{{ bl.bussinessLineName }}" disabled >
+                                </div>
+                              </div>
+                            </div>
+                          {% endfor %}
+
+                        <div role="tabpanel" class="tab-pane fade" id="caseModuleTab" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-3">
+                                <select class="form-control" onchange="$('#caseModuleInput').val($(this).val()).change()">
+                                    <option>&nbsp;</option>
+                                    {% for m in checkModules %}
+                                        <option>{{ m.moduleName }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-lg-5">
+                                <input type="text" class="form-control" id="caseModuleInput" onchange="editCheckVal()" onkeypress="EnterPress(event)" placeholder="请选择或输入{{ groupLevel2 }}">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="taskList" class="form-group"></div>
+                        <div class="widget-foot">
+                            <button class="btn btn-info pull-right" style="margin-left: 20px" onclick="closeInterfaceList()">关闭</button>
+                            <button class="btn btn-success pull-right" style="margin-left: 40px" onclick="showSaveInterface()">保存</button>
+                            <div class="clearfix" ></div>
+                        </div>
+                  </div>
+
+                  </div>
+                </div>
+                <!--用例页面-->
+                <div id="getTestCaseList" class="white_content x_panel" style="display: none;width:85%;margin-top: -35px" >
+                  <div class="x_title">
+                    <h2>选择业务流</h2>
+
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <div class="x_content">
+
+                    <div class="form-group">
+                        <div  id="checkOptionsTestCase">
+                            <span class="cat-text" style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>
+                        </div>
+
+
+{#                        <span class="tag"><span>sales&nbsp;&nbsp;</span><a href="#" title="Removing tag">x</a></span>#}
+{#                        <span class="tag"><span>sales&nbsp;&nbsp;</span><a href="#" title="Removing tag">x</a></span>#}
+                    </div>
+                      <br>
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist" style="margin-bottom: 0px">
+                        <li role="presentation" class="active"><a href="#TestCaseFounder" role="tab" data-toggle="tab" aria-expanded="true">用例创建人</a>
+                        </li>
+                          <li role="presentation" class=""><a href="#checkTestCaseId" role="tab" data-toggle="tab" aria-expanded="true">用例编号</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#TestCaseName" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">用例名称</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#TestCaseDescribe" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">用例描述</a>
+                        </li>
+                        </li>
+                           <li class="dropdown">
+                            <a href="#"  class="dropdown-toggle" data-toggle="dropdown"> {{ groupLevel1 }} <b class="caret"></b></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1">
+                                 <li><a href="#TestCaseBusinessLineTab" id="businessLineCheckTabTestCase"  tabindex="-1" name="tabExecResult" data-toggle="tab" onclick="editBusinessLineCheckTabTestCase('')">&nbsp;</a></li>
+                                {% for bl in checkBusinessLine %}
+                                    <li><a href="#TestCase{{ bl.bussinessLineName }}tab"  tabindex="-1" name="tabExecResult" data-toggle="tab" onclick="editBusinessLineCheckTabTestCase('{{ bl.bussinessLineName }}')">{{ bl.bussinessLineName }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li role="presentation" class=""><a href="#moduleTab" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">{{ groupLevel2 }}</a>
+                        </li>
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="TestCaseFounder" aria-labelledby="home-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="TestCaseFounderInput" onkeypress="EnterPressTestCase(event)" placeholder="请输入用例创建人">
+                            </div>
+                              <div class="col-lg-4" >
+                                  <span style="font-size: 15px;margin-top: 5px">快捷条件: </span>
+                                  <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="TestCaseInputVal('all')">所有</button>
+                                  <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="TestCaseInputVal('{{ request.session.userName }}')">{{ request.session.userName }}</button>
+                                  <button id="hover-aTestCase" type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="createPeopleTestCase(0)">其他</button>
+                                  <div id="TestCaseNames" style="margin-top: 10px"></div>
+                              </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="TestCaseName" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="TestCaseNameInput" onkeypress="EnterPressTestCase(event)" placeholder="请输入用例名称" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="checkTestCaseId" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="TestCaseIdInput" onkeypress="EnterPressTestCase(event)" placeholder="请输入用例编号" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="TestCaseDescribe" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="TestCaseDescribeInput" onkeypress="EnterPressTestCase(event)" placeholder="请输入用例描述">
+                            </div>
+                          </div>
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane fade" id="TestCaseBusinessLineTab" aria-labelledby="profile-tab">
+                              <div class="form-group">
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control"   onkeypress="EnterPress(event)" placeholder="请选择{{ groupLevel1 }}"  disabled >
+                                </div>
+                              </div>
+                        </div>
+                          {% for bl in checkBusinessLine %}
+                             <div role="tabpanel" class="tab-pane fade" id="TestCase{{ bl.bussinessLineName }}tab" aria-labelledby="profile-tab">
+                              <div class="form-group">
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control"   onkeypress="EnterPress(event)" value="{{ bl.bussinessLineName }}" disabled >
+                                </div>
+                              </div>
+                            </div>
+                          {% endfor %}
+                        <div role="tabpanel" class="tab-pane fade" id="moduleTab" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-3">
+                                <select class="form-control" onchange="$('#TestCaseModuleInput').val($(this).val()).change()">
+                                    <option>&nbsp;</option>
+                                    {% for m in checkModules %}
+                                        <option>{{ m.moduleName }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-lg-5">
+                                <input type="text" class="form-control" id="TestCaseModuleInput" onchange="editCheckValTestCase()" onkeypress="EnterPress(event)" placeholder="请选择或输入{{ groupLevel2 }}">
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                    <div id="TestCaseListPage" class="form-group"></div>
+                        <div class="widget-foot">
+                            <button class="btn btn-info pull-right" style="margin-left: 20px" onclick="closeTestCaseList()">关闭</button>
+                            <button class="btn btn-success pull-right" style="margin-left: 40px" onclick="showSaveTestCase()">保存</button>
+                            <div class="clearfix" ></div>
+                        </div>
+                  </div>
+
+                  </div>
+                </div>
+                    <div class="x_panel">
+                  <div class="x_title">
+                    <h2>执行详情</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <div  data-parsley-validate class="form-horizontal form-label-left">
+                      <div>
+                      </div>
+
+                      <div class="form-group" style="margin-bottom: 0px">
+
+                            <button  id="openTestCaseDivBtn" type="button" class="btn btn-primary btn-sm" style="border-color:#428bca;float: right;margin-right: 30%;margin-top: 5px" onclick="openTestCaseDiv('getTestCaseList','bgdiv')">选择业务流</button>
+                            <button  id="openDivBtn" type="button" class="btn btn-primary btn-sm" style="margin-right: 1%;float: right;border-color:#428bca;margin-top: 5px"  onclick="openDiv('getCaseList','bgdiv')">选择单接口</button>
+                      </div>
+                      <div class="form-group">
+                          <ul id="interfaceTab" class="nav nav-tabs bar_tabs" style="margin-bottom: 5px">
+                                                        <li class="active"><a href="#InterfacePage" data-toggle="tab">单接口列表</a></li>
+                                                        <li><a href="#testCasePage" data-toggle="tab">业务流列表</a></li>
+                                                    </ul>
+
+                                                    <div id="taskTabDiv" class="tab-content">
+                                                        <div class="tab-pane fade active in" id="InterfacePage" style="margin-left: 10px;margin-right: 10px">
+                                                            <table id="sort" class="table table-striped table-bordered table-hover" style="table-layout:fixed;width:100%;word-break:break-all;">
+                                                                <thead>
+                                                                    <tr style="color: snow" bgcolor="#2A3F54">
+                                                                        <th style="width:2.5%;">序号</th>
+                                                                        <th style="width:10%;">接口编号</th>
+                                                                        <th style="width:10%;">接口名称</th>
+                                                                        <th style="width:20%;">接口描述</th>
+                                                                        <th style="width:20%;">接口URL</th>
+                                                                        <th style="width:10%;">创建人</th>
+                                                                        <th style="width:11%;">操作</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="saveInterfaceList" >
+                                                                <td id="AllInterfaceTitle" colspan="7" align="center" >没有选择任何接口</td>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                        <div class="tab-pane fade"  id="testCasePage" style="margin-left: 10px;margin-right: 10px">
+                                                             <table id="testCaseSort"  class="table table-striped table-bordered table-hover" style="table-layout:fixed;width:100%;word-break:break-all;">
+                                                                <thead>
+                                                                <tr style="color: snow" bgcolor="#2A3F54">
+                                                                    <th style="width:2.5%;">序号</th>
+                                                                    <th style="width:10%;">用例编号</th>
+                                                                    <th style="width:10%;">用例名称</th>
+                                                                    <th style="width:20%;">用例描述</th>
+                                                                    <th style="width:20%;">步骤数量</th>
+                                                                    <th style="width:10%;">创建人</th>
+                                                                    <th style="width:11%;">操作</th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody id="saveTestCaseList" >
+                                                                <td id="AllTestCaseTitle" colspan="7" align="center" >没有选择任何用例</td>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                      </div>
+
+                    </div>
+                    <div class="ln_solid"></div>
+
+                  </div>
+
+                </div>
+              </div>
+                    {% if option == "add" and 'add' in  permissionsList %}
+                        <button style="margin-left: 60%;width: 8%" type="button" class="btn btn-success btn-lg" onclick="saveTask()">保存</button>
+                    {% elif option == "copy" and "copy" in permissionsList %}
+                        <a href="javascript:void(0);">
+                            <button style="margin-left: 60%" type="button" class="btn btn-success btn-lg" onclick="saveTask()">保存</button>
+                        </a>
+                    {% elif option == "edit" and "edit" in permissionsList %}
+                            <button style="margin-left: 60%" type="button" class="btn btn-success btn-lg" onclick="saveTask()">保存</button>
+                    {% endif %}
+            </div>
+          </div>
+    </div>
+    <!-- Content ends -->
+    <script type="text/javascript">
+
+        function initJudgeVersion() {
+            if ("{{ request.session.version }}" !== "CurrentVersion") {
+                alert("请注意！！！现在为历史版本[{{ request.session.version }}]页面！！！");
+            }
+        }
+        initJudgeVersion();
+        var interfacePage = {{ interfacePage }};
+        var testCasePage = {{ testCasePage }};
+        //限制一共只能勾一千 条
+        var interfaceNum = 0;
+        var interfaceNumMax = 2000;
+
+        $(document).ready(function(){
+            var fixHelperModified = function(e, tr) {
+                    var $originals = tr.children();
+                    var $helper = tr.clone();
+                    $helper.children().each(function(index) {
+                        $(this).width($originals.eq(index).width())
+                    });
+                    return $helper;
+                },
+                updateIndex = function() {
+                    sortTable("interfaceTr");
+                };
+            $("#sort tbody").sortable({
+                helper: fixHelperModified,
+                stop: updateIndex
+            }).disableSelection();
+        });
+
+
+        //弹出隐藏层
+        function openDiv(show_div,bg_div){
+
+            //弹出详情层
+            obshowdiv =  $('#'+show_div);
+            objclosediv = $('#'+show_div+'> label');
+            obbgdiv = $('#'+bg_div);
+            offtop=obshowdiv.offset().top;
+            offleft=obshowdiv.offset().left;
+            obshowdiv.css("top",offtop+40+"px");
+            objclosediv.css("top","40px");
+            objclosediv.css("left","90%%");
+            obshowdiv.show();
+            obbgdiv.show();
+            docheight = $(document).height();
+            obbgdiv.height(docheight);
+            $('html,body').animate({scrollTop:offtop}, 800);
+            selected();
+            $("#surprise3").click();
+            $("#openDivBtn").attr("disabled", true);
+            interfaceListIsChecked();
+
+        }
+
+
+        //关闭弹出层
+        function CloseDiv(show_div,bg_div){
+            $("#openDivBtn").attr("disabled", false);
+            $("#openTestCaseDivBtn").attr("disabled", false);
+            $('#'+show_div).hide();
+            $('#'+bg_div).hide();
+        }
+
+        var checkVals =  {"caseFounder":"{{ request.session.userName }}","interfaceId":"","title":"","casedesc":"","url":""};
+        function clearChecked() {
+            $("#caseFounderInput").val('');
+            $("#interfaceIdInput").val('') ;
+            $("#caseNameInput").val('') ;
+            $("#caseDescribeInput").val('');
+            $("#uriInput").val('');
+            $("#caseInterFaceInput").val('');
+            $("#caseBusinessLineCheckTab").click();
+            $("#caseModuleInput").val('');
+
+            editCheckVal();
+        }
+
+        function editBusinessLineCheckTab(name) {
+            checkVals["businessLine"] = name;
+            editCheckVal();
+        }
+
+        function editCheckVal() {
+
+            //接口创建人
+            if($("#caseFounderInput").val()==''){
+                checkVals['caseFounder'] = '{{ request.session.userName }}';
+            }else if($("#caseFounderInput").val()=='all'){
+                checkVals['caseFounder'] = '';
+            }else{
+                checkVals['caseFounder'] =$("#caseFounderInput").val() ;
+            }
+
+            //接口Id
+            if($("#interfaceIdInput").val()==''){
+                checkVals['interfaceId'] = '';
+            }else {
+                checkVals['interfaceId'] =$("#interfaceIdInput").val() ;
+            }
+
+            //接口名称
+            if($("#caseNameInput").val()==''){
+                checkVals['title'] = '';
+            }else {
+                checkVals['title'] =$("#caseNameInput").val() ;
+            }
+
+
+            //接口描述
+            if ($("#caseDescribeInput").val()==''){
+                checkVals['casedesc']='';
+            }else {
+                checkVals['casedesc']=$("#caseDescribeInput").val();
+            }
+
+            //服务
+            if ($("#uriInput").val()==''){
+                checkVals['uri']='';
+            }else {
+                checkVals['uri']=$("#uriInput").val();
+            }
+            //服务
+            if ($("#caseInterFaceInput").val()==''){
+                checkVals['url']='';
+            }else {
+                checkVals['url']=$("#caseInterFaceInput").val();
+            }
+            if ($("#caseModuleInput").val()==''){
+                checkVals['module']='';
+            }else {
+                checkVals['module']=$("#caseModuleInput").val();
+            }
+
+            selected();
+        }
+
+        function inputVal(val) {
+            $("#caseFounderInput").val(val);
+            editCheckVal();
+            interfaceListIsChecked();
+        }
+
+        function checkOptions() {
+
+            var htmls = ' <span class="cat-text"style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>';
+            var num =0;
+            var writeNum = 0;
+
+            for(var item in checkVals){
+                if(checkVals[item] != '' && typeof(checkVals[item]) != "undefined"){
+                    num ++;
+                }
+            }
+            for(var item in checkVals){
+                if(checkVals[item] != '' && typeof(checkVals[item]) != 'undefined'){
+                    var key = '';
+                    if(item == 'caseFounder'){
+                        key = '接口创建人';
+                    }
+                    if(item == 'interfaceId'){
+                        key = '接口编号';
+                    }
+                    if(item == 'title'){
+                        key = '接口名称';
+                    }
+                    if(item == 'casedesc'){
+                        key = '接口描述';
+                    }
+                    if(item == 'uri'){
+                        key = '接口URI';
+                    }
+                    if(item == 'url'){
+                        key = '接口URL';
+                    }
+                    if(item == "businessLine"){
+                        key = '{{ groupLevel1 }}';
+                    }
+                    if(item == "module"){
+                        key = '{{ groupLevel2 }}';
+                    }
+                    writeNum ++ ;
+                   {% comment %} if(writeNum != num){
+                        htmls = htmls+'<a href="#" onclick="delCheckOptions(\''+item+'\')"  data-url="nav" data-key="ppath" style="font-size: 15px;text-decoration:none" >'+key+'：'+checkVals[item]+' <button class="btn btn-xs" style="background-color: #dddddd"><i style="color: #5e5e5e" class="icon-remove"></i> </button> </a><span style="font-size: 15px">-></span> '
+                    }else{
+                        htmls = htmls+'<a href="#" onclick="delCheckOptions(\''+item+'\')" data-url="nav" data-key="ppath" style="font-size: 15px;text-decoration:none" >'+key+'：'+checkVals[item]+' <button class="btn btn-xs" style="background-color: #dddddd"><i style="color: #5e5e5e" class="icon-remove"></i> </button> </a> ';
+                    }{% endcomment %}
+                    htmls = htmls+'<span class="tag"><span>'+key+'：'+checkVals[item]+'&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delCheckOptions(\''+item+'\')">x</a></span> '
+
+                }
+            }
+            htmls = htmls +'<span class="tag" style="float: right;background-color: #ff7575"><span>默认筛选&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="clearChecked()">x</a></span>';
+
+{#            htmls = htmls +'<a href="#" onclick="clearChecked()" style="font-size: 15px;text-decoration:none;float:right;">[默认筛选]</a>';#}
+            $('#checkOption').html(htmls);
+        }
+
+
+        function EnterPress(event){ //传入 event
+            var e = event || window.event;
+            if(e.keyCode == 13){
+                editCheckVal();
+
+            }
+        }
+
+        function delCheckOptions(key) {
+            if(key=='caseFounder'){
+                $("#caseFounderInput").val('all');
+            }
+            if(key=='interfaceId'){
+                $("#interfaceIdInput").val('');
+            }
+            if(key=='title'){
+                $("#caseNameInput").val('');
+            }
+            if(key=='casedesc'){
+                $("#caseDescribeInput").val('');
+            }
+            if(key=='uri'){
+                $("#uriInput").val('');
+            }
+            if(key=='url'){
+                $("#caseInterFaceInput").val('');
+            }
+            if(key == "businessLine"){
+                $("#caseBusinessLineCheckTab").click();
+            }
+            if(key == "module"){
+                $("#caseModuleInput").val('');
+            }
+            editCheckVal();
+        }
+
+        function pageCall(pageNum) {
+            if($("#getTestCaseList").css("display") == "block"){
+{#                var data = {checkVal : encodeURI(JSON.stringify(checkValsTestCase)),orderBy : testCaseOrderBy};#}
+{#                htmlobj=$.ajax({url:resultUrl,async:false,data:data,type:"POST"});#}
+{#                $("#TestCaseListPage").html(htmlobj.responseText);#}
+{#                testCaseOrderByShow();#}
+{#                testCaseListIsChecked();#}
+                testCasePage = pageNum;
+                selecetdTestCase()
+
+            }else{
+{#                var data = {checkVal : encodeURI(JSON.stringify(checkVals)),orderBy : orderBy};#}
+{#                htmlobj=$.ajax({url:resultUrl,async:false,data:data,type:"POST"});#}
+{##}
+{#                $("#taskList").html(htmlobj.responseText);#}
+{#                orderByShow();#}
+{#                interfaceListIsChecked();#}
+                interfacePage = pageNum;
+                selected();
+            }
+        }
+
+        //创建时间排序
+        var orderBy = "i.modTime desc , i.id desc";
+        var interfaceNameFlag = "-1";
+        var addTimeFlag = '-1';
+
+        function interfaceOrderByName() {
+            if (interfaceNameFlag == '-1' || interfaceNameFlag == '0') {
+                interfaceNameFlag = '1';
+                addTimeFlag = '-1';
+                modTimeFlag = '-1';
+                //用例名称正序查
+                orderBy = 'i.title asc';
+            } else if (interfaceNameFlag == '1') {
+                interfaceNameFlag = '0';
+                //用例名称倒序查
+                orderBy = 'i.title desc';
+            }
+            selected();
+        }
+
+        function orderByAddTime() {
+            if (addTimeFlag == '-1' || addTimeFlag == '0') {
+                addTimeFlag = '1';
+                modTimeFlag = '-1';
+                interfaceNameFlag = '-1';
+                //创建时间正序查
+                orderBy = 'i.id asc';
+            } else if (addTimeFlag == '1') {
+                addTimeFlag = '0';
+                //创建时间倒序查
+                orderBy = 'i.id desc';
+            }
+            selected();
+        }
+        var modTimeFlag = '-1';
+        //修改时间排序
+        function orderByModTime() {
+            if(modTimeFlag == '-1' || modTimeFlag == '0'){
+                modTimeFlag = '1';
+                addTimeFlag = '-1';
+                interfaceNameFlag = '-1';
+                //修改时间正序查
+                orderBy = 'i.modTime asc , i.id asc';
+            }else if(modTimeFlag == '1' ){
+                modTimeFlag = '0';
+                //修改时间倒序查
+                orderBy = "i.modTime desc , i.id desc";
+            }
+            selected();
+        }
+
+
+        //排序样式显示
+        function orderByShow() {
+            if(addTimeFlag == '0'){
+                $("#addTimeBtn").text('创建时间▼');
+            }else if(addTimeFlag == '1'){
+                $("#addTimeBtn").text('创建时间▲');
+            }
+
+            if(modTimeFlag == '0'){
+                $("#modTimeBtn").text('修改时间▼');
+            }else if(modTimeFlag == '1'){
+                $("#modTimeBtn").text('修改时间▲');
+            }
+            if(interfaceNameFlag == '0'){
+                $("#interfaceNameBtn").text('接口名称▼');
+            }else if(interfaceNameFlag == '1'){
+                $("#interfaceNameBtn").text('接口名称▲');
+            }
+        }
+
+
+        function createPeople(num) {
+            var htmlobj=$.ajax({url:'{% url 'queryPeopleInterfaceByTableName' %}?tbName=tb_http_interface&num='+num,async:false});
+            var value = JSON.parse(htmlobj.responseText).body;
+            var nameVal = "";
+            for(var i = 0;i<value.length;i++){
+                nameVal = nameVal + ' &nbsp <a href="javascript:void(0);" id="hover-a" onclick="inputVal(\''+value[i].userName+'\')"  style="font-size: 15px;text-decoration:none">['+value[i].userName+'('+value[i].count+')]</a>'
+            }
+            if(value.length<3){
+                $("#names").html(nameVal);
+                $("#hover-a").attr('onclick','createPeople('+(0)+')');
+                $("#names").show();
+                return;
+            }else {
+                $("#names").html(nameVal);
+            }
+            $("#hover-a").attr('onclick','createPeople('+(num+1)+')');
+            $("#names").show();
+        }
+
+        function createPeopleTestCase(num) {
+            htmlobj=$.ajax({url:'{% url 'queryPeopleTestCase' %}?num='+num,async:false});
+            var value = JSON.parse(htmlobj.responseText).body;
+
+            var nameVal = "";
+            for(var i = 0;i<value.length;i++){
+            nameVal = nameVal + '<button type="button" class="btn btn-info btn-xs" onclick="TestCaseInputVal(\''+value[i].userName+'\')" >'+value[i].userName+'('+value[i].count+')</button> '
+            }
+            if(value.length<4){
+                $("#TestCaseNames").html(nameVal);
+                $("#hover-aTestCase").attr('onclick','createPeopleTestCase('+(0)+')');
+                $("#TestCaseNames").show();
+                return;
+            }else {
+                $("#TestCaseNames").html(nameVal);
+            }
+
+            $("#hover-aTestCase").attr('onclick','createPeopleTestCase('+(num+1)+')');
+            $("#TestCaseNames").show();
+        }
+
+        function closeInterfaceList() {
+            $("#surprise3").click();
+            CloseDiv("getCaseList", "bgdiv");
+//            auto();
+        }
+
+        var interfaceList = Array();
+        var interfaceData = {};
+        function Checkall() {
+            var checkbox = $("[name='interfaceCheckbox']");
+            if($("#checkboxAll").is(':checked')){
+                checkbox.each(function () {
+                    if(!$(this).is(':checked')){
+                        if(interfaceNum > (interfaceNumMax-1)){
+                            alert("任务最多只能包含"+interfaceNumMax+"个接口调用数量,当前"+interfaceNum);
+                            return false;
+                        }
+                        interfaceNum ++;
+                        interfaceData[$(this).attr("id")] = {};
+                        interfaceData[$(this).attr("id")].name = $(this).parent().next().next().text();
+                        interfaceData[$(this).attr("id")].casedesc = $(this).parent().next().next().next().text();
+                        interfaceData[$(this).attr("id")].url = $(this).parent().next().next().next().next().text();
+                        interfaceData[$(this).attr("id")].caseCheck = $(this).parent().next().next().next().next().next().next().children().html();
+                        interfaceData[$(this).attr("id")].addBy = $(this).parent().next().next().next().next().next().text();
+
+                        interfaceList.push($(this).attr("id"));
+                        $(this).prop("checked",true);
+                    }
+                })
+            }else {
+                checkbox.each(function () {
+                    if($(this).is(':checked')){
+                        interfaceNum --;
+                        interfaceData[$(this).attr("id")] = {};
+                        interfaceList.splice($.inArray($(this).attr("id"),interfaceList),1);
+                        $(this).prop("checked",false);
+                    }
+                });
+            }
+            showInterfaceList();
+        }
+        function showInterfaceList() {
+            $("#interfaceList").text("已选接口:"+interfaceList.join(" ， "));
+        }
+
+        function chechBtn(interfaceId) {
+            if($("#"+interfaceId).is(':checked')){
+                if(interfaceNum > (interfaceNumMax-1)){
+                    alert("任务最多只能包含"+interfaceNumMax+"个接口调用数量,当前"+interfaceNum);
+                    $("#"+interfaceId).prop("checked",false);
+                    return ;
+                }
+                interfaceNum ++;
+                interfaceData[interfaceId] = {};
+                interfaceData[interfaceId].name = $("#"+interfaceId).parent().next().next().text();
+                interfaceData[interfaceId].casedesc =  $("#"+interfaceId).parent().next().next().next().text();
+                interfaceData[interfaceId].url =  $("#"+interfaceId).parent().next().next().next().next().text();
+                interfaceData[interfaceId].caseCheck =  $("#"+interfaceId).parent().next().next().next().next().next().next().children().html();
+                interfaceData[interfaceId].addBy = $("#"+interfaceId).parent().next().next().next().next().next().text();
+                interfaceList.push(interfaceId);
+            }else {
+                interfaceNum --;
+                interfaceData[interfaceId] = {};
+                interfaceList.splice($.inArray(interfaceId,interfaceList),1);
+            }
+            var allFlag = true;
+            var interfaceCheckboxElements = $("[name='interfaceCheckbox']");
+            interfaceCheckboxElements.each(function () {
+                if(!$(this).prop("checked")){
+                    allFlag = false;
+                }
+            });
+            if(allFlag){
+                $("#checkboxAll").prop("checked",true);
+            }else {
+                $("#checkboxAll").prop("checked",false);
+            }
+            showInterfaceList();
+        }
+         function HTMLEncode(html) {
+            var temp = document.createElement("div");
+            (temp.textContent != null) ? (temp.textContent = html) : (temp.innerText = html);
+            var output = temp.innerHTML;
+            temp = null;
+            return output;
+        }
+
+        function trColor(element) {
+            if (element.css("background-color") === "rgb(245, 245, 245)") {
+                element.css("background-color", "#b0e0e6")
+            } else {
+                element.removeAttr("style");
+
+            }
+        }
+
+        function showSaveInterface() {
+            $("#AllInterfaceTitle").hide();
+            for(var i=0;i<interfaceList.length;i++){
+                $("#saveInterfaceList").append('<tr name="interfaceTr"  onclick="trColor($(this))">\
+                    <td class="index" name="interfaceTRId" style="width: 10%"></td>\
+                    <td name="interfaceFlag">'+HTMLEncode(interfaceList[i])+'</td>\
+                    <td><textarea class="table-fixed-write" style="height:auto"  disabled>'+ HTMLEncode( interfaceData[interfaceList[i]].name)+'</textarea></td>\
+                    <td><textarea class="table-fixed-write" style="height:auto"  disabled>'+HTMLEncode(interfaceData[interfaceList[i]].casedesc)+'</textarea></td>\
+                    <td><textarea class="table-fixed-write" style="height:auto"  disabled>'+HTMLEncode(interfaceData[interfaceList[i]].url)+'</textarea></td>\
+                    <td>'+ interfaceData[interfaceList[i]].addBy+'</td>\
+                    <td><div style="margin-top: -10px"><button class="btn btn-success" style="margin-top:10px" value="'+interfaceList[i]+'" name="interfaceCopy" onclick="copyTr($(this))">拷贝</button>'
+                    +interfaceData[interfaceList[i]].caseCheck+
+                    '<button class="btn btn-danger" style="margin-top:10px" value="'+interfaceList[i]+'" name="interfaceDel" onclick="delTr($(this))">删除</button></div></td>\
+                    </tr>');
+            }
+            sortTable("interfaceTr");
+            closeInterfaceList();
+
+            interfaceList= [];
+            $("#checkboxAll").prop("checked",false);
+            $("#interfaceList").text("已选接口:");
+            $("[name='interfaceCheckbox']").each(function () {
+                if($(this).is(':checked')){
+                    interfaceList.splice($.inArray($(this).attr("id"),interfaceList),1);
+                    $(this).prop("checked",false);
+                }
+            });
+            $("[href='#InterfacePage']").click();
+        }
+
+        function sortTable(name) {
+            var tmpObj = $("[name='"+name+"']");
+            tmpObj.each(function (i) {
+                $(this).children("td.index").text(i+1);
+            })
+        }
+
+        function copyTr(mySelf){
+            if(mySelf.attr("name") == "testCaseCopy") {
+                var interfaceCount = mySelf.parent().parent().parent().find(".num").text();
+                if (interfaceNum > (interfaceNumMax - interfaceCount)) {
+                    alert("任务最多只能包含" + interfaceNumMax + "个接口调用数量,当前" + interfaceNum);
+                    return;
+                }
+            }else {
+                if (interfaceNum > (interfaceNumMax - 1)) {
+                    alert("任务最多只能包含" + interfaceNumMax + "个接口调用数量,当前" + interfaceNum);
+                    return;
+                }
+            }
+
+            if(mySelf.attr("name") == "testCaseCopy"){
+                interfaceNum += parseInt(mySelf.parent().parent().parent().find(".num").text());
+
+            }else {
+                interfaceNum ++;
+            }
+
+            var name = mySelf.parent().parent().parent().attr("name");
+            mySelf.parent().parent().parent().after("<tr name='"+name+"'>"+mySelf.parent().parent().parent().html()+"</tr>");
+            sortTable(name);
+        }
+
+
+        function delTr(element) {
+
+            if(element.attr("name") == "testCaseDel") {
+                interfaceNum -= element.parent().parent().children(".num").text();
+            }else {
+                interfaceNum --;
+            }
+
+            element.parent().parent().parent().remove();
+
+            if($("[name='interfaceFlag']").length == 0){
+                $("#AllInterfaceTitle").show();
+            }
+            if ($("[name='testCaseFlag']").length == 0){
+                $("#AllTestCaseTitle").show();
+            }
+            sortTable(element.parent().parent().parent().attr("name"))
+        }
+
+        function _null() {
+
+        }
+
+
+
+        function interfaceListIsChecked() {
+
+            for(var i=0;i<interfaceList.length;i++){
+                $("#"+interfaceList[i]).prop("checked",true);
+            }
+            var allcheck = 1;
+            $("[name='interfaceCheckbox']").each(function () {
+                if(!$(this).is(':checked')){
+                    allcheck = 0;
+                }
+            });
+            if(allcheck == 1){
+                $("#checkboxAll").prop("checked",true);
+            }
+        }
+
+        function testCaseListIsChecked() {
+
+            for(var i=0;i<testCaseList.length;i++){
+                $("#"+testCaseList[i]).prop("checked",true);
+            }
+            var allcheck = 1;
+            $("[name='TestCaseCheckbox']").each(function () {
+                if(!$(this).is(':checked')){
+                    allcheck = 0;
+                }
+            });
+            if(allcheck == 1){
+                $("#TestCaseCheckboxAll").prop("checked",true);
+            }
+        }
+        window.onload = function() {
+            $("#surprise").click();
+            $("#surprise2").click();
+        };
+
+
+        function selected() {
+            checkOptions();
+            var data = {checkArr : encodeURI(JSON.stringify(checkVals)),orderBy : orderBy,interfacePage:interfacePage};
+            htmlobj=$.ajax({url:"{% url 'HTTP_TaskSelectInterfacePage' %}",async:false,data:data,type:"POST"});
+            $("#taskList").html(htmlobj.responseText);
+            orderByShow();
+            interfaceListIsChecked();
+        }
+
+        var checkValsTestCase =  {"caseFounder":"{{ request.session.userName }}","caseId":"","title":"","caseDesc":"","uri":"","url":""};
+        //弹出隐藏层
+        function openTestCaseDiv(show_div,bg_div){
+
+            //弹出详情层
+            obshowdiv =  $('#'+show_div);
+            objclosediv = $('#'+show_div+'> label');
+            obbgdiv = $('#'+bg_div);
+            offtop=obshowdiv.offset().top;
+            offleft=obshowdiv.offset().left;
+            obshowdiv.css("top",offtop+40+"px");
+            objclosediv.css("top","40px");
+            objclosediv.css("left","90%%");
+            obshowdiv.show();
+            obbgdiv.show();
+            docheight = $(document).height();
+            obbgdiv.height(docheight);
+            $('html,body').animate({scrollTop:offtop}, 800);
+            selecetdTestCase();
+
+            $("#surprise4").click();
+            $("#openTestCaseDivBtn").attr("disabled", true);
+            testCaseListIsChecked();
+
+        }
+        $(document).ready(function(){
+            var fixHelperModified = function(e, tr) {
+                    var $originals = tr.children();
+                    var $helper = tr.clone();
+                    $helper.children().each(function(index) {
+                        $(this).width($originals.eq(index).width())
+                    });
+                    return $helper;
+                },
+                updateIndex = function() {
+                    sortTable("testCaseTr");
+                };
+            $("#testCaseSort tbody").sortable({
+                helper: fixHelperModified,
+                stop: updateIndex
+            }).disableSelection();
+        });
+
+         function clearCheckedTestCase() {
+            $("#TestCaseFounderInput").val('');
+            $("#TestCaseIdInput").val('') ;
+            $("#TestCaseNameInput").val('') ;
+            $("#TestCaseDescribeInput").val('');
+            $("#businessLineCheckTabTestCase").click();
+            $("#TestCaseModuleInput").val('');
+            editCheckValTestCase();
+        }
+
+        function delCheckOptionsTestCase(key) {
+            if(key === 'caseFounder'){
+                $("#TestCaseFounderInput").val('all');
+            }
+            if(key === 'caseId'){
+                $("#TestCaseIdInput").val('');
+            }
+            if(key === 'title'){
+                $("#TestCaseNameInput").val('');
+            }
+            if(key === 'casedesc'){
+                $("#TestCaseDescribeInput").val('');
+            }
+            if(key === 'businessLine'){
+                $("#businessLineCheckTabTestCase").click();
+            }
+            if(key === 'module'){
+                $("#TestCaseModuleInput").val('');
+            }
+            editCheckValTestCase();
+        }
+
+        function editBusinessLineCheckTabTestCase(name) {
+            checkValsTestCase["businessLine"] = name;
+            editCheckValTestCase();
+        }
+
+        function editCheckValTestCase() {
+
+            //接口创建人
+            if($("#TestCaseFounderInput").val()==''){
+                checkValsTestCase['caseFounder'] = '{{ request.session.userName }}';
+            }else if($("#TestCaseFounderInput").val()=='all'){
+                checkValsTestCase['caseFounder'] = '';
+            }else{
+                checkValsTestCase['caseFounder'] =$("#TestCaseFounderInput").val() ;
+            }
+
+            //接口Id
+            if($("#TestCaseIdInput").val()==''){
+                checkValsTestCase['caseId'] = '';
+            }else {
+                checkValsTestCase['caseId'] =$("#TestCaseIdInput").val() ;
+            }
+
+            //接口名称
+            if($("#TestCaseNameInput").val()==''){
+                checkValsTestCase['title'] = '';
+            }else {
+                checkValsTestCase['title'] =$("#TestCaseNameInput").val() ;
+            }
+
+
+            //接口描述
+            if ($("#TestCaseDescribeInput").val()==''){
+                checkValsTestCase['caseDesc']='';
+            }else {
+                checkValsTestCase['caseDesc']=$("#TestCaseDescribeInput").val();
+            }
+
+            //接口描述
+            if ($("#TestCaseModuleInput").val()==''){
+                checkValsTestCase['module']='';
+            }else {
+                checkValsTestCase['module']=$("#TestCaseModuleInput").val();
+            }
+
+            selecetdTestCase();
+        }
+
+        function TestCaseInputVal(val) {
+            $("#TestCaseFounderInput").val(val);
+            editCheckValTestCase();
+            testCaseListIsChecked();
+        }
+
+        function checkOptionsTestCase() {
+
+            var htmls = ' <span class="cat-text"style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>';
+            var num =0;
+            var writeNum = 0;
+
+            for(var item in checkValsTestCase){
+                if(checkValsTestCase[item] != '' && typeof(checkValsTestCase[item]) != "undefined"){
+                    num ++;
+                }
+            }
+            for(var item in checkValsTestCase){
+                if(checkValsTestCase[item] != '' && typeof(checkValsTestCase[item]) != 'undefined'){
+                    var key = '';
+                    if(item == 'caseFounder'){
+                        key = '用例创建人';
+                    }
+                    if(item == 'caseId'){
+                        key = '用例编号';
+                    }
+                    if(item == 'title'){
+                        key = '用例名称';
+                    }
+                    if(item == 'caseDesc'){
+                        key = '用例描述';
+                    }
+                    if(item == 'businessLine'){
+                        key = '{{ groupLevel1 }}';
+                    }
+                    if(item == 'module'){
+                        key = '{{ groupLevel2 }}';
+                    }
+
+                    writeNum ++ ;
+                    htmls = htmls+'<span class="tag"><span>'+key+'：'+checkValsTestCase[item]+'&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delCheckOptionsTestCase(\''+item+'\')">x</a></span> '
+
+                }
+            }
+            htmls = htmls +'<span class="tag" style="float: right;background-color: #ff7575"><span>默认筛选&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="clearCheckedTestCase()">x</a></span>';
+
+            $('#checkOptionsTestCase').html(htmls);
+        }
+
+        function EnterPressTestCase(event){ //传入 event
+            var e = event || window.event;
+            if(e.keyCode == 13){
+                editCheckValTestCase();
+            }
+        }
+         //创建时间排序
+        var testCaseOrderBy = "t.modTime desc , t.id desc ";
+        var testCaseNameFlag = "-1";
+        var testCaseAddTimeFlag = '-1';
+        var testCaseModTimeFlag = '-1';
+
+         function testCaseOrderByName() {
+            if (testCaseNameFlag == '-1' || testCaseNameFlag == '0') {
+                testCaseNameFlag = '1';
+                testCaseAddTimeFlag = '-1';
+                testCaseModTimeFlag = '-1';
+                //用例名称正序查
+                testCaseOrderBy = 't.title asc';
+            } else if (testCaseNameFlag == '1') {
+                testCaseNameFlag = '0';
+                //用例名称倒序查
+                testCaseOrderBy = 't.title desc';
+            }
+            selecetdTestCase();
+        }
+
+        function testCaseOrderByAddTime() {
+            if (testCaseAddTimeFlag == '-1' || testCaseAddTimeFlag == '0') {
+                testCaseAddTimeFlag = '1';
+                testCaseModTimeFlag = '-1';
+                testCaseNameFlag = '-1';
+                //创建时间正序查
+                testCaseOrderBy = 't.id asc';
+            } else if (testCaseAddTimeFlag == '1') {
+                testCaseAddTimeFlag = '0';
+                //创建时间倒序查
+                testCaseOrderBy = 't.id desc';
+            }
+            selecetdTestCase();
+        }
+
+        //修改时间排序
+        function testCaseOrderByModTime() {
+            if(testCaseModTimeFlag == '-1' || testCaseModTimeFlag == '0'){
+                testCaseModTimeFlag = '1';
+                testCaseAddTimeFlag = '-1';
+                testCaseNameFlag = '-1';
+                //修改时间正序查
+                testCaseOrderBy = 't.modTime asc , t.id asc';
+            }else if(testCaseModTimeFlag == '1' ){
+                testCaseModTimeFlag = '0';
+                //修改时间倒序查
+                testCaseOrderBy = "t.modTime desc , t.id desc";
+            }
+            selecetdTestCase();
+        }
+
+        //排序样式显示
+        function testCaseOrderByShow() {
+            if(testCaseAddTimeFlag == '0'){
+                $("#testCaseAddTimeBtn").text('创建时间▼');
+            }else if(testCaseAddTimeFlag == '1'){
+                $("#testCaseAddTimeBtn").text('创建时间▲');
+            }
+
+            if(testCaseModTimeFlag == '0'){
+                $("#testCaseModTimeBtn").text('修改时间▼');
+            }else if(testCaseModTimeFlag == '1'){
+                $("#testCaseModTimeBtn").text('修改时间▲');
+            }
+
+            if(testCaseNameFlag == '0'){
+                $("#testCaseNameBtn").text('用例名称▼');
+            }else if(testCaseNameFlag == '1'){
+                $("#testCaseNameBtn").text('用例名称▲');
+            }
+        }
+
+
+        function closeTestCaseList() {
+            $("#surprise4").click();
+            CloseDiv("getTestCaseList", "bgdiv");
+//            autotestcase();
+        }
+
+        var testCaseList = Array();
+        var testCaseData = {};
+        function CheckTestCaseall() {
+            var checkbox = $("[name='TestCaseCheckbox']");
+            if($("#TestCaseCheckboxAll").is(':checked')){
+                checkbox.each(function () {
+                    if(!$(this).is(':checked')){
+                        if(interfaceNum > (interfaceNumMax-1)){
+                            alert("任务最多只能包含"+interfaceNumMax+"个接口调用数量,当前"+interfaceNum);
+                            return false;
+                        }
+                        interfaceNum += parseInt($(this).parent().next().next().next().next().text());
+
+                        testCaseData[$(this).attr("id")] = {};
+                        testCaseData[$(this).attr("id")].name = $(this).parent().next().next().text();
+                        testCaseData[$(this).attr("id")].caseDesc = $(this).parent().next().next().next().text();
+                        testCaseData[$(this).attr("id")].interfaceCount = $(this).parent().next().next().next().next().text();
+                        testCaseData[$(this).attr("id")].caseCheck = $(this).parent().next().next().next().next().next().next().children().html();
+                        testCaseData[$(this).attr("id")].addBy = $(this).parent().next().next().next().next().next().text();
+
+                        testCaseList.push($(this).attr("id"));
+
+                        $(this).prop("checked",true);
+                    }
+                })
+            }else {
+                checkbox.each(function () {
+                    if($(this).is(':checked')){
+                        testCaseData[$(this).attr("id")] = {};
+                        interfaceNum -= parseInt($(this).parent().next().next().next().next().text());
+                        testCaseList.splice($.inArray($(this).attr("id"),testCaseList),1);
+                        $(this).prop("checked",false);
+                    }
+                })
+            }
+            showTestCaseList();
+        }
+
+        function testCaseChechBtn(testCaseId) {
+            if($("#"+testCaseId).is(':checked')){
+                var interfaceCount = $("#count"+testCaseId).text();
+                if(interfaceNum > (interfaceNumMax-interfaceCount)){
+                    alert("任务最多只能包含"+interfaceNumMax+"个接口调用数量,当前"+interfaceNum);
+                    $("#"+testCaseId).prop("checked",false);
+                    return;
+                }
+
+                interfaceNum += parseInt(interfaceCount);
+                testCaseData[testCaseId] = {};
+                testCaseData[testCaseId].name =  $("#"+testCaseId).parent().next().next().text();
+                testCaseData[testCaseId].caseDesc = $("#"+testCaseId).parent().next().next().next().text();
+                testCaseData[testCaseId].interfaceCount =  $("#"+testCaseId).parent().next().next().next().next().text();
+                testCaseData[testCaseId].caseCheck =  $("#"+testCaseId).parent().next().next().next().next().next().next().children().html();
+                testCaseData[testCaseId].addBy =  $("#"+testCaseId).parent().next().next().next().next().next().text();
+                testCaseList.push(testCaseId);
+            }else {
+                testCaseData[testCaseId.name] = {};
+                interfaceNum -= parseInt($("#count"+testCaseId).text());
+                testCaseList.splice($.inArray(testCaseId,interfaceList),1);
+            }
+            var allFlag = true;
+            var testCaseCheckboxElements = $("[name='TestCaseCheckbox']");
+            testCaseCheckboxElements.each(function () {
+                if(!$(this).prop("checked")){
+                    allFlag = false;
+                }
+            });
+            if(allFlag){
+                $("#TestCaseCheckboxAll").prop("checked",true);
+            }else {
+                $("#TestCaseCheckboxAll").prop("checked",false);
+            }
+
+            showTestCaseList();
+        }
+
+        function showTestCaseList() {
+            $("#TestCaseList").text("已选用例:"+testCaseList.join(" ， "));
+        }
+
+
+        function showSaveTestCase() {
+            $("#AllTestCaseTitle").hide();
+            for(var i=0;i<testCaseList.length;i++){
+                $("#saveTestCaseList").append('<tr name="testCaseTr" onclick="trColor($(this))">\
+                    <td class="index">'+(i+1)+'</td>\
+                    <td name="testCaseFlag">'+HTMLEncode(testCaseList[i])+'</td>\
+                    <td><textarea class="table-fixed-write" style="height:auto" disabled>'+HTMLEncode(testCaseData[testCaseList[i]].name)+'</textarea></td>\
+                    <td><textarea class="table-fixed-write" style="height:auto" disabled>'+HTMLEncode(testCaseData[testCaseList[i]].caseDesc)+'</textarea></td>\
+                    <td class="num">'+HTMLEncode(testCaseData[testCaseList[i]].interfaceCount)+'</td>\
+                    <td>'+HTMLEncode(testCaseData[testCaseList[i]].addBy)+'</td>\
+                    <td><div style="margin-top: -10px"><button class="btn btn-success" style="margin-top: 10px" value="'+testCaseList[i]+'" name="testCaseCopy" onclick="copyTr($(this))">拷贝</button>' +
+                    testCaseData[testCaseList[i]].caseCheck+
+                    '<button class="btn btn-danger" style="margin-top: 10px" name="testCaseDel" onclick="delTr($(this))">删除</button></div></td>\
+                    </tr>');
+            }
+            sortTable("testCaseTr");
+            closeTestCaseList();
+
+            testCaseList= [];
+            $("#TestCaseCheckboxAll").prop("checked",false);
+            $("#TestCaseList").text("已选用例:");
+            $("[name='TestCaseCheckbox']").each(function () {
+                if($(this).is(':checked')){
+                    testCaseList.splice($.inArray($(this).attr("id"),testCaseList),1);
+                    $(this).prop("checked",false);
+                }
+            });
+
+            $("[href='#testCasePage']").click();
+        }
+
+
+
+        function delTestCase(id) {
+            if(confirm("确认删除用例?")){
+                interfaceNum -= $("#"+id).find("td.num").text();
+                $("#"+id).remove();
+                sortTable("testCaseTr");
+            }
+        }
+
+        function selecetdTestCase() {
+            checkOptionsTestCase();
+            var data = {checkArr : encodeURI(JSON.stringify(checkValsTestCase)),orderBy : testCaseOrderBy,testCasePage:testCasePage};
+            htmlobj=$.ajax({url:"{% url 'HTTP_TaskSelectTestCasePage' %}",async:false,data:data,type:"POST"});
+            $("#TestCaseListPage").html(htmlobj.responseText);
+            orderByShow();
+            testCaseListIsChecked();
+        }
+
+        function resetGlobalElement(element) {}
+        function verifyData() {
+            if(interfaceNum > interfaceNumMax){
+                alert("任务最多只能包含"+interfaceNumMax+"个接口调用数量,当前"+interfaceNum);
+                return false;
+            }
+            if($("#name").val() == ""){
+                alert("任务名称不能为空!")
+                    return false;
+            }
+            if($("#describe").val() == ""){
+                alert("任务描述不能为空!")
+                return false;
+            }
+            if($("[name='interfaceFlag']").length == 0 && $("[name='testCaseFlag']").length == 0 ){
+                alert("接口和用例数量不能同时为0!")
+                return false;
+            }
+            return true;
+        }
+
+        function saveTask() {
+            if(!verifyData()){
+                return;
+            }
+            var title = $("#name").val();
+            var taskDesc = $("#describe").val();
+            var emailList = $("#emailList").val();
+            var highPriorityVARS = "";
+            if ($("#commonValBeforeInput").val() != "") {
+                highPriorityVARS = "[CONF=common]" + $("#commonPriorityInput").val() + "[ENDCONF]";
+            }
+            var priorityValList = $("[name='PriorityValInput']");
+            for (var i = 0; i < priorityValList.length; i++) {
+                if (priorityValList[i].value == "") {
+                    continue;
+                } else {
+                    highPriorityVARS = highPriorityVARS + "[CONF=" + priorityValList[i].id.substr(12) + "]" + priorityValList[i].value + "[ENDCONF]";
+                }
+            }
+
+            var interfaceCount = $("[name='interfaceFlag']").length;
+            var interfaceFlag = $("[name='interfaceFlag']");
+            var interfaceFlagList = Array();
+            interfaceFlag.each(function (i) {
+                interfaceFlagList.push(interfaceFlag.eq(i).text());
+            });
+            var taskInterfaces = interfaceFlagList.join(",");
+
+            var caseCount = $("[name='testCaseFlag']").length;
+            var testCaseFlag = $("[name='testCaseFlag']");
+            var testCaseFlagList = Array();
+            testCaseFlag.each(function (i) {
+                testCaseFlagList.push(testCaseFlag.eq(i).text());
+                });
+            var taskTestcases = testCaseFlagList.join(",");
+
+            var taskLevel = $("#taskLevel").val();
+            var isCI = $("#isCI").val();
+            var data = {
+                title:title,
+                taskdesc:taskDesc,
+                emailList:emailList,
+                highPriorityVARS:highPriorityVARS,
+                interfaceCount:interfaceCount,
+                taskInterfaces:taskInterfaces,
+                caseCount:caseCount,
+                taskTestcases:taskTestcases,
+                interfaceNum:interfaceNum,
+                taskLevel:taskLevel,
+                isCI:isCI
+            };
+            if("{{ option }}" == "edit"){
+                data.id = taskdata.id;
+                data.addBy = taskdata.addBy_id;
+                var taskAddData = $.ajax({url:"{% url 'HTTP_TaskSaveEdit' %}?id="+taskdata.id,async:false,data:JSON.stringify(data),type:"POST"});
+            }else{
+                var taskAddData=$.ajax({url:"{% url 'HTTP_TaskAddData' %}",async:false,data:JSON.stringify(data),type:"POST"});
+            }
+
+            if(JSON.parse(taskAddData.responseText)["code"] != 10000){
+                alert(taskAddData.responseText)
+            }else {
+                location.href="{% url 'HTTP_taskCheck' %}";
+            }
+
+        }
+
+        var taskdata = "";
+        if("{{ option }}" != "add"){
+            var getTaskData = $.ajax({url:"{% url 'HTTP_taskGetTaskData' %}?id={{ id }}",async:false,type:"GET"});
+            taskdata = JSON.parse(getTaskData.responseText)["body"];
+            $("#taskId").val(taskdata.taskId);
+            $("#name").val(taskdata.title);
+            $("#describe").val(taskdata.taskdesc);
+
+            $("#taskLevel").val(taskdata.taskLevel);
+            $("#isCI").val(taskdata.isCI);
+            $("#emailList").val(taskdata.emailList);
+            $("#commonPriorityInput").val(taskdata.priorityCommon);
+
+            var serviceAjax = $.ajax({url: "{% url 'getServiceConf' %}", async: false});
+            var serviceJson = JSON.parse(serviceAjax.responseText);
+            var serviceConfKey = "";
+            for (var i = 0; i < serviceJson.length; i++) {
+                serviceConfKey = serviceJson[i]["serviceConfKey"];
+                $("#priorityVal_" + serviceConfKey).val(taskdata["confPriority"]["priority" + serviceConfKey]);
+            }
+
+            var interfaceInitData = taskdata["interfaceList"];
+            var testCaseInitData = taskdata["testCaseList"];
+            //TODO start test
+            var gPageSize = 2000;
+            var interfaceCurPageNum = 1; //设置当前页数，全局变量
+            var interfaceTotalPage = Math.ceil(interfaceInitData.length/gPageSize); //所有页数
+
+            var testCaseCurPageNum = 1;
+            var testCaseTotalPage = Math.ceil(testCaseInitData.length/gPageSize);
+        }
+
+        $(function () {
+            //根据页数读取数据
+            function getInterfaceData(pagenumber) {
+
+                interfaceCurPageNum++; //页码自动增加，保证下次调用时为新的一页。
+
+                if (pagenumber <= interfaceTotalPage){
+                    var startIndex = (pagenumber-1)*gPageSize;
+                    var endIndex = pagenumber*gPageSize;
+
+                    insertInterfaceDiv(startIndex,endIndex);
+                }
+            }
+            //初始化加载第一页数据
+            getInterfaceData(1);
+            function getTestCaseData(pagenumber) {
+                testCaseCurPageNum++; //页码自动增加，保证下次调用时为新的一页。
+                if (pagenumber <= testCaseTotalPage){
+                    var startIndex = (pagenumber-1)*gPageSize;
+                    var endIndex = pagenumber*gPageSize;
+                    insertTestCaseDiv(startIndex,endIndex);
+                }
+            }
+            //初始化加载第一页数据
+            getTestCaseData(1);
+            //生成数据html,append到div中
+            function insertInterfaceDiv(startIndex,endIndex) {
+                $("#AllInterfaceTitle").hide();
+                var tmpObj = $("#saveInterfaceList");
+                if(startIndex >= interfaceInitData.length){
+                    return false;
+                }
+                if(endIndex >= interfaceInitData.length){
+                    endIndex = interfaceInitData.length;
+                }
+                for(var i=startIndex;i<endIndex;i++){
+                    interfaceNum++;
+                    tmpObj.append('<tr name="interfaceTr" onclick="trColor($(this))">\
+                        <td class="index" name="interfaceTRId" ></td>\
+                        <td name="interfaceFlag">'+interfaceInitData[i].interfaceId+'</td>\
+                        <td><textarea class="table-fixed-write" style="height:auto" disabled>'+HTMLEncode(interfaceInitData[i].title)+'</textarea></td>\
+                        <td><textarea class="table-fixed-write" style="height:auto" disabled>'+HTMLEncode(interfaceInitData[i].casedesc)+'</textarea></td>\
+                        <td><textarea class="table-fixed-write" style="height:auto" disabled>'+HTMLEncode(interfaceInitData[i].url)+'</textarea></td>\
+                        <td>'+ interfaceInitData[i].userName+'</td>\
+                        <td><div style="margin-top: -10px"><button class="btn btn-success" name="interfaceCopy" style="margin-top: 10px" onclick="copyTr($(this))" >拷贝</button>\
+                        <a href="{% url 'HTTP_operationInterface' %}?id='+interfaceInitData[i].id+'&option=check&addBy='+interfaceInitData[i].loginName+'" target="_blank"><button style="margin-top: 10px" class="btn btn-primary">查看</button></a>\
+                        <button class="btn btn-danger" style="margin-top: 10px" name="interfaceDel" onclick="delTr($(this))">删除</button></td>\
+                        </tr>');
+                }
+                sortTable("interfaceTr");
+            }
+
+
+            //生成数据html,append到div中
+            function insertTestCaseDiv(startIndex,endIndex) {
+                $("#AllTestCaseTitle").hide();
+                var tmpObj = $("#saveTestCaseList");
+                if(startIndex >= testCaseInitData.length){
+                    return false;
+                }
+                if(endIndex >= testCaseInitData.length){
+                    endIndex = testCaseInitData.length;
+                }
+
+                for(var i=startIndex;i<endIndex;i++){
+                    interfaceNum += parseInt(testCaseInitData[i].stepCount);
+                    tmpObj.append('<tr name="testCaseTr" onclick="trColor($(this))">\
+                        <td class="index" name="testCaseTRId" ></td>\
+                        <td name="testCaseFlag">'+testCaseInitData[i].caseId+'</td>\
+                        <td><textarea class="table-fixed-write" style="height:auto" disabled>'+HTMLEncode(testCaseInitData[i].title)+'</textarea></td>\
+                        <td><textarea class="table-fixed-write" style="height:auto" disabled>'+HTMLEncode(testCaseInitData[i].casedesc)+'</textarea></td>\
+                        <td  class="num"><textarea class="table-fixed-write" style="height:auto" disabled>'+HTMLEncode(testCaseInitData[i].stepCount)+'</textarea></td>\
+                        <td>'+ HTMLEncode(testCaseInitData[i].userName)+'</td>\
+                        <td><div style="margin-top: -10px"><button style="margin-top: 10px" class="btn btn-success" name="testCaseCopy"  onclick="copyTr($(this))" >拷贝</button>\
+                        <a href="{% url 'HTTP_operationTestCase' %}?id='+testCaseInitData[i].id+'&option=check&addBy='+testCaseInitData[i].loginName+'" target="_blank"><button style="margin-top: 10px" class="btn btn-primary">查看</button></a>\
+                        <button class="btn btn-danger" name="testCaseDel" style="margin-top: 10px" onclick="delTr($(this))">删除</button></div></td>\
+                        </tr>');
+                }
+                sortTable("testCaseTr");
+            }
+
+
+            //==============核心代码=============
+            var winH = $(window).height(); //页面可视区域高度
+
+            var scrollHandler = function (){
+                var pageH = $(document.body).height();
+                var scrollT = $(window).scrollTop(); //滚动条top
+                var aa = (pageH - winH - scrollT) / winH;
+                if (aa < 0.02) {   //0.02是个参数
+                    if($("[href='#InterfacePage']").parent().attr("class") == "active"){
+                        getInterfaceData(interfaceCurPageNum);
+                    }else {
+                        getTestCaseData(testCaseCurPageNum);
+                    }
+                }
+            }
+            //定义鼠标滚动事件
+            $(window).scroll(scrollHandler);
+        });
+        //TODO end start test
+    </script>
+</div>
+<script src="/static/js/common/fuzhuInput.js?v={{ static_version }}"></script>
+{% include 'InterfaceTest/foot.html'%}

@@ -1,0 +1,917 @@
+{% include 'InterfaceTest/head.html'%}
+<!-- Main content starts -->
+
+<div class="content">
+<style type="text/css">
+    <!--
+    body,div,p,ul,li,font,span,td,th{
+    font-size:10pt;
+    line-height:155%;
+    }
+    table{
+    border-top-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 0px;
+    border-left-width: 1px;
+    border-top-style: solid;
+    border-right-style: solid;
+    border-bottom-style: none;
+    border-left-style: solid;
+    border-top-color: #CCCCCC;
+    border-right-color: #CCCCCC;
+    border-bottom-color: #CCCCCC;
+    border-left-color: #CCCCCC;
+    }
+    td{
+    border-bottom-width: 1px;
+    border-bottom-style: solid;
+    border-bottom-color: #CCCCCC;
+    }
+    .EditCell_TextBox {
+    width: 90%;
+    border:1px solid #0099CC;
+    }
+    .EditCell_DropDownList {
+    width: 90%;
+    }
+    -->
+    </style>
+    <!-- Sidebar -->
+     {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Sidebar ends -->
+    <!-- Main bar -->
+   <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                  <div class="col-xs-12 form-group pull-right top_search">
+                    <h3>{{ text.pageTitle }}</h3>
+                  </div>
+              </div>
+
+
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>{{ text.subPageTitle }}</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <div class="form-group">
+                        <div  id="queryOption">
+                            <span class="cat-text" style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>
+                        </div>
+
+                    </div>
+                      <br>
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist" style="margin-bottom: 0px">
+                        <li role="presentation" class="active"><a href="#addBy" role="tab" data-toggle="tab" aria-expanded="true">创建人</a>
+                        </li>
+                          <li role="presentation" class=""><a href="#varKey" role="tab" data-toggle="tab" aria-expanded="true">变量Key</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#varValue" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">变量Value</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#varDesc" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">变量描述</a>
+                        </li>
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="addBy" aria-labelledby="home-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="addByInput" onkeypress="EnterPress(event)" placeholder="请输入创建人">
+                            </div>
+                              <div class="col-lg-4" >
+                                  <span style="font-size: 15px;margin-top: 5px">快捷条件: </span>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="inputVal('all')">所有</button>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="inputVal('{{ request.session.userName }}')">{{ request.session.userName }}</button>
+                              <button id="hover-a" type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="createPeople(0)">其他</button>
+                                  <div id="names" style="margin-top: 10px">
+                            </div>
+                                  </div>
+
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="varDesc" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="varDescInput" onkeypress="EnterPress(event)" placeholder="请输入变量描述" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="varKey" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="varKeyInput" onkeypress="EnterPress(event)" placeholder="请输入变量Key" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="varValue" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="varValueInput" onkeypress="EnterPress(event)" placeholder="请输入变量Value">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="addPageObject" class="form-group"></div>
+                  </div>
+                </div>
+            <div id="fade" class="black_overlay" style="display: none; height: 974px;"></div>
+            <div class="box white_content" style="display: none;" id="addPageObjectSubPage">
+                <div class="box-header with-border">
+                    <h2 class="box-title" id="supPageTitle"></h2>
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" onclick="CloseDiv('addPageObjectSubPage','bgdiv')"><i
+                                class="fa fa-remove"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="form-horizontal">
+                        <form action="" method="post" target="id_iframe">
+                            {% csrf_token %}
+                            <div class="box-body">
+
+                                <div class="form-group">
+                                    <label for="inputEmail3" class="col-sm-2 control-label">PageObject Key</label>
+
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="poKey" placeholder="PageObject Key"
+                                               required="required">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="inputPassword3" class="col-sm-2 control-label">PageObject Title</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="poTitle" placeholder="PageObject Title"
+                                               required="required">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="inputPassword3" class="col-sm-2 control-label">PageObject Desc</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="poDesc" placeholder="PageObject Desc"
+                                               required="required">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- /.box-body -->
+                            <div class="box-footer">
+                                <button type="button" class="btn btn-default" onclick="CloseDiv('addPageObjectSubPage','bgdiv')">取消</button>
+                                <input type="submit" id="submit" class="btn btn-info pull-right" onclick="addPageObject()"
+                                       value="保存">
+                            </div>
+                        </form>
+                        <iframe id="id_iframe" name="id_iframe" style="display: none;"></iframe>
+                        <!-- /.box-footer -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+
+                </div>
+            </div>
+
+
+            <div class="box white_content" style="display: none;" id="addElementsSubPage">
+                <form id="addElementsSubPage" name="form1" method="post" action="">
+    <h3>添加元素</h3>
+    <table width="698" border="0" cellpadding="0" cellspacing="0" id="tabProduct">
+        <tr>
+          <td width="32" align="center" bgcolor="#EFEFEF" Name="Num"></td>
+          <td width="186" bgcolor="#EFEFEF" Name="Num" EditType="TextBox">elementKey</td>
+          <td width="152" bgcolor="#EFEFEF" Name="ProductName" EditType="DropDownList" >elementType</td>
+          <td width="103" bgcolor="#EFEFEF" Name="Amount" EditType="TextBox">elementValue</td>
+
+        </tr>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF"><input type="checkbox" name="checkbox2" value="checkbox" /></td>
+          <td bgcolor="#FFFFFF"></td>
+          <td bgcolor="#FFFFFF" Value="c"></td>
+          <td bgcolor="#FFFFFF"></td>
+
+        </tr>
+        <tr>
+          <td align="center" bgcolor="#FFFFFF"><input type="checkbox" name="checkbox22" value="checkbox" /></td>
+          <td bgcolor="#FFFFFF"></td>
+          <td bgcolor="#FFFFFF" Value="d"></td>
+          <td bgcolor="#FFFFFF"></td>
+
+        </tr>
+    </table>
+
+    <br />
+    <input type="button" name="Submit" value="新增" onclick="AddRow(document.getElementById('tabProduct'),1)" />
+    <input type="button" name="Submit2" value="删除" onclick="DeleteRow(document.getElementById('tabProduct'),1)" />
+    <input type="button" name="Submit22" value="重置" onclick="window.location.reload()" />
+    <input type="submit" name="Submit3" value="提交" onclick="GetTableData(document.getElementById('tabProduct'));return false;" />
+    </form>
+            </div>
+              </div>
+            </div>
+          </div>
+    </div>
+</div>
+    <script type="text/javascript">
+        var queryArr = {"varDesc":"","varKey":"","varValue":"","addBy":""};
+        //创建时间排序
+        var orderBy = "g.modTime desc , g.id desc";
+        var addTimeFlag = '-1';
+        var page = {{ page }};
+        var nameFlag = "-1";
+        function orderByName() {
+            if (nameFlag == '-1' || nameFlag == '0') {
+                nameFlag = '1';
+                addTimeFlag = '-1';
+                modTimeFlag = '-1';
+                //创建时间正序查
+                orderBy = 'g.varKey asc';
+            } else if (nameFlag == '1') {
+                nameFlag = '0';
+                //创建时间倒序查
+                orderBy = 'g.varKey desc';
+            }
+            selected();
+        }
+
+        function orderByAddTime() {
+            if (addTimeFlag == '-1' || addTimeFlag == '0') {
+                addTimeFlag = '1';
+                modTimeFlag = '-1';
+                nameFlag = '-1';
+                //创建时间正序查
+                orderBy = 'g.id asc';
+            } else if (addTimeFlag == '1') {
+                addTimeFlag = '0';
+                //创建时间倒序查
+                orderBy = 'g.id desc';
+            }
+            selected();
+        }
+        var modTimeFlag = '-1';
+        //修改时间排序
+        function orderByModTime() {
+            if(modTimeFlag == '-1' || modTimeFlag == '0'){
+                modTimeFlag = '1';
+                addTimeFlag = '-1';
+                nameFlag = '-1';
+                //修改时间正序查
+                orderBy = 'g.modTime asc , g.id asc';
+            }else if(modTimeFlag == '1' ){
+                modTimeFlag = '0';
+                //修改时间倒序查
+                orderBy = "g.modTime desc , g.id desc";
+            }
+            selected();
+        }
+
+        //排序样式显示
+        function orderByShow() {
+            if(addTimeFlag == '0'){
+                $("#addTimeBtn").text('创建时间▼');
+            }else if(addTimeFlag == '1'){
+                $("#addTimeBtn").text('创建时间▲');
+            }
+
+            if(modTimeFlag == '0'){
+                $("#modTimeBtn").text('修改时间▼');
+            }else if(modTimeFlag == '1'){
+                $("#modTimeBtn").text('修改时间▲');
+            }
+
+            if(nameFlag == '0'){
+                $("#nameBtn").text('变量KEY▼');
+            }else if(nameFlag == '1'){
+                $("#nameBtn").text('变量KEY▲');
+            }
+        }
+
+
+        function queryDataInit() {
+
+            $("#addByInput").val("");
+            //查询条件
+            editQueryData();
+            selected();
+        }
+
+        queryDataInit();
+
+
+        //搜索条件出的回车事件监听
+        function EnterPress(event){ //传入 event
+            var e = event || window.event;
+            if(e.keyCode == 13){
+                editQueryData();
+            }
+        }
+
+        function queryUserConf(data) {
+            if(data == "all"){
+                $('#addByInput').val('');
+            }else {
+                $('#addByInput').val(data);
+            }
+
+            editQueryData();
+        }
+
+        //编辑查询条件
+        function editQueryData() {
+            if($("#addByInput").val() == ""){
+                queryArr.addBy = "";
+            } else {
+                queryArr.addBy = $("#addByInput").val();
+            }
+
+            if($("#varDescInput").val() == ""  ){
+                queryArr.varDesc = "";
+            }else{
+                queryArr.varDesc = $("#varDescInput").val();
+            }
+
+            if($("#varKeyInput").val() == ""  ){
+                queryArr.varKey = "";
+            }else{
+                queryArr.varKey = $("#varKeyInput").val();
+            }
+
+            if($("#varValueInput").val() == ""  ){
+                queryArr.varValue = "";
+            }else{
+                queryArr.varValue = $("#varValueInput").val();
+            }
+
+            selected();
+        }
+
+        //清空查询条件
+        function CleanQueryData() {
+            $("#addByInput").val("");
+            $("#varDescInput").val("");
+            $("#varKeyInput").val("");
+            $("#varValueInput").val("");
+
+            editQueryData();
+
+        }
+
+        function delQueryOptions(key) {
+            if(key=='addBy'){
+                $("#addByInput").val('');
+            }
+            if(key=='varDesc'){
+                $("#varDescInput").val('');
+            }
+            if(key=='varKey'){
+                $("#varKeyInput").val('');
+            }
+            if(key=='varValue'){
+                $("#varValueInput").val('');
+            }
+            editQueryData();
+        }
+
+        //查询条件
+        function QueryOption(){
+            var htmls = ' <span class="cat-text"style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>';
+            var num =0;
+            var writeNum = 0;
+            for(var item in queryArr){
+                if(queryArr[item] != '' ){
+                    num ++;
+                }
+            }
+
+            for(var item in queryArr){
+                if(queryArr[item] != ''){
+                    var key = '';
+                    if(item == 'addBy'){
+                        key = '创建人';
+                    }
+                    if(item == 'varDesc'){
+                        key = '配置描述';
+                    }
+                    if(item == 'varKey'){
+                        key = '配置Key';
+                    }
+                    if(item == 'varValue'){
+                        key = '配置Value';
+                    }
+
+                    writeNum ++ ;
+                    htmls = htmls+'<span class="tag"><span>'+key+'：'+queryArr[item]+'&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delQueryOptions(\''+item+'\')">x</a></span> '
+
+                }
+            }
+                htmls = htmls +'<span class="tag" style="float: right;background-color: #ff7575"><span>清空筛选&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="CleanQueryData()">x</a></span>';
+            $('#queryOption').html(htmls);
+        }
+
+
+        //查询条件处的其他人员按钮
+        function QueryPeopleConf(num) {
+
+            htmlobj=$.ajax({url:'/Config/GlobalVarsConf/queryPeopleConf?num='+num,async:false});
+
+            if(htmlobj.responseText == "[]"){
+                alert("暂无其他用户");
+                return;
+            }
+            var value = JSON.parse(htmlobj.responseText);
+
+            var nameVal = "";
+            for(var i = 0;i<value.length;i++){
+                nameVal = nameVal + ' &nbsp <a href="#" id="hover-a" onclick="queryUserConf(\''+value[i].userName+'\')"  style="font-size: 15px;text-decoration:none">['+value[i].userName+'('+value[i].count+')]</a>'
+            }
+            if(value.length<3){
+                $("#names").html(nameVal);
+                $("#hover-a").attr('onclick','createPeople('+(1)+')');
+                $("#names").show();
+                return;
+            }else {
+                $("#names").html(nameVal);
+            }
+
+            $("#hover-a").attr('onclick','createPeople('+(num+1)+')');
+            $("#names").show();
+        }
+
+        //翻页
+        function pageCall(pageNum) {
+            page = pageNum;
+            selected();
+        }
+        //弹出隐藏层
+        function ShowDiv(){
+            obshowdiv =  $("#addPageObject");
+            offtop=obshowdiv.offset().top-60;
+            offleft=obshowdiv.offset().left;
+            obshowdiv.show();
+            docheight = $(document).height();
+            $('html,body').animate({scrollTop:offtop}, 200);
+        };
+
+        function selected() {
+            QueryOption();
+            var data = {queryArr : encodeURI(JSON.stringify(queryArr)),orderBy:orderBy,page:page};
+            htmlobj=$.ajax({url:"{% url 'getPageObject' %}",async:false,data:data,type:"POST"});
+            $("#addPageObject").html(htmlobj.responseText);
+            orderByShow();
+        }
+
+        function delGlobalVar(id) {
+
+            if(confirm("确认删除配置 "+$("[name='varKey"+id+"']").text()+" ?")){
+                if(confirm("一旦删除无法恢复，确认删除?")){
+                    htmlobj=$.ajax({url:"{% url 'ui_GlobalVarsDel' %}?id="+id,async:false});
+                    selected();
+                }
+            }
+        }
+
+        function editGlobalVar(id) {
+            $("#hiddenTR"+id).find("button").show();
+            var descText = $("#poTdDesc"+id).text();
+            var titleText = $("#poTdTitle"+id).text();
+            $("#poTdDesc"+id).html("<textarea id='poTextDesc"+id+"' style='max-width: 100%;width: 100%'>"+descText+"</textarea>");
+            $("#poTdTitle"+id).html("<textarea id='poTextTitle"+id+"' style='max-width: 100%;width: 100%'>"+titleText+"</textarea>");
+            $("#hiddenTR"+id).attr("style","");
+        }
+
+        function cancelEdit(id) {
+            $("[name='varDesc"+id+"']").html($("[name='varDesc"+id+"']").text());
+            $("[name='varKey"+id+"']").html($("[name='varKey"+id+"']").text());
+            $("#hiddenTR"+id).css("display","none");
+        }
+
+        function saveEdit(id) {
+            var data = {"id":id,"poTitle":$("#poTextTitle"+id).val(),"poDesc":$("#poTextDesc"+id).val()};
+            htmlobj=$.ajax({url:"{% url 'ui_GlobalVarsEdit' %}",data:{"data":encodeURI(JSON.stringify(data))},async:false,type:"POST"});
+            if(htmlobj.responseText != 0){
+                selected();
+            }else {
+                alert("没有修改任何值");
+            }
+        }
+
+        function addVarsConf() {
+            if(confirm("添加后Key值不可更改，是否继续保存")) {
+                var varDesc = $("#addVarDesc").val();
+                var varKey = $("#addVarKey").val();
+                var varValue = "";
+
+                var serviceTextList = $("[name='serviceTextAdd']");
+                serviceTextList.each(function () {
+                    if($(this).val().trim() != ""){
+                        var confName = $(this).parent().attr("name");
+                        varValue += "[CONF=" + confName + "]" + $(this).val().trim() + "[ENDCONF]";
+                    }
+                });
+
+                if(varKey == ""){
+                    alert("key不能为空");
+                    return
+                }
+                if(varValue == ""){
+                    alert("环境值至少填写一个");
+                    return
+                }
+                var data = {"varDesc": varDesc, "varKey": varKey, "varValue": varValue};
+                htmlobj = $.ajax({
+                    url: "{% url 'ui_GlobalVarsAdd' %}",
+                    data: {"data": encodeURI(JSON.stringify(data))},
+                    async: false,
+                    type:"POST"
+                });
+                if (JSON.parse(htmlobj.responseText)["code"] !== 10000) {
+                    alert(htmlobj.responseText);
+                    return;
+                }
+                selected();
+                  ShowDiv();
+            }
+        }
+
+
+
+        window.onload = function() {
+            $("#surprise").click();
+            $("#surprise2").click();
+        };
+
+
+              /**
+    * JS实现可编辑的表格
+    * 用法:EditTables(tb1,tb2,tb2,......);
+    * Create by Senty at 2008-04-12
+    **/
+
+    //设置多个表格可编辑
+    function EditTables(){
+    for(var i=0;i<arguments.length;i++){
+       SetTableCanEdit(arguments[i]);
+    }
+    }
+
+    //设置表格是可编辑的
+    function SetTableCanEdit(table){
+    for(var i=1; i<table.rows.length;i++){
+       SetRowCanEdit(table.rows[i]);
+    }
+    }
+
+    function SetRowCanEdit(row){
+    for(var j=0;j<row.cells.length; j++){
+
+       //如果当前单元格指定了编辑类型，则表示允许编辑
+       var editType = row.cells[j].getAttribute("EditType");
+       if(!editType){
+        //如果当前单元格没有指定，则查看当前列是否指定
+        editType = row.parentNode.rows[0].cells[j].getAttribute("EditType");
+       }
+       if(editType){
+        row.cells[j].onclick = function (){
+         EditCell(this);
+        }
+       }
+    }
+
+    }
+
+    //设置指定单元格可编辑
+    function EditCell(element, editType){
+
+    var editType = element.getAttribute("EditType");
+    if(!editType){
+       //如果当前单元格没有指定，则查看当前列是否指定
+       editType = element.parentNode.parentNode.rows[0].cells[element.cellIndex].getAttribute("EditType");
+    }
+
+    switch(editType){
+       case "TextBox":
+        CreateTextBox(element, element.innerHTML);
+        break;
+       case "DropDownList":
+        CreateDropDownList(element);
+        break;
+       default:
+        break;
+    }
+    }
+
+    //为单元格创建可编辑输入框
+    function CreateTextBox(element, value){
+    //检查编辑状态，如果已经是编辑状态，跳过
+    var editState = element.getAttribute("EditState");
+    if(editState != "true"){
+       //创建文本框
+       var textBox = document.createElement("INPUT");
+       textBox.type = "text";
+       textBox.className="EditCell_TextBox";
+
+
+       //设置文本框当前值
+       if(!value){
+        value = element.getAttribute("Value");
+       }
+       textBox.value = value;
+
+       //设置文本框的失去焦点事件
+       textBox.onblur = function (){
+        CancelEditCell(this.parentNode, this.value);
+       }
+       //向当前单元格添加文本框
+       ClearChild(element);
+       element.appendChild(textBox);
+       textBox.focus();
+       textBox.select();
+
+       //改变状态变量
+       element.setAttribute("EditState", "true");
+       element.parentNode.parentNode.setAttribute("CurrentRow", element.parentNode.rowIndex);
+    }
+
+    }
+
+
+    //为单元格创建选择框
+    function CreateDropDownList(element, value){
+    //检查编辑状态，如果已经是编辑状态，跳过
+    var editState = element.getAttribute("EditState");
+    if(editState != "true"){
+       //创建下接框
+       var downList = document.createElement("Select");
+       downList.className="EditCell_DropDownList";
+
+       //添加列表项
+       var items = element.getAttribute("DataItems");
+       if(!items){
+        items = element.parentNode.parentNode.rows[0].cells[element.cellIndex].getAttribute("DataItems");
+       }
+       if(items){
+        items = eval("[" + items + "]");
+        for(var i=0; i<items.length; i++){
+         var oOption = document.createElement("OPTION");
+         oOption.text = items[i].text;
+         oOption.value = items[i].value;
+         downList.options.add(oOption);
+        }
+       }
+
+       //设置列表当前值
+       if(!value){
+        value = element.getAttribute("Value");
+       }
+       downList.value = value;
+
+       //设置创建下接框的失去焦点事件
+       downList.onblur = function (){
+        CancelEditCell(this.parentNode, this.value, this.options[this.selectedIndex].text);
+       }
+
+       //向当前单元格添加创建下接框
+       ClearChild(element);
+       element.appendChild(downList);
+       downList.focus();
+
+       //记录状态的改变
+       element.setAttribute("EditState", "true");
+       element.parentNode.parentNode.setAttribute("LastEditRow", element.parentNode.rowIndex);
+    }
+
+    }
+
+
+    //取消单元格编辑状态
+    function CancelEditCell(element, value, text){
+    element.setAttribute("Value", value);
+    if(text){
+       element.innerHTML = text;
+    }else{
+       element.innerHTML = value;
+    }
+    element.setAttribute("EditState", "false");
+
+    //检查是否有公式计算
+    CheckExpression(element.parentNode);
+    }
+
+    //清空指定对象的所有字节点
+    function ClearChild(element){
+    element.innerHTML = "";
+    }
+
+    //添加行
+    function AddRow(table, index){
+        console.log(table, index)
+    var lastRow = table.rows[table.rows.length-1];
+    var newRow = lastRow.cloneNode(true);
+    //计算新增加行的序号，需要引入jquery 的jar包
+    var startIndex = $.inArray(lastRow,table.rows);
+    var endIndex = table.rows;
+    table.tBodies[0].appendChild(newRow);
+{#    newRow.cells[0].innerHTML=endIndex-startIndex;#}
+    SetRowCanEdit(newRow);
+    return newRow;
+{#    table.append(newRow);#}
+    }
+
+
+    //删除行
+    function DeleteRow(table, index){
+    for(var i=table.rows.length - 1; i>0;i--){
+       var chkOrder = table.rows[i].cells[0].firstChild;
+       if(chkOrder){
+        if(chkOrder.type = "CHECKBOX"){
+         if(chkOrder.checked){
+          //执行删除
+          table.deleteRow(i);
+         }
+        }
+       }
+    }
+    }
+
+    //提取表格的值,JSON格式
+    function GetTableData(table){
+    var tableData = new Array();
+    alert("行数：" + table.rows.length);
+    for(var i=1; i<table.rows.length;i++){
+       tableData.push(GetRowData(tabProduct.rows[i]));
+    }
+
+    return tableData;
+
+    }
+    //提取指定行的数据，JSON格式
+    function GetRowData(row){
+    var rowData = {};
+    for(var j=0;j<row.cells.length; j++){
+       name = row.parentNode.rows[0].cells[j].getAttribute("Name");
+       if(name){
+        var value = row.cells[j].getAttribute("Value");
+        if(!value){
+         value = row.cells[j].innerHTML;
+        }
+
+        rowData[name] = value;
+       }
+    }
+    //alert("ProductName:" + rowData.ProductName);
+    //或者这样：alert("ProductName:" + rowData["ProductName"]);
+    return rowData;
+
+    }
+
+    //检查当前数据行中需要运行的字段
+    function CheckExpression(row){
+    for(var j=0;j<row.cells.length; j++){
+       expn = row.parentNode.rows[0].cells[j].getAttribute("Expression");
+       //如指定了公式则要求计算
+       if(expn){
+        var result = Expression(row,expn);
+        var format = row.parentNode.rows[0].cells[j].getAttribute("Format");
+        if(format){
+         //如指定了格式，进行字值格式化
+         row.cells[j].innerHTML = formatNumber(Expression(row,expn), format);
+        }else{
+         row.cells[j].innerHTML = Expression(row,expn);
+        }
+       }
+
+    }
+    }
+
+    //计算需要运算的字段
+    function Expression(row, expn){
+    var rowData = GetRowData(row);
+    //循环代值计算
+    for(var j=0;j<row.cells.length; j++){
+       name = row.parentNode.rows[0].cells[j].getAttribute("Name");
+       if(name){
+        var reg = new RegExp(name, "i");
+        expn = expn.replace(reg, rowData[name].replace(/\,/g, ""));
+       }
+    }
+    return eval(expn);
+    }
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    /**
+    * 格式化数字显示方式
+    * 用法
+    * formatNumber(12345.999,'#,##0.00');
+    * formatNumber(12345.999,'#,##0.##');
+    * formatNumber(123,'000000');
+    * @param num
+    * @param pattern
+    */
+    /* 以下是范例
+    formatNumber('','')=0
+    formatNumber(123456789012.129,null)=123456789012
+    formatNumber(null,null)=0
+    formatNumber(123456789012.129,'#,##0.00')=123,456,789,012.12
+    formatNumber(123456789012.129,'#,##0.##')=123,456,789,012.12
+    formatNumber(123456789012.129,'#0.00')=123,456,789,012.12
+    formatNumber(123456789012.129,'#0.##')=123,456,789,012.12
+    formatNumber(12.129,'0.00')=12.12
+    formatNumber(12.129,'0.##')=12.12
+    formatNumber(12,'00000')=00012
+    formatNumber(12,'#.##')=12
+    formatNumber(12,'#.00')=12.00
+    formatNumber(0,'#.##')=0
+    */
+    function formatNumber(num,pattern){
+    var strarr = num?num.toString().split('.'):['0'];
+    var fmtarr = pattern?pattern.split('.'):[''];
+    var retstr='';
+
+    // 整数部分
+    var str = strarr[0];
+    var fmt = fmtarr[0];
+    var i = str.length-1;
+    var comma = false;
+    for(var f=fmt.length-1;f>=0;f--){
+        switch(fmt.substr(f,1)){
+          case '#':
+            if(i>=0 ) retstr = str.substr(i--,1) + retstr;
+            break;
+          case '0':
+            if(i>=0) retstr = str.substr(i--,1) + retstr;
+            else retstr = '0' + retstr;
+            break;
+          case ',':
+            comma = true;
+            retstr=','+retstr;
+            break;
+        }
+    }
+    if(i>=0){
+        if(comma){
+          var l = str.length;
+          for(;i>=0;i--){
+            retstr = str.substr(i,1) + retstr;
+            if(i>0 && ((l-i)%3)==0) retstr = ',' + retstr;
+          }
+        }
+        else retstr = str.substr(0,i+1) + retstr;
+    }
+
+    retstr = retstr+'.';
+    // 处理小数部分
+    str=strarr.length>1?strarr[1]:'';
+    fmt=fmtarr.length>1?fmtarr[1]:'';
+    i=0;
+    for(var f=0;f<fmt.length;f++){
+        switch(fmt.substr(f,1)){
+          case '#':
+            if(i<str.length) retstr+=str.substr(i++,1);
+            break;
+          case '0':
+            if(i<str.length) retstr+= str.substr(i++,1);
+            else retstr+='0';
+            break;
+        }
+    }
+    return retstr.replace(/^,+/,'').replace(/\.$/,'');
+    }
+
+    </script>
+
+
+
+
+
+
+    <script language="javascript" src="GridEdit.js"></script>
+    <script language="javascript">
+    var tabProduct = document.getElementById("tabProduct");
+
+    // 设置表格可编辑
+    // 可一次设置多个，例如：EditTables(tb1,tb2,tb2,......)
+    EditTables(tabProduct);
+
+
+    </script>
+
+
+    <!-- Content ends -->
+{% include 'InterfaceTest/foot.html'%}
+<script src="/static/ui/js/addPageObject/addPageObject_check.js"></script>

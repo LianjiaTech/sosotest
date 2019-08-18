@@ -1,0 +1,71 @@
+<div class="col-lg-12">
+    <span class="pagination" style="font-size: 15px;"> &nbsp;&nbsp;排序: &nbsp;&nbsp; </span>
+    <button id="interfaceNameBtn" class="btn btn-primary" onclick="orderByName()" style="font-size: 10px;">接口名称</button>
+    <button id="addTimeBtn" class="btn btn-primary" onclick="orderByAddTime()" style="font-size: 10px;">创建时间</button>
+    <button id="modTimeBtn" class="btn btn-primary" onclick="orderByModTime()" style="font-size: 10px;">修改时间</button>
+    {#    <div class="pagination" style="float:right;" ></div>#}
+    <div class="pagination" style="float:right;">
+        {% include 'InterfaceTest/pagination.html' %}
+    </div>
+</div>
+<table class="table table-bordered " style="table-layout:fixed;width:100%;word-break:break-all;">
+    <thead>
+    <tr style="color: snow" bgcolor="#2A3F54">
+        <th style="width:50px;text-align: center">#</th>
+        <th style="width:10%;">任务ID</th>
+        <th style="width:10%;">任务名称</th>
+        <th style="width:10%;">任务描述</th>
+
+        <th style="width:10%;">文件添加人</th>
+        <th style="width:10%;">文件名称</th>
+        <th style="width:10%;">sheet名称</th>
+
+        <th style="width:8%;">业务线</th>
+        <th style="width:15%;">模块</th>
+        <th style="width:15%;">来源</th>
+
+        <th style="width:10%;">任务添加人</th>
+        <th style="width:17%">操作</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% if pageCount == 0 %}
+     <tr>
+        <td colspan="12" align="center">没有符合条件的搜索结果</td>
+     </tr>
+    {% else %}
+        {% for pageData in pageDatas %}
+            <tr>
+                <td style="text-align: center">{{ pageData.id }}</td>
+                <td>{{ pageData.taskId }}</td>
+                <td>{{ pageData.title }}</td>
+                <td>{{ pageData.taskdesc }}</td>
+
+                <td>{{ pageData.fileAddByName }}</td>
+                <td>{{ pageData.fileName }}</td>
+                <td>{{ pageData.sheetName }}</td>
+                <td>{{ pageData.businessLineName }}</td>
+                <td>{{ pageData.moduleName }}</td>
+                <td>{{ pageData.sourceGroup }}</td>
+
+                <td>{{ pageData.addByName }}</td>
+                <td>
+                    <button class="btn btn-primary"  onclick="checkSimpleTask('{{ pageData.taskId }}')">查看</button>
+                    <button class="btn btn-info" onclick="copySimpleTask('{{ pageData.taskId }}')">拷贝</button>
+{#                    <button class="btn btn-warning"  onclick="showExecuteSimpleTask('{{ pageData.taskId }}')" style="margin-right: 0px">执行</button>#}
+                    <button class="btn btn-warning"  onclick="runUITask('{{ pageData.taskId }}')" style="margin-right: 0px">执行</button>
+                    {% if pageData.addBy == request.session.loginName %}
+                        <button class="btn btn-success" style="margin-top: 10px;margin-bottom: 3px"  onclick="editSimpleTask('{{ pageData.taskId }}')">编辑</button>
+                        <button class="btn btn-danger" style="margin-top: 10px;margin-bottom: 3px" onclick="deleteSimpleTask('{{ pageData.taskId }}')">删除</button>
+                    {% endif %}
+
+                </td>
+            </tr>
+
+
+        {% endfor %}
+    {% endif %}
+    </tbody>
+</table>
+

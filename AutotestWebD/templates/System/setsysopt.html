@@ -1,0 +1,60 @@
+<php> echo file_get_contents("http://localhost".(C('SERVER_PORT')==80?'':":".C('SERVER_PORT'))."/System/main/inithead");</php>
+<div style="height: 18px"></div>
+<!-- Main content starts -->
+<link rel="stylesheet" href="/platform_resource/style/useraudit.css">
+
+<div class="content">
+    <!-- Sidebar -->
+    <php> echo file_get_contents("http://localhost".(C('SERVER_PORT')==80?'':":".C('SERVER_PORT'))."/System/main/initmenu?open=syscheck");</php>
+    <!-- Sidebar ends -->
+    <!-- Main bar -->
+    <div class="mainbar">
+        <!-- Page heading -->
+        <div class="page-head">
+            <h2 class="pull-left"><i class="icon-home"></i> 系统检测</a>
+            </h2>
+            <div class="clearfix"></div>
+        </div>
+        <!-- Page heading ends -->
+        <!-- Matter -->
+        <div class="matter">
+            <div class="container">
+
+
+                <button type="button" class="button {$runCaseDebugTaskCheckOutput=='2'?'green':'red'} ">
+                    <p style="font-size: 25px">
+                        用例调试系统<br>
+                        {$runCaseDebugTaskCheckOutput=='2'?'任务正常':'任务异常'}({$runCaseDebugTaskCheckOutput})
+                    </p>
+                    <a href='/System/SystemOpt/exec_sysrestart?task=runCaseDebugTask' style="font-size: 18px">重启</a>
+                    &nbsp;&nbsp;
+                    <a href='/System/SystemOpt/stop_sysrestart?task=runCaseDebugTask' style="font-size: 18px">停止</a>
+                </button>
+
+                <button type="button" class="button {$runPlatformTaskCheckOutput=='2'?'green':'red'} ">
+                    <p style="font-size: 25px">
+                        任务执行系统<br>
+                        {$runPlatformTaskCheckOutput=='2'?'任务正常':'任务异常'}({$runPlatformTaskCheckOutput})
+                    </p>
+                    <a href='/System/SystemOpt/exec_sysrestart?task=runPlatformTask' style="font-size: 18px">重启</a>
+                    &nbsp;&nbsp;
+                    <a href='/System/SystemOpt/stop_sysrestart?task=runPlatformTask' style="font-size: 18px">停止</a>
+                </button>
+
+                <button type="button" class="button {$runTaskCancelCheckOutput=='2'?'green':'red'} ">
+                    <p style="font-size: 25px">
+                        执行终止系统<br>
+                        {$runTaskCancelCheckOutput=='2'?'任务正常':'任务异常'}({$runTaskCancelCheckOutput})
+                    </p>
+                    <a href='/System/SystemOpt/exec_sysrestart?task=runTaskCancel' style="font-size: 18px">重启</a>
+                    &nbsp;&nbsp;
+                    <a href='/System/SystemOpt/stop_sysrestart?task=runTaskCancel' style="font-size: 18px">停止</a>
+                </button>
+
+            </div>
+        </div>
+        <!-- Matter ends -->
+    </div>
+</div>
+<!-- Content ends -->
+<php> echo file_get_contents("http://localhost".(C('SERVER_PORT')==80?'':":".C('SERVER_PORT'))."/System/main/initfoot");</php>

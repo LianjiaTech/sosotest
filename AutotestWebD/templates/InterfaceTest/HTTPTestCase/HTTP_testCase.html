@@ -1,0 +1,2016 @@
+{% include 'InterfaceTest/head.html'%}
+<!-- Main content starts -->
+<style>
+
+</style>
+<script type="text/javascript">
+    var optionFromContext = "{{ option }}";
+    var interfaceList = Array();
+    function initJudgeVersion() {
+        if ("{{ request.session.version }}" !== "CurrentVersion") {
+            alert("请注意！！！现在为历史版本[{{ request.session.version }}]页面！！！");
+        }
+    }
+    initJudgeVersion();
+    //弹出隐藏层
+    function openDiv(show_div,bg_div){
+        //弹出详情层
+        obshowdiv =  $('#'+show_div);
+        objclosediv = $('#'+show_div+'> label');
+        obbgdiv = $('#'+bg_div);
+        offtop=obshowdiv.offset().top;
+        offleft=obshowdiv.offset().left;
+        obshowdiv.css("top",offtop+40+"px");
+        objclosediv.css("top","40px");
+        objclosediv.css("left","90%%");
+        obshowdiv.show();
+        obbgdiv.show();
+        docheight = $(document).height();
+        obbgdiv.height(docheight);
+        $('html,body').animate({scrollTop:offtop}, 800);
+
+        $("#surprise3").click();
+        $("#openDivBtn").attr("disabled", true);
+        interfaceListIsChecked();
+
+    };
+    //关闭弹出层
+    function CloseDiv(show_div,bg_div){
+        $("#openDivBtn").attr("disabled", false);
+        $('#'+show_div).hide();
+        $('#'+bg_div).hide();
+    }
+
+    function syncText(element) {
+        if(element.is(':checked')){
+            element.next().html("&nbsp;&nbsp;同步");
+        }else {
+            element.next().html("&nbsp;&nbsp;不同步");
+        }
+
+    }
+
+    var page = '{{ page }}';
+    var checkVals =  eval('(' +'{"caseFounder":"{{ request.session.userName }}","interfaceId":"","title":"","casedesc":"","url":""}'+ ')');
+    function clearChecked() {
+        $("#caseFounderInput").val('');
+        $("#interfaceIdInput").val('') ;
+        $("#caseNameInput").val('') ;
+        $("#caseDescribeInput").val('');
+        $("#caseInterFaceInput").val('');
+        $("#caseModuleInput").val('');
+        $("#businessLineCheckTab").children().eq(0).children().eq(0).click();
+        editCheckVal();
+    }
+
+       function editBusinessLineCheckTab(name) {
+        checkVals["businessLine"] = name;
+        editCheckVal();
+    }
+
+
+    function editCheckVal() {
+
+        //接口创建人
+        if($("#caseFounderInput").val()==''){
+            checkVals['caseFounder'] = "";
+        }else if($("#caseFounderInput").val()=='all'){
+            checkVals['caseFounder'] = '';
+        }else{
+            checkVals['caseFounder'] =$("#caseFounderInput").val() ;
+        }
+
+        //接口Id
+        if($("#interfaceIdInput").val()==''){
+            checkVals['interfaceId'] = '';
+        }else {
+            checkVals['interfaceId'] =$("#interfaceIdInput").val() ;
+        }
+
+        //接口名称
+        if($("#caseNameInput").val()==''){
+            checkVals['title'] = '';
+        }else {
+            checkVals['title'] =$("#caseNameInput").val() ;
+        }
+
+
+        //接口描述
+        if ($("#caseDescribeInput").val()==''){
+            checkVals['casedesc']='';
+        }else {
+            checkVals['casedesc']=$("#caseDescribeInput").val();
+        }
+
+        //服务
+        if ($("#caseInterFaceInput").val()==''){
+            checkVals['url']='';
+        }else {
+            checkVals['url']=$("#caseInterFaceInput").val();
+        }
+
+        if ($("#caseModuleInput").val()==''){
+            checkVals['module']='';
+        }else {
+            checkVals['module']=$("#caseModuleInput").val();
+        }
+        selected();
+    }
+
+
+    function inputVal(val) {
+        $("#caseFounderInput").val(val);
+        editCheckVal();
+        interfaceListIsChecked();
+    }
+
+    function checkOptions() {
+
+        var htmls = ' <span class="cat-text"style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>';
+
+        for(var item in checkVals){
+            if(checkVals[item] != '' && typeof(checkVals[item]) != 'undefined'){
+                var key = '';
+                switch(item){
+                    case "caseFounder":
+                        key = '接口创建人';
+                        break;
+                    case "interfaceId":
+                        key = '接口编号';
+                        break;
+                    case "title":
+                        key = '接口名称';
+                        break;
+                    case "casedesc":
+                        key = '接口描述';
+                        break;
+                    case "url":
+                        key = '接口URL';
+                        break;
+                    case "module":
+                        key = '{{ groupLevel2 }}';
+                        break;
+                    case "businessLine":
+                        key = "{{ groupLevel1 }}";
+                        break;
+                }
+                htmls = htmls+'<span class="tag"><span>'+key+'：'+checkVals[item]+'&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delCheckOptions(\''+item+'\')">x</a></span> '
+
+            }
+        }
+        htmls = htmls +'<span class="tag" style="float: right;background-color: #ff7575"><span>默认筛选&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="clearChecked()">x</a></span>';
+        $('#checkOption').html(htmls);
+    }
+
+    function EnterPress(event){ //传入 event
+        var e = event || window.event;
+        if(e.keyCode == 13){
+            editCheckVal();
+
+        }
+    }
+
+      function pageCall(pageNum) {
+        page = pageNum;
+        selected();
+    }
+
+    function delCheckOptions(key) {
+        switch (key){
+            case "caseFounder":
+                $("#caseFounderInput").val('all');
+                break;
+            case "interfaceId":
+                $("#interfaceIdInput").val('');
+                break;
+            case "title":
+                $("#caseNameInput").val('');
+                break;
+            case "casedesc":
+                $("#caseDescribeInput").val('');
+                break;
+            case "url":
+                $("#caseInterFaceInput").val('');
+                break;
+            case "module":
+                $("#caseModuleInput").val('');
+                break;
+            case "businessLine":
+                $("#businessLineCheckTab").children().eq(0).children().eq(0).click();
+                break;
+        }
+        editCheckVal();
+    }
+
+
+    //创建时间排序
+    var orderBy = "i.modTime desc , i.id desc";
+    var addTimeFlag = '-1';
+    var interfaceNameFlag = "-1";
+
+    function interfaceOrderByName() {
+            if (interfaceNameFlag == '-1' || interfaceNameFlag == '0') {
+                interfaceNameFlag = '1';
+                addTimeFlag = '-1';
+                modTimeFlag = '-1';
+                //用例名称正序查
+                orderBy = 'i.title asc';
+            } else if (interfaceNameFlag == '1') {
+                interfaceNameFlag = '0';
+                //用例名称倒序查
+                orderBy = 'i.title desc';
+            }
+            selected();
+        }
+
+    function orderByAddTime() {
+        if (addTimeFlag == '-1' || addTimeFlag == '0') {
+            addTimeFlag = '1';
+            modTimeFlag = '-1';
+            interfaceNameFlag = '-1';
+            //创建时间正序查
+            orderBy = 'i.id asc';
+        } else if (addTimeFlag == '1') {
+            addTimeFlag = '0';
+            //创建时间倒序查
+            orderBy = 'i.id desc';
+        }
+        selected();
+    }
+    var modTimeFlag = '-1';
+    //修改时间排序
+    function orderByModTime() {
+        if(modTimeFlag == '-1' || modTimeFlag == '0'){
+            modTimeFlag = '1';
+            addTimeFlag = '-1';
+            interfaceNameFlag = '-1';
+            //修改时间正序查
+            orderBy = 'i.modTime asc , i.id asc';
+        }else if(modTimeFlag == '1' ){
+            modTimeFlag = '0';
+            //修改时间倒序查
+            orderBy = "i.modTime desc , i.id desc";
+        }
+        selected();
+    }
+    //排序样式显示
+    function orderByShow() {
+        if(addTimeFlag == '0'){
+            $("#addTimeBtn").text('创建时间▼');
+        }else if(addTimeFlag == '1'){
+            $("#addTimeBtn").text('创建时间▲');
+        }
+
+        if(modTimeFlag == '0'){
+            $("#modTimeBtn").text('修改时间▼');
+        }else if(modTimeFlag == '1'){
+            $("#modTimeBtn").text('修改时间▲');
+        }
+
+        if(interfaceNameFlag == '0'){
+            $("#interfaceNameBtn").text('接口名称▼');
+        }else if(interfaceNameFlag == '1'){
+            $("#interfaceNameBtn").text('接口名称▲');
+        }
+    }
+
+    function createPeople(num) {
+        htmlobj=$.ajax({url:'{% url 'queryPeopleInterface' %}?num='+num,async:false});
+        var value = JSON.parse(htmlobj.responseText).body;
+
+        var nameVal = "";
+        for(var i = 0;i<value.length;i++){
+            nameVal = nameVal + '<button type="button" class="btn btn-info btn-xs" onclick="inputVal(\''+value[i].userName+'\')" >'+value[i].userName+'('+value[i].count+')</button> '
+        }
+        if(value.length<3){
+            $("#names").html(nameVal);
+            $("#hover-a").attr('onclick','createPeople('+(0)+')');
+            $("#names").show();
+            return;
+        }else {
+            $("#names").html(nameVal);
+        }
+
+        $("#hover-a").attr('onclick','createPeople('+(num+1)+')');
+        $("#names").show();
+    }
+
+    function closeInterfaceList() {
+        $("#surprise3").click();
+        CloseDiv("getCaseList", "bgdiv");
+    }
+
+
+    //以下为接口选择
+    function interfaceListIsChecked() {
+
+        for(var i=0;i<interfaceList.length;i++){
+            $("#"+interfaceList[i]).prop("checked",true);
+        }
+        var allcheck = 1;
+        $("[name='interfaceCheckbox']").each(function () {
+            if(!$(this).is(':checked')){
+                allcheck = 0;
+            }
+        });
+        if(allcheck == 1){
+            $("#checkboxAll").prop("checked",true);
+        }
+    }
+function Checkall() {
+    var checkbox = $("[name='interfaceCheckbox']");
+    if ($("#checkboxAll").is(':checked')) {
+
+        checkbox.each(function () {
+            if (!$(this).is(':checked')) {
+                interfaceList.push($(this).attr("id"));
+                $(this).prop("checked", true);
+            }
+        })
+
+    } else {
+        checkbox.each(function () {
+            if ($(this).is(':checked')) {
+                interfaceList.splice($.inArray($(this).attr("id"), interfaceList), 1);
+                $(this).prop("checked", false);
+            }
+        })
+    }
+}
+
+</script>
+
+{% include 'InterfaceTest/HTTPMenu.html' %}
+    <div class="content">
+    <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <div class="col-xs-12 form-group pull-right top_search">
+                    <h3>{{ text.pageTitle }}</h3>
+                  </div>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>{{ text.subPageTitle }}</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <div  data-parsley-validate class="form-horizontal form-label-left">
+                      <div>
+                        <h2>基本信息</h2>
+                        <br>
+                      </div>
+                        {% if option != "add" %}
+                            {% if option != "copy" %}
+                                <div class="form-group" >
+                                    <label class="control-label col-md-min-1">用例编号</label>
+                                    <div class="col-lg-8">
+                                        <input type="text" id="caseIdInput" class="form-control col-md-7 col-xs-12" disabled value="">
+                                    </div>
+                                </div>
+                                {% else %}
+                            {% endif %}
+                        {% endif %}
+                      <div class="form-group">
+                        <label class="control-label col-md-min-1">用例名称 <span class="required">*</span>
+                        </label>
+                        <div class="col-lg-8">
+                          <input  id="name" placeholder="请输入用例名称" type="text"  required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-min-1" for="last-name">用例描述 <span class="required">*</span>
+                        </label>
+                        <div class="col-lg-8">
+                            <textarea type="text" id="describe" required="required" class="form-control col-md-7 col-xs-12 Fixed-width"
+                            placeholder="请输入用例描述"
+                            ></textarea>
+                        </div>
+                      </div>
+                     <div class="form-group">
+                            <label class="control-label col-md-min-1">{{ groupLevel1 }}</label>
+                            <div class="col-lg-2" style="width: 13.5%">
+                                <select class="form-control" id="caseBusinessLine" onchange="switchModule($(this).val(),'caseModules')">
+                                    {% for business in businessLine %}
+                                        <option value="{{ business.id }}">{{ business.bussinessLineName }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <label class="control-label col-md-min-1" style="width:4.3%;">{{ groupLevel2 }}</label>
+                            <div class="col-lg-2" style="width: 13.5%">
+                                <select class="form-control" id="caseModules">
+                                    {% for m in modules %}
+                                        <option value="{{ m.id }}">{{ m.moduleName }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <label class="control-label col-md-min-1" style="width:4.3%;">来源</label>
+                            <div class="col-lg-2" style="width: 13.5%">
+                                <select class="form-control" id="caseSources">
+                                     {% for s in source %}
+                                        <option value="{{ s.id }}">{{ s.sourceName }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <label class="control-label col-md-min-1" style="width:4.3%;">优先级</label>
+                            <div class="col-lg-2" style="width: 13.5%">
+                                <select class="form-control" id="testCaseLevel">
+                                    <option value="0">高</option>
+                                    <option value="5" selected>中</option>
+                                    <option value="9">低</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                      <div class="form-group" style="margin-bottom: 0px">
+                          <hr>
+                        <h2 style="width: 20%;float: left">步骤详情</h2>
+                           <button  id="showAllStepDiv" type="button" class="btn btn-primary btn-sm" style="border-color:#428bca;float: right;margin-right: 30%;margin-top: 5px" onclick="showAllStepDiv()">打开所有步骤</button>
+                      <button  id="openDivBtn" type="button" class="btn btn-primary btn-sm" style="margin-right: 1%;float: right;border-color:#428bca;margin-top: 5px"  onclick="openDiv('getCaseList','bgdiv')">选择单接口</button>
+                      </div>
+                     <table id="stepGroup"  width="75%">
+
+                      </table>
+
+
+                    </div>
+                    <div class="ln_solid"></div>
+                    <div style="width:65%;" class="col-lg-12">
+                    {% if option == "add" %}
+                        {% if 'add' in  permissionsList %}
+                            <button style="float: right" type="button" class="btn btn-success btn-lg" onclick="saveOrDebug('save')">保存</button>
+                        {% endif %}
+                    {% elif option == "check" %}
+                        {% if "edit" in permissionsList %}
+                            <a href="{% url 'HTTP_operationTestCase' %}?id={{ id }}&option=edit&addBy={{ addBy }}">
+                                <button style="float: right" type="button" class="btn btn-success btn-lg">编辑</button>
+                           </a>
+                        {% endif %}
+                        {% if "copy" in permissionsList %}
+                            <a href="{% url 'HTTP_operationTestCase' %}?id={{ id }}&option=copy&addBy={{ addBy }}">
+                                <button style="float: right" type="button" class="btn btn-success btn-lg">拷贝</button>
+                            </a>
+                        {% endif %}
+                    {% elif option == "copy" %}
+                        <a href="javascript:void(0);">
+                            <button style="float: right" type="button" class="btn btn-success btn-lg" onclick="saveOrDebug('save')">保存</button>
+                        </a>
+                    {% elif option == "edit" %}
+                        <a href="javascript:void(0);">
+                            {% if "edit" in permissionsList %}
+                                <button style="float: right" type="button" class="btn btn-success btn-lg" onclick="saveOrDebug('edit')">保存</button>
+                            {% else %}
+                                <button style="float: right" type="button" class="btn btn-success btn-lg" onclick="window.close()">关闭</button>
+                            {% endif %}
+                        </a>
+                    {% endif %}
+                    </div>
+                  </div>
+                </div>
+               <!--接口页面-->
+              <div id="getCaseList" class="white_content x_panel" style="display: none;width:85%;margin-top: -35px" >
+                  <div class="x_title">
+                    <h2>选择单接口</h2>
+
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <div class="x_content">
+
+                    <div class="form-group">
+                        <div  id="checkOption">
+                            <span class="cat-text" style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>
+                        </div>
+
+                    </div>
+                      <br>
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist" style="margin-bottom: 0px">
+                        <li role="presentation" class="active"><a href="#caseFounder" role="tab" data-toggle="tab" aria-expanded="true">接口创建人</a>
+                        </li>
+                          <li role="presentation" class=""><a href="#caseId" role="tab" data-toggle="tab" aria-expanded="true">接口编号</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#caseName" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">接口名称</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#caseDescribe" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">接口描述</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#caseInterFace" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">接口URL</a>
+                        </li>
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="caseFounder" aria-labelledby="home-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="caseFounderInput" onkeypress="EnterPress(event)" placeholder="请输入接口创建人">
+                            </div>
+                              <div class="col-lg-4" >
+                                  <span style="font-size: 15px;margin-top: 5px">快捷条件: </span>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="inputVal('all')">所有</button>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="inputVal('{{ request.session.userName }}')">{{ request.session.userName }}</button>
+                              <button id="hover-a" type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="createPeople(0)">其他</button>
+                                  <div id="names" style="margin-top: 10px">
+                            </div>
+                                  </div>
+
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="caseName" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="caseNameInput" onkeypress="EnterPress(event)" placeholder="请输入接口名称" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="caseId" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="interfaceIdInput" onkeypress="EnterPress(event)" placeholder="请输入接口编号" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="caseDescribe" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="caseDescribeInput" onkeypress="EnterPress(event)" placeholder="请输入接口描述">
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="caseInterFace" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="caseInterFaceInput"  onkeypress="EnterPress(event)" placeholder="请输入接口URL" >
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="taskList" class="form-group"></div>
+                        <div class="widget-foot">
+                            <button class="btn btn-info pull-right" style="margin-left: 20px" onclick="closeInterfaceList()">关闭</button>
+                            <button class="btn btn-success pull-right" style="margin-left: 40px" onclick="selectInterfaceAddStep()">保存</button>
+                            <div class="clearfix" ></div>
+                        </div>
+                  </div>
+
+                  </div>
+                </div>
+              </div>
+              <!--调试-->
+              <div class="x_panel">
+                  <div class="x_title">
+                    <h2>接口调试</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    {% include "config/debugBtnPage.html" %}
+                      <div id="debugResult" style="display: none">
+                                                    <table class="table table-striped table-bordered table-hover"
+                                                           style="table-layout:fixed;width:100%;word-break:break-all;">
+                                                        <thead>
+                                                        <tr style="color: snow" bgcolor="#2A3F54">
+                                                            <th style="width:2%;">编号</th>
+                                                            <th style="width:3%;">测试结果</th>
+                                                            <th style="width:3%;">执行环境</th>
+                                                            <th style="width:3%;">步骤数量</th>
+                                                            <th style="width:15%;">断言结果</th>
+                                                            <th style="width:3%;">执行前耗时</th>
+                                                            <th style="width:3%;">执行耗时</th>
+                                                            <th style="width:3%;">执行后耗时</th>
+                                                            <th style="width:3%;">总耗时</th>
+                                                            <th style="width:3.5%;">操作</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody id="debugResultTbody">
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                  </div>
+                </div>
+            </div>
+
+          </div>
+    </div>
+    </div>
+<!-- Content ends -->
+  <style>
+  .ui-state-highlight { height: 89px }
+  </style>
+<script src="/static/template_js/http/testcase_code_editor.js?v={{ static_version }}"></script>
+<script type="text/javascript">
+    var allStepCodeEditorDict = {};
+    var stepArr = {"step":[]};
+    var getTestCaseStepPage = $.ajax({url: "{% url 'HTTP_TestCaseStepPage' %}", async: false});
+    var response = getTestCaseStepPage.responseText;
+    var getTestCaseStepDetailPage = $.ajax({url: "{% url 'HTTP_TestCaseStepDetailPage' %}", async: false});
+    var stepDetailResponse = getTestCaseStepDetailPage.responseText;
+    var dataJsonString = "";
+    var optionFromContext = '{{ option }}';
+    //步骤计数器
+    var allStepIndex = 0;
+
+    function getUrlParam(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+        var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+        if (r != null) return unescape(r[2]); return null; //返回参数值
+    }
+
+    function useCustomToggle(element) {
+        var useCustomUriCheckbox = element.parent().find("[name='useCustomUri']");
+        if (useCustomUriCheckbox.prop("checked")){
+            useCustomUriCheckbox.prop("checked",false);
+            element.html('使用自定义地址<i class="fa fa-hand-o-right"></i>');
+        }else {
+            useCustomUriCheckbox.prop("checked",true);
+            element.html('<i class="fa fa-hand-o-left"></i>使用服务配置地址');
+        }
+    }
+
+    if (optionFromContext != 'add') {
+        var getTestCaseData = $.ajax({url: "{% url 'getTestCaseDataForId' %}?id={{ id }}", async: false});
+        dataJsonString = JSON.parse(getTestCaseData.responseText)["body"];
+        stepArr = JSON.parse(dataJsonString);
+    }else{
+        //获取redisKey
+        var dataKey = getUrlParam("dataKey");
+        if (dataKey !== null){
+            try {
+                var htmlText = $.ajax({url: "{% url 'getRedisTestCaseData' %}?dataKey=" + dataKey, async: false});
+                var htmlTextJson = JSON.parse(htmlText.responseText);
+                if (htmlTextJson["code"] === 10000) {
+                    dataJsonString = htmlTextJson["body"];
+                    stepArr = JSON.parse(dataJsonString);
+                }
+            }catch (err){
+                console.log(err)
+            }
+
+        }
+    }
+    function stepInput() {
+        $("#stepGroup").append($(response));
+        var thisStep = $("[name1='newStep']").eq(0);
+        thisStep.data("index",allStepIndex);
+        thisStep.attr("id","testCaseStep_"+allStepIndex);
+        var thisStepDetailsEditBtn = thisStep.find("[name='stepDetailsEditBtn']");
+        thisStepDetailsEditBtn.attr("onclick","showStepDetail('"+allStepIndex+"')");
+        thisStepDetailsEditBtn.attr("id","stepDetailsEditBtn_"+allStepIndex);
+        thisStepDetailsEditBtn.data("isShow",false);
+        thisStepDetailsEditBtn.data("isAgainShow",false);
+        thisStep.removeAttr("name1");
+        thisStep.find("[name='stepDetail']").attr("id","stepDetail_"+allStepIndex);
+        allStepIndex += 1;
+    }
+
+    //初始化页面
+    function InitStep() {
+
+        if (dataJsonString == "") {
+            stepInput();
+            stepPageWrite();
+            switchModule($("#caseBusinessLine").val());
+        } else {
+            stepArr = JSON.parse(dataJsonString);
+            $("#caseIdInput").val(stepArr.caseId);
+            $("#name").val(stepArr.title);
+            $("#describe").val(stepArr.casedesc);
+            switchModule(stepArr.businessLineId_id,"caseModules");
+
+            $("#caseBusinessLine").find("option[value='" + stepArr.businessLineId_id + "']").prop("selected", true).change();
+            try {
+                $("#caseModules").find("option[value='" + stepArr.moduleId_id + "']").prop("selected", true).change();
+            } catch (e) {
+
+            }
+            $("#caseSources").find("option[value='" + stepArr.sourceId_id + "']").prop("selected", true);
+            $("#testCaseLevel").find("option[value='" + stepArr.caselevel + "']").prop("selected", true);
+            for (var stepNum = 0; stepNum <= stepArr.step.length; stepNum++) {
+               stepInput();
+            }
+            stepPageWrite();
+            stepDataWrite();
+            if(optionFromContext === "check"){
+                $("textarea").attr("disabled",true);
+                $("input").attr("disabled",true);
+            }
+        }
+    }
+    var businessLine_module_relation = $.ajax({
+        url: '{% url 'bmRelation' %}',
+        type: 'get',
+        async: false,
+    });
+    try {
+        var bmDict = JSON.parse(businessLine_module_relation.responseText).body;
+    } catch (e) {
+        alert(bmDict);
+        alert("获取业务线模块关联失败")
+    }
+    InitStep();
+
+    function switchModule(blId,moduleDomId) {
+        $("#"+moduleDomId+" option").remove();
+        for(var index = 0; index < bmDict[blId].length;index ++){
+            jQuery("<option></option>").val(bmDict[blId][index]["id"]).text(bmDict[blId][index]["moduleName"]).appendTo("#"+moduleDomId);
+        }
+        $("#caseBusinessLine").select2();
+        $("#caseModules").select2();
+        $("#caseSources").select2();
+        $("#testCaseLevel").select2();
+    }
+
+    function addStep(){
+        stepInput();
+        stepPageWrite();
+    }
+
+    function textareaNotSort(){
+        $("#stepGroup tbody").sortable({ disabled: true })
+    }
+
+    function textareaSort(){
+        $("#stepGroup tbody").sortable({ disabled: false })
+    }
+
+    function stepPageWrite() {
+        var stepList = $("[name='testCaseStep']");
+        var stepLabel = $("[name='stepLabel']");
+        var headBG = $("[name='headBG']");
+
+        var stepDetailsEditBtn = $("[name='stepDetailsEditBtn']");
+
+        var beforeNotSort = $("[ name='beforeNotSort']");
+        var afterNotSort = $("[ name='afterNotSort']");
+        for (var index = 0;index < stepList.length;index ++){
+            stepLabel.eq(index).text("步骤"+(index+1));
+            beforeNotSort.eq(index).mousedown(function(){
+                textareaNotSort()
+            });
+            afterNotSort.eq(index).mousedown(function(){
+                textareaNotSort()
+            });
+            beforeNotSort.eq(index).mouseup(function(){
+                textareaSort()
+            });
+            afterNotSort.eq(index).mouseup(function(){
+                textareaSort()
+            });
+            var thisStep = stepList.eq(index);
+            if(stepList.eq(index).data("stepData") === undefined){
+                stepList.eq(index).data("stepData",{});
+            }
+            if (index !== stepList.length -1){
+                thisStep.find("[name='stepDetailsEditBtn']").css("display","");
+                thisStep.find("[name='stepCopy']").css("display","");
+                thisStep.find("[name='stepDetailsDeleteBtn']").css("display","");
+                thisStep.find("[name='stepSwitchDiv']").css("display","");
+                thisStep.find("[name='stepSwitchFor']").attr("for","stepSwitch_"+index);
+                thisStep.find("[name='stepSwitch']").attr("id","stepSwitch_"+index);
+                thisStep.find("[name='stepSwitchFor']").attr("for","stepSwitch_"+index);
+
+                thisStep.find("[name='stepDesc']").removeAttr("onclick","stepInput()");
+                //颜色
+                headBG.css("background-color","#E0FFFF");
+            }else {
+                thisStep.find("[name='stepDesc']").attr("onclick","addStep()");
+                headBG.eq(index).css("background-color","#C0C0C0");
+            }
+
+        }
+    }
+    function stepDataWrite() {
+{#        var stepDesc = $("[name='stepDesc']");#}
+{#        var isSync = $("[name='isSync']");#}
+{#        var fromInterfaceId = $("[name='fromInterfaceId']");#}
+{#        var stepList = $("[name='testCaseStep']");#}
+        for (var index = 0;index < stepArr.step.length; index++) {
+            var thisStepData = stepArr.step[index];
+
+            thisStepDataWrite(index, thisStepData)
+        }
+    }
+
+    function thisStepDataWrite(index,thisStepData) {
+        var thisStep = $("[name='testCaseStep']").eq(index);
+        var thisStepDesc = thisStep.find("[name='stepDesc']");
+        var thisFromInterfaceId = thisStep.find("[name='fromInterfaceId']");
+        var thisSync = thisStep.find("[name='isSync']");
+        var thisSwitch = thisStep.find("[name='stepSwitch']");
+
+{#        var thisStepData = stepArr.step[index];#}
+
+        thisStepDesc.val(thisStepData.stepDesc);
+        thisStep.data("stepData", thisStepData);
+
+        if (thisStepData["fromInterfaceId"] !== "无" && thisStepData.fromInterfaceId !== "") {
+            thisFromInterfaceId.text(thisStepData.fromInterfaceId);
+            var idArray = thisStepData.fromInterfaceId.split("_");
+            thisFromInterfaceId.attr("href", "{% url 'HTTP_operationInterface' %}?id=" + idArray[2] + "&option=check&addBy=" + thisStepData.addBy_id);
+            thisSync.css("visibility", "visible");
+            thisSync.next().css("visibility", "visible");
+            thisSync.prop("disabled", false);
+            if (thisStepData.isSync == 0) {
+                thisSync.prop("checked", false);
+                thisSync.next().html("&nbsp;&nbsp;不同步")
+            } else {
+                thisSync.prop("checked", true);
+                thisSync.next().html("&nbsp;&nbsp;同步")
+            }
+            if(thisStepData.stepSwitch === 1){
+                thisSwitch.prop("checked", true);
+            }else {
+                thisSwitch.prop("checked", false);
+            }
+        }
+    }
+    function loadFile(element) {
+        var file = element[0].files[0];
+        if (file.size > 1024 * 1024) {
+            alert("文件大小不能超过1M");
+            element.val('')
+            return false;
+        }
+        element.parent().next().val(element.val());
+        element.parent().next().next().text('');
+
+    }
+    function showStepDetail(index) {
+        var thisStepDetailsEditBtn = $("#stepDetailsEditBtn_"+index);
+        var thisStepDetailDiv = $("#stepDetail_"+index);
+
+        if (thisStepDetailsEditBtn.data("isShow")){
+            thisStepDetailDiv.css("display","none");
+            thisStepDetailsEditBtn.data("isShow",false);
+        }else
+            {
+            if (thisStepDetailsEditBtn.data("isAgainShow")){
+                thisStepDetailDiv.css("display","block");
+                thisStepDetailsEditBtn.data("isShow",true);
+                return;
+            }
+            thisStepDetailDiv.html(stepDetailResponse);
+            thisStepDetailDiv.find("[name='body']").attr("name", "body" + index);
+            thisStepDetailDiv.find("[name='modules']").attr("id", "modules" + index);
+            thisStepDetailDiv.find("[name='businessLine']").attr("onchange", "switchModule($(this).val(),'modules" + index + "')");
+            switchModule(thisStepDetailDiv.find("[name='businessLine']").val(), "modules" + index);
+            //修改步骤内Tab切换的值
+            var switchTabList = thisStepDetailDiv.find("[name1='switchTab']");
+            for (var tabIndex = 0; tabIndex < switchTabList.length; tabIndex++) {
+                var thisSwitchTab = switchTabList.eq(tabIndex);
+                thisSwitchTab.attr("href", thisSwitchTab.attr("href").split("__")[0] + "__" + index)
+            }
+            var switchDivList = thisStepDetailDiv.find("[name1='switchDiv']");
+
+            for (var divIndex = 0; divIndex < switchDivList.length; divIndex++) {
+                var thisSwitchDiv = switchDivList.eq(divIndex);
+                thisSwitchDiv.attr("id", thisSwitchDiv.attr("id").split("__")[0] + "__" + index)
+            }
+
+            thisStepDetailDiv.find("[name='redirectSelect']").select2();
+            thisStepDetailDiv.find("[name='businessLine']").select2();
+            thisStepDetailDiv.find("[name='modules']").select2();
+            thisStepDetailDiv.find("[name='sources']").select2();
+            thisStepDetailDiv.find("[name='methodSelect']").select2();
+            thisStepDetailDiv.find("[name='URI']").select2();
+            thisStepDetailDiv.find("[name1='bodyNone']").click();
+            thisStepWrite(index);
+            initAllEditor(index);
+            thisStepDetailsEditBtn.data("isShow", true);
+            thisStepDetailsEditBtn.data("isAgainShow", true);
+
+        }
+        if(optionFromContext === "check"){
+            $("textarea").attr("disabled",true);
+            $("input").attr("disabled",true);
+            $("select").attr("disabled",true);
+        }
+    }
+
+    //删除步骤
+    function deleteStep(element) {
+        element.parents("[name='testCaseStep']").remove();
+        stepOrder();
+    }
+
+    //写入单一步骤的元素
+    function thisStepWrite(index) {
+        var thisStep = $("#testCaseStep_"+index);
+        if (JSON.stringify(thisStep.data("stepData")) !== "{}"){
+            var thisStepData = thisStep.data("stepData");
+            thisStep.find("[name='businessLine']").find("option[value='" + thisStepData.businessLineId_id + "']").prop("selected", true).change();
+            thisStep.find("[name='modules']").find("option[value='" + thisStepData.moduleId_id + "']").prop("selected", true).change();
+            thisStep.find("[name='sources']").find("option[value='" + thisStepData.sourceId_id + "']").prop("selected", true).change();
+            thisStep.find("[name='commonValBefore']").val(thisStepData.varsPre);
+
+            thisStep.find("[name='commonValAfter']").val(thisStepData.varsPost);
+            thisStep.find("[name='methodSelect']").find("option[value='" + thisStepData.method + "']").prop("selected", true).change();
+            thisStep.find("[name='URI']").find("option[value='" + thisStepData.uri + "']").prop("selected", true).change();
+            thisStep.find("[name='URL']").val(thisStepData.url);
+            thisStep.find("[name='customUri']").val(thisStepData.customUri);
+            if(thisStepData.useCustomUri === 0){
+                thisStep.find("[name='useCustomUri']").prop("checked",true);
+                thisStep.find("[name='useCustomUriBtn']").html('<i class="fa fa-hand-o-left"></i>使用服务配置地址');
+            }else{
+                thisStep.find("[name='useCustomUri']").prop("checked",false);
+                thisStep.find("[name='useCustomUriBtn']").html('使用自定义地址<i class="fa fa-hand-o-right"></i>');
+            }
+            thisStep.find("[name='redirectSelect']").find("option[value='" + thisStepData.urlRedirect + "']").prop("selected", true).change();
+            thisStep.find("[name='timeout']").val(thisStepData.timeout);
+            thisStep.find("[name='performanceTime']").val(thisStepData.performanceTime);
+            if(thisStepData.header === undefined){
+                var thisHeader = {}
+            }else  if(typeof(thisStepData.header) == "string"){
+                var thisHeader =  JSON.parse( thisStepData.header);
+            }else {
+                var thisHeader = JSON.parse(JSON.stringify(thisStepData.header));
+            }
+            tableInitDict(thisStep.find("[name='headerTbody']"), thisHeader);
+            thisStep.find("[name='headerTab']").text('HEADER('+(thisStep.find("[name='headerTbody']").children().length-1)+')');
+            var paramsFlag = 0;
+            var paramsList = urlencodeToList(thisStepData.params);
+            for (var paramsIndex = 0;paramsIndex<paramsList.length;paramsIndex++){
+                if (paramsList[paramsIndex][0] == "" || paramsList[paramsIndex][1] == ""){
+                    paramsFlag = 1;
+                }
+            }
+            if (paramsFlag == 0){
+                tableInitList(thisStep.find("[name='paramsTbody']"), urlencodeToList(thisStepData.params));
+            }else {
+                var parameter = thisStep.find("[name='parameter']");
+                parameter.parent().parent().children().eq(0).css("display", "none");
+                parameter.parent().parent().children().eq(1).css("display", "block");
+                parameter.val(thisStepData.params);
+            }
+
+            if (thisStepData.method != "GET" && thisStepData.method != "HEAD") {
+                thisStep.find("[name='bodyTab']").parent().css("display", "block");
+                thisStep.find("[name='bodyTab']").click();
+                if(thisStepData.bodyType !== undefined){
+                    thisStep.find("[name='radioParentDiv']").find("input").each(function () {
+                    if ($(this).val() == thisStepData.bodyType) {
+                        $(this).prop("checked", true);
+                        thisStep.find("[name='body-" + thisStepData.bodyType + "']").css("display", "block");
+                    } else {
+                        $(this).prop("checked", false);
+                        thisStep.find("[name='body-" + $(this).val() + "']").css("display", "none");
+                    }
+                });
+                }
+
+
+                switch (thisStepData.bodyType) {
+                    case "x-www-form-urlencoded":
+                        tableInitList(thisStep.find("[name='x-www-form-urlencodedTbody']"), urlencodeToList(thisStepData.bodyContent));
+                        break;
+                    case "raw":
+                        thisStep.find("[name='body-raw-input']").val(thisStepData.bodyContent);
+                        thisStep.find("[name='body-raw-select']").css("display", "block");
+
+                        if (thisHeader["Content-Type"]) {
+                            thisStep.find("[name='headerSelected']").val(thisHeader["Content-Type"]);
+                            changeSelectWidth(thisStep.find("[name='headerSelected']"));
+                        }
+                        break;
+                    case "binary":
+                        if (typeof (thisStepData.bodyContent) == "string") {
+                            thisStep.find("[name='binarySpan']").text(thisStepData.bodyContent);
+                            thisStep.find("[name='binaryTextName']").val(JSON.parse(thisStepData.bodyContent)["showPath"]);
+                        } else {
+                            thisStep.find("[name='binarySpan']").text(JSON.stringify(thisStepData.bodyContent));
+                            thisStep.find("[name='binaryTextName']").val(JSON.parse(JSON.stringify(thisStepData.bodyContent))["showPath"]);
+                        }
+
+                        break;
+                    case "form-data":
+                        var formTrList = thisStep.find("[name='body-form-Tbody']");
+                        if (typeof(thisStepData.bodyContent) == "string") {
+                            var bodyContentList = JSON.parse(thisStepData.bodyContent);
+                        } else {
+                            var bodyContentList = JSON.parse(JSON.stringify(thisStepData.bodyContent));
+                        }
+                        for (var bodyContentIndex = 0; bodyContentIndex < bodyContentList.length; bodyContentIndex++) {
+                            if (bodyContentIndex > formTrList.children().length - 2) {
+                                addTableTr(formTrList);
+                            }
+                            formTrList.children().eq(bodyContentIndex).find("input").eq(0).val(bodyContentList[bodyContentIndex]["key"]);
+                            formTrList.children().eq(bodyContentIndex).eq(0).find("select").val(bodyContentList[bodyContentIndex]["type"]);
+
+                            formDataInput_file(formTrList.children().eq(bodyContentIndex).eq(0).find("select"));
+                            if (bodyContentList[bodyContentIndex]["type"] == "text") {
+                                formTrList.children().eq(bodyContentIndex).children().eq(1).find("input").eq(0).val(bodyContentList[bodyContentIndex]["value"]);
+                            } else {
+                                formTrList.children().eq(bodyContentIndex).children().eq(1).find("[name='formDataFileName']").val(bodyContentList[bodyContentIndex]["value"]["showPath"]);
+                                formTrList.children().eq(bodyContentIndex).children().eq(1).find("[name='formDataFileSpan']").text(JSON.stringify(bodyContentList[bodyContentIndex]["value"]));
+                            }
+                        }
+                        break;
+                }
+
+            } else {
+            }
+        }
+
+    }
+
+    //保存单一步骤中元素中的数据
+    function thisStepRead(index,formData) {
+        var thisStep = $("[name='testCaseStep']").eq(index);
+        var thisStepDetailsEditBtn = thisStep.find("[name='stepDetailsEditBtn']");
+        var thisStepData = JSON.parse(JSON.stringify(thisStep.data("stepData")));
+        thisStepData.stepDesc = thisStep.find("[name='stepDesc']").val();
+        thisStepData.fromInterfaceId = thisStep.find("[name='fromInterfaceId']").text();
+        thisStepData.stepNum = index + 1;
+        if(thisStep.find("[name='isSync']").is(':checked')){
+            thisStepData.isSync = 1;
+        }else {
+            thisStepData.isSync = 0;
+        }
+        if(thisStep.find("[name='stepSwitch']").is(':checked')){
+            thisStepData.stepSwitch = 1;
+        }else {
+            thisStepData.stepSwitch = 0;
+        }
+
+
+        if (thisStepDetailsEditBtn.data("isAgainShow")) {
+            thisStepData.businessLineId_id = thisStep.find("[name='businessLine']").find("option:selected").val();
+            thisStepData.moduleId_id = thisStep.find("[name='modules']").find("option:selected").val();
+            thisStepData.sourceId_id = thisStep.find("[name='sources']").find("option:selected").val();
+{#            thisStepData.varsPre = thisStep.find("[name='commonValBefore']").val();#}
+            thisStepData.varsPre = codeEditor["before_"+thisStep.attr("id")].getValue();
+{#            thisStepData.varsPost = thisStep.find("[name='commonValAfter']").val();#}
+            thisStepData.varsPost = codeEditor["after_"+thisStep.attr("id")].getValue();
+
+            thisStepData.method = thisStep.find("[name='methodSelect']").find("option:selected").val();
+            thisStepData.uri = thisStep.find("[name='URI']").find("option:selected").val();
+            thisStepData.url = thisStep.find("[name='URL']").val();
+            thisStepData.customUri = thisStep.find("[name='customUri']").val();
+            if(thisStep.find("[name='useCustomUri']").prop("checked")){
+                thisStepData.useCustomUri = 0;
+            }else{
+                thisStepData.useCustomUri = 1;
+            }
+            thisStepData.urlRedirect = thisStep.find("[name='redirectSelect']").val();
+            thisStepData.timeout = thisStep.find("[name='timeout']").val();
+            thisStepData.performanceTime = thisStep.find("[name='performanceTime']").val();
+            thisStepData.header = JSON.stringify(tableElementChildrenToDict(thisStep.find("[name='headerTbody']")));
+            var parameterInputElement = thisStep.find("[name='parameter']");
+            if (parameterInputElement.parent().css("display") == "block") {
+                thisStepData.params = parameterInputElement.val();
+            } else {
+                thisStepData.params = tableDataTourlencode(thisStep.find("[name='paramsTbody']"));
+            }
+            thisStepData.bodyType = thisStep.find("[name='radioParentDiv']").find("input:checked").val();
+            switch (thisStepData.bodyType) {
+                case "none":
+                    thisStepData.bodyContent = "";
+                case "x-www-form-urlencoded":
+                    var urlEncodeElement = thisStep.find("[name='x-www-form-urlencodedTbody']");
+                    if (urlEncodeElement.parent().css("display") == "none") {
+                        thisStepData.bodyContent = thisStep.find("[name='x-www-form-urlencoded-input']").val();
+                    } else {
+                        thisStepData.bodyContent = tableDataTourlencode(urlEncodeElement);
+                    }
+                    break;
+
+                case "raw":
+                    thisStepData.bodyContent = thisStep.find("[name='body-raw-input']").val();
+                    break;
+
+                case "binary":
+                    var binarySpan = thisStep.find("[name='binarySpan']").text();
+                    if (binarySpan == "") {
+                        var fileInput = thisStep.find("[name='binaryFileInput']").eq(0)[0].files[0];
+                        if (typeof(fileInput) != "undefined") {
+                            thisStepData.bodyContent = {};
+                            formData.append('file', fileInput);
+                            thisStepData.bodyContent['showPath'] = thisStep.find("[name='binaryTextName']").val();
+                            thisStepData.bodyContent["filename"] = fileInput.name;
+                            thisStepData.bodyContent["size"] = fileInput.size;
+                        }
+                    } else {
+
+                        thisStepData.bodyContent = JSON.parse(binarySpan);
+                    }
+                    break;
+                case "form-data":
+                    var tableTr = thisStep.find("[name='body-form-Tbody']").children();
+                    thisStepData.bodyContent = [];
+                    for (var i = 0; i < tableTr.length; i++) {
+                        var tableTd = tableTr.eq(i).find("td:first");
+                        var key = tableTd.children().eq(0).val().trim();
+                        var type = tableTd.children().eq(1).val().trim();
+                        if (type == "text") {
+                            var value = tableTr.eq(i).find("td").eq(1).children().val().trim();
+                            if (key == "" && value == "") {
+                                continue
+                            }
+                        }
+                        var thisContent = {};
+                        thisContent["key"] = key;
+                        thisContent["type"] = type;
+                        var assignBodyContent = thisStep.find("[name='body-form-Tbody']").find("[name='formDataFileSpan']").eq(i).text();
+                        if (thisContent["type"] == "text") {
+                            thisContent["value"] = value;
+                        } else if (assignBodyContent != "") {
+                            formData.append(key, assignBodyContent);
+                            thisContent["value"] = JSON.parse(assignBodyContent);
+                        } else {
+                            var formDataFileShow = thisStep.find("[name='body-form-Tbody']").children().eq(i).children().eq(1).find("[name='formDataFileName']").val();
+                            var formFileShowList = thisStep.find("[name='body-form-Tbody']").find("[name='formDataInput']").eq(i)[0].files[0];
+                            thisContent["value"] = {};
+                            thisContent["value"]["showPath"] = formDataFileShow;
+                            thisContent["value"]["filename"] = formFileShowList.name;
+                            thisContent["value"]["size"] = formFileShowList.size;
+                            formData.append(key, formFileShowList)
+                        }
+                        thisStepData.bodyContent.push(thisContent);
+                    }
+                    break;
+
+            }
+        }
+
+        var dataValidity = stepDataValidity(thisStepData);
+        if (dataValidity === false){
+            return false;
+        }
+        return thisStepData;
+    }
+    
+    //检查单个Step的数据是否符合规则要求
+    function stepDataValidity(thisStepData) {
+        if(thisStepData.stepDesc === undefined || thisStepData.stepDesc === ""){
+            alert("步骤描述不能为空!");
+            return false;
+        }
+        if(thisStepData.url === undefined || thisStepData.url === ""){
+            alert("步骤请求的URL不能为空");
+            return false;
+        }
+        if( thisStepData.url === undefined || thisStepData.url.indexOf("?")!=-1){
+            alert("url中不能包含问号，参数请填写params，问号自动拼接");
+            return false;
+        }
+        if(!isRealNum(thisStepData.timeout)){
+             alert("超时时间必须为数字");
+            return false;
+        }
+        if(!isRealNum(thisStepData.performanceTime)){
+             alert("超性能时间必须为数字");
+            return false;
+        }
+
+        if(thisStepData.customUri !== "" && thisStepData.customUri.trim().toLowerCase().substr(0, 4).indexOf("http") === -1){
+            alert("http格式错误");
+            return false
+        }
+
+        return true;
+        
+    }
+
+
+    function isRealNum(val) {
+        // isNaN()函数 把空串 空格 以及NUll 按照0来处理 所以先去除
+        if (val === "" || val == null) {
+            return true;
+        }
+        if (!isNaN(val)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function changeBodyTab(element) {
+
+        if (element.val() === "GET" || element.val() === "HEAD") {
+            element.parent().parent().next().find("[name='bodyTab']").parent().css("display", "none");
+            element.parent().parent().next().find("[name='paramsTab']").click();
+        } else {
+            element.parent().parent().next().find("[name='bodyTab']").parent().css("display", "block");
+            element.parent().parent().next().find("[name='bodyTab']").click();
+        }
+
+    }
+    function toggleUrlEncode(element) {
+        if (element.text().trim() == "原始") {
+            element.parent().parent().parent().parent().css("display", "none");
+            element.parent().parent().parent().parent().next().css("display", "block");
+            var tableData = tableDataTourlencode(element.parent().parent().parent().next());
+            element.parent().parent().parent().parent().next().children().val(tableData);
+        } else {
+            element.parent().css("display", "none");
+            element.parent().prev().attr("style", "table-layout: fixed;");
+            tableInitList(element.parent().prev().find("tbody"), urlencodeToList(element.next().val()));
+        }
+    }
+
+    //保存所有步骤中元素中的数据
+    function allStepRead() {
+        var formData = new FormData();
+        var allStep = $("[name='testCaseStep']");
+        if(allStep.length === 1){
+            alert("步骤数量不能为空");
+            return false;
+        }
+        if(allStep.eq(allStep.length-1).find("[name='stepDetailsEditBtn']").css("display") !=="none"){
+            alert("添加步骤的备用行必须最末尾");
+            return false;
+        }
+        stepArr.step = [];
+        for(var stepIndex = 0;stepIndex<allStep.length -1 ;stepIndex++){
+
+            var tmpthisStepData = thisStepRead(stepIndex,formData);
+            if (tmpthisStepData === false){
+                return false;
+            }
+            stepArr.step[stepIndex] = tmpthisStepData;
+        }
+        return formData;
+    }
+
+    function showAllStepDiv() {
+        var btnList = $("[name='stepDetailsEditBtn']");
+
+        if($("#showAllStepDiv").text() == "打开所有步骤"){
+
+            for(var i = 0;i<btnList.length-1;i++){
+                if(!btnList.eq(i).data("isShow")){
+                    btnList.eq(i).click();
+                }
+            }
+            $("#showAllStepDiv").text("关闭所有步骤");
+        }else {
+            for(var i = 0;i<btnList.length-1;i++){
+                if(btnList.eq(i).data("isShow")){
+                    btnList.eq(i).click();
+                }
+            }
+            $("#showAllStepDiv").text("打开所有步骤");
+        }
+    }
+
+    //隐藏所有步骤详情
+    function hideAllStepDetail() {
+        var stepDetailsEditBtnList = $("[name='stepDetailsEditBtn']");
+
+        for (var index =0;index<stepDetailsEditBtnList.length;index++){
+            var thisStep = stepDetailsEditBtnList.eq(index);
+            if (thisStep.data("isShow")){
+                thisStep.click();
+            }
+        }
+    }
+
+    var thisElementForPublicKey;
+    var currentCodeEditor = '';
+    function clickBodyRadio(element) {
+        element.parents("[name='bodyTabContent']").children().each(function () {
+            if($(this).attr("name") == ("body-"+element.val())){
+                $(this).css("display", "block");
+            }else if(typeof($(this).attr("name")) != "undefined"){
+                 $(this).css("display", "none");
+            }
+        });
+        if(element.val() == "raw"){
+                element.parent().parent().next().css("display", "block");
+            }else {
+                element.parent().parent().next().css("display", "none");
+            }
+    }
+
+    function formDataInput_file(element) {
+        if (element.val() == "text") {
+            element.parent().next().find("input").eq(0).css("display", "block");
+            element.parent().next().find("div").css("display", "none");
+            element.parent().next().find("button").css("margin-top", "-32.5px")
+        } else {
+            element.parent().next().find("div").css("display", "block");
+            element.parent().next().find("input").eq(0).css("display", "none");
+            element.parent().next().find("button").css("margin-top", "2px")
+        }
+    }
+
+     function addTableTr(element) {
+          var lastElement = element.children().last();
+          var lastElementHtml = lastElement.prop("outerHTML");
+          lastElement.after(lastElementHtml);
+          tableStyle(element)
+      }
+
+    function tableDataTourlencode(element) {
+        var tableTr = element.children();
+        var tableStr = "";
+        if (tableTr.length != 0) {
+            for (var i = 0; i < tableTr.length; i++) {
+                if (tableTr.eq(i).find("td").eq(0).children().val().trim() == "" && tableTr.eq(i).find("td").eq(1).children().val().trim() == "") {
+                    continue;
+                }
+                tableStr += tableTr.eq(i).find("td").eq(0).children().val().trim() + "=" + tableTr.eq(i).find("td").eq(1).children().val().trim();
+                if (i != (tableTr.length - 2)) {
+                    tableStr += "&";
+                }
+            }
+        }
+        return tableStr;
+    }
+
+    function tableStyle(element) {
+        var elementList = element.children();
+        for (var i = 0; i < elementList.length; i++) {
+            var elementInput = elementList.eq(i).find("input");
+            if (i != (elementList.length - 1)) {
+                elementInput.css("background-color", "");
+                elementInput.attr("onclick", "");
+                elementList.eq(i).find("button").css("display", "block");
+                elementList.eq(i).find("select").attr("disabled", false);
+                elementList.eq(i).find("select").css("background-color", "");
+            } else {
+                elementInput.css("background-color", "rgb(183, 186, 189)");
+                elementList.eq(i).find("button").css("display", "none");
+                elementList.eq(i).find("select").css("background-color", "rgb(183, 186, 189)");
+                elementList.eq(i).find("select").attr("disabled", true);
+            }
+        }
+    }
+
+    function changeHeader(element,codeType) {
+         var headerJson = tableElementChildrenToDict(element);
+          if (codeType == "" || codeType == "Text") {
+            if (headerJson["Content-Type"]) {
+                delete headerJson["Content-Type"];
+            }
+        } else {
+            headerJson["Content-Type"] = codeType
+        }
+        dictInitTable(element,headerJson);
+        element.parent().parent().parent().parent().parent().parent().find("[name='headerTab']").text("HEADER("+(element.children().length-1)+")")
+    }
+
+    function tableElementChildrenToDict(element) {
+        var tableTr = element.children();
+        var tableJson = {};
+        for (var i = 0; i < tableTr.length; i++) {
+            if (tableTr.eq(i).find("td").eq(0).children().val().trim() == "" && tableTr.eq(i).find("td").eq(1).children().val().trim() == "") {
+                continue;
+            }
+            tableJson[tableTr.eq(i).find("td").eq(0).children().val().trim()] = tableTr.eq(i).find("td").eq(1).children().val().trim();
+        }
+        return tableJson;
+    }
+
+    function dictInitTable(element, jsonDict) {
+
+        if (JSON.stringify(jsonDict) != "{}") {
+            var i = 0;
+            for (var key in jsonDict) {
+                if (i == (element.children().length - 1)) {
+                    addTableTr(element);
+                }
+                var onlyElement = element.children().eq(i).find('td');
+                var headerKey = onlyElement.eq(0).children();
+                var headerValue = onlyElement.eq(1).children().eq(0);
+                headerKey.val(key);
+                headerValue.val(jsonDict[key]);
+                if (key != "" || jsonDict[key] != "") {
+                    i++;
+                }
+            }
+            for (var j = 0; j < element.children().length; j++) {
+                if (j > i) {
+                    element.children().eq(j - 1).remove();
+                }
+            }
+        } else {
+            for (var i = 0; i < element.children().length - 1; i++) {
+                element.children().eq(i).remove();
+            }
+        }
+    }
+    function tableInitDict(elementName, jsonDict) {
+        var flag = 0;
+        for (var key in jsonDict) {
+            if (flag == (elementName.children().length - 1)) {
+                addTableTr(elementName);
+            }
+            var element = elementName.children().eq(flag).find('td');
+            var headerKey = element.eq(0).children();
+            var headerValue = element.eq(1).children().eq(0);
+            headerKey.val(key);
+            headerValue.val(jsonDict[key]);
+            flag++;
+        }
+        for (var j = 0; j < elementName.children().length; j++) {
+            if (j > flag) {
+                elementName.children().eq(j - 1).remove();
+            }
+        }
+
+    }
+
+     function tableInitList(elementName, urlencodeList) {
+        var i;
+
+        for (i = 0; i < urlencodeList.length; i++) {
+            if (i == (elementName.children().length - 1)) {
+                addTableTr(elementName);
+            }
+            var element = elementName.children().eq(i).find('td');
+            var headerKey = element.eq(0).children();
+            var headerValue = element.eq(1).children().eq(0);
+            headerKey.val(urlencodeList[i][0]);
+            headerValue.val(urlencodeList[i][1]);
+        }
+        for (var j = 0; j < elementName.children().length; j++) {
+            if (j > i) {
+                elementName.children().eq(j - 1).remove();
+            }
+        }
+
+    }
+
+    function urlencodeToList(str) {
+        if (str == "") {
+            return []
+        }
+        if (typeof (str) == "undefined") {
+            return []
+        }
+        var strList = str.split("&");
+        var retList = [];
+        for (var s in strList) {
+            var sp = strList[s].split("=");
+            if (sp.length == 1) {
+                retList.push(["", sp[0]])
+            } else {
+                var strText = "";
+                for (var i = 1; i < sp.length; i++) {
+                    if (i == sp.length - 1) {
+                        strText = strText + sp[i]
+                    } else {
+                        strText = strText + sp[i] + "="
+                    }
+                }
+                retList.push([sp[0], strText])
+            }
+        }
+        return retList;
+    }
+
+    function changeSelectWidth(codeType) {
+        switch (codeType.val()) {
+            case "Text":
+                codeType.css("width", "80px");
+                break;
+            case "text/plain":
+                codeType.css("width", "150px");
+                break;
+            case "application/json":
+                codeType.css("width", "200px");
+                break;
+            case "application/javascript":
+                codeType.css("width", "260px");
+                break;
+            case "application/xml":
+                codeType.css("width", "200px");
+                break;
+            case "text/xml":
+                codeType.css("width", "150px");
+                break;
+            case "text/html":
+                codeType.css("width", "200px");
+                break;
+        }
+    }
+    //换位置后重新计算index
+    function stepOrder() {
+        var testStepList = $("[name='testCaseStep']");
+        for (var index = 0;index < testStepList.length;index ++){
+            var thisStep = testStepList.eq(index);
+{#            thisStep.data("index",index);#}
+{#            thisStep.find("[name='stepDetailsEditBtn']").attr("onclick","showStepDetail('"+index+"')");#}
+            thisStep.find("[name='stepLabel']").text("步骤"+(index+1));
+        }
+    }
+
+      $(document).ready(function(){
+          var fixHelperModified = function(e, tr) {
+            var $originals = tr.children();
+            var $helper = tr;
+            $helper.children().each(function(index) {
+                $(this).width($originals.eq(index).width());
+            });
+{#                $helper.css({ 'height': '300px'});#}
+            return $helper;
+        },
+        startFunc = function () {
+            hideAllStepDetail();
+        },
+        updateIndex = function() {
+            stepOrder();
+        };
+
+
+    $("#stepGroup tbody").sortable({
+        placeholder:"ui-state-highlight",
+        distance: 30,
+        helper: fixHelperModified,
+        forceHelperSize:true,
+        revert:true,
+        beforeMouseStart:startFunc,
+        stop: updateIndex,
+        axis: 'y'
+    }).disableSelection();
+    });
+    function moreEnv() {
+        if ($('#debugMoreEnv').css("display") == "none") {
+            $('#debugMoreEnv').css("display", "block");
+        } else {
+            $('#debugMoreEnv').css("display", "none");
+        }
+    }
+    var checkResultId = 0;
+    var table= '';
+
+
+    function HTMLEncode(html) {
+        var temp = document.createElement("div");
+        (temp.textContent != null) ? (temp.textContent = html) : (temp.innerText = html);
+        var output = temp.innerHTML;
+        temp = null;
+        return output;
+    }
+
+    function checkStep(id) {
+        if ($("[name='stepResule" + id + "']").css("display") == "none") {
+            $("[name='stepResule" + id + "']").css("display", "block");
+        } else {
+            $("[name='stepResule" + id + "']").css("display", "none");
+        }
+
+    }
+
+    function checkStepDetail(id) {
+        if ($("#stepDetail" + id + "").attr('hidden') == 'hidden') {
+            $("#stepDetail" + id + "").show();
+            $("#stepDetail" + id + "").removeAttr('hidden');
+        } else {
+            $("#stepDetail" + id + "").hide();
+            $("#stepDetail" + id + "").attr('hidden', 'hidden');
+        }
+
+    }
+
+    function clearResult() {
+        table = '';
+        checkResultId = 0;
+        $("#debugResult").hide();
+        $('#clearResult').hide();
+    }
+    var thisTime = 0;
+    var debugFlag = false;
+
+    function saveOrDebug(opt,httpConfKey) {
+        $("#publicKeyDiv").css("display","none");
+        var formData = allStepRead();
+        if (formData === false){
+            return;
+        }
+        if(optionFromContext == "edit" ){
+            stepArr.caseId = $("#caseIdInput").val();
+        }else {
+            stepArr.caseId = "";
+        }
+        stepArr.title = $("#name").val();
+        if(stepArr.title === ""){
+            alert("用例名称不能为空");
+            return;
+        }
+        stepArr.casedesc = $("#describe").val();
+        if(stepArr.casedesc === ""){
+            alert("用例步骤不能为空");
+            return;
+        }
+        stepArr.businessLineId_id = $("#caseBusinessLine option:selected").val();
+        stepArr.moduleId_id = $("#caseModules option:selected").val();
+        stepArr.caselevel = $("#testCaseLevel option:selected").val();
+        stepArr.sourceId_id = $("#caseSources option:selected").val();
+        if (opt === "save") {
+            formData.append("stepArr", JSON.stringify(stepArr));
+            var testCaseAdd = $.ajax({
+                url: '{% url 'HTTP_testCaseAdd' %}',
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+            if (JSON.parse(testCaseAdd.responseText)["code"] == 10000) {
+                if (optionFromContext == 'copy') {
+                    window.close();
+                    window.opener.location.reload();
+                } else {
+                    location.href = '{% url 'HTTP_testCaseCheck' %}';
+                }
+            } else {
+                alert(JSON.parse(testCaseAdd.responseText)["message"]);
+            }
+        }
+        else if (opt == "debug") {
+            thisTime = 0;
+            debugFlag = true;
+            $("[name='debug']").attr("disabled", true);
+            checkResultId++;
+            stepArr.httpConfKey = httpConfKey;
+            formData.append("stepArr", JSON.stringify(stepArr));
+            var testCaseDebugAdd = $.ajax({
+                url: '{% url 'HTTP_TestCaseDebugAdd' %}',
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+            var runing = ' <tr><td  colspan="10" align="center" style="font-size: 30px" >获取结果中...</td></tr>';
+            $("#debugResultTbody").html(runing + table);
+            $("#debugResult").show();
+            $("#clearResult").show();
+            try {
+                var testCasedDebugAddResult = JSON.parse(testCaseDebugAdd.responseText)
+
+                if (testCasedDebugAddResult["code"] === 10000) {
+
+                    var testCasedDebug = $.ajax({
+                        url: "{% url 'HTTP_TestCaseDebug' %}",
+                        async: true,
+                        type: "POST",
+                        data: testCasedDebugAddResult["body"],
+                        success: function () {
+                            if (JSON.parse(testCasedDebug.responseText)["code"] == 10000) {
+                                function debugResult() {
+                                    var url = "{% url 'HTTP_TestCaseDebugGetResult' %}";
+                                    var getCaseDebugResultStr = $.ajax({
+                                        url: url, async: true,
+                                        type:"POST",
+                                        data:testCasedDebugAddResult["body"],
+                                        success: function () {
+
+                                            var getCaseDebugResult = JSON.parse(getCaseDebugResultStr.responseText);
+                                            if (getCaseDebugResult["code"] == 16002) {
+                                                {#                                                if(confirm("调试进行中！是否继续等待?")){#}
+                                                {#                                                    debugResult();#}
+                                                {#                                                }else{#}
+                                                {#                                                    //把本条结果设置成4#}
+                                                {##}
+                                                {#                                                    table = '<tr><td>'+checkResultId+'</td><td colspan="9" align="center"  style="font-size: 30px" >结果获取失败，服务器超时。</td></tr>'+table;#}
+                                                {#                                                    $("#debugResultTbody").html(table);#}
+                                                {#                                                    $("[name='debug']").attr("disabled", false);#}
+                                                {#                                                }#}
+
+                                                thisTime += 1;
+                                                $("#debugResultTbody").children().first().children().first().html("获取结果中...已执行" + thisTime +
+                                                    "秒&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击<button class=\"btn btn-danger\" onclick=\"cancelDebug()\">取消</button>调试"
+                                                );
+                                                if (debugFlag) {
+                                                    debugResult();
+                                                } else {
+                                                    $("#debugResultTbody").children().first().remove();
+                                                    table = '<tr><td>' + checkResultId + '</td><td colspan="9" align="center"  style="font-size: 30px" >调试已取消</td></tr>' + table;
+                                                    $("#debugResultTbody").html(table);
+                                                }
+                                            } else {
+                                                thisTime = 0;
+                                                var result = getCaseDebugResult["body"];
+                                                var resultHtml = '<tr >'
+                                                    + '<td>' + checkResultId + '</td>'
+                                                    + '<td>' + result.testResult + '</td>'
+                                                    + '<td>' + HTMLEncode(result.alias) + '</td>'
+                                                    + '<td>' + result.stepCount + '</td>'
+                                                    + '<td><textarea style="width:100%;height:30px;background:transparent;border-style:none; resize:vertical ; "  readonly>' + HTMLEncode(result.assertResult) + '</textarea></td>'
+                                                    + '<td>' + result.beforeExecuteTakeTime + '</td>'
+                                                    + '<td>' + result.executeTakeTime + '</td>'
+                                                    + '<td>' + result.afterExecuteTakeTime + '</td>'
+                                                    + '<td>' + result.totalTakeTime + '</td>'
+                                                    + '<td><button class="btn btn-primary"  onclick="checkStep(\'' + checkResultId + '\');ShowDiv($(this))" >查看步骤</button></td>'
+                                                    + '</tr>' +
+                                                    '<tr ><td colspan="10" style="margin: 0px;padding: 0px;padding-left: 8px;padding-right: 8px;">' +
+                                                    ' <table name="stepResule' + checkResultId + '" class="table table-striped table-bordered table-hover" style="border: 1px solid #c9c9c9;table-layout:fixed;width:100%;word-break:break-all;display:none;">' +
+                                                    //                                                    ' <table name="stepResule'+checkResultId+'" class="table table-striped table-bordered table-hover" style="table-layout:fixed;width:100%;word-break:break-all;display:block;">'+
+
+                                                    '<thead>' +
+                                                    '<tr style="color: snow" bgcolor="#008b8b">' +
+                                                    '<th style="width:5%;">步骤</th>' +
+                                                    '<th style="width:10%;">步骤描述</th>' +
+                                                    '<th style="width:5%;">测试结果</th>' +
+                                                    '<th style="width:15%;">实际结果</th>' +
+                                                    '<th style="width:25%;">断言结果</th>' +
+                                                    '<th style="width:5%;">初始耗时</th>' +
+                                                    '<th style="width:5%;">执行耗时</th>' +
+                                                    '<th style="width:5%;">恢复耗时</th>' +
+                                                    '<th style="width:5%;">总耗时</th>' +
+                                                    '<th style="width:5%;">操作</th>' +
+                                                    '</tr>' +
+                                                    '</thead>' +
+                                                    '<tbody>';
+
+                                                for (var i = 0; i < result.step.length; i++) {
+                                                    var HTTPHeaderResult = {};
+                                                    try {
+                                                        HTTPHeaderResult = JSON.parse(result.step[i].header);
+                                                    } catch (err) {
+                                                        HTTPHeaderResult = {}
+                                                    }
+
+
+                                                    var HTTPRequestText = "";
+
+                                                    var HTTPBodyContent = result.step[i].bodyContent;
+                                                    var HTTPURL = result.step[i].url;
+                                                    var HTTPParams = result.step[i].params;
+                                                    var HTTPMethod = result.step[i].method;
+                                                    if (HTTPParams == "未设置参数") {
+                                                        HTTPRequestText = HTTPMethod + " " + HTTPURL + " HTTP/1.1";
+                                                    } else {
+                                                        HTTPRequestText = HTTPMethod + " " + HTTPURL + "?" + HTTPParams + " HTTP/1.1";
+                                                    }
+                                                    for (var HTTPRequestKey in HTTPHeaderResult) {
+                                                        HTTPRequestText = HTTPRequestText + "\n" + HTTPRequestKey + ":" + HTTPHeaderResult[HTTPRequestKey];
+                                                    }
+                                                    if (HTTPBodyContent != "") {
+                                                        HTTPRequestText = HTTPRequestText + "\n\n" + HTTPBodyContent;
+                                                    }
+
+                                                    //处理HTTP响应
+                                                    try {
+                                                        var HTTPResult = JSON.parse(result.step[i].actualResult);
+                                                        var HTTPResultText = "";
+                                                        var HTTPActualText = "";
+                                                        HTTPResultText = "HTTP/1.1 " + HTTPResult["reason"];
+
+                                                        for (var HTTPResultKey in HTTPResult["headers"]) {
+                                                            HTTPResultText = HTTPResultText + "\n" + HTTPResultKey + ":" + HTTPResult["headers"][HTTPResultKey];
+                                                        }
+
+                                                        if (HTTPResult["content"] != "") {
+                                                            HTTPResultText = HTTPResultText + "\n\n" + HTTPResult["content"];
+                                                            HTTPActualText = HTTPResult["content"];
+                                                        }
+                                                    } catch (e) {
+                                                        HTTPResultText = result.step[i].actualResult;
+                                                        HTTPActualText = result.step[i].actualResult;
+                                                    }
+
+
+                                                    resultHtml = resultHtml + '<tr bgcolor="#FF0000"><td>' + result.step[i].stepNum + '</td>' +
+                                                        '<td><textarea style="width:100%;height:75px;background:transparent;border-style:none; resize:vertical ; "  readonly>' + HTMLEncode(result.step[i].stepDesc) + '</textarea></td>' +
+                                                        '<td>' + (result.step[i].testResult == "" ? "NOTRUN" : result.step[i].testResult) + '</td>' +
+                                                        '<td><textarea style="width:100%;height:75px;background:transparent;border-style:none; resize:vertical ; "  readonly ondblclick="OpenDetailDiv(\'实际结果\',$(this).val())" >' + HTMLEncode(HTTPActualText) + '</textarea></td>' +
+                                                        '<td><textarea style="width:100%;height:75px;background:transparent;border-style:none; resize:vertical ; "  readonly ondblclick="OpenDetailDiv(\'断言结果\',$(this).val())" >' + HTMLEncode(result.step[i].assertResult) + '</textarea></td>' +
+                                                        '<td>' + result.step[i].beforeExecuteTakeTime + '</td>' +
+                                                        '<td>' + result.step[i].executeTakeTime + '</td>' +
+                                                        '<td>' + result.step[i].afterExecuteTakeTime + '</td>' +
+                                                        '<td>' + result.step[i].totalTakeTime + '</td>' +
+                                                        '<td><button class="btn btn-primary" style="background-color:#008b8b;border-color:#008b8b;" onclick="checkStepDetail(\'' + checkResultId + '_' + result.step[i].stepNum + '\');ShowDiv($(this))" >查看详情</button></td></tr>' +
+
+                                                        '<tr><td colspan="10"   id="stepDetail' + checkResultId + '_' + result.step[i].stepNum + '" hidden>' +
+                                                        '<div ><table  class="table table-striped table-bordered table-hover" style="table-layout:fixed;width:100%;word-break:break-all;">' +
+                                                        '<thead>\n' +
+                                                        '                <tr>\n' +
+                                                        '                    <th style="width:50%;vertical-align: top"  >请求报文\t</th>\n' +
+                                                        '                    <th style="width:50%;vertical-align: top" >响应报文\n</th>\n' +
+                                                        '                </tr>' +
+                                                        '<tr>\n' +
+                                                        '                    <th><textarea class="read-size" readonly="readonly" style="width:100%;height:210px;background:transparent;border-style:none;max-width: 100%;min-width: 100%;min-height: 210px" ondblclick="OpenDetailDiv(\'INVOKE请求\',$(this).val())">'+HTMLEncode(HTTPRequestText)+'</textarea></th>' +
+                                                        '                    <th><textarea class="read-size" readonly="readonly" style="width:100%;height:210px;background:transparent;border-style:none;max-width: 100%;min-width: 100%;min-height: 210px" ondblclick="OpenDetailDiv(\'响应\',$(this).val())">'+HTMLEncode(HTTPResultText)+'</textarea></th>' +
+                                                        '</tr></thead>'+
+                                                        '<tbody>' +
+                                                        '<tr>\n' +
+                                                        '                    <td>准备</td>\n' +
+                                                        '                    <td>断言恢复</td>\n' +
+                                                        '                </tr>'+
+                                                        '<tr><td><textarea class="read-size" readonly="readonly" style="width:100%;height:210px;background:transparent;border-style:none;max-width: 100%;min-width: 100%;min-height: 210px" ondblclick="OpenDetailDiv(\'准备\',$(this).val())">'+HTMLEncode(result.step[i].varsPre)+'</textarea></td>'+
+                                                        '<td><textarea class="read-size" readonly="readonly" style="width:100%;height:210px;background:transparent;border-style:none;max-width: 100%;min-width: 100%;min-height: 210px" ondblclick="OpenDetailDiv(\'断言恢复\',$(this).val())">'+HTMLEncode(result.step[i].varsPost)+'</textarea></td></tr>'+
+                                                        '</tbody>'+
+                                                        '</table></div>' +
+                                                        '</td></tr>'
+                                                    ;
+
+                                                }
+                                                resultHtml = resultHtml + '</tbody>' +
+                                                    '</table>' +
+                                                    '</td></tr>';
+                                                table = resultHtml + table;
+                                                //                                                alert(resultHtml);
+                                                $("#debugResultTbody").html(table);
+                                                $("[name='debug']").attr("disabled", false);
+                                            }
+
+                                        },
+                                        error: function () {
+                                            table = '<tr><td>' + checkResultId + '</td>' + checkResultId + '<td colspan="9" align="center"  style="font-size: 30px" >结果获取失败，服务器超时。</td></tr>' + table;
+                                            $("#debugResultTbody").html(table + resultHtml);
+                                            $("[name='debug']").attr("disabled", false);
+                                        }
+                                    });
+
+                                }
+
+                                debugResult();
+
+                            } else {
+                                var runing = ' <tr><td  colspan="10" align="center" style="font-size: 30px" >' + testCasedDebug.responseText + '</td></tr>';
+                                $("#debugResultTbody").html(runing + table);
+                                $("#debugResult").show();
+                                $("#clearResult").show();
+                                $("[name='debug']").attr("disabled", false);
+                            }
+                        }
+                    });
+                }
+                else {
+                    var runing = ' <tr><td  colspan="10" align="center" style="font-size: 30px" >' + testCasedDebugAddResult["message"] + '</td></tr>';
+                    $("#debugResultTbody").html(runing + table);
+                    $("#debugResult").show();
+                    $("#clearResult").show();
+                    $("[name='debug']").attr("disabled", false);
+                }
+            } catch (err) {
+                alert(err)
+                var runing = ' <tr><td  colspan="10" align="center" style="font-size: 30px" >' + testCaseDebugAdd.responseText + '</td></tr>';
+                $("#debugResultTbody").html(runing + table);
+                $("#debugResult").show();
+                $("#clearResult").show();
+                $("[name='debug']").attr("disabled", false);
+            }
+            $("#results").html(testCaseDebugAdd.responseText);
+
+        }
+        else if (opt == "edit") {
+            var syncList = $("[name='isSync']");
+            for (var i = 0;i<syncList.length;i++){
+                if (syncList.eq(i).is(":checked")){
+                     if (!confirm("勾选同步的步骤不会被保存，以同步的接口数据为准，确认保存?")){
+                        return;
+                     }
+                    break;
+                }
+
+            }
+
+            formData.append("stepArr", JSON.stringify(stepArr));
+            formData.append("id", stepArr["id"]);
+            var saveEditResult = $.ajax({
+                url: '{% url 'HTTP_testCaseSaveEdit' %}',
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+
+            {#                    var saveEditResult =$.ajax({url:"{% url 'HTTP_testCaseSaveEdit' %}",async:false,data: JSON.stringify(stepArr),type:"POST"});#}
+            if (JSON.parse(saveEditResult.responseText)["code"] == 10000) {
+                if(confirm("保存成功，是否退出编辑？")) {
+                    window.close();
+                    window.opener.location.reload(); //='/InterfaceTest/HttpTestCaseCheck';
+                }
+            } else {
+                alert(JSON.parse(saveEditResult.responseText)["message"]);
+            }
+
+        }
+    }
+
+
+    function selected() {
+        checkOptions();
+        var data = {checkArr: encodeURI(JSON.stringify(checkVals)), orderBy: orderBy, page: page};
+        var htmlobj = $.ajax({
+            url: "{% url 'HTTP_TestCaseSelectInterfaceListCheck' %}",
+            async: false,
+            data: data,
+            type: "POST"
+        });
+        $("#taskList").html(htmlobj.responseText);
+        orderByShow();
+        interfaceListIsChecked();
+
+    }
+
+    selected();
+
+    function chechBtn(interfaceId) {
+        if ($("#" + interfaceId).is(':checked')) {
+            interfaceList.push(interfaceId);
+        } else {
+            interfaceList.splice($.inArray(interfaceId, interfaceList), 1);
+        }
+        var allFlag = true;
+        var interfaceCheckboxElements = $("[name='interfaceCheckbox']");
+        interfaceCheckboxElements.each(function () {
+            if (!$(this).prop("checked")) {
+                allFlag = false;
+            }
+        });
+        if (allFlag) {
+            $("#checkboxAll").prop("checked", true);
+        } else {
+            $("#checkboxAll").prop("checked", false);
+        }
+    }
+
+    function selectInterfaceAddStep() {
+        if (interfaceList.length == 0) {
+            alert("请选择接口才能保存！");
+            return;
+        }
+        var list = interfaceList.join(",");
+        var selectInterfaceAddStep = $.ajax({
+            url: "{% url 'HTTP_SelectInterfaceAddStep' %}",
+            async: false,
+            data: {list: list},
+            type: "POST"
+        });
+        var result = JSON.parse(selectInterfaceAddStep.responseText)["body"];
+
+        for (var i = 0; i < result.length; i++) {
+            stepInput();
+            stepPageWrite();
+            var index = $("[name='testCaseStep']").length-2;
+{#            var thisStep = $("[name='testCaseStep']").eq(index);#}
+{#            thisStep.data("stepData",result[i]);#}
+            result[i].fromInterfaceId = result[i].interfaceId;
+            result[i].stepDesc = result[i].casedesc;
+            result[i].stepSwitch = 1;
+            delete(result[i]["interfaceId"]);
+            delete(result[i]["casedesc"]);
+            thisStepDataWrite(index,result[i]);
+{#            num = getJsonLength(stepArr.step);#}
+{#            stepArr.step[num] = result[i];#}
+{#            stepArr.step[num].fromInterfaceId = result[i].interfaceId;#}
+{#            stepArr.step[num].stepDesc = result[i].casedesc;#}
+{#            stepVal("add", stepArr);#}
+        }
+{#        stepArrSave("save");#}
+{#        saveCaseList();#}
+        interfaceList = [];
+        $("#checkboxAll").prop("checked", false);
+        $("#interfaceList").text("已选接口:");
+        $("[name='interfaceCheckbox']").each(function () {
+            if ($(this).is(':checked')) {
+                interfaceList.splice($.inArray($(this).attr("id"), interfaceList), 1);
+                $(this).prop("checked", false);
+            }
+        });
+        closeInterfaceList();
+    }
+  //跳到事件的地方
+    function ShowDiv(element) {
+        obshowdiv = element;
+        offtop = obshowdiv.offset().top - 155;
+        offleft = obshowdiv.offset().left;
+        obshowdiv.show();
+        docheight = $(document).height();
+        $('html,body').animate({scrollTop: offtop}, 200);
+    }
+
+    function copyStep(element) {
+        addStep();
+        var index = $("[name='testCaseStep']").length-2;
+        var thisStepData = element.parents("[name='testCaseStep']").data("stepData");
+        thisStepDataWrite(index,thisStepData);
+    }
+
+    window.onscroll = function () {
+        $("#publicKeyDiv").css("top", $(document).scrollTop()+125 )
+    };
+
+   function cancelDebug() {
+        thisTime = 0;
+        debugFlag = false;
+        $("[name='debug']").attr("disabled", false);
+    }
+</script>
+{% include 'fuzhu_page/publicKeyMain.html' %}
+{% include 'InterfaceTest/foot.html'%}

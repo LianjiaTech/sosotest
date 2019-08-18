@@ -1,0 +1,51 @@
+<div>
+    <div class="pagination" style="float:left;margin-bottom: 0px;">
+        <a href="#addEnvConfDiv"><button style="margin-bottom: 4px;" class="btn btn-success" >添加</button></a>
+        <a href="javascript:void(0);"><button style="margin-bottom: 4px;" class="btn btn-danger" onclick="resetUpToTopInfo();">清空置顶</button></a>
+    </div>
+    <div class="pagination" style="float:right;">
+        {% include 'InterfaceTest/pagination.html' %}
+    </div>
+</div>
+
+<table class="table table-striped table-bordered table-hover"
+       style="table-layout:fixed;width:100%;word-break:break-all;margin-top:8px">
+    <thead>
+    <tr style="color: snow" bgcolor="#2A3F54">
+        <th style="width:8%;">服务Key</th>
+        <th style="width:10%;">配置名称</th>
+        <th style="width:15%;">配置描述</th>
+        <th style="width:12%;">创建时间/创建人</th>
+        <th style="width:12%;">修改时间/修改人</th>
+        <th style="width:5%;">操作</th>
+    </tr>
+    </thead>
+    <tbody style="width: 100%">
+    {% if pageCount == 0 %}
+        <td colspan="6" align="center" >没有符合条件的搜索结果</td>
+    {% else %}
+          {% for pageData in pageDatas %}
+            <tr>
+                <td name="httpConfKey{{ pageData.id }}"><textarea class="list_textarea"  disabled>{{ pageData.uriKey }}</textarea></td>
+                <td name="alias{{ pageData.id }}"><textarea class="list_textarea"  disabled>{{ pageData.alias }}</textarea></td>
+                <td name="httpConfDesc{{ pageData.id }}"><textarea class="list_textarea"  disabled>{{ pageData.uriDesc }}</textarea></td>
+                <td>{{ pageData.addTime }}/{{ pageData.userName }}</td>
+                <td>{{ pageData.modTime }}/{% if pageData.modByName %}                        {{ pageData.modByName }}                    {% else %}                        {{ pageData.userName }}                    {% endif %}</td>
+
+                <td style="text-align: center">
+                    <div style="margin-top: -10px" id="opration{{ pageData.id }}">
+                        <button class="btn btn-info optionButtionSize" onclick="addUriSort('{{ pageData.uriKey }}')" title="置顶"><i class="fa fa-eject"></i></button>
+                    {% if "edit" in pageData.permissions %}
+                        <button class="btn btn-success optionButtionSize" onclick="editUserHttpConf('{{ pageData.id }}','{{ pageData.uriKey }}')" title="编辑"><i class="fa fa-edit"></i></button>
+                    {% endif %}
+                    {% if "delete" in pageData.permissions %}
+                        <button class="btn btn-danger optionButtionSize" onclick="delUserHttpConf('{{ pageData.id }}','{{ pageData.uriKey }}');" title="删除"><i class="fa fa-trash"></i></button>
+                    {% endif %}
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    {% endif %}
+    </tbody>
+
+</table>

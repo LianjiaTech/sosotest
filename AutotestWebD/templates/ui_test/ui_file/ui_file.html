@@ -1,0 +1,402 @@
+{% include 'InterfaceTest/head.html' %}
+<!-- Main content starts -->
+<style>
+    a.button {
+        position: relative;
+        color: rgba(255, 255, 255, 1);
+        text-decoration: none;
+        background-color: rgba(219, 87, 5, 1);
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: 700;
+        font-size: 4em;
+        display: block;
+        padding: 4px;
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
+        -webkit-box-shadow: 0px 9px 0px rgba(219, 31, 5, 1), 0px 9px 25px rgba(0, 0, 0, .7);
+        -moz-box-shadow: 0px 9px 0px rgba(219, 31, 5, 1), 0px 9px 25px rgba(0, 0, 0, .7);
+        box-shadow: 0px 9px 0px rgba(219, 31, 5, 1), 0px 9px 25px rgba(0, 0, 0, .7);
+        margin: 100px auto;
+        width: 160px;
+        text-align: center;
+
+        -webkit-transition: all .1s ease;
+        -moz-transition: all .1s ease;
+        -ms-transition: all .1s ease;
+        -o-transition: all .1s ease;
+        transition: all .1s ease;
+    }
+
+    a.button:active {
+        -webkit-box-shadow: 0px 3px 0px rgba(219, 31, 5, 1), 0px 3px 6px rgba(0, 0, 0, .9);
+        -moz-box-shadow: 0px 3px 0px rgba(219, 31, 5, 1), 0px 3px 6px rgba(0, 0, 0, .9);
+        box-shadow: 0px 3px 0px rgba(219, 31, 5, 1), 0px 3px 6px rgba(0, 0, 0, .9);
+        position: relative;
+        top: 6px;
+    }
+</style>
+<div class="content">
+    <!-- Sidebar -->
+    {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Main bar -->
+    <div class="right_col" role="main" style="min-height: 1657px;">
+        <div class="">
+            <div class="page-title">
+                <div class="title_left">
+                    <div class="col-xs-12 form-group pull-right top_search">
+                        <h3>{{ text.pageTitle }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>{{ text.subPageTitle }}</h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                </li>
+
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div data-parsley-validate class="form-horizontal form-label-left">
+                                <div id="createDir" class="col-md-12">
+                                    <a class="button" href="javascript:void(0);"
+                                       style="margin-left: 25%;margin-right: 0px;float: left"
+                                       onclick="userIsDir()">上传文件</a>
+                                    <a class="button" href="/static/ui_test/framework/UITestFrameWork.zip"
+                                       style="margin-left: 0px;margin-right: 25%;float: right;">框架下载</a>
+
+                                    <div style="text-align:center;font-size: 50px;height: 100px;margin-top: 20%"
+                                         id="fileNameInput"></div>
+                                    <input id="uploads" onchange="loadFile($(this))" type="file" style="display: none">
+                                    <div class="ln_solid"></div>
+
+                                    <div style="width:75%;" class="col-lg-12">
+                                        {#                                <button style="float: right" type="button" class="btn btn-info btn-lg" onclick="checkUIFileList()">&nbsp;&nbsp;&nbsp;&nbsp;查看&nbsp;&nbsp;&nbsp;&nbsp;</button>#}
+                                        <button id="upBtn" style="display:none;float: right" type="button"
+                                                class="btn btn-success btn-lg" onclick="saveFile()">&nbsp;&nbsp;&nbsp;&nbsp;保存&nbsp;&nbsp;&nbsp;&nbsp;
+                                        </button>
+                                    </div>
+                                </div>
+                                {#                        <div id="fileList" style="display:none;">#}
+                                {#                            <div class="col-xs-3">#}
+                                {#                              <ul class="nav nav-tabs tabs-left" id="fileUL">#}
+                                {#                              </ul>#}
+                                {#                            </div>#}
+                                {#                            <div class="col-xs-9">#}
+                                {#                              <!-- Tab panes -->#}
+                                {#                              <div class="tab-content" id="fileTab">#}
+                                {#                              </div>#}
+                                {#                            </div>#}
+                                {#                             <div class="col-lg-12">#}
+                                {#                                 <div class="ln_solid" ></div>#}
+                                {#                                  <div class="col-xs-3">#}
+                                {#                                     <h4 style="margin-left: 40%">基本信息</h4>#}
+                                {#                                    </div>#}
+                                {#                                 <div class="col-xs-9" >#}
+                                {#                                     <div class="form-group">#}
+                                {#                                         <label class="control-label col-md-min-1">{{ groupLevel1 }}</label>#}
+                                {#                                         <div class="col-lg-2" style="width: 20%">#}
+                                {#                                             <select class="form-control" id="businessLine"#}
+                                {#                                                     onchange="switchModule($(this).val())">#}
+                                {#                                                 {% for business in businessLine %}#}
+                                {#                                                     <option value="{{ business.id }}">{{ business.bussinessLineName }}</option>#}
+                                {#                                                 {% endfor %}#}
+                                {#                                             </select>#}
+                                {#                                         </div>#}
+                                {#                                         <label class="control-label col-md-min-1"#}
+                                {#                                                style="width:4.3%;">{{ groupLevel2 }}</label>#}
+                                {#                                         <div class="col-lg-2" style="width: 20%">#}
+                                {#                                             <select class="form-control" id="modules"></select>#}
+                                {#                                         </div>#}
+                                {#                                     </div>#}
+                                {##}
+                                {#                                 </div>#}
+                                {##}
+                                {##}
+                                {#                             </div>#}
+                                {#                             <div class="col-lg-12">#}
+                                {#                                 <div class="ln_solid" ></div>#}
+                                {#                                  <div class="col-xs-3">#}
+                                {#                                     <h4 style="margin-left: 40%">执行环境</h4>#}
+                                {#                                    </div>#}
+                                {#                                 <div class="col-xs-9" id="httpConfDiv">#}
+                                {#                                     <label style="font-weight:normal"><input style="zoom:150%; vertical-align:bottom;" type="checkbox" name="httpTest01">集成测试环境&nbsp;&nbsp;&nbsp;&nbsp;</label>#}
+                                {#                                     <label style="font-weight:normal"><input style="zoom:150%; vertical-align:bottom;" type="checkbox" name="httpStage02">预发布灰度&nbsp;&nbsp;&nbsp;&nbsp;</label>#}
+                                {##}
+                                {#                                 </div>#}
+                                {##}
+                                {##}
+                                {#                             </div>#}
+                                {#                            <div class="col-lg-12">#}
+                                {#                                <div class="ln_solid" ></div>#}
+                                {#                                <div style="width:75%;" >#}
+                                {#                                    <button style="float: right;" type="button" class="btn btn-info btn-lg" onclick="uploadSubPage()">文件上传</button>#}
+                                {#                                    <button id="upBtn" style="float: right" type="button" class="btn btn-success btn-lg" onclick="executeTestCase()">&nbsp;&nbsp;&nbsp;&nbsp;执行&nbsp;&nbsp;&nbsp;&nbsp;</button>#}
+                                {##}
+                                {#                                 </div>#}
+                                {#                            </div>#}
+                                {#                        </div>#}
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!--调试-->
+            </div>
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    var businessLine_module_relation = $.ajax({
+        url: '{% url 'bmRelation' %}',
+        type: 'get',
+        async: false
+    });
+    try {
+        var bmDict = JSON.parse(businessLine_module_relation.responseText).body;
+    } catch (e) {
+        alert(bmDict);
+        alert("获取业务线模块关联失败")
+    }
+
+
+    function userIsDir() {
+        var htmlobj = $.ajax({url: "{% url 'createDir' %}", async: false, type: 'get'});
+        try {
+            if (JSON.parse(htmlobj.responseText)["code"] === 10000) {
+                $('#uploads').click();
+            } else {
+                alert("用户目录创建失败，请联系管理员！")
+            }
+        } catch (e) {
+            alert("用户目录创建失败，请联系管理员！")
+        }
+
+    }
+
+    function loadFile(element) {
+        var file = element[0].files[0];
+        var point = file.name.lastIndexOf(".");
+
+        var type = file.name.substr(point);
+        {#        if (file.size > 1024*1024) {#}
+        {#            alert("文件大小不能超过1M");#}
+        {#            element.val('');#}
+        {#            return false;#}
+        {#        } #}
+        if (type.trim() !== ".xls") {
+            alert("文件必须是xls格式");
+            element.val('');
+            return false;
+        }
+        if (element[0].files[0].name.indexOf(" ") >= 0) {
+            alert('文件名称中包含空格，请删除重新上传');
+            element.val('');
+            return false;
+        }
+        $("#fileNameInput").text(element[0].files[0].name);
+        $("#upBtn").css("display", "block");
+    }
+
+    function saveFile() {
+        var formData = new FormData();
+        if (typeof ($("#uploads")[0].files[0]) !== "undefined") {
+            formData.append('file', $("#uploads")[0].files[0]);
+        } else {
+            alert("请选择文件");
+            return;
+        }
+
+        var fileUpload = $.ajax({
+            url: '{% url 'fileExists' %}',
+            type: 'POST',
+            data: formData,
+            async: false,
+            cache: false,
+            contentType: false,
+            processData: false
+        });
+        var uploadFlag = false;
+        if (JSON.parse(fileUpload.responseText)["code"] === 100000) {
+            if (confirm("文件已存在，是否覆盖？")) {
+                uploadFlag = true;
+            }
+        } else {
+            uploadFlag = true;
+        }
+
+        if (uploadFlag) {
+            var fileUpload2 = $.ajax({
+                url: '{% url 'fileUpload' %}',
+                type: 'POST',
+                data: formData,
+                async: false,
+                cache: false,
+                contentType: false,
+                processData: false
+            });
+            if (JSON.parse(fileUpload2.responseText)["code"] == 10000) {
+                alert("上传成功");
+                $("#uploads").val("");
+                $("#fileNameInput").text("");
+                $("#upBtn").css("display", "none");
+            }
+
+        }
+    }
+
+    {#    function checkUIFileList() {#}
+    {#        $("#createDir").css("display","none");#}
+    {#        getFileList();#}
+    {#        $("#fileList").css("display","block");#}
+    {#    }#}
+
+    {#    function getFileList() {#}
+    {#        var htmlobj = $.ajax({url:"{% url 'checkFileList' %}",async:false,type: 'get'});#}
+    {#        try{#}
+    {#            var files = JSON.parse(htmlobj.responseText)["body"];#}
+    {#            var flag = 0;#}
+    {#             $("#fileUL").html("");#}
+    {#             $("#fileTab").html("");#}
+    {##}
+    {#            $.each(files["excelFilesDict"],function(key,value) {#}
+    {#                if (key === files["loginName"]){#}
+    {#                    $.each(value["sheet"],function(key2,value2) {#}
+    {#                     if (flag === 0){#}
+    {#                        var active = " active"#}
+    {#                     }else {#}
+    {#                        var active = ""#}
+    {#                     }#}
+    {##}
+    {#                     $("#fileUL").append('<li class="'+active+'" name="fileTabLi"><a href="#file'+flag+'" data-toggle="tab" name="'+key2+'"   aria-expanded="true">'+key2+'&nbsp;&nbsp;&nbsp;&nbsp;<span name="'+key+'">'+value["userName"]+'</span></a></li>');#}
+    {##}
+    {#                    var tabHtml = '<div class="tab-pane'+active+'" id="file'+flag+'" name="fileTabDiv">';#}
+    {#                    for(var sheetIndex = 0;sheetIndex < value2.length;sheetIndex++){#}
+    {#                        tabHtml += '<label style="font-weight:normal"><input style="zoom:150%; vertical-align:bottom;" type="checkbox"  name="'+value2[sheetIndex]+'">'+value2[sheetIndex] +"&nbsp;&nbsp;&nbsp;&nbsp;</label>";#}
+    {#                    }#}
+    {#                    tabHtml += '<a href="{% url "downLoadExcel" %}?loginName='+key+'&fileName='+key2+'">下载</a>';#}
+    {#                    tabHtml += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" onclick=file_delete("'+key+'","'+key2+'")>删除</a>';#}
+    {#                    tabHtml += '</div>';#}
+    {#                    $("#fileTab").append(tabHtml);#}
+    {##}
+    {#                    flag ++;#}
+    {#                     });#}
+    {#                }#}
+    {##}
+    {#             });#}
+    {##}
+    {##}
+    {#            $.each(files["excelFilesDict"],function(key,value) {#}
+    {#                if (key !== files["loginName"]) {#}
+    {#                    $.each(value["sheet"], function (key2, value2) {#}
+    {#                        if (flag === 0) {#}
+    {#                            var active = " active"#}
+    {#                        } else {#}
+    {#                            var active = ""#}
+    {#                        }#}
+    {#                     $("#fileUL").append('<li class="'+active+'" name="fileTabLi"><a href="#file'+flag+'" data-toggle="tab" name="'+key2+'" aria-expanded="true">'+key2+'&nbsp;&nbsp;&nbsp;&nbsp;<span name="'+key+'">'+value["userName"]+'</span></a></li>');#}
+    {##}
+    {#                        var tabHtml = '<div class="tab-pane' + active + '" id="file' + flag + '" name="fileTabDiv">';#}
+    {#                        for (var sheetIndex = 0; sheetIndex < value2.length; sheetIndex++) {#}
+    {#                            tabHtml += '<label style="font-weight:normal"><input style="zoom:150%; vertical-align:bottom;" type="checkbox"  name="' + value2[sheetIndex] + '">' + value2[sheetIndex] + "&nbsp;&nbsp;&nbsp;&nbsp;</label>";#}
+    {#                        }#}
+    {#                        tabHtml += '<a href="{% url "downLoadExcel" %}?loginName='+key+'&fileName='+key2+'">下载</a>';#}
+    {##}
+    {#                        tabHtml += '</div>';#}
+    {#                        $("#fileTab").append(tabHtml);#}
+    {##}
+    {#                        flag++;#}
+    {#                    });#}
+    {#                }#}
+    {#             });#}
+    {##}
+    {#        }catch (e){#}
+    {##}
+    {#        }#}
+    {#    }#}
+
+
+
+    //显示大按钮
+    {#    function uploadSubPage() {#}
+    {#        $("#createDir").css("display","block");#}
+    {#        $("#fileList").css("display","none");#}
+    {#    }#}
+    {##}
+    {#    function initPage() {#}
+    {#         var htmlobj = $.ajax({url:"{% url 'userIsFileShowSubPage' %}",async:false,type: 'get'});#}
+    {#         try{#}
+    {#             if (JSON.parse(htmlobj.responseText)["code"] !== 100000){#}
+    {#                 checkUIFileList()#}
+    {#             }#}
+    {#         }catch (e){#}
+    {##}
+    {#         }#}
+    {#    }#}
+
+    {#    function executeTestCase() {#}
+    {#        var fileTabDiv = $("[name='fileTabDiv']");#}
+    {#        var sheetNameList = [];#}
+    {#        for(var divIndex = 0; divIndex < fileTabDiv.length ; divIndex ++ ){#}
+    {#            if (fileTabDiv.eq(divIndex).attr("class") === "tab-pane active"){#}
+    {##}
+    {#                var checkboxs = fileTabDiv.eq(divIndex).find("input:checked");#}
+    {#                for (var checkboxIndex =0;checkboxIndex< checkboxs.length;checkboxIndex++){#}
+    {#                    sheetNameList.push(checkboxs.eq(checkboxIndex).attr("name"))#}
+    {#                }#}
+    {#            }#}
+    {#        }#}
+    {#        var httpConfList = [];#}
+    {#        var httpConfCheckbox = $("#httpConfDiv").find("input:checked");#}
+    {#        if (httpConfCheckbox.length === 0){#}
+    {#            alert("请选择环境");#}
+    {#            return false;#}
+    {#        }#}
+    {#        for (var index = 0 ; index < httpConfCheckbox.length; index ++){#}
+    {#            httpConfList.push(httpConfCheckbox.eq(index).attr("name"));#}
+    {#        }#}
+    {##}
+    {#        var fileNameList = $("[name='fileTabLi']");#}
+    {#        var fileName = "";#}
+    {#        var userName = "";#}
+    {#        for(var fileNameIndex = 0 ; fileNameIndex < fileNameList.length ;fileNameIndex ++){#}
+    {#            if(fileNameList.eq(fileNameIndex).attr("class") === "active" || fileNameList.eq(fileNameIndex).attr("class") === " active" ){#}
+    {#                fileName = fileNameList.eq(fileNameIndex).find("a").attr("name");#}
+    {#                userName = fileNameList.eq(fileNameIndex).find("span").eq(0).attr("name");#}
+    {#            }#}
+    {#        }#}
+    {#        var businessLineId = $("#businessLine option:selected").val();#}
+    {##}
+    {#        var moduleId = $("#modules option:selected").val();#}
+    {#        var dataDict = {"httpConfList":JSON.stringify(httpConfList),"sheetNameList":JSON.stringify(sheetNameList),"fileName":fileName,"userName":userName,"businessLineId":businessLineId,"moduleId":moduleId};#}
+    {#         var htmlobj = $.ajax({#}
+    {#                      url: '{% url 'runTest' %}' ,#}
+    {#                      type: 'POST',#}
+    {#                      data: dataDict,#}
+    {#                      async: false#}
+    {#                  });#}
+    {#        try{#}
+    {#            if(JSON.parse(htmlobj.responseText)["code"] === 10000){#}
+    {#                window.location.href = "{% url 'uiTestResultPage' %}"#}
+    {#            }else {#}
+    {#                alert("请求服务异常，请联系管理员")#}
+    {#            }#}
+    {#        }catch (e){#}
+    {#            alert("任务执行失败，请联系管理员")#}
+    {#        }#}
+    {##}
+    {#    }#}
+    {#    #}
+    {#    initPage();#}
+</script>
+
+<!-- Content ends -->
+{% include 'InterfaceTest/foot.html' %}

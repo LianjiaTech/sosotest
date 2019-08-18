@@ -1,0 +1,187 @@
+{% include 'InterfaceTest/head.html' %}
+
+<div class="content">
+    <!-- Sidebar -->
+    {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Main bar -->
+    <div id="loading" class="loadingWrap" style="display:none;"></div>
+    <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <div class="col-xs-12 form-group pull-right top_search">
+                    <h3>{{ text.pageTitle }}</h3>
+                  </div>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>{{ text.subPageTitle }}</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <div  data-parsley-validate class="form-horizontal form-label-left">
+                        <form action=""  method="post" target="id_iframe">
+                            {% csrf_token %}
+                      <div class="form-group">
+                        <label class="control-label col-lg-2">jira UserName <span class="required" style="color: red">*</span>
+                        </label>
+                        <div class="col-lg-7">
+                          <input  id="jiraUserName" placeholder="请输入jira用户名" type="text"  required="" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-lg-2" for="last-name">jira Password <span class="required" style="color: red">*</span>
+                        </label>
+                        <div class="col-lg-7">
+                            <input  id="jiraPassword" placeholder="请输入jira密码" type="password"  required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-lg-2" for="last-name">gerrit UserName <span class="required" style="color: red">*</span>
+                        </label>
+                        <div class="col-lg-7">
+                            <input  id="gerritUserName" placeholder="请输入gerrit用户名" type="text"  required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-lg-2" for="last-name">gerrit Password <span class="required" style="color: red">*</span>
+                        </label>
+                        <div class="col-lg-7">
+                            <input  id="gerritPassword" placeholder="请输入gerrit密码" type="password"  required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-lg-2" for="last-name">releasemgr UserName <span class="required" style="color: red">*</span>
+                        </label>
+                        <div class="col-lg-7">
+                            <input  id="releasemgrUserName" placeholder="请输入releasemgr用户名" type="text"  required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-lg-2" for="last-name">releasemgr Password <span class="required" style="color: red">*</span>
+                        </label>
+                        <div class="col-lg-7">
+                            <input  id="releasemgrPassword" placeholder="请输入releasemgr密码" type="password"  required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-lg-2" for="last-name">filterId <span class="required" style="color: red">*</span>
+                        </label>
+                        <div class="col-lg-7">
+                            <input  id="filterId" placeholder="请输入filterId" type="text"  required="required" class="form-control col-md-7 col-xs-12" value="14558">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                            <label class="control-label col-lg-2">OPS类型</label>
+                            <div class="col-lg-7">
+                                <select class="form-control" id="OPSType">
+                                    <option value="MR">MR</option>
+                                    <option value="EP">EP</option>
+                                </select>
+                            </div>
+                        </div>
+                    <div class="form-group">
+                        <label class="control-label col-lg-2" for="last-name">备注
+                        </label>
+                        <div class="col-lg-7">
+                            <textarea type="text" id="remark"  class="form-control col-md-7 col-xs-12 Fixed-width"
+                            placeholder="请输入备注"
+                            ></textarea>
+                        </div>
+                      </div>
+                        <div class="form-group">
+                          <div class="col-lg-9">
+                                <button style="float: right" type="submit" class="btn btn-success btn-lg" onclick="doDeployment()">&nbsp;&nbsp;&nbsp;&nbsp;提交&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                                <button style="float: right" type="button" class="btn btn-danger btn-lg" onclick="flushData()">&nbsp;&nbsp;&nbsp;&nbsp;清空&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                          </div>
+                      </div>
+                    </form>
+                    <iframe id="id_iframe" name="id_iframe" style="display: none;">
+                    </iframe>
+                    </div>
+
+
+                  </div>
+                </div>
+              </div>
+                <!--调试-->
+            </div>
+
+          </div>
+    </div>
+</div>
+<script type="text/javascript">
+    function initGetText() {
+        var getText = $.ajax({
+                url:"{% url 'initGetText' %}",
+                type:"GET",
+                async:false});
+        var responseJson = JSON.parse(getText.responseText);
+        if (responseJson["code"] === 10000){
+            var data = responseJson["body"];
+            $("#jiraUserName").val(data["jiraUserName"]);
+            $("#jiraPassword").val(data["jiraPassword"]);
+            $("#gerritUserName").val(data["gerritUserName"]);
+            $("#gerritPassword").val(data["gerritPassword"]);
+            $("#releasemgrUserName").val(data["releasemgrUserName"]);
+            $("#releasemgrPassword").val(data["releasemgrPassword"]);
+            $("#filterId").val(data["filterId"]);
+            $("#OPSType").val(data["OPSType"]);
+        }
+
+    }
+    initGetText();
+
+    function doDeployment() {
+        $("#loading").show();
+        var data = {};
+        data["jiraUserName"] = $("#jiraUserName").val();
+        data["jiraPassword"] = $("#jiraPassword").val();
+        data["gerritUserName"] = $("#gerritUserName").val();
+        data["gerritPassword"] = $("#gerritPassword").val();
+        data["releasemgrUserName"] = $("#releasemgrUserName").val();
+        data["releasemgrPassword"] = $("#releasemgrPassword").val();
+        data["filterId"] = $("#filterId").val();
+        data["OPSType"] = $("#OPSType").val();
+
+        for (var index in data){
+            if(!data[index]){
+                $("#loading").hide();
+                return
+            }
+        }
+        data["reMark"] = $("#remark").val();
+
+        $.ajax({
+                url:"{% url 'doDeployment' %}",
+                type:"POST",
+                data:data,
+                success:function(getText){
+                    $("#loading").hide();
+                    var responseJson = JSON.parse(JSON.parse(getText)["body"]);
+                    //身份认证通过 则跳转  106 == 强弱效验失败 100 == 效验成功
+                    if (responseJson["statusCode"] === 106 || responseJson["statusCode"] === 100 || responseJson["statusCode"] === 109){
+                        location.href = "{% url 'deploymentCheck' %}";
+                    }
+                    else {
+                        alert(responseJson["message"])
+                    }
+                }
+        });
+    }
+
+    function flushData() {
+        $("input").val("");
+    }
+</script>
+
+<!-- Content ends -->
+{% include 'InterfaceTest/foot.html' %}

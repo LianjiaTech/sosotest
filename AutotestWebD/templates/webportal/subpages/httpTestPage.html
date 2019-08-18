@@ -1,0 +1,99 @@
+
+  <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>Action自动化测试执行情况</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                  <div id="allInterfaceTestResultChart" style="height:350px;"></div>
+
+                  </div>
+                </div>
+              </div>
+  <!-- FastClick -->
+    <script src="/static/cttp/vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="/static/cttp/vendors/nprogress/nprogress.js"></script>
+    <!-- ECharts -->
+    <script src="/static/cttp/vendors/echarts/dist/echarts.min.js"></script>
+    <script src="/static/cttp/vendors/echarts/map/js/world.js"></script>
+    <script src="/static/new_template/build/js/customAction.js"></script>
+
+<div class="row tile_count" style="margin-bottom: 0px;margin-top: 0px" id="graph">
+</div>
+<script type="text/javascript">
+
+    getBusinessLineNameId = function () {
+				var ajaxRequest = $.ajax({
+            		url: "/webportal/getBusinessLineNameId",
+            		type: "get",
+            		async: false
+        		});
+        		var request = JSON.parse(ajaxRequest.responseText);
+        		if (request["code"] === 10000) {
+            		return request["body"]
+        		} else {
+            		alert("错误 " + request["code"] + ":" + request["message"]);
+        		}
+            };
+
+const results = getBusinessLineNameId();
+const temp = results.map(item => {
+    return `
+    <div class="col-md-6 col-sm-6 col-xs-6 tile_stats_count">
+       <div class="x_panel">
+                  <div class="x_title">
+                    <h2>${item.name}自动化测试执行情况</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                      <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
+                        <ul class="dropdown-menu" role="menu">
+                          <li><a href="#">Settings 1</a>
+                          </li>
+                          <li><a href="#">Settings 2</a>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a class="close-link"><i class="fa fa-close"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                  <div id="${item.id}" style="height:350px;"></div>
+
+                  </div>
+                </div>
+    </div>
+    `;
+})
+    $('#graph').html(temp.join(''));
+</script>
+<script src="/static/new_template/build/js/customActionSFA.js"></script>
+<script src="/static/new_template/build/js/customActionCustomerServiceCloud.js"></script>
+<script src="/static/new_template/build/js/customActionFieldCloud.js"></script>
+<script src="/static/new_template/build/js/customActionPASS.js"></script>
+<script src="/static/new_template/build/js/customActionOa.js"></script>
+<script src="/static/new_template/build/js/customActionDataIntelligence.js"></script>
+<script src="/static/new_template/build/js/customActionMarketingCloud.js"></script>
+<script src="/static/new_template/build/js/customActionHighTask.js"></script>

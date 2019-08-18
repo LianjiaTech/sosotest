@@ -1,0 +1,2 @@
+rm -rf /opt/ATPlatform/release/AutotestPlatform/AutotestWebD/reports/$(date -d "10 days ago" +%Y%m%d)
+rm -rf /opt/ATPlatform/release/AutotestPlatform/AutotestWebD/static/ui_test_reports/*_$(date -d "10 days ago" +%Y%m%d)_*

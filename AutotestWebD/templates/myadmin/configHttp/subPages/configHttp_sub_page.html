@@ -1,0 +1,97 @@
+<div class="box-body no-padding" >
+
+
+
+    <div class="box-header with-border">
+          <h3 class="box-title">数据服务器列表</h3>
+
+{#          <div class="box-tools pull-right">#}
+{#            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>#}
+{#            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>#}
+{#          </div>#}
+        <button style="margin: auto; float: right;margin-right: 30px" onclick="addConfigHttpBtn()" type="button" class="btn bg-olive margin">添加数据服务器</button>
+        </div>
+
+<div class="box-footer clearfix">
+  <ul class="pagination pagination-sm no-margin pull-right">
+    {% include "myadmin/pagination.html" %}
+  </ul>
+</div>
+    <table class="table table-striped table-bordered">
+        <tbody>
+        <tr>
+            <th style="width: 2%">#</th>
+            <th style="width: 15%">环境配置Key</th>
+            <th style="width: 15%">服务配置Key</th>
+            <th style="width: 15%">环境配置名称</th>
+            <th style="width: 10%">API执行时是否显示</th>
+            {% if menu.UI == 1 %}
+            <th style="width: 10%">UI执行时是否显示</th>
+            {% endif %}
+            <th style="width: 10%">dubbo执行时是否显示</th>
+            <th style="width: 10%">是否有效</th>
+
+            <th style="width: 25%;">操作</th>
+        </tr>
+         {% if pageCount == 0 %}
+        <td colspan="8" align="center" >没有符合条件的搜索结果</td>
+    {% else %}
+        {% for pageData in pageDatas %}
+            <tr>
+                <td>{{ pageData.id }}</td>
+                <td id="httpConfKey_{{ pageData.id }}">{{ pageData.httpConfKey }}</td>
+                <td>{{ pageData.serviceConfKey }}</td>
+                <td>{{ pageData.alias }}</td>
+                {% if pageData.apiRunState == 1 %}
+                <td>是</td>
+                {% else %}
+                <td>否</td>
+                {% endif %}
+            {% if menu.UI == 1 %}
+                {% if pageData.uiRunState == 1 %}
+                <td>是</td>
+                {% else %}
+                <td>否</td>
+                {% endif %}
+            {% endif %}
+            {% if menu.DubboInterface == 1 %}
+                {% if pageData.dubboRunState == 1 %}
+                <td>是</td>
+                {% else %}
+                <td>否</td>
+                {% endif %}
+            {% endif %}
+                {% if pageData.state == 1 %}
+                <td>有效</td>
+                {% else %}
+                <td>无效</td>
+                {% endif %}
+                <td>
+                    {% if pageData.state == 1 %}
+                    <button type="button" class="btn bg-olive"
+                            onclick="editConfigHttpBtn('{{ pageData.id }}')">编辑
+                    </button>
+                    <button  type="button" class="btn bg-red"
+                            onclick="deleteConfigHttpBtn($(this), '{{ pageData.id }}')">删除
+                    </button>
+                    {% else %}
+                    <button  type="button" class="btn bg-red"
+                            onclick="resetConfigHttpBtn($(this), '{{ pageData.id }}')">启用
+                    </button>
+                    {% endif %}
+
+                </td>
+
+            </tr>
+
+        {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+
+</div>
+<div class="box-footer clearfix">
+  <ul class="pagination pagination-sm no-margin pull-right">
+    {% include "myadmin/pagination.html" %}
+  </ul>
+</div>

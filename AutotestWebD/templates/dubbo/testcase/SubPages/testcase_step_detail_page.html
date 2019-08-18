@@ -1,0 +1,126 @@
+     <div class="form-group" style="margin-bottom: 0px;margin-top: 15px">
+
+            <label class="control-label col-md-min-1">{{ groupLevel1 }}</label>
+            <div class="col-lg-3" style="width:21%;">
+                <select class="form-control" name="businessLine" >
+                    {% for business in businessLine %}
+                        <option value="{{ business.id }}">{{ business.bussinessLineName }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <label class="control-label col-md-min-1">{{ groupLevel2 }}</label>
+            <div class="col-lg-3" style="width:21%;">
+                <select class="form-control" name="modules">
+                </select>
+            </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-lg-11" style="width: 88%;margin-top: 20px;margin-left: 10px;">
+                  <div>
+                        <h2>准备</h2>
+                  </div>
+                    <div id="interfaceTabContent" class="tab-content" style="margin-top: 5px">
+                            <div class="form-group">
+                                <div class="col-lg-7" style="width: 100%">
+
+                                    <div id="myTabContent1" class="tab-content">
+                                        <div class="tab-pane fade active in" name="commonValBeforeDiv" name1="switchDiv" id="commonValBefore">
+                                            <div class="form-group">
+                                                <div class="col-lg-12" style="max-width: 1000px">
+                                                    <textarea type="text"
+                                                              onfocus="resetGlobalElement($(this),'')"
+
+                                                              style="height: 100px;max-width: 100%"
+                                                              name="commonValBefore"
+                                                              class="form-control"
+                                                              placeholder="请输入通用变量">{{ beforeCommonVal }}</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                    <div>
+                        <h2>执行信息</h2>
+                    </div>
+                        <div class="form-group" style="padding-left: 20px">
+                            <div class="col-lg-2" style="width:15%;padding-right: 0px;padding-left: 0px" >
+                                <select class="form-control" style="border-radius:0px;" name="SYSTEM_KEY" >
+                                    {% for u in uri %}
+                                    <option value="{{ u.uriKey }}" title="{{ u.uriKey }}">{{ u.alias }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div  class="col-lg-2" style="width:20%;padding-right: 0px;padding-left: 0px">
+                                <button name="useCustomUriBtn" style="width: 100%;padding-top: 6px;padding-bottom: 6px;background-color: #CCFFFF;border-color: #99FFFF" onclick="useCustomToggle($(this))" type="button" class="btn btn-lg">
+                                    <i class="fa fa-hand-o-left"></i>使用服务配置地址</button>
+                                <input type="checkbox" name="useCustomUri" checked style="display:none;" />
+                            </div>
+                            <div class="col-lg-2" style="width:55%;padding-right: 0px;padding-left: 0px">
+                                <input type="text" name="customUri" style="border-radius:0px;height: 38px;resize:none"  class="form-control" placeholder="请输入自定义请求地址,例:10.10.10.10:8888" title="请输入自定义请求地址,例:http://127.0.0.1">
+                            </div>
+                        </div>
+                            <div class="form-group" style="padding-left: 20px">
+                            <div class="col-lg-1" style="width:15%;padding-right: 0px;padding-left: 0px" >
+                                <select class="form-control" style="border-radius:0px;" name="ENVKEY_FOR_GETDUBBOINFO" >
+                                    <option value="" title="">选择环境</option>
+                                    {% for hc in envConfList %}
+                                    <option value="{{ hc.httpConfKey }}" title="{{ hc.httpConfKey }}">{{ hc.alias }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-lg-2" style="width:40%;padding-right: 0px;padding-left: 0px" >
+                                <input  list="input_list_service" type="text" name="SERVICE_PATH" style="border-radius:0px;height: 38px;resize:none" id="SERVICE_PATH" class="form-control" placeholder="请输入服务的全路径,例:com.xxx.xxxx.XxxxxFacade"/>
+                                <datalist id="input_list_service" name="input_list_service"></datalist>
+                            </div>
+                            <div class="col-lg-1" style="width:20%;padding-right: 0px;padding-left: 0px" >
+                                <input  list="input_list_method"  type="text" name="METHOD" style="border-radius:0px;height: 38px;resize:none" id="METHOD" class="form-control" placeholder="请输入接口,例:getSharePoolHouseInfo"/>
+                                <datalist id="input_list_method" name="input_list_method"></datalist>
+                            </div>
+                            <div class="col-lg-1" style="width:15%;padding-right: 0px;padding-left: 0px" >
+                                <select class="form-control" style="border-radius:0px;height: 38px;" id="encoding"  name="encoding">
+                                    <option value="gb18030">GB18030</option>
+                                    <option value="utf8">UTF-8</option>
+                                    <option value="gbk">GBK</option>
+                                    <option value="gb2312">GB2312</option>
+                                </select>
+                            </div>
+
+                        </div>
+                         <div class="form-group">
+                             <div class="col-lg-7" style="width: 100%">
+                                <div class="col-lg-12"  style="max-width: 1000px">
+                                    <textarea type="text" class="form-control Fixed-width"
+                                              style="width:100%;" onfocus="resetGlobalElement($(this),'')"
+                                              name="parameter" placeholder="请输入测试参数,多个参数使用半角逗号（,）间隔"></textarea>
+                                </div>
+                             </div>
+                         </div>
+                     <div>
+                        <h2>断言恢复</h2>
+                    </div>
+                            <div class="form-group">
+                                <div class="col-lg-7" style="width: 100%">
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade active in"
+                                             name="commonValAfterDiv" name1="switchDiv" id="commonValAfter">
+                                            <div class="form-group">
+                                                <div class="col-lg-12" style="max-width: 1000px">
+                                                    <textarea type="text"
+                                                              onfocus="resetGlobalElement($(this),'')"
+                                                              style="height: 100px;max-width: 100%"
+                                                              class="form-control"
+                                                              name="commonValAfter"
+                                                              placeholder="请输入断言恢复等"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </div>

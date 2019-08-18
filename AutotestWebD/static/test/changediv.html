@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="/static/AdminLTE/bower_components/jquery/dist/jquery.min.js"></script>
+</head>
+<body>
+<style>
+#container {
+    width: 100%;
+    height: 100%;
+    /* Disable selection so it doesn't get annoying */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: moz-none;
+    -ms-user-select: none;
+    user-select: none;
+}
+#container #left {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 100px;
+    background: red;
+    display: none;
+}
+#container #right {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 200px;
+    background: blue;
+}
+#container #handle {
+    position: absolute;
+    left: -4px;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+    cursor: w-resize;
+}
+</style>
+<div id="container">
+    <!-- Left side -->
+    <div id="left"> This is the left side's content! </div>
+    <!-- Right side -->
+    <div id="right">
+        <!-- Actual resize handle -->
+        <div id="handle"></div> This is the right side's content!
+    </div>
+</div>
+</body>
+<script type="text/javascript">
+$(function () {
+    var isResizing = false, lastDownX = 0;
+    var container = $('#container'), left = $('#left'), right = $('#right'), handle = $('#handle');
+    handle.on('mousedown', function (e) {
+        isResizing = true;
+        lastDownX = e.clientX;
+    });
+    $(document).on('mousemove', function (e) {
+        // we don't want to do anything if we aren't resizing.
+        if (!isResizing) return;
+        var offsetRight = container.width() - (e.clientX - container.offset().left);
+        left.css('right', offsetRight);
+        right.css('width', offsetRight);
+    }).on('mouseup', function (e) {
+        // stop resizing
+        isResizing = false;
+    });
+});
+</script>
+</html>

@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>关键字使用帮助</title>
+    <style>
+        .kwFont {
+            font-weight: bold;
+            color: #5B00AE;
+        }
+
+        .typeFont {
+            font-weight: bold;
+            color: #1aaef3;
+        }
+
+        .paramTable table{border-left:1px solid #6f6f6f;border-bottom:1px solid #6f6f6f;}
+        .paramTable table th{border-right:1px solid #6f6f6f;border-top:1px solid #6f6f6f;}
+        .paramTable table td{border-right:1px solid #6f6f6f;border-top:1px solid #6f6f6f;}
+
+        .title1{
+            color: #3b9e3b;
+        }
+        .title2{
+            color: #1aaef3;
+        }
+    </style>
+</head>
+<body>
+<div>快速索引：
+    <br><a href="#EXECUTE_INTERFACE">执行接口</a>&nbsp;&nbsp;{% if menu.DubboInterface == 1 %}<a href="#EXECUTE_DUBBO_INTERFACE">执行DUBBO接口</a>{% endif %}
+    <br><a href="#TIMESTAMP">获取当前时间戳（秒级）</a>&nbsp;&nbsp;<a href="#TIMESTAMP_MS">获取当前时间戳（豪秒级）</a>&nbsp;&nbsp;<a href="#DATETIME_FORMAT">时间格式化处理</a>&nbsp;&nbsp;
+        <a href="#SPECIAL_TIMESTAMP">特殊定义时间戳</a>&nbsp;&nbsp;
+    <br><a href="#TIMESTAMP_FORMAT">时间戳（秒级）格式化为时间格式</a>&nbsp;&nbsp;<a href="#TIMESTAMP_FORMAT_MS">时间戳（豪秒级）格式化为时间格式</a>&nbsp;&nbsp;<a href="#DAYS_OF_MONTH">获取某月天数</a>&nbsp;&nbsp;
+    <br><a href="#RANDOM_INT">随机数</a>&nbsp;&nbsp;<a href="#RANDOM_CN">随机中文</a>&nbsp;&nbsp;<a href="#RANDOM_EN">随机英文</a>&nbsp;&nbsp;
+    <br><a href="#SUB_STR">截取字符串</a>&nbsp;&nbsp;<a href="#RE_FINDALL">正则获取所有匹配字符串</a>&nbsp;&nbsp;<a href="#BS_FIND">使用BeautifulSoap在html网页上取值</a>&nbsp;&nbsp;<a href="#JSON_PATH_GET">JSONPATH路径值获取</a>&nbsp;&nbsp;<a href="#JSON_GET">JSON路径值获取</a>&nbsp;&nbsp;<a href="#JSON_PATH_EXIST">JSON路径值判断</a>&nbsp;&nbsp;
+    <br><a href="#JSON_LIST_LEN">获取JSON列表长度</a>&nbsp;&nbsp;<a href="#GET_JSON_FROM_LIST_BY_KEYVALUE">获取LIST中的JSON</a>&nbsp;&nbsp;<a href="#GET_JSON_KEYS_LIST">获取json中第几个元素的key值</a>&nbsp;&nbsp;<a href="#GET_JSON_KEY_BY_INDEX">获取json中第几个元素的key值</a>&nbsp;&nbsp;
+        <a href="#GET_LIST_KEY_VALUE_TO_STRING_WITH_SPLIT_TAG">取出list中对象的路径值的字符串拼接</a>&nbsp;&nbsp;
+
+    <br><br>断言相关:
+    <br><a href="#VALUE_ASSERT">值判断</a>&nbsp;&nbsp;<a href="#OR_ASSERT">或判断</a>&nbsp;&nbsp;<a href="#ASSERT">断言内容</a>&nbsp;&nbsp;<a href="#ASSERT_STRUCT">断言结构</a>&nbsp;&nbsp;
+
+    <br><br>变量常量等:
+    <br><a href="#VAR">变量引用</a>&nbsp;&nbsp;<a href="#GVAR">全局变量引用</a>&nbsp;&nbsp;<a href="#TEXT">组合文本引用</a>&nbsp;&nbsp;<a href="#CONST">常量引用</a>&nbsp;&nbsp;
+
+    <br><br>关键字结合PYTHON运算:
+    <br><a href="#EVAL">执行python表达式</a>&nbsp;&nbsp;<a href="#EXEC_PYTHON">执行python语句</a>&nbsp;&nbsp;
+
+    <br><br>数据库REDIS操作:
+    <br><a href="#DB">DB操作</a>&nbsp;&nbsp;<a href="#REDIS">REDIS操作</a>&nbsp;&nbsp;
+</div>
+
+
+<h1 class="title1">执行类关键字</h1>
+<!--========================================================================================================================================-->
+<hr>
+<a name="EXECUTE_INTERFACE"><h2 class="title2">执行接口</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">EXECUTE_INTERFACE</span>(interfaceIds,IGNORE_XXX_XXX)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>interfaceIds</td><td>interfaceId，多个interfaceId用逗号间隔</td><td>执行一个接口就传入HTTP_INTERFACE_1，如果要执行多个用逗号间隔，例如HTTP_INTERFACE_1,HTTP_INTERFACE_2</td>
+    </tr>
+    <tr>
+        <td>IGNORE_XXX_XXX</td><td>使用IGNORE开头，可以忽略接口执行的结果，不影响主流程执行</td><td>执行一个接口就传入HTTP_INTERFACE_1，如果要忽略错误传入 IGNORE_ERROR，如果忽略失败和错误，IGNORE_ERROR_FAIL,全部忽略IGNORE_ALL</td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/恢复断言</span>中使用<br>
+<br>
+使用方法：<br>
+执行单个接口<br>
+EXECUTE_INTERFACE(HTTP_INTERFACE_1)<br>
+执行多个接口<br>
+EXECUTE_INTERFACE(HTTP_INTERFACE_1,HTTP_INTERFACE_2)<br>
+执行单个接口，当结果FAIL时忽略不影响主流程<br>
+resText = EXECUTE_INTERFACE(HTTP_INTERFACE_1,IGNORE_FAIL)<br>
+执行多个接口，所有结果不影响主流程<br>
+resText = EXECUTE_INTERFACE(HTTP_INTERFACE_1,HTTP_INTERFACE_2,IGNORE_ALL)<br>
+<br>
+<!--========================================================================================================================================-->
+{% if menu.DubboInterface == 1 %}
+<!--========================================================================================================================================-->
+<hr>
+<a name="EXECUTE_DUBBO_INTERFACE"><h2 class="title2">执行DUBBO接口</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">EXECUTE_DUBBO_INTERFACE</span>(interfaceIds,IGNORE_XXX_XXX)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>interfaceIds</td><td>interfaceId，多个interfaceId用逗号间隔</td><td>执行一个接口就传入HTTP_INTERFACE_1，如果要执行多个用逗号间隔，例如HTTP_INTERFACE_1,HTTP_INTERFACE_2</td>
+    </tr>
+    <tr>
+        <td>IGNORE_XXX_XXX</td><td>使用IGNORE开头，可以忽略接口执行的结果，不影响主流程执行</td><td>执行一个接口就传入HTTP_INTERFACE_1，如果要忽略错误传入 IGNORE_ERROR，如果忽略失败和错误，IGNORE_ERROR_FAIL,全部忽略IGNORE_ALL</td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/恢复断言</span>中使用<br>
+<br>
+使用方法：<br>
+执行单个接口<br>
+EXECUTE_INTERFACE(DUBBO_INTERFACE_1)<br>
+执行多个接口<br>
+EXECUTE_INTERFACE(DUBBO_INTERFACE_1,DUBBO_INTERFACE_2)<br>
+执行单个接口，当结果FAIL时忽略不影响主流程<br>
+resText = EXECUTE_INTERFACE(DUBBO_INTERFACE_1,IGNORE_FAIL)<br>
+执行多个接口，所有结果不影响主流程<br>
+resText = EXECUTE_INTERFACE(DUBBO_INTERFACE_1,DUBBO_INTERFACE_2,IGNORE_ALL)<br>
+<br>
+<!--========================================================================================================================================-->
+{% endif %}
+<br>
+<h1 class="title1">时间类关键字</h1>
+<!--========================================================================================================================================-->
+<hr>
+<a name="TIMESTAMP"><h2 class="title2">获取当前时间戳（秒级）</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">TIMESTAMP</span>(+-DS)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>+-DS</td><td>控制加减天(D)和秒(S)</td><td>例如:当前时间加1天就是 +1D，减一天就是-1D，加10秒就是+10S，减10秒就是-10S。</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+变量中获取当前时间戳：<br>
+timestampCurrent = TIMESTAMP(); #获取当前时间戳;<br>
+timestampTomorrow = TIMESTAMP(+1D); #获取明天此时时间戳;<br>
+timestampYesterday = TIMESTAMP(-1D); #获取昨天此时时间戳;<br>
+timestampAfterHalfHour = TIMESTAMP(+1800S); #获取半小时(1800秒)后时间戳;<br>
+timestampBeforeHalfHour = TIMESTAMP(-1800S); #获取半小时(1800秒)前时间戳;<br>
+<br>
+<!--========================================================================================================================================-->
+<!--========================================================================================================================================-->
+<hr>
+<a name="TIMESTAMP_MS"><h2 class="title2">获取当前时间戳（毫秒级）</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">TIMESTAMP_MS</span>(+-DS)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>+-DS</td><td>控制加减天(D)和秒(S)</td><td>例如:当前时间加1天就是 +1D，减一天就是-1D，加10秒就是+10S，减10秒就是-10S。</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+变量中获取当前时间戳：<br>
+timestampCurrent = TIMESTAMP_MS(); #获取当前时间戳;<br>
+timestampTomorrow = TIMESTAMP_MS(+1D); #获取明天此时时间戳;<br>
+timestampYesterday = TIMESTAMP_MS(-1D); #获取昨天此时时间戳;<br>
+timestampAfterHalfHour = TIMESTAMP_MS(+1800S); #获取半小时(1800秒)后时间戳;<br>
+timestampBeforeHalfHour = TIMESTAMP_MS(-1800S); #获取半小时(1800秒)前时间戳;<br>
+<br>
+<!--========================================================================================================================================-->
+
+<hr>
+<a name="DATETIME_FORMAT"><h2 class="title2">时间格式化处理</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">DATETIME_FORMAT</span>(datetimeFormatString,+-DS)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>datetimeFormatString</td><td>年月日时分秒的格式化</td><td>例如:%Y-%m-%d %H:%M:%S 表示 2017-01-08 09:52:52。</td></tr>
+    <tr><td>+-DS</td><td>控制加减天(D)和秒(S)</td><td>例如:当前时间加1天就是 +1D，减一天就是-1D，加10秒就是+10S，减10秒就是-10S。</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+获取特殊的格式化时间。<br>
+时间格式化示例：<br>
+timeCurrent = DATETIME_FORMAT(%Y-%m-%d %H:%M:%S); #获取当前格式化时间;<br>
+timeTomorrow = DATETIME_FORMAT(%Y-%m-%d %H:%M:%S,+1D); #获取明天此时格式化时间;<br>
+timeYesterday = DATETIME_FORMAT(%Y-%m-%d %H:%M:%S,-1D); #获取昨天此时格式化时间;<br>
+timeAfterHalfHour = DATETIME_FORMAT(%Y-%m-%d %H:%M:%S,+1800S); #获取半小时(1800秒)后格式化时间;<br>
+timeBeforeHalfHour = DATETIME_FORMAT(%Y-%m-%d %H:%M:%S,-1800S); #获取半小时(1800秒)前格式化时间;<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="SPECIAL_TIMESTAMP"><h2 class="title2">特殊定义时间戳</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">SPECIAL_TIMESTAMP</span>(specialType,+-DS)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>specialType</td><td>特殊的类型</td><td>目前可选择范围：START_OF_MONTH，END_OF_MONTH，START_OF_WEEK，END_OF_WEEK，START_OF_DAY，END_OF_DAY。</td></tr>
+    <tr><td>+-DS</td><td>控制加减天(D)和秒(S)</td><td>例如:当前时间加1天就是 +1D，减一天就是-1D，加10秒就是+10S，减10秒就是-10S。</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+获取特殊时间戳，单位精确到秒，示例如下：<br>
+timestampStartOfMonth = SPECIAL_TIMESTAMP(START_OF_MONTH); #获取本月开始时间戳;<br>
+timestampEndOfMonth = SPECIAL_TIMESTAMP(END_OF_MONTH); #获取本月结束时间戳;<br>
+timestampStartOfWeek = SPECIAL_TIMESTAMP(START_OF_WEEK); #获取本周开始时间戳;<br>
+timestampEndOfWeek = SPECIAL_TIMESTAMP(END_OF_WEEK); #获取本周结束时间戳;<br>
+timestampStartOfDay = SPECIAL_TIMESTAMP(START_OF_DAY); #获取当日开始时间戳;<br>
+timestampEndOfDay = SPECIAL_TIMESTAMP(END_OF_DAY); #获取当日结束时间戳;<br>
+timestampStartOfYestoday = SPECIAL_TIMESTAMP(START_OF_DAY,-1D); #获取昨日开始时间戳;<br>
+timestampEndOfYestoday = SPECIAL_TIMESTAMP(END_OF_DAY,-1D); #获取昨日结束时间戳;<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="TIMESTAMP_FORMAT"><h2 class="title2">时间戳（秒级）To时间格式</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">TIMESTAMP_FORMAT</span>(timestamp,datetimeFormatString)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>timestamp</td><td>时间戳，单位秒。</td><td>长整形时间戳</td></tr>
+    <tr><td>datetimeFormatString</td><td>年月日时分秒的格式化</td><td>例如:%Y-%m-%d %H:%M:%S 表示 2017-01-08 09:52:52。</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+时间戳格式化为格式化时间示例：<br>
+timestampStartOfMonth = SPECIAL_TIMESTAMP(START_OF_MONTH); #获取本月开始时间戳;<br>
+formatedTime = TIMESTAMP_FORMAT($VAR[timestampStartOfMonth],%Y-%m-%d %H:%M:%S); #将本月开始时间戳格式化为格式化时间;<br>
+<br>
+<!--========================================================================================================================================-->
+<!--========================================================================================================================================-->
+<hr>
+<a name="TIMESTAMP_FORMAT_MS"><h2 class="title2">时间戳（毫秒级）To时间格式</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">TIMESTAMP_FORMAT_MS</span>(timestamp,datetimeFormatString)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>timestamp</td><td>时间戳，单位秒。</td><td>长整形时间戳</td></tr>
+    <tr><td>datetimeFormatString</td><td>年月日时分秒的格式化</td><td>例如:%Y-%m-%d %H:%M:%S 表示 2017-01-08 09:52:52。</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+时间戳格式化为格式化时间示例：<br>
+timestampStartOfMonth = TIMESTAMP_MS(); #获取当前毫秒级时间戳;<br>
+formatedTime = TIMESTAMP_FORMAT_MS($VAR[timestampStartOfMonth],%Y-%m-%d %H:%M:%S); #将本月开始时间戳格式化为格式化时间;<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="DAYS_OF_MONTH"><h2 class="title2">获取某月的天数</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">DAYS_OF_MONTH</span>(year,month)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>year</td><td>年，只能获取1900年之后的。可以传入大于1900的四位数字，也可以传入THIS，LAST，LAST-2等。</td><td>例如：2016，THIS，LAST，LAST-3标识前3年，如果今天是2018年，LAST-3就是2015年。</td></tr>
+    <tr><td>month</td><td>月，可以传入数字，也可以传入THIS，LAST，LAST-2等。</td><td>例如:1标识1月份，THIS表示当月，LAST表示上个月，LAST-2表示上两个月</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+获取某月的天数示例：<br>
+daysOfThisMonth = DAYS_OF_MONTH(THIS,THIS); #获取本月天数;<br>
+daysOfLastMonth = DAYS_OF_MONTH(THIS,LAST); #获取上月天数;<br>
+daysOfLast3Month = DAYS_OF_MONTH(THIS,LAST-3); #获取上3个月天数;<br>
+dys = DAYS_OF_MONTH(THIS,2); #获取今年2月份天数;<br>
+<br>
+
+<br>
+<h1 class="title1">随机字符串获取</h1>
+<!--========================================================================================================================================-->
+<hr>
+<a name="RANDOM_INT"><h2 class="title2">随机数</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">RANDOM_INT</span>(minNum,maxNum)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>minNum</td><td>最小值，必须是大于等于0的整数。</td><td>例如:0,1,100等。</td></tr>
+    <tr><td>maxNum</td><td>最大值，必须是大于等于0的整数且大于minNum。</td><td>例如:1,100等。</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+取随机数：<br>
+randInt = RANDOM_INT(1,100); #获取1到100的随机数;<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="RANDOM_CN"><h2 class="title2">随机中文</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">RANDOM_CN</span>(prefixString,randomLength)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>prefixString</td><td>固定前缀</td><td>例如 自动化测试</td></tr>
+    <tr><td>randomLength</td><td>随机长度，必须是大于等于1的整数。</td><td>例如:1/3/5/7/8等。</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+取随机中文：<br>
+randCn = RANDOM_CN(自动化测试,3); #获取自动化测试开头的随机中文字符串，结果为自动化测试XXX，XXX为三个随机中文字符;<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="RANDOM_EN"><h2 class="title2">随机英文</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">RANDOM_EN</span>(prefixString,randomLength)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>prefixString</td><td>固定前缀</td><td>例如 自动化测试</td></tr>
+    <tr><td>randomLength</td><td>随机长度，必须是大于等于1的整数。</td><td>例如:1/3/5/7/8等。</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+取随机英文：<br>
+randCn = RANDOM_EN(autotest,3); #获取自动化测试开头的随机中文字符串，结果为autotestXXX，XXX为三个随机英文字符;<br>
+<br>
+
+<br>
+<h1 class="title1">字符串处理</h1>
+<!--========================================================================================================================================-->
+<hr>
+<a name="SUB_STR"><h2 class="title2">截取字符串</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">SUB_STR</span>(baseString,startTag,endTag)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>baseString</td><td>要截取的字符串</td><td>一般用来处理网页的返回结果，从其中截取字符串。</td></tr>
+    <tr><td>startTag</td><td>开始tag，如果从头开始截取为空即可。</td><td></td></tr>
+    <tr><td>endTag</td><td>结束tag，如果截取到最后为空即可。</td><td></td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+截取字符串：<br>
+假设执行接口，返回结果如下：<br>
+<pre>
+    [{"skillsetId":15202,"skillsetTitle":"A技能组","skillsetPersonList":[{"id":14003,"userId":91622,"profileId":90022,"userName":"客服-A-客服云","status":1,"lastestLoginAt":1514956344660}]},{"skillsetId":15201,"skillsetTitle":"管理员客服组","skillsetPersonList":[{"id":14002,"userId":91621,"profileId":90021,"userName":"管理员杜松","status":1,"lastestLoginAt":1514962191692}]}]
+</pre>
+使用SUB_STR截取第一个 skillsetTitle<br>
+subedStr = SUB_STR($CONST[RESP_TEXT],"skillsetTitle":","); #截取结果是A技能组;<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="RE_FINDALL"><h2 class="title2">正则获取所有匹配字符串</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">RE_FINDALL</span>(baseString,reString)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>baseString</td><td>要截取的字符串</td><td>一般用来处理网页的返回结果，从其中截取字符串。</td></tr>
+    <tr><td>reString</td><td>re表达式</td><td>例如 \d+  startstr(.+?)endstr</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+正则获取所有匹配字符串：<br>
+假设执行接口，返回结果如下：<br>
+<pre>
+    [{"skillsetId":15202,"skillsetTitle":"A技能组","skillsetPersonList":[{"id":14003,"userId":91622,"profileId":90022,"userName":"客服-A-客服云","status":1,"lastestLoginAt":1514956344660}]},{"skillsetId":15201,"skillsetTitle":"管理员客服组","skillsetPersonList":[{"id":14002,"userId":91621,"profileId":90021,"userName":"管理员杜松","status":1,"lastestLoginAt":1514962191692}]}]
+</pre>
+使用RE_FINDALL截取第一个所有的skillsetTitle<br>
+skillsetTitleList = RE_FINDALL($CONST[RESP_TEXT],"skillsetTitle":"(.+?)"); #截取结果是["A技能组"];<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="BS_FIND"><h2 class="title2">使用BeautifulSoap在html网页上取值</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">BS_FIND</span>(htmlString,attrJson,textOrAll,index)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>htmlString</td><td>要处理的html字符串</td><td>html字符串</td></tr>
+    <tr><td>attrJson</td><td>属性的JSON</td><td>例如 {"id":"main"} 就是取 id 为main的网页元素</td></tr>
+    <tr><td>textOrAll</td><td>要去的内容all text name等</td><td>例如 取出一个元素来，all就是显示所有html，text只显示其中的text，name是现实标签名。</td></tr>
+    <tr><td>index</td><td>索引</td><td>例如 0 就是取第一个，以此类推，必须是大于等于0的数字。</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+正则获取所有匹配字符串：<br>
+假设执行接口，返回结果如下：<br>
+<pre>
+    &lt;div class="crm-register-input-warpper">
+      &lt;input type="password" class="crm-register-input user_pwd" name="password" placeholder='Please input password' tabindex="2">
+      &lt;span class="crm-register-verification dinline-block" style="display:none;">
+        &lt;a href="javascript:;" act="pwd_forget" tabindex="4">Forgot password?</a>
+      &lt;/span>
+    &lt;/div>
+</pre>
+testbs1 = BS_FIND($CONST[RESP_TEXT],{"act":"pwd_forget"},all);<br>
+执行完为：testbs1 = &lt;a act="pwd_forget" href="javascript:\;" tabindex="4">Forgot password?</a> ;<br>
+testbs2 = BS_FIND($CONST[RESP_TEXT],{"act":"pwd_forget"});<br>
+执行完为：testbs2 = Forgot password? ;<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="JSON_PATH_GET"><h2 class="title2">JSONPATH路径值获取</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">JSON_PATH_GET</span>(jsonStr,jsonPath)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>jsonStr</td><td>要从中取值的JSON字符串</td><td>一般用来处理网页的返回json结果。</td></tr>
+    <tr><td>jsonPath</td><td>jsonPath表达式</td><td>例如 $.data.entityDatas[?(@.isPublished=='1' && @.type=='1')].id</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+获取JSON对应路径的值：<br>
+假设执行接口，返回结果如下：<br>
+<pre>
+    {"skillsetId":15202,"skillsetTitle":"A技能组","skillsetPersonList":[{"id":14003,"userId":91622,"profileId":90022,"userName":"客服-A-客服云","status":1,"lastestLoginAt":1514956344660}]}
+</pre>
+使用JSON_PATH_GET截取skillsetTitle<br>
+skillsetTitle = JSON_PATH_GET($CONST[RESP_TEXT],$.skillsetTitle); #截取结果是[A技能组];<br>
+skillsetPersonListId = JSON_PATH_GET($CONST[RESP_TEXT],$.skillsetPersonList[0].id); #获取skillsetPersonList的第一个元素的id，截取结果[14003];<br>
+<h3>注意事项</h3>
+<span>使用中注意json中value的类型，例如id的值是"111",那么在写jsonPath时也要加上 双/单引号</span>
+<br>
+<span>更多语法请查看<a href="http://goessner.net/articles/JsonPath/index.html#e2" target="_blank">http://goessner.net/articles/JsonPath/index.html#e2</a> </span>
+<br><!--========================================================================================================================================-->
+<hr>
+<a name="JSON_GET"><h2 class="title2">JSON路径值获取</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">JSON_GET</span>(jsonStr,jsonPath)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>jsonStr</td><td>要从中取值的JSON字符串</td><td>一般用来处理网页的返回json结果。</td></tr>
+    <tr><td>jsonPath</td><td>准确路径值</td><td>例如 ['status']</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+获取JSON对应路径的值：<br>
+假设执行接口，返回结果如下：<br>
+<pre>
+    {"skillsetId":15202,"skillsetTitle":"A技能组","skillsetPersonList":[{"id":14003,"userId":91622,"profileId":90022,"userName":"客服-A-客服云","status":1,"lastestLoginAt":1514956344660}]}
+</pre>
+使用JSON_GET截取skillsetTitle<br>
+skillsetTitle = JSON_GET($CONST[RESP_TEXT],['skillsetTitle']); #截取结果是A技能组;<br>
+skillsetPersonListId = JSON_GET($CONST[RESP_TEXT],['skillsetPersonList'][0]['id']); #获取skillsetPersonList的第一个元素的id，截取结果14003;<br>
+<br><!--========================================================================================================================================-->
+<hr>
+<a name="JSON_PATH_EXIST"><h2 class="title2">JSON路径值判断</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">JSON_PATH_EXIST</span>(jsonStr,jsonPath)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>jsonStr</td><td>要从中取值的JSON字符串</td><td>一般用来处理网页的返回json结果。</td></tr>
+    <tr><td>jsonPath</td><td>准确路径值</td><td>例如 ['status']</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+判断是否JSON字符串是否存在对应路径：<br>
+假设执行接口，返回结果如下：<br>
+<pre>
+    {"skillsetId":15202,"skillsetTitle":"A技能组","skillsetPersonList":[{"id":14003,"userId":91622,"profileId":90022,"userName":"客服-A-客服云","status":1,"lastestLoginAt":1514956344660}]}
+</pre>
+使用JSON_PATH_EXIST判断skillsetTitle和skillsetTitle2是否存在。<br>
+skillsetTitle = JSON_PATH_EXIST($CONST[RESP_TEXT],['skillsetTitle']); #结果是True;<br>
+skillsetTitle2 = JSON_PATH_EXIST($CONST[RESP_TEXT],['skillsetTitle2']); #结果是False;<br>
+skillsetPersonListId = JSON_PATH_EXIST($CONST[RESP_TEXT],['skillsetPersonList'][0]['id']); #结果是True;<br>
+skillsetPersonListId = JSON_PATH_EXIST($CONST[RESP_TEXT],['skillsetPersonList'][1]['id']); #结果是False;<br>
+<br>
+<br><!--========================================================================================================================================-->
+<hr>
+<a name="JSON_LIST_LEN"><h2 class="title2">获取JSON列表长度</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">JSON_LIST_LEN</span>(jsonStr,jsonPath) <br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>jsonStr</td><td>要从中取值的JSON字符串</td><td>一般用来处理网页的返回json结果。</td></tr>
+    <tr><td>jsonPath</td><td>准确路径值，可省略，默认值是空字符串</td><td>例如 ['status']</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+判断是否JSON字符串是否存在对应路径：<br>
+假设执行接口，返回结果如下：<br>
+<pre>
+    {"skillsetId":15202,"skillsetTitle":"A技能组","skillsetPersonList":[{"id":14003,"userId":91622,"profileId":90022,"userName":"客服-A-客服云","status":1,"lastestLoginAt":1514956344660}]}
+</pre>
+使用JSON_LIST_LEN判断skillsetPersonList的长度。<br>
+jsonLen = JSON_LIST_LEN($CONST[RESP_TEXT],['skillsetPersonList']); #结果是1;
+<br>假设执行接口，返回结果如下：<br>
+<pre>
+    [{"id":14003,"userId":91622,"profileId":90022,"userName":"客服-A-客服云","status":1,"lastestLoginAt":1514956344660}]
+</pre>
+使用JSON_LIST_LEN判断返回结果的list的长度。<br>
+jsonLen = JSON_LIST_LEN($CONST[RESP_TEXT]); #结果是1;<br>
+<br>
+<br><!--========================================================================================================================================-->
+<hr>
+<a name="GET_JSON_FROM_LIST_BY_KEYVALUE"><h2 class="title2">获取LIST中的JSON OBJ</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">GET_JSON_FROM_LIST_BY_KEYVALUE</span>(listStr,keyPath,keyValue,index) <br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>listStr</td><td>要从中取值的JSON LIST字符串</td><td>一般用来处理网页的返回json结果。</td></tr>
+    <tr><td>keyPath</td><td>JSON LIST中的JSON OBJ对应的要取值的path</td><td>例如 ['status']</td></tr>
+    <tr><td>keyValue</td><td>JSON LIST中的JSON OBJ对应的要取值的path的value</td><td>例如 0</td></tr>
+    <tr><td>index</td><td>取第几次出现的位置，可省略，省略默认值是1</td><td>例如取第一次出现的位置就写1，以此类推</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+根据对象对应的路径的值获取到LIST中的JSON OBJ，index使用默认值1：<br>
+假设执行接口，返回结果如下：<br>
+<pre>
+    [
+    {"skillsetId":15202,"skillsetTitle":"A技能组","skillsetPersonList":[{"id":14003,"userId":91622,"profileId":90022,"userName":"客服-A-客服云","status":1,"lastestLoginAt":1514956344660}]},
+    {"skillsetId":15203,"skillsetTitle":"B技能组","skillsetPersonList":[{"id":14003,"userId":91622,"profileId":90022,"userName":"客服-A-客服云","status":1,"lastestLoginAt":1514956344660}]},
+    {"skillsetId":15204,"skillsetTitle":"C技能组","skillsetPersonList":[{"id":14003,"userId":91622,"profileId":90022,"userName":"客服-A-客服云","status":1,"lastestLoginAt":1514956344660}]}
+    ]
+</pre>
+使用GET_JSON_FROM_LIST_BY_KEYVALUE获取B技能组的对象。<br>
+jsonObj = GET_JSON_FROM_LIST_BY_KEYVALUE($CONST[RESP_TEXT],['skillsetTitle'],B技能组); #结果是{"skillsetId":15203,"skillsetTitle":"B技能组","skillsetPersonList":[{"id":14003,"userId":91622,"profileId":90022,"userName":"客服-A-客服云","status":1,"lastestLoginAt":1514956344660}]} ;
+<br>
+根据对象对应的路径的值获取到LIST中第2次出现的JSON OBJ：<br>
+假设执行接口，返回结果如下：<br>
+<pre>
+    [
+    {"skillsetId":15202,"skillsetTitle":"A技能组","skillsetPersonList":[{"id":14003,"userId":91622,"profileId":90022,"userName":"客服-A-客服云","status":1,"lastestLoginAt":1514956344660}]},
+    {"skillsetId":15203,"skillsetTitle":"B技能组","skillsetPersonList":[{"id":14003,"userId":91622,"profileId":90022,"userName":"客服-A-客服云","status":1,"lastestLoginAt":1514956344660}]},
+    {"skillsetId":15204,"skillsetTitle":"C技能组","skillsetPersonList":[{"id":14003,"userId":91622,"profileId":90022,"userName":"客服-A-客服云","status":1,"lastestLoginAt":1514956344660}]},
+    {"skillsetId":15205,"skillsetTitle":"B技能组","skillsetPersonList":[{"id":14003,"userId":91622,"profileId":90022,"userName":"客服-A-客服云","status":1,"lastestLoginAt":1514956344660}]},
+    ]
+</pre>
+使用GET_JSON_FROM_LIST_BY_KEYVALUE获取B技能组的对象。<br>
+jsonObj = GET_JSON_FROM_LIST_BY_KEYVALUE($CONST[RESP_TEXT],['skillsetTitle'],B技能组,2); #结果是{"skillsetId":15205,"skillsetTitle":"B技能组","skillsetPersonList":[{"id":14003,"userId":91622,"profileId":90022,"userName":"客服-A-客服云","status":1,"lastestLoginAt":1514956344660}]} ;
+<br>
+<br><!--========================================================================================================================================-->
+<hr>
+<a name="GET_JSON_KEYS_LIST"><h2 class="title2">获取json的所有key值列表</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">GET_JSON_KEYS_LIST</span>(jsonStr)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>jsonStr</td><td>要从中取key list的JSON字符串</td><td>一般用来处理网页的返回json结果。</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+获取JSON中的所有key值，返回一个list：<br>
+假设执行接口，返回结果如下：<br>
+<pre>
+    {"skillsetId":15202,"skillsetTitle":"A技能组","skillsetPersonList":[{"id":14003,"userId":91622,"profileId":90022,"userName":"客服-A-客服云","status":1,"lastestLoginAt":1514956344660}]}
+</pre>
+使用GET_JSON_KEYS_LIST获取列表。<br>
+keyIndex2 = GET_JSON_KEY_BY_INDEX($CONST[RESP_TEXT]); #结果是["skillsetId","skillsetTitle","skillsetPersonList"]<br>
+<br>
+<br><!--========================================================================================================================================-->
+<hr>
+<a name="GET_JSON_KEY_BY_INDEX"><h2 class="title2">获取json中第几个元素的key值</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">GET_JSON_KEY_BY_INDEX</span>(jsonStr,index)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>jsonStr</td><td>要从中取key的JSON字符串</td><td>一般用来处理网页的返回json结果。</td></tr>
+    <tr><td>index</td><td>索引位置，必须是大于等于1的整数。</td><td>例如 1 3 5 8 等</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+获取JSON OBJ中对应的第几个位置的key值：<br>
+假设执行接口，返回结果如下：<br>
+<pre>
+    {"skillsetId":15202,"skillsetTitle":"A技能组","skillsetPersonList":[{"id":14003,"userId":91622,"profileId":90022,"userName":"客服-A-客服云","status":1,"lastestLoginAt":1514956344660}]}
+</pre>
+使用GET_JSON_KEY_BY_INDEX获取第二个key值。<br>
+keyIndex2 = GET_JSON_KEY_BY_INDEX($CONST[RESP_TEXT],2); #结果是skillsetTitle;<br>
+<br>
+<br><!--========================================================================================================================================-->
+<hr>
+<a name="GET_LIST_KEY_VALUE_TO_STRING_WITH_SPLIT_TAG"><h2 class="title2">取出list中对象的路径值的字符串拼接</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">GET_LIST_KEY_VALUE_TO_STRING_WITH_SPLIT_TAG</span>(listStr,keyPath,splitTag) <br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>listStr</td><td>要处理的LIST字符串</td><td>一般用来处理网页的返回json结果。</td></tr>
+    <tr><td>keyPath</td><td>LIST字符串中对应的JSON OBJ的keyPath</td><td>例如 ['skillsetId'] 等</td></tr>
+    <tr><td>splitTag</td><td>分隔符，字符串或者符号，默认是英文逗号</td><td>例如a s , ; 等</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+取出LIST字符串中的JSON OBJ的某个路径的值并根据间隔符拼成字符串。<br>
+假设执行接口，返回结果如下：<br>
+<pre>
+    [
+    {"skillsetId":15202,"skillsetTitle":"A技能组","skillsetPersonList":[{"id":14003,"userId":91622,"profileId":90022,"userName":"客服-A-客服云","status":1,"lastestLoginAt":1514956344660}]},
+    {"skillsetId":15203,"skillsetTitle":"B技能组","skillsetPersonList":[{"id":14003,"userId":91622,"profileId":90022,"userName":"客服-A-客服云","status":1,"lastestLoginAt":1514956344660}]},
+    {"skillsetId":15204,"skillsetTitle":"C技能组","skillsetPersonList":[{"id":14003,"userId":91622,"profileId":90022,"userName":"客服-A-客服云","status":1,"lastestLoginAt":1514956344660}]}
+    ]
+</pre>
+使用GET_LIST_KEY_VALUE_TO_STRING_WITH_SPLIT_TAG获取所有skillsetId的字符串拼接。<br>
+skillsetIdStrs = GET_LIST_KEY_VALUE_TO_STRING_WITH_SPLIT_TAG($CONST[RESP_TEXT],['skillsetTitle'],\,); #使用逗号间隔，结果是15202,15203,15204;<br>
+skillsetIdStrsByA = GET_LIST_KEY_VALUE_TO_STRING_WITH_SPLIT_TAG($CONST[RESP_TEXT],['skillsetTitle'],A); #使用逗号间隔，结果是15202A15203A15204;<br>
+<br>
+
+<br>
+<h1 class="title1">断言关键字</h1>
+<!--========================================================================================================================================-->
+<hr>
+<a name="VALUE_ASSERT"><h2 class="title2">值判断</h2></a>
+<h3>关键字</h3>
+无
+<h3>参数说明</h3>
+<div class="paramTable">
+无
+</div>
+<h3>使用示例</h3>
+只能在<span class="typeFont">ASSERT关键字</span>中使用<br>
+<br>
+在<span class="typeFont">ASSERT关键字</span>中使用方式如下：<br>
+ASSERT(a [IN] abc); #断言a包含与abc;<br>
+ASSERT(a [NOT_IN] abc); #断言a不包含与abc;<br>
+ASSERT(a [==] a); #断言a等于a;<br>
+ASSERT(a [!=] b); #断言a不等于b;<br>
+ASSERT(2 [>] 1); #断言2大于1;<br>
+ASSERT(2 [>=] 1); #断言2大于等于1;<br>
+ASSERT(2 [<] 3); #断言2小于3;<br>
+ASSERT(2 [<=] 3); #断言2小于等于3;<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="OR_ASSERT"><h2 class="title2">或判断</h2></a>
+<h3>关键字</h3>
+无
+<h3>参数说明</h3>
+<div class="paramTable">
+无
+</div>
+<h3>使用示例</h3>
+只能在<span class="typeFont">ASSERT关键字</span>中使用<br>
+<br>
+在<span class="typeFont">ASSERT关键字</span>中使用方式如下：<br>
+ASSERT(a [IN] bc {OR} a [==] a); #a包含与bc或者a等于a，只要一个成立，断言结果就通过;<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="ASSERT"><h2 class="title2">断言内容ASSERT(content)</h2></a>
+<h3>关键字</h3>
+无
+<h3>参数说明</h3>
+<div class="paramTable">
+无
+</div>
+<h3>使用示例</h3>
+只能在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+在<span class="typeFont">准备/断言恢复</span>中使用方式如下：<br>
+ASSERT(a [IN] bc {OR} a [==] a); #断言a包含与bc或者a等于a，只要一个成立，断言结果就通过;<br>
+ASSERT(abc); #断言接口执行的返回结果中包含字符串abc;<br>
+ASSERT({"id":1}); #断言返回结果中的json的id为1，可以递归断言，只要路径对就可以进行断言;<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="ASSERT_STRUCT"><h2 class="title2">断言结构ASSERT_STRUCT(jsonStr)</h2></a>
+<h3>关键字</h3>
+无
+<h3>参数说明</h3>
+<div class="paramTable">
+无
+</div>
+<h3>使用示例</h3>
+只能在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+在<span class="typeFont">准备/断言恢复</span>中使用方式如下：<br>
+ASSERT_STRUCT({"id":1,"msg":"OK"});#断言接口执行的返回内容包含id和msg，且结构和类型一致;<br>
+<br>
+<!--========================================================================================================================================-->
+
+<br>
+<h1 class="title1">变量常量全局等</h1>
+<!--========================================================================================================================================-->
+<hr>
+<a name="VAR"><h2 class="title2">变量引用</h2></a>
+<h3>关键字</h3>
+无<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+无
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/执行信息/断言恢复</span>中使用<br>
+<br>
+调用方式$VAR[varKey]
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="GVAR"><h2 class="title2">全局变量引用</h2></a>
+<h3>关键字</h3>
+无<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+无
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/执行信息/断言恢复</span>中使用<br>
+<br>
+调用方式$GVAR[gvarKey]
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="TEXT"><h2 class="title2">组合文本引用</h2></a>
+<h3>关键字</h3>
+无<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+无
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/执行信息/断言恢复</span>中使用<br>
+<br>
+调用方式1：$TEXT[textKey]<br>
+调用方式2：$IMPORT[textKey]<br>
+调用方式3：$RUNFUNC[textKey]<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="CONST"><h2 class="title2">常量引用</h2></a>
+<h3>关键字</h3>
+无<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+无
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/执行信息/断言恢复</span>中使用<br>
+<br>
+最近响应的头信息：$CONST[RESP_HEADER]<br>
+最近响应的状态码：$CONST[RESP_STATUS]<br>
+最近响应的请求体：$CONST[RESP_TEXT]<br>
+请求接口响应的头信息：$CONST[INTERFACE_RESP_HEADER]<br>
+请求接口响应的状态码：$CONST[INTERFACE_RESP_STATUS]<br>
+请求接口响应的请求体：$CONST[INTERFACE_RESP_TEXT]<br>
+<br>
+<h1 class="title1">关键字结合PYTHON运算</h1>
+<!--========================================================================================================================================-->
+<hr>
+<a name="EVAL"><h2 class="title2">执行python表达式</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">EVAL</span>( python_scripts )<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>python_scripts</td><td>合法的python表达式</td><td>python语句</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+只能在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+在<span class="typeFont">准备/断言恢复</span>中使用方式如下：<br>
+假如执行接口返回值如下：<br>
+a = 1;<br>
+b = EVAL($VAR[a]+1);<br>
+执行后b为2.<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="EXEC_PYTHON"><h2 class="title2">执行python语句</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">EXEC_PYTHON</span>( python_scripts )<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>python_scripts</td><td>合法的python语句</td><td>python语句</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+只能在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+在<span class="typeFont">准备/断言恢复</span>中使用方式如下：<br>
+假如执行接口返回值如下：<br>
+<pre>
+{
+  "status": 0,
+  "statusText": "??????",
+  "data": {
+    "entity": {
+      "name": "工作报告",
+      "pageSize": "20",
+      "autoScroll": "0"
+    },
+    "unDealCount": {
+      "count": "0"
+    },
+    "permission": {
+      "func": "true"
+    },
+    "businessTypes": [
+      {
+        "id": 155816,
+        "belongId": 25,
+        "typeName": "日报",
+        "typeName_resourcekey": "XdMDBizTp.dayreport.busiType_155816"
+      },
+      {
+        "id": 155817,
+        "belongId": 26,
+        "typeName": "周报",
+        "typeName_resourcekey": "XdMDBizTp.weekreport.busiType_155817"
+      },
+      {
+        "id": 155818,
+        "belongId": 27,
+        "typeName": "月报",
+        "typeName_resourcekey": "XdMDBizTp.monthreport.busiType_155818"
+      }
+    ]
+  }
+}
+</pre>
+给变量赋值和取变量值示例如下：<br>
+<pre>
+EXEC_PYTHON(
+ASSERT_MODE = False #默认是False，可不写。True时，如果遇到异常或者assert False将结束后续执行。False时，遇到异常等不结束执行，继续后面的执行
+resText = """$CONST[RESP_TEXT]"""
+resDict = json.loads(resText)
+VAR['status'] = resDict['status']
+getPvar = "$VAR[key]" #直接从平台取值，利用平台特性
+getPvar2 = VAR['key'] #从python dict中取平台变量，利用python dict。
+);</pre><br>
+执行完毕后，会生成变量 status = 0。<br>
+其中VAR['status']中的VAR[]是必须带的，不带VAR[]将不会加入到变量列表。<br>
+
+<br>
+进行断言示例如下：<br>
+<pre>
+EXEC_PYTHON(
+ASSERT_MODE = True #默认是False，可不写。True时，如果遇到异常或者assert False将结束后续执行。False时，遇到异常等不结束执行，继续后面的执行
+resText = """$CONST[RESP_TEXT]"""
+resDict = json.loads(resText)
+VAR['status'] = resDict['status']
+getPvar = "$VAR[key]" #直接从平台取值，利用平台特性
+getPvar2 = VAR['key'] #从python dict中取平台变量，利用python dict。
+if getPvar == "abc":
+    assert True
+else:
+    assert False
+);</pre><br>
+执行后，当执行了assertTrue之后，继续执行，断言通过。当执行分支else时，断言失败，结束执行。如果python代码遇到异常，断言ERROR，结束执行。<br>
+
+<br>
+DEBUG_MODE的示例如下：<br>
+<pre>
+EXEC_PYTHON(
+DEBUG_MODE = True #默认是False，可不写。True时，执行结束会输出python的代码和执行后的变量池。
+VAR['a'] = 1
+);</pre><br>
+执行后，会输出执行的python语句和变量池等。<br>
+
+<br>
+执行平台关键字的的示例如下：<br>
+<pre>
+#测试python只调用平台关键字;
+EXEC_PYTHON(
+DEBUG_MODE = True
+VAR['TEST'] = """$VAR[assString ]"""
+VAR['randIntInPython'] = """RANDOM_INT(1,20) """
+if False:
+    VAR['testRandom'] = INVOKE{ RANDOM_INT(1,20) }END
+else:
+    VAR['executeResultHtp1'] = INVOKE{ EXECUTE_INTERFACE(HTTP_INTERFACE_1) $VAR[TEST]}END
+INVOKE{ASSERT($VAR[assString ] ) }END
+VAR['test222'] = """$VAR[curTimeStamp]abccc"""
+);</pre><br>
+执行后，可以把执行结果赋值给变量，也可以执行断言，等等。调用平台关键字方式 INVOKE{ 中间平台的语法，关键字变量引用等 }END<br>
+
+<h4>注意事项</h4>
+1、python代码换行后如果缩进是4个空格。<br>
+2、可以使用VAR[key]给变量赋值，如果使用$VAR[] 等带$符号的，要加双引号或者三引号作为字符串传递，如果是数字可不加。<br>
+3、不可使用import 引入包，需要联系管理员。目前已经默认import json,time,datetime<br>
+4、单个代码块执行时间最长10s，超过10s会抛出超时异常。<br>
+5、代码块中不能出现英文分号，如果出现，需要加反斜杠转义。<br>
+6、代码块中加入 DEBUG_MODE = True，可以输出实际执行的代码和执行后的变量池。<br>
+7、python代码中调用平台关键字方式 INVOKE{ 中间平台的语法，关键字变量引用等 }END，在INVOKE{}END中间的内容只有python代码执行到的时候才会执行！<br>
+
+<br>
+<br>
+
+<h1 class="title1">数据库REDIS操作</h1>
+<!--========================================================================================================================================-->
+<hr>
+<a name="DB"><h2 class="title2">数据库操作&nbsp;DB_SELECT/UPDATE/DELETE/INSERT(service,sql)</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">DB_SELECT</span>( service,sql )<br>
+<span class="kwFont">DB_UPDATE</span>( service,sql )<br>
+<span class="kwFont">DB_DELETE</span>( service,sql )<br>
+<span class="kwFont">DB_INSERT</span>( service,sql )<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>service</td><td>数据配置中的host-后面的key(可以为空，为空使用默认数据库服务)</td><td>例如配置 host-saas = 10.10.10.10，那么key就是saas</td></tr>
+    <tr><td>sql</td><td>sql语句，要求 库名.表名</td><td>平台只配置数据库的ip port username password，不配置具体数据库，所以sql语句中要表明。sql语句要求影响行数不超过100行，必须有where子句。</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+只能在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+在<span class="typeFont">准备/断言恢复</span>中使用方式如下：<br>
+假如执行接口返回值如下：<br>
+selectValueList = DB_SELECT(saas, select id,name from saas.user where id > 10);#查询id大于10的用户，返回是一个list加dict的json字符串，可以用JSON_GET等关键字解析取值;<br>
+DB_UPDATE(saas,update db.table set name="wang" where id = 10); #执行update语句，返回影响行数;<br>
+<br>
+<br>
+<!--========================================================================================================================================-->
+<!--========================================================================================================================================-->
+<hr>
+<a name="REDIS"><h2 class="title2">REDIS操作&nbsp;REDIS_SET/GET/DEL(*args,**kwargs)</h2></a>
+<h3>关键字</h3>
+<span class="kwFont">REDIS_SET</span>( key,value,timeout=None,db=0,service=testproject )<br>
+<span class="kwFont">REDIS_GET</span>( key,db=0,service=testproject )<br>
+<span class="kwFont">REDIS_DEL</span>( key,db=0,service=testproject )<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr><td>service</td><td>数据配置中redis的host-后面的key(可以为空，为空使用默认数据库服务)</td><td>例如配置 host-saas = 10.10.10.10，那么key就是saas</td></tr>
+    <tr><td>timeout</td><td>超时时间</td><td>超时时间，单位秒</td></tr>
+    <tr><td>db</td><td>哪个数据库</td><td>大于0的整数</td></tr>
+    <tr><td>key</td><td>redis的key</td><td>合法的key</td></tr>
+    <tr><td>value</td><td>redis要设置的value</td><td>合法的value</td></tr>
+</table>
+</div>
+<h3>使用示例</h3>
+只能在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+在<span class="typeFont">准备/断言恢复</span>中使用方式如下：<br>
+假如执行接口返回值如下：<br>
+REDIS_SET(k1,va1);#设置默认数据库默认配置的k1的值va1;<br>
+REDIS_SET(k1,va1,timeout=10,db=1,service=saas);#设置指定saas数据库1的k1的值va1，10秒超时;<br>
+getV = REDIS_GET(k1);#获取值;<br>
+REDIS_DEL(k1);#删除redis值;<br>
+<br>
+<br>
+<!--========================================================================================================================================-->
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+</body>
+</html>

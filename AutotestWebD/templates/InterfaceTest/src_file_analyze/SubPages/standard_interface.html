@@ -1,0 +1,28 @@
+<table class="table table-striped table-bordered table-hover"
+       style="table-layout:fixed;width:100%;word-break:break-all;margin-top:8px">
+    <thead>
+    <tr style="color: snow" bgcolor="#1e7db9">
+        <th style="width:60%;">文件名称</th>
+        <th style="width:40%;">接口名称</th>
+        <th style="width:40%;">更新时间</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for data in dataList %}
+    <tr>
+        <td>{{ data.fileName }}</td>
+        <td>{{ data.interfaceUrl }}</td>
+        <td>{{ data.modTime }}</td>
+    </tr>
+    {% endfor %}
+   </tbody>
+</table>
+<button style="float: right" type="button" onclick="$('#EditVars').show();$('#fileDetail').hide()" class="btn btn-primary btn-lg">&nbsp;&nbsp;&nbsp;&nbsp;返回&nbsp;&nbsp;&nbsp;&nbsp;</button>
+
+<div>
+    <button type="button" value="save" class="button blue " style="margin-top:8px;visibility:hidden"
+            onclick="debugCase('save')"><p style="font-size: 20px;">批量执行</p></button>
+    <div class="pagination" style="float:right;">
+          {% include 'InterfaceTest/pagination.html' %}
+    </div>
+</div>

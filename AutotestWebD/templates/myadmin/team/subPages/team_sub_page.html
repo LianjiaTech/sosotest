@@ -1,0 +1,76 @@
+<div class="box-body no-padding" >
+    <div class="box-header with-border">
+          <h3 class="box-title">小组列表</h3>
+
+{#          <div class="box-tools pull-right">#}
+{#            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>#}
+{#            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>#}
+{#          </div>#}
+        {% if isTeamLeader != 1 %}
+        <button style="margin: auto;float: right;margin-right: 30px" onclick="addTeamBtn()" type="button" class="btn bg-olive margin">添加小组</button>
+        {% endif %}
+    </div>
+
+    <table class="table table-striped table-bordered">
+        <tbody>
+        <tr>
+            <th style="width: 2%">#</th>
+            <th style="width: 10%">小组名称</th>
+            <th style="width: 10%">小组key</th>
+            <th style="width: 5%">是否有效</th>
+            <th style="width: 15%;">操作</th>
+        </tr>
+         {% if pageCount == 0 %}
+        <td colspan="8" align="center" >没有符合条件的搜索结果</td>
+    {% else %}
+        {% for pageData in pageDatas %}
+            <tr>
+                <td>{{ pageData.id }}</td>
+                <td id="teamName_{{ pageData.id }}">{{ pageData.teamName }}</td>
+                <td>{{ pageData.teamKey }}</td>
+                {% if pageData.state == 0 %}
+                <td>无效</td>
+                {% else %}
+                <td>有效</td>
+                {% endif %}
+
+                <td>
+                    {% if pageData.state == 1 %}
+                   <button type="button" class="btn bg-olive"
+                           onclick="editTeamBtn('{{ pageData.id }}')">编辑
+                   </button>
+                    <button type="button" class="btn bg-green"
+                            onclick="addUsersToTeamBtn('{{pageData.id}}')">组员管理
+                    </button>
+                    <button type="button" class="btn bg-yellow"><a href="{% url 'admin_user_role_check_page' %}?teamId={{ pageData.id }}">角色管理</a>
+                    </button>
+                    <button type="button" class="btn bg-blue"
+                            onclick="teamAuthorizeBtn('{{pageData.teamKey}}')">授权
+                    </button>
+                    <button type="button" class="btn bg-blue"
+                            onclick="transferDataBtn('{{pageData.id}}')">数据转移
+                    </button>
+                    <button  type="button" class="btn bg-red"
+                             onclick="deleteTeamBtn($(this), '{{ pageData.id }}')">删除
+                    </button>
+                    {% else %}
+                     <button  type="button" class="btn bg-red"
+                             onclick="resetTeamBtn($(this), '{{ pageData.id }}')">启用
+                    </button>
+                    {% endif %}
+
+                </td>
+
+            </tr>
+
+        {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+
+</div>
+<div class="box-footer clearfix">
+  <ul class="pagination pagination-sm no-margin pull-right">
+    {% include "myadmin/pagination.html" %}
+  </ul>
+</div>

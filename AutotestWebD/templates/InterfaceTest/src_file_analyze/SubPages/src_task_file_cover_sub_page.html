@@ -1,0 +1,195 @@
+<script type="text/javascript">
+    function checkCovered(element) {
+        if(element.text() === "显示已覆盖"){
+            element.text("隐藏已覆盖");
+        }else {
+            element.text("显示已覆盖");
+        }
+        element.parent().find("table").find("[class='coveredStandard']").toggle()
+    }
+
+    function checkNoCovered(element) {
+        if(element.text() === "显示未覆盖"){
+            element.text("隐藏未覆盖");
+        }else {
+            element.text("显示未覆盖");
+        }
+        element.parent().find("table").find("[class='noCoveredStandard']").toggle()
+    }
+
+    function redundantCovered(element) {
+        if(element.text() === "显示标准库不存在"){
+            element.text("隐藏标准库不存在");
+        }else {
+            element.text("显示标准库不存在");
+        }
+        element.parent().find("table").find("[class='redundantStandard']").toggle()
+    }
+</script>
+<table class="table table-striped table-bordered table-hover"
+       style="table-layout:fixed;width:100%;word-break:break-all;margin-top:8px">
+    <thead>
+    <tr style="color: snow" bgcolor="#2A3F54">
+        <th style="width:25%;">任务</th>
+        <th style="width:25%;">{{ groupLevel1 }}</th>
+        <th style="width:25%;">{{ groupLevel2 }}</th>
+        <th style="width:10%;">标准接口数量</th>
+        <th style="width:10%;">已覆盖数量</th>
+        <th style="width:10%;">未覆盖数量</th>
+        <th style="width:10%;">覆盖率</th>
+{#        <th style="width:8%;">操作</th>#}
+    </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td class="allDetailTd">所有</td>
+            <td class="allDetailTd">所有</td>
+            <td class="allDetailTd">所有</td>
+            <td>{{ allDataStatistics.standardCount }}</td>
+            <td>{{ allDataStatistics.coverCount }}</td>
+            <td>{{ allDataStatistics.notCoverCount }}</td>
+            <td>{{ allDataStatistics.coverage }}%</td>
+{#            <td  style="text-align: center"><button class="btn btn-primary" onclick="$(this).parent().parent().next().toggle()">查看详情</button></td>#}
+        </tr>
+ <!-- ======================================================================开始输出接口对比====================================================================== -->
+{#        <tr style="display: none">#}
+{#            <td colspan="8">#}
+{#            <button class="btn coveredStandard coveredStandardBtn" onclick="checkCovered($(this))">隐藏已覆盖({{ allDataStatistics.coverCount }})</button>#}
+{#            <button class="btn noCoveredStandard noCoveredStandardBtn" onclick="checkNoCovered($(this))">隐藏未覆盖({{ allDataStatistics.notCoverCount }})</button>#}
+{#            <button class="btn redundantStandard redundantStandardBtn" onclick="redundantCovered($(this))">隐藏标准库不存在({{ allDataStatistics.notStandardCount }})</button>#}
+{#                <table class="table table-bordered table-hover" style="table-layout:fixed;width:100%;word-break:break-all;margin-top:8px">#}
+{#                    <thead>#}
+{#                    <tr style="color: snow" bgcolor="#2A3F54">#}
+{#                        <th style="width: 10%">标准接口{{ groupLevel1 }}</th>#}
+{#                        <th style="width:10%;">标准接口{{ groupLevel2 }}</th>#}
+{#                        <th style="width:25%;">标准接口url</th>#}
+{#                        <th style="width:25%;">已编写接口url</th>#}
+{#                        <th style="width:10%;">已编写接口{{ groupLevel2 }}</th>#}
+{#                        <th style="width:10%;">已编写接口{{ groupLevel1 }}</th>#}
+{#                    </tr>#}
+{#                    </thead>#}
+{#                    <tbody>#}
+{#                    {% for standardBusinessLineKey,standardBusinessLineValue in standardDataDict.items %}#}
+{#                       {% for standardDataList in standardBusinessLineValue.dataList %}#}
+{#                           {% if standardDataList.standardIsCovered %}#}
+{#                            <tr >#}
+{#                                <td class="coveredStandard">{{ standardDataList.businessLineName }}</td>#}
+{#                                <td class="coveredStandard">{{ standardDataList.moduleName }}</td>#}
+{#                                <td class="coveredStandard">{{ standardDataList.url }}</td>#}
+{#                                <td class="coveredStandard">{{ standardDataList.url }}</td>#}
+{#                                <td class="coveredStandard">{{ standardDataList.moduleName }}</td>#}
+{#                                <td class="coveredStandard">{{ standardDataList.businessLineName }}</td>#}
+{#                            </tr>#}
+{#                           {% endif %}#}
+{#                        {% endfor %}#}
+{#                        {% for standardDataList in standardBusinessLineValue.dataList %}#}
+{#                            {% if not standardDataList.standardIsCovered %}#}
+{#                                <tr>#}
+{#                                    <td class="noCoveredStandard">{{ standardDataList.businessLineName }}</td>#}
+{#                                    <td class="noCoveredStandard">{{ standardDataList.moduleName }}</td>#}
+{#                                    <td class="noCoveredStandard">{{ standardDataList.url }}</td>#}
+{#                                    <td class="noCoveredStandard">-</td>#}
+{#                                    <td class="noCoveredStandard">-</td>#}
+{#                                    <td class="noCoveredStandard">-</td>#}
+{#                                </tr>#}
+{#                           {% endif %}#}
+{#                        {% endfor %}#}
+{#                    {% endfor %}#}
+{#                    {% for selfDataKey,selfDataValue in dataDict.items %}#}
+{#                        {% for seleDataList in selfDataValue.dataList %}#}
+{#                            {% if not seleDataList.dataIsCovered %}#}
+{#                                <tr>#}
+{#                                    <td class="redundantStandard">-</td>#}
+{#                                    <td class="redundantStandard">-</td>#}
+{#                                    <td class="redundantStandard">-</td>#}
+{#                                    <td class="redundantStandard">{{ seleDataList.url }}</td>#}
+{#                                    <td class="redundantStandard">{{ seleDataList.moduleName }}</td>#}
+{#                                    <td class="redundantStandard">{{ seleDataList.businessLineName }}</td>#}
+{#                                </tr>#}
+{#                            {% endif %}#}
+{#                        {% endfor %}#}
+{#                    {% endfor %}#}
+{#                    </tbody>#}
+{#                </table>#}
+{#            </td>#}
+{#        </tr>#}
+ <!-- ======================================================================结束输出接口对比====================================================================== -->
+
+    {% for businessLineKey,businessValue in dataDict.items %}
+            <tr>
+                <td class="allDetailTd">所有</td>
+                <td>{{ businessLineKey }}</td>
+                <td class="allDetailTd">所有</td>
+                <td>{{ businessValue.businessLineStandardCount }}</td>
+                <td>{{ businessValue.businessLineIsCoveredCount }}</td>
+                <td>{{ businessValue.businessNotCovered }}</td>
+                <td>{{ businessValue.businessCovered }}%</td>
+{#                <td  style="text-align: center"><button class="btn btn-primary" onclick="$(this).parent().parent().next().toggle()">查看详情</button></td>#}
+            </tr>
+
+            {% for moduleKey,moduleValue in businessValue.moduleDict.items %}
+                <tr>
+                    <td  class="allDetailTd">所有</td>
+                    <td>{{ businessLineKey }}</td>
+                    <td>{{ moduleKey }}</td>
+                    <td>{{ moduleValue.moduleStandardCount }}</td>
+                    <td>{{ moduleValue.moduleIsCoveredCount }}</td>
+                    <td>{{ moduleValue.moduleNotCoveredCount }}</td>
+                    <td>{{ moduleValue.moduleCovered }}%</td>
+{#                    <td style="text-align: center"><button class="btn btn-primary" onclick="$(this).parent().parent().next().toggle()">查看详情</button></td>#}
+                </tr>
+                <tr style="display: none">
+            {% endfor %}
+
+    {% endfor %}
+
+
+
+    {% for taskKey,taskValue in taskDict.items %}
+         <tr>
+             <td>{{ taskKey }}</td>
+             <td class="allDetailTd">所有</td>
+             <td class="allDetailTd">所有</td>
+             <td>{{ taskValue.standardDataCount }}</td>
+             <td>{{ taskValue.taskIsCoveredCount }}</td>
+             <td>{{ taskValue.notCoveredCount }}</td>
+             <td>{{ taskValue.coverage }}%</td>
+{#             <td  style="text-align: center"><button class="btn btn-primary" onclick="$(this).parent().parent().next().toggle()">查看详情</button></td>#}
+         </tr>
+
+            {% for taskBlKey,taskBlValue in taskValue.taskContainsBl.items %}
+                <tr>
+                     <td>{{ taskKey }}</td>
+                     <td>{{ taskBlKey }}</td>
+                     <td class="allDetailTd">所有</td>
+                     <td>{{ taskBlValue.standardBlCount }}</td>
+                     <td>{{ taskBlValue.blIsCoveredCount }}</td>
+                     <td>{{ taskBlValue.blNotCoveredCount }}</td>
+                     <td>{{ taskBlValue.blCoverage }}%</td>
+{#                     <td  style="text-align: center"><button class="btn btn-primary" onclick="$(this).parent().parent().next().toggle()">查看详情</button></td>#}
+                </tr>
+
+                {% for taskMdKey,taskMdValue in taskBlValue.blContainsMd.items %}
+                        <tr>
+                             <td>{{ taskKey }}</td>
+                             <td>{{ taskBlKey }}</td>
+                             <td>{{ taskMdKey }}</td>
+                             <td>{{ taskMdValue.standardMdCount }}</td>
+                             <td>{{ taskMdValue.mdIsCoveredCount }}</td>
+                             <td>{{ taskMdValue.mdNotCoveredCount }}</td>
+                             <td>{{ taskMdValue.mdCoverage }}%</td>
+{#                             <td  style="text-align: center"><button class="btn btn-primary" onclick="$(this).parent().parent().next().toggle()">查看详情</button></td>#}
+                        </tr>
+
+                {% endfor %}
+            {% endfor %}
+    {% endfor %}
+    </tbody>
+</table>
+<div>
+    <button type="button" value="save" class="button blue " style="margin-top:8px;visibility:hidden"
+            onclick="debugCase('save')"><p style="font-size: 20px;">批量执行</p></button>
+    <div class="pagination" style="float:right;">
+          {% include 'InterfaceTest/pagination.html' %}
+    </div>
+</div>

@@ -1,0 +1,552 @@
+{% include 'InterfaceTest/head.html'%}
+<!-- Main content starts -->
+<script type="text/javascript">
+
+</script>
+
+<div class="content">
+    <!-- Sidebar -->
+        {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Sidebar ends -->
+    <!-- Main bar -->
+    <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>服务配置</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <div class="form-group">
+                        <div  id="queryOption">
+                            <span class="cat-text" style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>
+                        </div>
+
+
+{#                        <span class="tag"><span>sales&nbsp;&nbsp;</span><a href="#" title="Removing tag">x</a></span>#}
+{#                        <span class="tag"><span>sales&nbsp;&nbsp;</span><a href="#" title="Removing tag">x</a></span>#}
+                    </div>
+                      <br>
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist" style="margin-bottom: 0px">
+                        <li role="presentation" class="active"><a href="#addBy" role="tab" data-toggle="tab" aria-expanded="true">创建人</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#uriName" role="tab" data-toggle="tab" aria-expanded="true">服务名称</a>
+                        </li>
+                          <li role="presentation" class=""><a href="#uriDesc" role="tab" data-toggle="tab" aria-expanded="true">服务描述</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#uriKey" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">服务Key</a>
+                        </li>
+
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="addBy" aria-labelledby="home-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="addByInput" onkeypress="EnterPress(event)" placeholder="请输入创建人">
+                            </div>
+                              <div class="col-lg-4" >
+                                  <span style="font-size: 15px;margin-top: 5px">快捷条件: </span>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="queryUserConf('all')">所有</button>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="queryUserConf('{{ request.session.userName }}')">{{ request.session.userName }}</button>
+                              <button id="hover-a" type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="createPeople(0)">其他</button>
+                                  <div id="names" style="margin-top: 10px">
+                            </div>
+                                  </div>
+
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="uriDesc" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="uriDescInput" onkeypress="EnterPress(event)" placeholder="请输入配置描述" >
+                            </div>
+                          </div>
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane fade" id="uriKey" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+{#                                <input type="text" class="form-control" id="uriKeyInput" onkeypress="EnterPress(event)" placeholder="服务Key">#}
+                                <select id="uriKeyInput" class="form-control" style="width: 300px;" onchange="editQueryData()">
+                                      <option value="" title="">全部服务</option>
+                                    {% for u in uri %}
+                                        <option value="{{ u.uriKey }}" title="{{ u.uriDesc }}">{{ u.uriKey }}[{{ u.alias }}]</option>
+                                    {% endfor %}
+                                  </select>
+                            </div>
+                          </div>
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane fade" id="uriName" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="uriNameInput" onkeypress="EnterPress(event)" placeholder="请输入服务名称">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="EditVars" class="form-group" style="margin-top: 70px"></div>
+                  </div>
+                </div>
+
+                  <div class="x_panel">
+                  <div class="x_title">
+                    <a name="addEnvConfDiv">
+                      <h2>服务配置添加</h2>
+                    </a>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <div data-parsley-validate="" class="form-horizontal form-label-left">
+                        <div class="form-group">
+                            <label class="control-label col-md-min-1">服务协议</label>
+                            <div class="col-lg-8">
+                                <input type="checkbox" id="protocolHttp"  placeholder="HTTP" /> HTTP
+                                &nbsp;&nbsp;&nbsp;&nbsp;
+                                {% if menu.DubboInterface == 1 %}
+                                <input type="checkbox" id="protocolDubbo"  placeholder="DUBBO" /> DUBBO
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-min-1">服务名称</label>
+                            <div class="col-lg-8">
+                                <input type="text" id="addUriConfAlias" class="form-control"  placeholder="请输入配置名称(建议是git工程名，例如git@git.xxxxxxxx.com:common/sosotest.git的名称写sosotest)" >
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label class="col-lg-4 control-label"></label>
+                            <div class="col-lg-9" style="text-align:center">
+                                <button type="button"   class="btn btn-success" onclick="addHttpConf()">&nbsp;&nbsp;&nbsp;&nbsp;添加&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                                <button type="button"   class="btn btn-danger" onclick="resetAddHttpConf()">&nbsp;&nbsp;&nbsp;&nbsp;重置&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                            </div>
+                        </div>
+
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    </div>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+
+          </div>
+    </div>
+</div>
+    <script type="text/javascript">
+        $("#uriKeyInput").select2();
+        var queryArr = {"alias":"","addBy":""};
+        var page = {{ page }};
+        
+        function queryDataInit() {
+            $("#addByInput").val("");
+            //查询条件
+            editQueryData();
+        }
+
+        queryDataInit();
+
+
+        //搜索条件出的回车事件监听
+        function EnterPress(event){ //传入 event
+            var e = event || window.event;
+            if(e.keyCode == 13){
+                editQueryData();
+            }
+        }
+
+        function queryUserConf(data) {
+            if(data == "all"){
+                $('#addByInput').val('');
+            }else {
+                $('#addByInput').val(data);
+            }
+
+            editQueryData()
+        }
+
+        //编辑查询条件
+        function editQueryData() {
+            if($("#addByInput").val() == ""){
+                queryArr.addBy = "";
+            } else {
+                queryArr.addBy = $("#addByInput").val();
+            }
+
+            if($("#uriNameInput").val() == ""  ){
+                queryArr.alias = "";
+            }else{
+                queryArr.alias = $("#uriNameInput").val();
+            }
+
+            if($("#uriKeyInput").val() == ""  ){
+                queryArr.uriKey = "";
+            }else{
+                queryArr.uriKey = $("#uriKeyInput").val();
+            }
+
+            if($("#uriDescInput").val() == ""  ){
+                queryArr.uriDesc = "";
+            }else{
+                queryArr.uriDesc = $("#uriDescInput").val();
+            }
+            selected();
+        }
+
+        //清空查询条件
+        function CleanQueryData() {
+            $("#uriNameInput").val("");
+            $("#uriDescInput").val("");
+            $("#uriKeyInput").val("");
+            $("#addByInput").val("");
+
+            editQueryData();
+
+        }
+
+        function delQueryOptions(key) {
+            if(key=='addBy'){
+                $("#addByInput").val('');
+            }
+            if(key=='alias'){
+                $("#uriNameInput").val('');
+            }
+            if(key=='uriDesc'){
+                $("#uriDescInput").val('');
+            }
+
+            if(key=='uriKey'){
+                $("#uriKeyInput").val('');
+            }
+            if(key=='addBy'){
+                $("#addByInput").val('');
+            }
+            editQueryData();
+        }
+
+        //查询条件
+        function QueryOption(){
+            var htmls = ' <span class="cat-text" style="font-size: 15px;float: left;">搜索条件:</span>';
+            var num =0;
+            var writeNum = 0;
+            for(var item in queryArr){
+                if(queryArr[item] != '' ){
+                    num ++;
+                }
+            }
+
+            for(var item in queryArr){
+                if(queryArr[item] != ''){
+                    var key = '';
+                    if(item == 'addBy'){
+                        key = '创建人';
+                    }
+                    if(item == 'alias'){
+                        key = '服务名称';
+                    }
+                    if(item == 'uriDesc'){
+                        key = '服务描述';
+                    }
+
+                    if(item == 'uriKey'){
+                        key = '服务Key';
+                    }
+
+                    writeNum ++ ;
+                    htmls = htmls+'<span class="tag"><span>'+key+'：'+queryArr[item]+'&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delQueryOptions(\''+item+'\')">x</a></span> ';
+
+                }
+            }
+        htmls = htmls +'<span class="tag" style="float: right;background-color: #ff7575"><span>默认筛选&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="clearChecked()">x</a></span>';
+            $('#queryOption').html(htmls);
+        }
+
+
+        //查询条件处的其他人员按钮
+        function QueryPeopleConf(num) {
+            htmlobj=$.ajax({url:'/Config/UserHttpConf/queryPeopleConf?num='+num,async:false});
+
+            if(htmlobj.responseText == "[]"){
+                alert("暂无其他用户");
+                return;
+            }
+            var value = JSON.parse(htmlobj.responseText);
+
+            var nameVal = "";
+            for(var i = 0;i<value.length;i++){
+                nameVal = nameVal + ' &nbsp <a href="#" id="hover-a" onclick="queryUserConf(\''+value[i].userName+'\')"  style="font-size: 15px;text-decoration:none">['+value[i].userName+'('+value[i].count+')]</a>'
+            }
+            if(value.length<3){
+                $("#names").html(nameVal);
+                $("#hover-a").attr('onclick','createPeople('+(1)+')');
+                $("#names").show();
+                return;
+            }else {
+                $("#names").html(nameVal);
+            }
+
+            $("#hover-a").attr('onclick','createPeople('+(num+1)+')');
+            $("#names").show();
+        }
+
+
+    function inputVal(val) {
+        $("#addByInput").val(val);
+        editQueryData();
+    }
+
+    function createPeople(num) {
+        var htmlobj=$.ajax({url:'{% url 'queryPeopleInterfaceByTableName' %}?tbName=tb_config_uri&num='+num,async:false});
+        var value = JSON.parse(htmlobj.responseText).body;
+        var nameVal = "";
+        for(var i = 0;i<value.length;i++){
+            nameVal = nameVal + ' &nbsp <a href="javascript:void(0);" id="hover-a" onclick="inputVal(\''+value[i].userName+'\')"  style="font-size: 15px;text-decoration:none">['+value[i].userName+'('+value[i].count+')]</a>'
+        }
+        if(value.length<3){
+            $("#names").html(nameVal);
+            $("#hover-a").attr('onclick','createPeople('+(0)+')');
+            $("#names").show();
+            return;
+        }else {
+            $("#names").html(nameVal);
+        }
+        $("#hover-a").attr('onclick','createPeople('+(num+1)+')');
+        $("#names").show();
+    }
+
+        //翻页
+        function pageCall(pageNum) {
+            page = pageNum;
+            selected();
+        }
+        function resetUpToTopInfo(){
+            page = 1;
+            htmlobj=$.ajax({url:"{% url 'HTTP_DelAllUserUri' %}",async:false,type:"GET"});
+            var ajaxResult = JSON.parse(htmlobj.responseText)
+            if(ajaxResult["code"] != 10000){
+                alert(ajaxResult['message']);
+            }
+            selected();
+        }
+        //弹出隐藏层
+        function ShowDiv(){
+            obshowdiv =  $("#EditVars");
+            offtop=obshowdiv.offset().top-60;
+            offleft=obshowdiv.offset().left;
+            obshowdiv.show();
+            docheight = $(document).height();
+            $('html,body').animate({scrollTop:offtop}, 200);
+        }
+
+
+        function selected() {
+            QueryOption();
+            var data = {queryArr : encodeURI(JSON.stringify(queryArr)),page:page};
+            htmlobj=$.ajax({url:"{% url 'HTTP_UserUriConfListCheck' %}",async:false,data:data,type:"POST"});
+            $("#EditVars").html(htmlobj.responseText);
+
+        }
+
+
+        function addUriSort(varId) {
+            htmlobj=$.ajax({url:"{% url 'HTTP_UserAddUserUriSort' %}",async:false,data:{uriKey:varId},type:"POST"});
+            var ajaxResult = JSON.parse(htmlobj.responseText)
+            if(ajaxResult["code"] != 10000){
+                alert(htmlobj.responseText);
+            }
+            selected();
+
+        }
+
+        function delUserHttpConf(id,httpConfKey) {
+            if(confirm("确认删除配置 "+$("[name='alias"+id+"']").text()+" ?")){
+                if(confirm("一旦删除无法恢复，确认删除?")){
+
+                    htmlobj=$.ajax({url:"{% url 'HTTP_UriConfDel' %}?uriKey="+encodeURI(httpConfKey)+"&id=" + id,async:false});
+                    if(JSON.parse(htmlobj.responseText)["code"] != 10000){
+                        alert(htmlobj.responseText);
+                    }
+                    selected();
+
+                }
+
+            }
+        }
+
+        function checkVars(id) {
+            if ($("#hiddenTR" + id).attr("style") == "") {
+                 $("#hiddenTR" + id).attr("style", "display:none");
+                 return;
+             }
+            $("[name='alias"+id+"']").html("<pre><textarea id='aliasText"+id+"' style='max-width: 100%;width: 100%'>"+$("[name='alias"+id+"']").text()+"</textarea></pre>");
+            $("[name='httpConfDesc"+id+"']").html("<pre><textarea  id='httpConfDescText"+id+"' style='max-width: 100%;width: 100%'>"+$("[name='httpConfDesc"+id+"']").text()+"</textarea></pre>");
+            var uriInput = $("#hiddenTR"+id).find("[name='UriConf']");
+            uriInput.attr("disabled",false);
+            var getData = JSON.parse($.ajax({url:"{% url 'getHttpConfData' %}?id="+id,async:false}).responseText).body;
+            for(var serviceIndex = 0; serviceIndex<getData.length;serviceIndex++){
+                 uriInput.each(function () {
+                       if($(this).parent().attr("name") == getData[serviceIndex]["httpConfKey"]){
+                            $(this).val(getData[serviceIndex]["httpConfValue"])
+                       }
+                 });
+            }
+            var dubboInput = $("#hiddenTR"+id).find("[name='dubboUriConf']");
+            for(var serviceIndex = 0; serviceIndex<getData.length;serviceIndex++){
+                 dubboInput.each(function () {
+                       if($(this).parent().attr("name") == getData[serviceIndex]["httpConfKey"]){
+                            $(this).val(getData[serviceIndex]["httpConfValue"])
+                       }
+                 });
+            }
+
+
+            htmlobj = $.ajax({url:"{% url 'getServiceConf' %}",async:false});
+            var result =htmlobj.responseText;
+            var resultArr = JSON.parse(result);
+            var htmls = '<select class="form-control" id="serviceSelect'+id+'">';
+            for (var i=0;i<resultArr.length;i++){
+                if(resultArr[i]["alias"] ==  $("[name='serviceAlias"+id+"']").text()){
+                    htmls =htmls+ ' <option selected value ="'+resultArr[i]["serviceConfKey"]+'">'+resultArr[i]["alias"]+'</option>';
+                    continue ;
+                }
+                htmls =htmls+ ' <option value ="'+resultArr[i]["serviceConfKey"]+'">'+resultArr[i]["alias"]+'</option>';
+            }
+            htmls = htmls + '</select>';
+            $("[name='serviceAlias"+id+"']").html(htmls);
+            $("#hiddenTR"+id).attr("style","");
+            $("#hiddenTR"+id).find("button").hide();
+         }
+
+        function editUserHttpConf(id,httpConfKey) {
+            $("[name='httpConfDesc"+id+"']").html("<pre><textarea  id='httpConfDescText"+id+"' style='max-width: 100%;width: 100%'>"+$("[name='httpConfDesc"+id+"']").text()+"</textarea></pre>");
+            htmlobj = $.ajax({url:"{% url 'getServiceConf' %}",async:false});
+            var result =htmlobj.responseText;
+            var resultArr = JSON.parse(result);
+            var htmls = '<select class="form-control" id="serviceSelect'+id+'">';
+            for (var i=0;i<resultArr.length;i++){
+                if(resultArr[i]["alias"] ==  $("[name='serviceAlias"+id+"']").text()){
+                    htmls =htmls+ ' <option selected value ="'+resultArr[i]["serviceConfKey"]+'">'+resultArr[i]["alias"]+'</option>';
+                    continue ;
+                }
+                htmls =htmls+ ' <option value ="'+resultArr[i]["serviceConfKey"]+'">'+resultArr[i]["alias"]+'</option>';
+            }
+            htmls = htmls + '</select>';
+            $("[name='serviceAlias"+id+"']").html(htmls);
+
+            $("#opration"+id).html('<button  class="btn btn-success optionButtionSize"  onclick="saveEdit(\''+id+'\',\''+httpConfKey+'\')"><i class="fa fa-save"></i></button>' +
+                '<button class="btn btn-danger optionButtionSize" onclick="cancelEdit(\''+id+'\',\''+httpConfKey+'\')"><i class="fa fa-ban"></i></button>');
+
+
+        }
+
+        function cancelEdit(id,httpConfKey) {
+            $("[name='httpConfDesc"+id+"']").html($("[name='httpConfDesc"+id+"']").text());
+            $("#opration"+id).html('<button class="btn btn-info optionButtionSize"  onclick="addVarsSort(\''+httpConfKey+'\')"><i class="fa fa-eject"></i></button>\n' +
+                '<button class="btn btn-success optionButtionSize" onclick="editUserHttpConf(\''+id+'\',\''+httpConfKey+'\')"><i class="fa fa-edit"></i></button>\n' +
+                ' <button class="btn btn-danger optionButtionSize" onclick="delUserHttpConf(\''+id+'\',\''+httpConfKey+'\');"><i class="fa fa-trash"></i></button>');
+        }
+
+        function saveEdit(id,uriKey) {
+            var data = {
+                "uriKey": uriKey,
+                "httpConfDesc": $("#httpConfDescText" + id).val(),
+            };
+            htmlobj = $.ajax({
+                url: "{% url 'HTTP_UriConfEdit' %}?id=" + id,
+                data: data,
+                async: false,
+                type: "POST"
+            });
+            if (JSON.parse(htmlobj.responseText)["code"] === 10000) {
+                selected();
+            } else {
+                alert(htmlobj.responseText);
+            }
+        }
+
+        function resetAddHttpConf() {
+            if(confirm("重置后输入的值会消失")){
+                $("#addUriConfAlias").val("");
+                $("#addUriConfDesc").val("");
+            }
+        }
+
+        function addHttpConf() {
+            var alias = $("#addUriConfAlias").val();
+            var protocol = "";
+            if($("#protocolHttp").prop("checked")){
+                protocol += "HTTP,"
+            }
+            if($("#protocolDubbo").prop("checked")){
+                protocol += "DUBBO,"
+            }
+            if(alias == ""){
+                alert("名称不能为空！");
+                return;
+            }
+            var regAlias = /^[0-9a-zA-z-_]+$/ig;
+            if(alias.match(regAlias)){}else{
+                alert("服务名称只能是数字、字母、-和_。");
+                return;
+            }
+            if(protocol == ""){
+                alert("协议不能为空！");
+                return;
+            }
+            if (confirm("添加后，服务名称将不可修改，是否确认添加？")) {
+
+                var data = {
+                    "alias": alias,
+                    "protocols": protocol,
+                };
+                $.ajax({
+                    url: "{% url 'HTTP_HttpUriAddApply' %}",
+                    data: data,
+                    async: false,
+                    type: "POST",
+                    dataType:"json",
+                    success:function (response) {
+                        alert(response.message);
+                    }
+                });
+
+            }
+            selected();
+        }
+
+        window.onload = function() {
+            $("#surprise").click();
+            $("#surprise2").click();
+        };
+    </script>
+    <!-- Content ends -->
+{% include 'InterfaceTest/foot.html'%}

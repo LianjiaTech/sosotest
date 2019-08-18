@@ -1,0 +1,1 @@
+mysql -uingage -pingage -e"use xsy_interface_test_platform;source /home/autotest/dbsqls/${1};"

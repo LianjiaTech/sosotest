@@ -1,0 +1,62 @@
+<tr>
+    <td name="debugId"> </td>
+    <td>        {% if testResult == "PASS" %}
+            <span style="color: green;font-weight: bold;font-size: 25px;">{{ testResult }}</span>
+        {% else %}
+            <span style="color: red;font-weight: bold;font-size: 25px;">{{ testResult }}</span>
+        {% endif %}</td>
+    <td>{{ alias }}</td>
+    <td><textarea name="HTTPActualText" style="width:100%;height:75px;background:transparent;border-style:none; resize:none; " readonly="readonly"  ondblclick="OpenDetailDiv('实际结果',$(this).val())" ></textarea>
+    </td>
+    <td><textarea style="width: 481px; height: 81px; background: transparent; border-style: none; margin: 0px;" readonly="readonly"  ondblclick="OpenDetailDiv('断言结果',$(this).val())">{{ assertResult }}</textarea>
+    </td>
+    <td>{{ beforeExecuteTakeTime }}</td>
+    <td>{{ executeTakeTime }}</td>
+    <td>{{ afterExecuteTakeTime }}</td>
+    <td>{{ totalTakeTime }}</td>
+    <td>
+        <button class="btn btn-primary" name="debugBtnCheckDetails" onclick="checkDebugCase();ShowDiv($(this))">查看详情</button>
+    </td>
+</tr>
+<tr id="resultDetailstr" name="resultDetails" style="display:none;">
+    <div >
+        <td colspan="10" align="center" style="font-size: 12px">
+            <table class="table table-striped table-bordered table-hover"
+                   style="table-layout:fixed;width:100%;word-break:break-all;border:1px">
+                <thead>
+                <tr>
+                    <th style="width:50%;vertical-align: top"  >INVOKE请求</th>
+                    <th style="width:50%;vertical-align: top" >响应</th>
+                </tr>
+                <tr>
+                    <th>
+                       <textarea name="HTTPRequestText" style="width:100%;height:210px;background:transparent;border-style:none;max-width: 100%;min-width: 100%;min-height: 210px"
+                       readonly="readonly"  ondblclick="OpenDetailDiv('INVOKE请求',$(this).val())">系统：{{ dubboSystem }}
+dubbo请求：invoke {{ dubboService }}.{{ dubboMethod }}({{ dubboParams }})</textarea>
+                        <br>
+                        <a href="/static/littletool/jsoncn.html?{{ dubboParams }}" target="_blank">查看JSON</a>
+                    </th>
+                    <th >
+                        <textarea name="HTTPResultText" style="width:100%;height:210px;background:transparent;border-style:none;max-width: 100%;min-width: 100%;min-height: 210px"
+                        readonly="readonly"  ondblclick="OpenDetailDiv('响应',$(this).val())" ></textarea>
+                        <span name="HTTPResultSpan" style="display:none;">{{ actualResult }}</span>
+                        <br>
+                        <a href="/static/littletool/jsoncn.html?{{ actualResult }}" target="_blank">查看JSON</a>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+
+                <tr>
+                    <td>准备</td>
+                    <td>断言恢复</td>
+                </tr>
+                <tr>
+                    <td><textarea style="width:100%;height:210px;background:transparent;border-style:none;max-width: 100%;min-width: 100%;min-height: 210px" readonly="readonly"  ondblclick="OpenDetailDiv('准备',$(this).val())">{{ varsPre }}</textarea></td>
+                    <td><textarea style="width:100%;height:210px;background:transparent;border-style:none;max-width: 100%;min-width: 100%;min-height: 210px" readonly="readonly"  ondblclick="OpenDetailDiv('断言恢复',$(this).val())">{{ varsPost }}</textarea></td>
+                </tr>
+                </tbody>
+            </table>
+        </td>
+    </div>
+</tr>

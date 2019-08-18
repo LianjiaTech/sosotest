@@ -1,0 +1,449 @@
+{% include 'InterfaceTest/head.html' %}
+<!-- Main content starts -->
+<div class="content">
+    <!-- Sidebar -->
+    {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Main bar -->
+    <div class="right_col" role="main" style="min-height: 1657px;">
+        <div class="">
+
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>{{ text.subPageTitle }}</h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div data-parsley-validate class="form-horizontal form-label-left">
+                                <form action="" method="post" target="id_iframe">
+                                    {% csrf_token %}
+                                    <div class="col-lg-12">
+                                        <div class="ln_solid"></div>
+                                        <div class="col-xs-3">
+                                            <h4 style="margin-left: 40%">包名称
+                                                <small style="color: red">*</small>
+                                            </h4>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-min-1"
+                                                       style="width:4.3%;"></label>
+                                                <div class="col-lg-1" style="width: 50%">
+                                                    <input type="text" class="form-control  " id="title"
+                                                           required="required"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <div class="ln_solid"></div>
+                                        <div class="col-xs-3">
+                                            <h4 style="margin-left: 40%">包描述
+                                                <small style="color: red">*</small>
+                                            </h4>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-min-1"
+                                                       style="width:4.3%;"></label>
+                                                <div class="col-lg-2" style="width: 50%">
+                                                    <input type="text" class="form-control" id="packageDesc"
+                                                           required="required"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="ln_solid"></div>
+                                        <div class="col-xs-3">
+                                            <h4 style="margin-left: 40%">包类型</h4>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-min-1"
+                                                       style="width:4.3%;"></label>
+                                                <div class="col-lg-2" style="width: 50%">
+                                                    <label style="font-weight:normal;cursor:pointer"
+                                                           onclick="switchDevice('androidDiv')"><input type="radio"
+                                                                                                       name="packageType"
+                                                                                                       checked
+                                                                                                       value="1">&nbsp;android&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                                    <label style="font-weight:normal;cursor:pointer"
+                                                           onclick="switchDevice('iosDiv')"><input type="radio"
+                                                                                                   name="packageType"
+                                                                                                   value="2">&nbsp;iphone&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                                    {#                                                    <label style="font-weight:normal;cursor:pointer" onclick="switchDevice('ipadDiv')"><input type="radio"#}
+                                                    {#                                                                                                            name="packageType"#}
+                                                    {#                                                                                                            value="3">&nbsp;ipad&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>#}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="ln_solid"></div>
+                                    </div>
+                                    <div class="col-lg-12" name="deviceDiv" id="androidDiv">
+                                        <div class="col-xs-3">
+                                            <h4 style="margin-left: 40%">appPackage
+                                                <small style="color: red">*</small>
+                                            </h4>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-min-1"
+                                                       style="width:4.3%;"></label>
+                                                <div class="col-lg-2" style="width: 50%">
+                                                    <input type="text" class="form-control" id="appPackage"
+                                                           required="required"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <h4 style="margin-left: 40%">appActivity
+                                                <small style="color: red">*</small>
+                                            </h4>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-min-1"
+                                                       style="width:4.3%;"></label>
+                                                <div class="col-lg-2" style="width: 50%">
+                                                    <input type="text" class="form-control" id="appActivity"
+                                                           required="required"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12" name="deviceDiv" id="iosDiv" style="display: none">
+                                        <div class="col-xs-3">
+                                            <h4 style="margin-left: 40%">bundleId
+                                                <small style="color: red">*</small>
+                                            </h4>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-min-1"
+                                                       style="width:4.3%;"></label>
+                                                <div class="col-lg-2" style="width: 50%">
+                                                    <input type="text" class="form-control" id="iphoneBundleId"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12" name="deviceDiv" id="ipadDiv" style="display:none;">
+                                        <div class="col-xs-3">
+                                            <h4 style="margin-left: 40%">bundleId
+                                                <small style="color: red">*</small>
+                                            </h4>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-min-1"
+                                                       style="width:4.3%;"></label>
+                                                <div class="col-lg-2" style="width: 50%">
+                                                    <input type="text" class="form-control" id="ipadBundleId"
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="ln_solid"></div>
+                                        <div class="col-xs-3">
+                                            <h4 style="margin-left: 40%;">包文件
+                                                <small style="color: red">*</small>
+                                            </h4>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-min-1"
+                                                       style="width:4.3%;"></label>
+                                                <div class="col-lg-2" style="width: 50%">
+                                                    <a class="btn btn-app" style="margin-left: auto;box-shadow: none"
+                                                       href="javascript:void (0)" onclick="clickUpload()">
+                                                        <i class="fa fa-cloud-upload"></i> upload
+                                                    </a>
+                                                    <span id="uploadFileName" class="text-muted"
+                                                          style="margin-left: 30px;font-size: 20px;display: none"><i
+                                                            class="fa fa-file-zip-o"></i><span
+                                                            style="margin-left: 20px"><span id="fileName"></span></span></span>
+                                                    <input type="file" id="uploads" onchange="loadFile($(this))"
+                                                           style="display: none">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="ln_solid"></div>
+                                        <div style="width:75%;">
+                                            {% if option != "add" %}
+                                                <a href="{% url 'uiShowSimpleTask' %}" style="float: right"
+                                                   class="btn btn-primary btn-lg">
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;返回&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                </a>
+                                            {% endif %}
+                                            {% if option == "add" or option == "copy" %}
+                                                <button id="saveSimpleTaskBtn" style="float: right" type="submit"
+                                                        class="btn btn-success btn-lg" onclick="addPackage()">
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;保存&nbsp;&nbsp;&nbsp;&nbsp;
+                                                </button>
+                                            {% elif option == "edit" %}
+                                                <button id="saveSimpleTaskBtn" style="float: right" type="submit"
+                                                        class="btn btn-success btn-lg"
+                                                        onclick="saveEdit()">
+                                                    &nbsp;&nbsp;&nbsp;&nbsp;保存&nbsp;&nbsp;&nbsp;&nbsp;
+                                                </button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </form>
+                                <iframe id="id_iframe" name="id_iframe" style="display: none;"></iframe>
+                                <div id="loading" class="loadingWrap" style="display:none;"></div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!--调试-->
+        </div>
+
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+
+    var updateFile = false;
+
+    function clickUpload() {
+        $("#uploads").click();
+    }
+
+    function loadFile(element) {
+        var file = element[0].files[0];
+        if (typeof (file) === "undefined") {
+            alert("请选择文件");
+            return
+        }
+        if (file.size > 1024 * 1024 * 100) {
+            alert("文件大小不能超过100M");
+            element.val('');
+            return false;
+        }
+        var point = file.name.lastIndexOf(".");
+
+        var type = file.name.substr(point);
+        if (type.trim() !== ".apk" && type.trim() !== ".zip") {
+            alert("文件必须是apk或者zip格式");
+            element.val('');
+            return false;
+        }
+        if (file.name.indexOf(" ") >= 0) {
+            alert('文件名称中包含空格，请删除重新上传');
+            element.val('');
+            return false;
+        }
+        updateFile = true;
+        $("#uploadFileName").css('display', "");
+        $("#fileName").text(element[0].files[0].name);
+    }
+
+
+    function requiredInput() {
+        var verifyElement = $("[required='required']");
+        for (var index = 0; index < verifyElement.length; index++) {
+            if (verifyElement.eq(index).val() === "") {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    {#    function initPage() {#}
+    {#        var htmlobj = $.ajax({url: "{% url 'userIsFileShowSubPage' %}", async: false, type: 'get'});#}
+    {#        try {#}
+    {#            if (JSON.parse(htmlobj.responseText)["code"] !== 100000) {#}
+    {#                checkUIFileList()#}
+    {#            }#}
+    {#        } catch (e) {#}
+    {##}
+    {#        }#}
+    {#        dataInit()#}
+    {#    }#}
+
+    function getRequestData() {
+        if (requiredInput() === false) {
+            return
+        }
+        var formData = new FormData();
+        formData.append("title", $("#title").val());
+        formData.append("packageDesc", $("#packageDesc").val());
+
+        if ($("#fileName").text() !== "" && updateFile === false) {
+            var point = $("#fileName").text().lastIndexOf(".");
+            var type = $("#fileName").text().substr(point);
+        } else {
+            var element = $("#uploads");
+            var file = element[0].files[0];
+            if (typeof (file) === "undefined") {
+                alert("请选择文件");
+                return
+            }
+            var point = file.name.lastIndexOf(".");
+            var type = file.name.substr(point);
+            formData.append("file", file);
+
+        }
+        formData.append("fileName", $("#fileName").text());
+        if ($("[name='deviceDiv']").eq(0).css("display") === "block") {
+            formData.append("packageType", 1);
+            formData.append("appPackage", $("#appPackage").val());
+            formData.append("appActivity", $("#appActivity").val());
+            //文件必须是apk
+            if (type.trim() !== ".apk") {
+                alert("android文件必须是apk格式");
+                return false;
+            }
+        } else {
+            formData.append("packageType", 2);
+            formData.append("bundleId", $("#iphoneBundleId").val());
+            //文件必须是zip
+            if (type.trim() !== ".zip") {
+                alert("ios文件必须是zip格式");
+                return false;
+            }
+        }
+        return formData;
+    }
+
+
+    function addPackage() {
+        var now = new Date();
+
+        var formData = getRequestData();
+        if (formData === false) {
+            return
+        }
+        var appPackageIsExist = $.ajax({
+            url: '{% url 'appPackageIsExist' %}',
+            type: 'POST',
+            data: {"fileName": formData.get("file").name},
+            async: false
+        });
+        var appPackageIsExistJson = JSON.parse(appPackageIsExist.responseText);
+        var upload = false;
+        if (appPackageIsExistJson.code === 10000) {
+            upload = true;
+        } else if (appPackageIsExistJson.code === 10011) {
+            if (confirm(appPackageIsExistJson.message)) {
+                upload = true;
+            }
+        } else {
+            alert(appPackageIsExistJson.message);
+        }
+        if (upload) {
+            $("#loading").css("display", "");
+            var uiAppPackage = $.ajax({
+                url: '{% url 'uiAppPackage' %}',
+                type: 'POST',
+                data: formData,
+                async: true,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function () {
+                    if (JSON.parse(uiAppPackage.responseText).code === 10000) {
+                        window.location.href = "{% url 'uiAppPackageCheckPage' %}"
+                    } else {
+                        alert(JSON.parse(uiAppPackage.responseText).message);
+                        $("#loading").css("display", "none");
+                    }
+                }
+            });
+
+
+        }
+    }
+
+
+    function saveEdit() {
+        var formData = getRequestData();
+        if (formData === false) {
+            return;
+        }
+        formData.append("dataId", "{{ dataId }}");
+        $("#loading").css("display", "");
+        var uiAppPackage = $.ajax({
+            url: '{% url 'uiAppPackage' %}',
+            type: 'POST',
+            data: formData,
+            async: true,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function () {
+                if (JSON.parse(uiAppPackage.responseText).code === 10000) {
+                    window.location.href = "{% url 'uiAppPackageCheckPage' %}"
+                } else {
+                    alert(JSON.parse(uiAppPackage.responseText).message);
+                    $("#loading").css("display", "none");
+                }
+            }
+        });
+
+    }
+
+    dataInit();
+
+    function dataInit() {
+        if ("{{ option }}" !== "add") {
+            var requestData = {"dataId": "{{ dataId }}"};
+            var htmlobj = $.ajax({
+                url: "{% url 'getAppPackage' %}", type: "POST", data: requestData, success: function () {
+                    var requestData = JSON.parse(htmlobj.responseText);
+                    if (requestData["code"] !== 10000) {
+                        {#                        window.location.href = "{% url 'uiShowSimpleTask' %}";#}
+                    }
+                    var requestJson = requestData.body;
+                    {#                    alert(htmlobj.responseText)#}
+                    $("#title").val(requestJson.title);
+                    $("#packageDesc").val(requestJson.packageDesc);
+                    $("[name='packageType']").eq(requestJson.packageType - 1).prop("checked", true);
+                    $("#appPackage").val(requestJson.appPackage);
+                    $("#appActivity").val(requestJson.appActivity);
+                    $("#iphoneBundleId").val(requestJson.bundleId);
+                    $("#uploadFileName").css('display', "");
+                    $("#fileName").text(requestJson.appFileName);
+
+                }
+            });
+        }
+
+    }
+
+    function switchDevice(deviceName) {
+        $("[name='deviceDiv']").each(function () {
+            if ($(this).attr("id") !== deviceName) {
+                $(this).css("display", "none");
+                $(this).find("input").removeAttr("required");
+                $(this).find("input").val("");
+            } else {
+                $(this).css("display", "");
+                $(this).find("input").attr("required", "required");
+            }
+        })
+    }
+
+
+</script>
+
+<!-- Content ends -->
+{% include 'InterfaceTest/foot.html' %}

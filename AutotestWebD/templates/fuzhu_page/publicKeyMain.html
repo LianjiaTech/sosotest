@@ -1,0 +1,67 @@
+<style>
+#container {
+    width: 100%;
+    height: 100%;
+    /* Disable selection so it doesn't get annoying */
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: moz-none;
+    -ms-user-select: none;
+    user-select: none;
+}
+#container #left {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 100px;
+    background: red;
+    display: none;
+}
+#container #right {
+    position: absolute;
+    right: 0;
+    top: 10%;
+    opacity:.80;
+    bottom: 0;
+    width:0.3%;
+    min-width: 0.3%;
+    height:85%;
+    z-index: 99999;
+    background-color: #E0E0E0;
+}
+#container #handle {
+    position: absolute;
+    left: -4px;
+    top: 0;
+    bottom: 0;
+    width: 8px;
+    cursor: w-resize;
+    background-color: #697A8E;
+
+}
+</style>
+<!--右侧辅助输入区可以拖动改变大小-->
+<div id="container">
+    <!-- Left side -->
+{#    <div id="left"> This is the left side's content! </div>#}
+    <!-- Right side -->
+    <div id="right">
+        <!-- Actual resize handle -->
+        <div id="handle"></div>{% include 'fuzhu_page/publicKey.html' %}{% include 'fuzhu_page/publicKeyPy.html' %}
+    </div>
+</div>
+<div id="showDetailsInfoDivFade" class="black_overlay" style="display: none; height: 974px;"></div>
+<div id="showDetailsInfoDiv" class="white_content x_panel" style="width: 100%;align-content: center;" >
+  <div class="x_title">
+      <h2 id="realDetailInfoTitle">查看详情</h2>
+        <button class="btn btn-info pull-right" style="margin-left: 10px" onclick="CloseDetailDiv('showDetailsInfoDiv','showDetailsInfoDivFade')"><i class="fa fa-remove"></i>
+        </button>
+      <div class="clearfix"></div>
+  </div>
+  <div class="x_content" style="height: 80%;">
+      <textarea disabled style="width: 100%; height: 100%;" id="realDetailInfoText"></textarea>
+  </div>
+</div>
+<script src="/static/js/common/fuzhuInput.js?v={{ static_version }}"></script>

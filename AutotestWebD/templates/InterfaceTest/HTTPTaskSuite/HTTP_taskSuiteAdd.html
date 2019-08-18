@@ -1,0 +1,978 @@
+{% include 'InterfaceTest/head.html'%}
+<!-- Main content starts -->
+<style>
+    tr{cursor: pointer;}
+    .black_overlay{
+        display: none;
+        position: absolute;
+        top: 0%%;
+        left: 0%%;
+        width: 100%%;
+        height: 100%%;
+        background-color: black;
+        z-index:1001;
+        -moz-opacity: 0.8;
+        opacity:.80;
+        filter: alpha(opacity=80);
+    }
+    .white_content {
+        display: none;
+        position: absolute;
+        top: 10%%;
+        left: 10%%;
+        width: 80%%;
+        height: 80%%;
+        border: 10px solid ;
+        background-color: white;
+        z-index:1002;
+        overflow: auto;
+    }
+
+</style>
+    <!-- Sidebar ends -->
+    <!-- Main bar -->
+<div class="content">
+    <!-- Sidebar -->
+   {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Sidebar ends -->
+    <!-- Main bar -->
+    <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <div class="col-xs-12 form-group pull-right top_search">
+                    <h3>{{ text.pageTitle }}</h3>
+                  </div>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                <!--基本信息 -->
+                  <div class="x_panel">
+                  <div class="x_title">
+                    <h2>基本信息</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <div  data-parsley-validate class="form-horizontal form-label-left">
+                      <div>
+                      </div>
+                        {% if option != "add" %}
+                            {% if option != "copy" %}
+                                <div class="form-group" >
+                                    <label class="control-label col-md-min-1">任务集编号</label>
+                                    <div class="col-lg-8">
+                                        <input type="text" id="taskSuiteId" class="form-control col-md-7 col-xs-12" disabled value="">
+                                    </div>
+                                </div>
+                                {% else %}
+                            {% endif %}
+                        {% endif %}
+                      <div class="form-group">
+                        <label class="control-label col-md-min-1">任务集名称<span class="required">*</span>
+                        </label>
+                        <div class="col-lg-8">
+                          <input  id="taskSuiteName" placeholder="请输入任务名称" type="text"  required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-min-1"  for="last-name">任务集描述 <span class="required">*</span>
+                        </label>
+                        <div class="col-lg-8">
+                            <textarea type="text" id="taskSuiteDesc" required="required" class="form-control col-md-7 col-xs-12 Fixed-width"
+                            placeholder="请输入任务描述"
+                            ></textarea>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-min-1">默认邮件列表<span class="required"></span>
+                        </label>
+                        <div class="col-lg-8">
+                          <input id="emailList" placeholder="请输入默认邮件列表" type="text" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="ln_solid"></div>
+
+                  </div>
+                </div>
+               <!--接口页面-->
+                <div id="getTaskList" class="white_content x_panel" style="display: none;width:85%;margin-top: -35px" >
+                  <div class="x_title">
+                    <h2>选择任务</h2>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <div class="x_content">
+
+                    <div class="form-group">
+                        <div  id="checkOption">
+                            <span class="cat-text" style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>
+                        </div>
+
+
+{#                        <span class="tag"><span>sales&nbsp;&nbsp;</span><a href="#" title="Removing tag">x</a></span>#}
+{#                        <span class="tag"><span>sales&nbsp;&nbsp;</span><a href="#" title="Removing tag">x</a></span>#}
+                    </div>
+                      <br>
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist" style="margin-bottom: 0px">
+                        <li role="presentation" class="active"><a href="#taskFounder" role="tab" data-toggle="tab" aria-expanded="true">任务创建人</a>
+                        </li>
+                          <li role="presentation" class=""><a href="#taskId" role="tab" data-toggle="tab" aria-expanded="true">任务编号</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#taskName" role="tab" id="profile-tab1" data-toggle="tab" aria-expanded="false">任务名称</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#taskDesc" role="tab" id="profile-tab21" data-toggle="tab" aria-expanded="false">任务描述</a>
+                        </li>
+
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="taskFounder" aria-labelledby="home-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="caseFounderInput" onkeypress="EnterPress(event)" placeholder="请输入接口创建人">
+                            </div>
+                              <div class="col-lg-4" >
+                                  <span style="font-size: 15px;margin-top: 5px">快捷条件: </span>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="inputVal('all')">所有</button>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="inputVal('{{ request.session.userName }}')">{{ request.session.userName }}</button>
+                              <button id="hover-a" type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="createPeople(0)">其他</button>
+                                  <div id="names" style="margin-top: 10px">
+                            </div>
+                                  </div>
+
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="taskName" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="taskNameInput" onkeypress="EnterPress(event)" placeholder="请输入任务名称" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="taskId" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="taskIdInput" onkeypress="EnterPress(event)" placeholder="请输入任务编号" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="taskDescribe" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="taskDescInput" onkeypress="EnterPress(event)" placeholder="请输入任务描述">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="taskList" class="form-group"></div>
+                        <div class="widget-foot">
+                            <button class="btn btn-info pull-right" style="margin-left: 20px" onclick="closeTaskList()">关闭</button>
+                            <button class="btn btn-success pull-right" style="margin-left: 40px" onclick="showSaveTask()">保存</button>
+                            <div class="clearfix" ></div>
+                        </div>
+                  </div>
+
+                  </div>
+                </div>
+                    <div class="x_panel">
+                  <div class="x_title">
+                    <h2>执行详情</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <div  data-parsley-validate class="form-horizontal form-label-left">
+                      <div>
+                      </div>
+
+                      <div class="form-group" style="margin-bottom: 0px">
+
+                            <button  id="openDivBtn" type="button" class="btn btn-primary btn-sm" style="margin-right: 25%;float: right;border-color:#428bca;margin-top: 5px"  onclick="openDiv('getTaskList','bgdiv')">选择任务</button>
+                      </div>
+                      <div class="form-group">
+                          <ul id="interfaceTab" class="nav nav-tabs bar_tabs" style="margin-bottom: 5px">
+                                                        <li class="active"><a href="#taskPage" data-toggle="tab">任务列表</a></li>
+                                                    </ul>
+
+                                                    <div id="taskTabDiv" class="tab-content">
+                                                        <div class="tab-pane fade active in" id="taskPage" style="margin-left: 10px;margin-right: 10px">
+                                                            <table id="sort" class="table table-striped table-bordered table-hover" style="table-layout:fixed;width:100%;word-break:break-all;">
+                                                                <thead>
+                                                                    <tr style="color: snow" bgcolor="#2A3F54">
+                                                                        <th style="width:2.5%;">序号</th>
+                                                                        <th style="width:10%;">任务编号</th>
+                                                                        <th style="width:10%;">任务名称</th>
+                                                                        <th style="width:20%;">任务描述</th>
+                                                                        <th style="width:20%;">包含接口数量</th>
+                                                                        <th style="width:10%;">创建人</th>
+                                                                        <th style="width:11%;">操作</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody id="saveTaskList" >
+                                                                <td id="AllTaskTitle" colspan="7" align="center" >没有选择任何任务</td>
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                      </div>
+
+                    </div>
+                    <div class="ln_solid"></div>
+
+                  </div>
+
+                </div>
+              </div>
+
+                    {% if option == "add" %}
+                        {% if 'add' in  permissionsList %}
+                        <button style="margin-left: 60%;width: 8%" type="button" class="btn btn-success btn-lg" onclick="saveTaskSuite()">保存</button>
+                        {% endif %}
+                    {% elif option == "copy" %}
+                            <a href="javascript:void(0);">
+                                <button style="margin-left: 60%" type="button" class="btn btn-success btn-lg" onclick="saveTaskSuite()">保存</button>
+                            </a>
+                    {% elif option == "edit" %}
+                            <button style="margin-left: 60%" type="button" class="btn btn-success btn-lg" onclick="saveTaskSuite()">保存</button>
+                    {% elif option == "check" %}
+                        <div style="margin-right: 30%">
+                        {% if "copy" in  permissionsList %}
+                            <a  href="{% url 'HTTP_operationTaskSuite' %}?id={{ id }}&option=copy&addBy={{ addBy }}">
+                                <button style="float: right" type="button" class="btn btn-success btn-lg">拷贝</button>
+                            </a>
+                        {% endif %}
+                        {% if "edit" in  permissionsList %}
+                            <a href="{% url 'HTTP_operationTaskSuite' %}?id={{ id }}&option=edit&addBy={{ addBy }}">
+                            <button style="float: right" type="button" class="btn btn-success btn-lg" >编辑</button>
+                            </a>
+                        {% endif %}
+                        </div>
+                    {% endif %}
+
+            </div>
+
+          </div>
+    </div>
+    <!-- Content ends -->
+    <script type="text/javascript">
+
+        function initJudgeVersion() {
+            if ("{{ request.session.version }}" !== "CurrentVersion") {
+                alert("请注意！！！现在为历史版本[{{ request.session.version }}]页面！！！");
+            }
+        }
+        initJudgeVersion();
+        var taskPageNum = 1;
+
+        var taskNum = 0;
+        var taskMaxNum = 50;
+
+
+        $(document).ready(function(){
+            var fixHelperModified = function(e, tr) {
+                    var $originals = tr.children();
+                    var $helper = tr.clone();
+                    $helper.children().each(function(index) {
+                        $(this).width($originals.eq(index).width()+20)
+                    });
+                    return $helper;
+                },
+                updateIndex = function() {
+                    sortTable("taskTr");
+                };
+            $("#sort tbody").sortable({
+                helper: fixHelperModified,
+                stop: updateIndex
+            }).disableSelection();
+        });
+
+
+        //弹出隐藏层
+        function openDiv(show_div,bg_div){
+
+            //弹出详情层
+            obshowdiv =  $('#'+show_div);
+            objclosediv = $('#'+show_div+'> label');
+            obbgdiv = $('#'+bg_div);
+            offtop=obshowdiv.offset().top;
+            offleft=obshowdiv.offset().left;
+            obshowdiv.css("top",offtop+40+"px");
+            objclosediv.css("top","40px");
+            objclosediv.css("left","90%%");
+            obshowdiv.show();
+            obbgdiv.show();
+            docheight = $(document).height();
+            obbgdiv.height(docheight);
+            $('html,body').animate({scrollTop:offtop}, 800);
+            selected();
+            $("#openDivBtn").attr("disabled", true);
+            taskListIsChecked();
+
+        }
+
+
+        //关闭弹出层
+        function CloseDiv(show_div,bg_div){
+            $("#openDivBtn").attr("disabled", false);
+            $("#openTestCaseDivBtn").attr("disabled", false);
+            $('#'+show_div).hide();
+            $('#'+bg_div).hide();
+        }
+
+        var checkVals =  {"caseFounder":"{{ request.session.userName }}","taskId":"","title":"","desc":""};
+        function clearChecked() {
+            $("#caseFounderInput").val('');
+            $("#interfaceIdInput").val('') ;
+            $("#caseNameInput").val('') ;
+            $("#caseDescribeInput").val('');
+            $("#uriInput").val('');
+            $("#caseInterFaceInput").val('');
+            $("#caseBusinessLineCheckTab").click();
+            $("#caseModuleInput").val('');
+
+            editCheckVal();
+        }
+
+        function editBusinessLineCheckTab(name) {
+            checkVals["businessLine"] = name;
+            editCheckVal();
+        }
+
+        function editCheckVal() {
+
+            //接口创建人
+            if($("#caseFounderInput").val()==''){
+                checkVals['caseFounder'] = '{{ request.session.userName }}';
+            }else if($("#caseFounderInput").val()=='all'){
+                checkVals['caseFounder'] = '';
+            }else{
+                checkVals['caseFounder'] =$("#caseFounderInput").val() ;
+            }
+
+            //接口Id
+            if($("#taskIdInput").val()==''){
+                checkVals['taskId'] = '';
+            }else {
+                checkVals['taskId'] =$("#taskIdInput").val() ;
+            }
+
+            //接口名称
+            if($("#taskNameInput").val()==''){
+                checkVals['title'] = '';
+            }else {
+                checkVals['title'] =$("#taskNameInput").val() ;
+            }
+
+
+            //接口描述
+            if ($("#taskDescribeInput").val()==''){
+                checkVals['taskdesc']='';
+            }else {
+                checkVals['taskdesc']=$("#taskDescribeInput").val();
+            }
+
+            //服务
+            if ($("#uriInput").val()==''){
+                checkVals['uri']='';
+            }else {
+                checkVals['uri']=$("#uriInput").val();
+            }
+            //服务
+            if ($("#caseInterFaceInput").val()==''){
+                checkVals['url']='';
+            }else {
+                checkVals['url']=$("#caseInterFaceInput").val();
+            }
+            if ($("#caseModuleInput").val()==''){
+                checkVals['module']='';
+            }else {
+                checkVals['module']=$("#caseModuleInput").val();
+            }
+
+            selected();
+        }
+
+        function inputVal(val) {
+            $("#caseFounderInput").val(val);
+            editCheckVal();
+            interfaceListIsChecked();
+        }
+
+        function checkOptions() {
+
+            var htmls = ' <span class="cat-text"style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>';
+            var num =0;
+            var writeNum = 0;
+
+            for(var item in checkVals){
+                if(checkVals[item] != '' && typeof(checkVals[item]) != "undefined"){
+                    num ++;
+                }
+            }
+            for(var item in checkVals){
+                if(checkVals[item] != '' && typeof(checkVals[item]) != 'undefined'){
+                    var key = '';
+                    if(item == 'caseFounder'){
+                        key = '接口创建人';
+                    }
+                    if(item == 'taskId'){
+                        key = '接口编号';
+                    }
+                    if(item == 'title'){
+                        key = 'r任务名称';
+                    }
+                    if(item == 'taskdesc'){
+                        key = '任务描述';
+                    }
+                    if(item == 'uri'){
+                        key = '接口URI';
+                    }
+                    if(item == 'url'){
+                        key = '接口URL';
+                    }
+                    if(item == "businessLine"){
+                        key = '{{ groupLevel1 }}';
+                    }
+                    if(item == "module"){
+                        key = '{{ groupLevel2 }}';
+                    }
+                    writeNum ++ ;
+                   {% comment %} if(writeNum != num){
+                        htmls = htmls+'<a href="#" onclick="delCheckOptions(\''+item+'\')"  data-url="nav" data-key="ppath" style="font-size: 15px;text-decoration:none" >'+key+'：'+checkVals[item]+' <button class="btn btn-xs" style="background-color: #dddddd"><i style="color: #5e5e5e" class="icon-remove"></i> </button> </a><span style="font-size: 15px">-></span> '
+                    }else{
+                        htmls = htmls+'<a href="#" onclick="delCheckOptions(\''+item+'\')" data-url="nav" data-key="ppath" style="font-size: 15px;text-decoration:none" >'+key+'：'+checkVals[item]+' <button class="btn btn-xs" style="background-color: #dddddd"><i style="color: #5e5e5e" class="icon-remove"></i> </button> </a> ';
+                    }{% endcomment %}
+                    htmls = htmls+'<span class="tag"><span>'+key+'：'+checkVals[item]+'&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delCheckOptions(\''+item+'\')">x</a></span> '
+
+                }
+            }
+            htmls = htmls +'<span class="tag" style="float: right;background-color: #ff7575"><span>默认筛选&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="clearChecked()">x</a></span>';
+
+{#            htmls = htmls +'<a href="#" onclick="clearChecked()" style="font-size: 15px;text-decoration:none;float:right;">[默认筛选]</a>';#}
+            $('#checkOption').html(htmls);
+        }
+
+
+        function EnterPress(event){ //传入 event
+            var e = event || window.event;
+            if(e.keyCode == 13){
+                editCheckVal();
+
+            }
+        }
+
+        function delCheckOptions(key) {
+            if(key=='caseFounder'){
+                $("#caseFounderInput").val('all');
+            }
+            if(key=='interfaceId'){
+                $("#interfaceIdInput").val('');
+            }
+            if(key=='title'){
+                $("#caseNameInput").val('');
+            }
+            if(key=='casedesc'){
+                $("#caseDescribeInput").val('');
+            }
+            if(key=='uri'){
+                $("#uriInput").val('');
+            }
+            if(key=='url'){
+                $("#caseInterFaceInput").val('');
+            }
+            if(key == "businessLine"){
+                $("#caseBusinessLineCheckTab").click();
+            }
+            if(key == "module"){
+                $("#caseModuleInput").val('');
+            }
+            editCheckVal();
+        }
+
+        function pageCall(pageNum) {
+            taskPageNum = pageNum;
+            selected();
+        }
+
+        //创建时间排序
+        var orderBy = "i.modTime desc , i.id desc";
+        var interfaceNameFlag = "-1";
+        var addTimeFlag = '-1';
+
+        function interfaceOrderByName() {
+            if (interfaceNameFlag == '-1' || interfaceNameFlag == '0') {
+                interfaceNameFlag = '1';
+                addTimeFlag = '-1';
+                modTimeFlag = '-1';
+                //用例名称正序查
+                orderBy = 'i.title asc';
+            } else if (interfaceNameFlag == '1') {
+                interfaceNameFlag = '0';
+                //用例名称倒序查
+                orderBy = 'i.title desc';
+            }
+            selected();
+        }
+
+        function orderByAddTime() {
+            if (addTimeFlag == '-1' || addTimeFlag == '0') {
+                addTimeFlag = '1';
+                modTimeFlag = '-1';
+                interfaceNameFlag = '-1';
+                //创建时间正序查
+                orderBy = 'i.id asc';
+            } else if (addTimeFlag == '1') {
+                addTimeFlag = '0';
+                //创建时间倒序查
+                orderBy = 'i.id desc';
+            }
+            selected();
+        }
+        var modTimeFlag = '-1';
+        //修改时间排序
+        function orderByModTime() {
+            if(modTimeFlag == '-1' || modTimeFlag == '0'){
+                modTimeFlag = '1';
+                addTimeFlag = '-1';
+                interfaceNameFlag = '-1';
+                //修改时间正序查
+                orderBy = 'i.modTime asc , i.id asc';
+            }else if(modTimeFlag == '1' ){
+                modTimeFlag = '0';
+                //修改时间倒序查
+                orderBy = "i.modTime desc , i.id desc";
+            }
+            selected();
+        }
+
+
+        //排序样式显示
+        function orderByShow() {
+            if(addTimeFlag == '0'){
+                $("#addTimeBtn").text('创建时间▼');
+            }else if(addTimeFlag == '1'){
+                $("#addTimeBtn").text('创建时间▲');
+            }
+
+            if(modTimeFlag == '0'){
+                $("#modTimeBtn").text('修改时间▼');
+            }else if(modTimeFlag == '1'){
+                $("#modTimeBtn").text('修改时间▲');
+            }
+            if(interfaceNameFlag == '0'){
+                $("#interfaceNameBtn").text('接口名称▼');
+            }else if(interfaceNameFlag == '1'){
+                $("#interfaceNameBtn").text('接口名称▲');
+            }
+        }
+
+
+        function createPeople(num) {
+            htmlobj=$.ajax({url:'{% url 'queryPeopleInterface' %}?num='+num,async:false});
+            var value = JSON.parse(htmlobj.responseText).body;
+
+            var nameVal = "";
+            for(var i = 0;i<value.length;i++){
+            nameVal = nameVal + '<button type="button" class="btn btn-info btn-xs" onclick="inputVal(\''+value[i].userName+'\')" >'+value[i].userName+'('+value[i].count+')</button> '
+            }
+            if(value.length<4){
+                $("#names").html(nameVal);
+                $("#hover-a").attr('onclick','createPeople('+(0)+')');
+                $("#names").show();
+                return;
+            }else {
+                $("#names").html(nameVal);
+            }
+
+            $("#hover-a").attr('onclick','createPeople('+(num+1)+')');
+            $("#names").show();
+        }
+
+        function createPeopleTestCase(num) {
+            htmlobj=$.ajax({url:'{% url 'queryPeopleTestCase' %}?num='+num,async:false});
+            var value = JSON.parse(htmlobj.responseText).body;
+
+            var nameVal = "";
+            for(var i = 0;i<value.length;i++){
+            nameVal = nameVal + '<button type="button" class="btn btn-info btn-xs" onclick="TestCaseInputVal(\''+value[i].userName+'\')" >'+value[i].userName+'('+value[i].count+')</button> '
+            }
+            if(value.length<4){
+                $("#TestCaseNames").html(nameVal);
+                $("#hover-aTestCase").attr('onclick','createPeopleTestCase('+(0)+')');
+                $("#TestCaseNames").show();
+                return;
+            }else {
+                $("#TestCaseNames").html(nameVal);
+            }
+
+            $("#hover-aTestCase").attr('onclick','createPeopleTestCase('+(num+1)+')');
+            $("#TestCaseNames").show();
+        }
+
+        function closeTaskList() {
+            CloseDiv("getTaskList", "bgdiv");
+        }
+
+        var taskList = Array();
+        var taskData = {};
+        function taskCheckboxAll() {
+            var checkbox = $("[name='taskCheckbox']");
+            if($("#taskCheckboxAll").is(':checked')){
+                checkbox.each(function () {
+                    if(!$(this).is(':checked')){
+                        if(taskNum > (taskMaxNum-1)){
+                            alert("任务最多只能包含"+taskMaxNum+"个接口调用数量,当前"+taskNum);
+                            return false;
+                        }
+                        taskNum ++;
+                        taskData[$(this).attr("id")] = {};
+                        taskData[$(this).attr("id")].taskName = $(this).parent().next().next().text();
+                        taskData[$(this).attr("id")].taskDesc = $(this).parent().next().next().next().text();
+                        taskData[$(this).attr("id")].interfaceNum =  $(this).parent().next().next().next().next().text();
+                        taskData[$(this).attr("id")].taskCheck = '<a href="{% url 'HTTP_operationTask' %}?taskId='+$(this).attr("id")+'&amp;option=check" target="_blank"><button style="margin-top: 10px" class="btn btn-primary">查看</button></a>';
+                        taskData[$(this).attr("id")].addBy = $(this).parent().next().next().next().next().next().text();
+
+                        taskList.push($(this).attr("id"));
+                        $(this).prop("checked",true);
+                    }
+                })
+            }else {
+                checkbox.each(function () {
+                    if($(this).is(':checked')){
+                        taskNum --;
+                        taskData[$(this).attr("id")] = {};
+                        taskList.splice($.inArray($(this).attr("id"),taskList),1);
+                        $(this).prop("checked",false);
+                    }
+                });
+            }
+            showTaskList();
+        }
+        function showTaskList() {
+            $("#interfaceList").text("已选接口:"+taskList.join(" ， "));
+        }
+
+        function taskChechBtn(taskId) {
+            if($("#"+taskId).is(':checked')){
+                if(taskNum > (taskMaxNum-1)){
+                    alert("任务最多只能包含"+taskMaxNum+"个接口调用数量,当前"+taskNum);
+                    $("#"+taskId).prop("checked",false);
+                    return ;
+                }
+                taskNum ++;
+                taskData[taskId] = {};
+                taskData[taskId].taskName = $("#"+taskId).parent().next().next().text();
+                taskData[taskId].taskDesc =  $("#"+taskId).parent().next().next().next().text();
+                taskData[taskId].interfaceNum =  $("#"+taskId).parent().next().next().next().next().text();
+                taskData[taskId].taskCheck =  $("#"+taskId).parent().next().next().next().next().next().next().children().html();
+                taskData[taskId].addBy = $("#"+taskId).parent().next().next().next().next().next().text();
+                taskList.push(taskId);
+            }else {
+                taskNum --;
+                taskData[taskId] = {};
+                taskList.splice($.inArray(taskId,taskList),1);
+            }
+            var allFlag = true;
+            var taskCheckboxElements = $("[name='taskCheckbox']");
+            taskCheckboxElements.each(function () {
+                if(!$(this).prop("checked")){
+                    allFlag = false;
+                }
+            });
+            if(allFlag){
+                $("#taskCheckboxAll").prop("checked",true);
+            }else {
+                $("#taskCheckboxAll").prop("checked",false);
+            }
+            showTaskList();
+        }
+         function HTMLEncode(html) {
+            var temp = document.createElement("div");
+            (temp.textContent != null) ? (temp.textContent = html) : (temp.innerText = html);
+            var output = temp.innerHTML;
+            temp = null;
+            return output;
+        }
+
+        function trColor(element) {
+            if (element.css("background-color") === "rgb(245, 245, 245)") {
+                element.css("background-color", "#b0e0e6")
+            } else {
+                element.removeAttr("style");
+
+            }
+        }
+
+        function showSaveTask() {
+            $("#AllTaskTitle").hide();
+            for(var i=0;i<taskList.length;i++){
+                $("#saveTaskList").append('<tr name="taskTr"  onclick="trColor($(this))">\
+                    <td class="index" name="taskTRId" style="width: 10%"></td>\
+                    <td name="taskFlag">'+HTMLEncode(taskList[i])+'</td>\
+                    <td><textarea class="table-fixed-write" style="height:auto"  disabled>'+ HTMLEncode( taskData[taskList[i]].taskName)+'</textarea></td>\
+                    <td><textarea class="table-fixed-write" style="height:auto"  disabled>'+HTMLEncode(taskData[taskList[i]].taskDesc)+'</textarea></td>\
+                    <td><textarea class="table-fixed-write" style="height:auto"  disabled>'+HTMLEncode(taskData[taskList[i]].interfaceNum)+'</textarea></td>\
+                    <td>'+ taskData[taskList[i]].addBy+'</td>\
+                    <td><div style="margin-top: -10px"><button class="btn btn-success" style="margin-top:10px" value="'+taskList[i]+'" name="interfaceCopy" onclick="copyTr($(this))">拷贝</button>\
+                    <a href="{% url "HTTP_operationTask" %}?taskId='+taskList[i]+'&option=check" target="_blank"><button style="margin-top: 10px" class="btn btn-primary">查看</button></a>\
+                    <button class="btn btn-danger" style="margin-top:10px" value="'+taskList[i]+'" name="interfaceDel" onclick="delTr($(this))">删除</button></div></td>\
+                    </tr>');
+            }
+            sortTable("taskTr");
+            closeTaskList();
+
+            taskList= [];
+            $("#checkboxAll").prop("checked",false);
+            $("#interfaceList").text("已选接口:");
+            $("[name='interfaceCheckbox']").each(function () {
+                if($(this).is(':checked')){
+                    taskList.splice($.inArray($(this).attr("id"),interfaceList),1);
+                    $(this).prop("checked",false);
+                }
+            });
+            $("[href='#InterfacePage']").click();
+        }
+
+        function sortTable(name) {
+            var tmpObj = $("[name='"+name+"']");
+            tmpObj.each(function (i) {
+                $(this).children("td.index").text(i+1);
+            })
+        }
+
+        function copyTr(mySelf){
+            if(mySelf.attr("name") == "testCaseCopy") {
+                var taskCount = mySelf.parent().parent().parent().find(".num").text();
+                if (taskNum > (taskMaxNum - taskCount)) {
+                    alert("任务最多只能包含" + taskMaxNum + "个接口调用数量,当前" + taskNum);
+                    return;
+                }
+            }else {
+                if (taskNum > (taskMaxNum - 1)) {
+                    alert("任务最多只能包含" + taskMaxNum + "个接口调用数量,当前" + taskNum);
+                    return;
+                }
+            }
+
+            if(mySelf.attr("name") == "testCaseCopy"){
+                taskNum += parseInt(mySelf.parent().parent().parent().find(".num").text());
+
+            }else {
+                taskNum ++;
+            }
+
+            var name = mySelf.parent().parent().parent().attr("name");
+            mySelf.parent().parent().parent().after("<tr name='"+name+"'>"+mySelf.parent().parent().parent().html()+"</tr>");
+            sortTable(name);
+        }
+
+
+        function delTr(element) {
+
+            taskNum --;
+            element.parent().parent().parent().remove();
+
+            if($("[name='taskFlag']").length == 0){
+                $("#AllTaskTitle").show();
+            }
+
+            sortTable(element.parent().parent().parent().attr("name"))
+        }
+
+        function _null() {
+
+        }
+
+
+
+        function taskListIsChecked() {
+
+            for(var i=0;i<taskList.length;i++){
+                $("#"+taskList[i]).prop("checked",true);
+            }
+            var allcheck = 1;
+            $("[name='taskCheckbox']").each(function () {
+                if(!$(this).is(':checked')){
+                    allcheck = 0;
+                }
+            });
+            if(allcheck == 1){
+                $("#taskCheckboxAll").prop("checked",true);
+            }
+        }
+
+        function testCaseListIsChecked() {
+
+            for(var i=0;i<testCaseList.length;i++){
+                $("#"+testCaseList[i]).prop("checked",true);
+            }
+            var allcheck = 1;
+            $("[name='TestCaseCheckbox']").each(function () {
+                if(!$(this).is(':checked')){
+                    allcheck = 0;
+                }
+            });
+            if(allcheck == 1){
+                $("#TestCaseCheckboxAll").prop("checked",true);
+            }
+        }
+
+        function selected() {
+            checkOptions();
+            var data = {checkArr : encodeURI(JSON.stringify(checkVals)),orderBy : orderBy,taskPageNum:taskPageNum};
+            htmlobj=$.ajax({url:"{% url 'HTTP_TaskSuiteSelectTaskPage' %}",async:false,data:data,type:"POST"});
+            $("#taskList").html(htmlobj.responseText);
+            orderByShow();
+            taskListIsChecked();
+        }
+
+        function verifyData() {
+            if(taskNum > taskMaxNum){
+                alert("任务最多只能包含"+taskMaxNum+"个接口调用数量,当前"+taskNum);
+                return false;
+            }
+            if($("#taskSuiteName").val() == ""){
+                alert("任务集名称不能为空!");
+                    return false;
+            }
+            if($("#taskSuiteDesc").val() == ""){
+                alert("任务集描述不能为空!");
+                return false;
+            }
+            if($("[name='taskFlag']").length == 0){
+                alert("任务数量不能为0!");
+                return false;
+            }
+            return true;
+        }
+
+        function saveTaskSuite() {
+            if(!verifyData()){
+                return;
+            }
+            var title = $("#taskSuiteName").val();
+            var taskSuiteDesc = $("#taskSuiteDesc").val();
+            var emailList = $("#emailList").val();
+            var taskCount = $("[name='taskFlag']").length;
+            var taskFlag = $("[name='taskFlag']");
+            var taskIdList = Array();
+            taskFlag.each(function (i) {
+                taskIdList.push(taskFlag.eq(i).text());
+            });
+            var taskList = taskIdList.join(",");
+            var taskLevel = $("#taskLevel").val();
+            var data = {
+                title:title,
+                taskSuiteDesc:taskSuiteDesc,
+                emailList:emailList,
+                taskCount:taskCount,
+                taskList:taskList
+            };
+            if("{{ option }}" == "edit"){
+                data.id = taskSuitedata.id;
+                var taskAddData = $.ajax({url:"{% url 'HTTP_TaskSuiteSaveEdit' %}?id=" + data.id,async:false,data:JSON.stringify(data),type:"POST"});
+            }else{
+                var taskAddData=$.ajax({url:"{% url 'HTTP_TaskSuiteAddData' %}",async:false,data:JSON.stringify(data),type:"POST"});
+            }
+
+            if(JSON.parse(taskAddData.responseText)["code"] != 10000){
+                alert(taskAddData.responseText);
+            }else {
+                location.href="{% url 'HTTP_taskSuiteCheck' %}";
+            }
+
+        }
+
+        var taskSuitedata = "";
+        if("{{ option }}" != "add"){
+            var getTaskSuiteData = $.ajax({url:"{% url 'HTTP_taskSuiteGetTaskSuiteData' %}?id={{ id }}",async:false,type:"GET"});
+            taskSuitedata = JSON.parse(getTaskSuiteData.responseText)["body"];
+            $("#taskSuiteId").val(taskSuitedata.taskSuiteId);
+            $("#taskSuiteName").val(taskSuitedata.title);
+            $("#taskSuiteDesc").val(taskSuitedata.taskSuiteDesc);
+
+            $("#emailList").val(taskSuitedata.emailList);
+
+            var taskInitData = taskSuitedata["taskDataList"];
+
+            //TODO start test
+            var gPageSize = 2000;
+            var taskCurPageNum = 1; //设置当前页数，全局变量
+            var taskTotalPage = Math.ceil(taskInitData.length/gPageSize); //所有页数
+        }
+
+        $(function () {
+            //根据页数读取数据
+            function getTaskData(pagenumber) {
+
+                taskCurPageNum++; //页码自动增加，保证下次调用时为新的一页。
+
+                if (pagenumber <= taskTotalPage){
+                    var startIndex = (pagenumber-1)*gPageSize;
+                    var endIndex = pagenumber*gPageSize;
+
+                    insertTaskDiv(startIndex,endIndex);
+                }
+            }
+            //初始化加载第一页数据
+            getTaskData(1);
+
+            //生成数据html,append到div中
+            function insertTaskDiv(startIndex,endIndex) {
+                $("#AllTaskTitle").hide();
+                var tmpObj = $("#saveTaskList");
+                if(startIndex >= taskInitData.length){
+                    return false;
+                }
+                if(endIndex >= taskInitData.length){
+                    endIndex = taskInitData.length;
+                }
+                for(var i=startIndex;i<endIndex;i++){
+                    taskNum++;
+                    tmpObj.append('<tr name="taskTr" onclick="trColor($(this))">\
+                        <td class="index" name="interfaceTRId" >'+taskNum+'</td>\
+                        <td name="taskFlag">'+taskInitData[i].taskId+'</td>\
+                        <td><textarea class="table-fixed-write" style="height:auto" disabled>'+HTMLEncode(taskInitData[i].title)+'</textarea></td>\
+                        <td><textarea class="table-fixed-write" style="height:auto" disabled>'+HTMLEncode(taskInitData[i].taskdesc)+'</textarea></td>\
+                        <td><textarea class="table-fixed-write" style="height:auto" disabled>'+HTMLEncode(taskInitData[i].interfaceNum)+'</textarea></td>\
+                        <td>'+ taskInitData[i].userName+'</td>\
+                        <td><div style="margin-top: -10px"><button class="btn btn-success" name="taskCopy" style="margin-top: 10px" onclick="copyTr($(this))" >拷贝</button>\
+                        <a href="{% url 'HTTP_operationTask' %}?id='+taskInitData[i].id+'&option=check&addBy='+taskInitData[i].addBy_id+'" target="_blank"><button style="margin-top: 10px" class="btn btn-primary">查看</button></a>\
+                        <button class="btn btn-danger" style="margin-top: 10px" name="taskDel" onclick="delTr($(this))">删除</button></td>\
+                        </tr>');
+                }
+                sortTable("taskTr");
+            }
+
+
+            //==============核心代码=============
+            var winH = $(window).height(); //页面可视区域高度
+
+            var scrollHandler = function (){
+                var pageH = $(document.body).height();
+                var scrollT = $(window).scrollTop(); //滚动条top
+                var aa = (pageH - winH - scrollT) / winH;
+                if (aa < 0.02) {   //0.02是个参数
+                        getTaskData(taskCurPageNum);
+
+                }
+            }
+            //定义鼠标滚动事件
+            $(window).scroll(scrollHandler);
+        });
+        //TODO end start test
+    </script>
+</div>
+
+<script src="/static/js/common/fuzhuInput.js?v={{ static_version }}"></script>
+
+{% include 'InterfaceTest/foot.html'%}

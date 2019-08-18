@@ -1,0 +1,67 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3c.org/TR/1999/REC-html401-19991224/loose.dtd">
+<html class=" ext-strict x-viewport">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>URI编码处理</title>
+
+    <meta name="description" content="URI decode encode">
+    <meta name="keywords" content="URI编解码工具" />
+
+    <style type="text/css">.br0 {
+        COLOR: #009900
+    }
+    .st0 {
+        COLOR: #3366cc
+    }
+    .sy0 {
+        COLOR: #339933
+    }
+    </style>
+    <script>
+function encodeText() {
+    var baseText = document.getElementById("baseText").value;
+//    var encedText = encodeURI(baseText);
+//    var encedText = escape(baseText);
+    var encedText = encodeURIComponent (baseText);
+    document.getElementById("processedText").value = encedText;
+}
+function decodeText() {
+    var baseText = document.getElementById("baseText").value;
+//    var decText = decodeURI(baseText);
+//    var decText = unescape(baseText);
+    var decText = decodeURIComponent(baseText);
+    document.getElementById("processedText").value = decText;
+}
+
+var UnicodeConverter={
+    ToUnicode:function(str){
+       return escape(str).toLocaleLowerCase().replace(/%u/gi,'\\u');
+    },
+    ToCN:function(str){
+       return unescape(str.replace(/\\u/gi,'%u'));
+    }
+};
+function cnToUnicode() {
+    var baseText = document.getElementById("baseText").value;
+    var encedText = UnicodeConverter.ToUnicode (baseText);
+    document.getElementById("processedText").value = encedText;
+}
+function unicodeToCn() {
+    var baseText = document.getElementById("baseText").value;
+    var decText = UnicodeConverter.ToCN(baseText);
+    document.getElementById("processedText").value = decText;
+}
+    </script>
+</head>
+<body>
+<label>原始值</label><br>
+<textarea id = "baseText" style="margin: 0px; width: 1024px; height: 400px;"></textarea><br>
+<button onclick="encodeText()">URL编码</button>
+<button onclick="decodeText()">URL解码</button>
+<button onclick="cnToUnicode()">中文 转 Unicode</button>
+<button onclick="unicodeToCn()">Unicode 转 中文</button>
+<br>
+<label>处理后的值</label><br><textarea id = "processedText" style="margin: 0px; width: 1024px; height: 400px;"></textarea>
+</body>
+</html>

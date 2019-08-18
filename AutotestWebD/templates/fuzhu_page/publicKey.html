@@ -1,0 +1,116 @@
+<div id="publicKeyDiv" class="" style="margin-left: 10px;margin-top: 10px;margin-bottom: 10px;overflow-y: auto;display: none;">
+<button style="float: right;width: 30px;height: 30px;" onclick="hideFuzhuBar()">
+    <i class="fa fa-angle-double-right"></i>
+</button>
+<button style="float: right;width: 30px;height: 30px;background-color: yellow;" onclick="ChangeFuzhuType('PY')">
+        <i class="fa fa-exchange"></i>
+</button>
+<h2>数据关键字</h2>
+    <a onclick="resetPublicKey('$VAR[key]')" name="publicKey-VAR" style="display:none;"
+       class="hover-blue backgundred" title="变量的引用">变量</a>
+    <a onclick="resetPublicKey('$GVAR[key]')" name="publicKey-GVAR" style="display:none;"
+       class="hover-blue backgundred" title="全局变量的引用">全局变量</a>
+    <a onclick="resetPublicKey('$TEXT[key]')" name="publicKey-TEXT" style="display:none;"
+       class="hover-blue backgundred" title="组合文本的引用">组合文本</a>
+    <a onclick="resetPublicKey('EXECUTE_INTERFACE(HTTP_INTERFACE_1);\n')" name="publicKey-EXECUTE_INTERFACE" style="display:none;"
+       class="hover-blue orange-s" title="调用执行其他接口，返回结果是接口执行后的body内容">执行HTTP接口</a>
+    {% if menu.DubboInterface == 1 %}
+    <a onclick="resetPublicKey('EXECUTE_DUBBO_INTERFACE(DUBBO_INTERFACE_1);\n')" name="publicKey-EXECUTE_INTERFACE" style="display:none;"
+       class="hover-blue orange-s" title="调用执行其他DUBBO接口，返回结果是接口执行后的内容">执行DUBBO接口</a>
+    {% endif %}
+    <a onclick="resetPublicKey('TIMESTAMP(+0D);\n')" name="publicKey-TIMESTAMP" style="display:none;"
+       class="hover-blue backgundredcyan"
+       title="获取当前时间戳，到秒。+1D -1D是加减1天，+1S -1S加减1秒">获取当前时间戳</a>
+    <a onclick="resetPublicKey('TIMESTAMP_FORMAT(timestamp,%Y-%m-%d %H:%M:%S);\n')" name="publicKey-TIMESTAMP_FORMAT" style="display:none;"
+       class="hover-blue backgundredcyan" title="时间戳格式化为时间格式">时间戳To时间格式</a>
+    <a onclick="resetPublicKey('TIMESTAMP_MS(+0D);\n')" name="publicKey-TIMESTAMP" style="display:none;"
+       class="hover-blue backgundredcyan"
+       title="获取当前时间戳，到秒。+1D -1D是加减1天，+1S -1S加减1秒">获取当前时间戳毫秒</a>
+    <a onclick="resetPublicKey('TIMESTAMP_FORMAT_MS(timestamp,%Y-%m-%d %H:%M:%S);\n')" name="publicKey-TIMESTAMP_FORMAT" style="display:none;"
+       class="hover-blue backgundredcyan" title="时间戳格式化为时间格式">时间戳To时间格式毫秒</a>
+    <a onclick="resetPublicKey('TIME_SLEEP(1);\n')" name="publicKey-TIMESTAMP" style="display:none;"
+       class="hover-blue backgundredcyan" title="执行等待,单位秒">执行等待</a>
+    <a onclick="resetPublicKey('RANDOM_INT(minNum,maxNum);\n')" name="publicKey-RANDOM_INT" style="display:none;"
+       class="hover-blue orange-d"
+       title="获取随机数，RANDOM_INT(100,999) 返回一个100到999的随机数">随机数</a>
+    <a onclick="resetPublicKey('RANDOM_CN(自动化测试,3);\n')" name="publicKey-RANDOM_CN" style="display:none;"
+       class="hover-blue orange-d"
+       title="获取随机中文字符串,不带参数随机返回一个10位字符串，待1个参数返回前缀是参数后缀10位随机字符串的随机字符，待两个参数是前缀加随机次数。">随机中文</a>
+    <a onclick="resetPublicKey('RANDOM_EN(autotest,10);\n')"  name="publicKey-RANDOM_EN" style="display:none;"
+       class="hover-blue orange-d"
+       title="获取随机英文字符串,不带参数随机返回一个10位字符串，待1个参数返回前缀是参数后缀10位随机字符串的随机字符，待两个参数是前缀加随机次数。">随机英文</a>
+    <a onclick="resetPublicKey('RANDOM_VALUE_IN_LIST([4,3,8]);\n')"  name="publicKey-RANDOM_EN" style="display:none;"
+       class="hover-blue orange-d"
+       title="从列表中随机获取一个值">列表中随机</a>
+    <a onclick="resetPublicKey('SUB_STR(baseString,startTag,endTag);\n')" name="publicKey-SUB_STR" style="display:none;"
+       class="hover-blue orange-d"
+       title="截取字符串，SUB_STR(abc,a,c) 返回b">截取字符串</a>
+    <a onclick="resetPublicKey('RE_FINDALL(baseString,reString);\n')" name="publicKey-RE_FINDALL" style="display:none;"
+       class="hover-blue orange-d"
+       title="正则获取所有匹配字符串">正则获取所有匹配字符串</a>
+    <a onclick="resetPublicKey('JSON_GET(JsonString,JsonPath);\n')" name="publicKey-JSON_GET" style="display:none;"
+       class="hover-blue orange-d"
+       title="获取json字符串对应路径的值，比如JSON_PATH_GET(jsonString,[‘id’])">JSON路径值获取</a>
+    <a onclick="resetPublicKey('JSON_PATH_GET(JsonString,JsonPath);\n')" name="publicKey-JSON_GET" style="display:none;"
+       class="hover-blue orange-d"
+       title="获取json字符串对应路径的值，比如JSON_PATH_GET(jsonString,[‘id’])">JSONPATH路径值获取</a>
+    <a onclick="resetPublicKey('URL_ENCODE(str);\n')" name="publicKey-URL_ENCODE" style="display:none;"
+       class="hover-blue orange-d" title="url-encode字符串">url-encode字符串</a>
+    <a onclick="resetPublicKey('MD5(str);\n')" name="publicKey-URL_ENCODE" style="display:none;"
+       class="hover-blue orange-d" title="url-encode字符串">字符串MD5加密</a>
+   <a onclick="resetPublicKey('$CONST[RESP_TEXT]')"  name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundgreen"
+       title="最近一个http请求返回的内容">RESP_TEXT</a>
+    {% if menu.DubboInterface == 1 %}
+    <a onclick="resetPublicKey('$CONST[DUBBO_TEXT]')"  name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundgreen" title="所测接口的DUBBO请求返回的内容">DUBBO_TEXT</a>
+    {% endif %}
+    <a onclick="resetPublicKey('DB_SELECT( servie, select语句 );\n')"  name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow"
+       title="查询数据，返回一个list josn">DB_SELECT</a>
+    <a onclick="resetPublicKey('DB_DELETE( servie, delete语句 );\n')"  name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow"
+       title="查询数据，返回一个list josn">DB_DELETE</a>
+    <a onclick="resetPublicKey('DB_UPDATE( servie, update语句 );\n')"  name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow"
+       title="查询数据，返回一个list josn">DB_UPDATE</a>
+    <a onclick="resetPublicKey('DB_INSERT( servie, insert语句 );\n')"  name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow"
+       title="查询数据，返回一个list josn">DB_INSERT</a>
+    <a onclick="resetPublicKey('REDIS_SET( key,value,timeout=10,db=0,service=xxxx );\n')"  name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow"
+       title="查询数据，返回一个list josn">REDIS_SET</a>
+    <a onclick="resetPublicKey('REDIS_GET( key,db=0,service=xxxx );\n')"  name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow"
+       title="查询数据，返回一个list josn">REDIS_GET</a>
+    <a onclick="resetPublicKey('REDIS_DEL( key,db=0,service=xxxx );\n')"  name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow"
+       title="查询数据，返回一个list josn">REDIS_DEL</a>
+    <a onclick="resetPublicKey('[IN]')"  name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow"
+       title="例如 A [IN] B ,则判断A包含于B">[包含于]</a>
+    <a onclick="resetPublicKey('[NOT_IN]')"  name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow"
+       title="例如 A [NOT_IN] B ,则判断A不包含于B">[不包含于]</a>
+    <a onclick="resetPublicKey('[==]')" name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow"
+       title="例如 A [==] B ,则判断B是否等于A">[等于]</a>
+    <a onclick="resetPublicKey('[!=]')" name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow" title="例如 A [!=] B ,则判断B是否不等于A">[不等于]</a>
+    <a onclick="resetPublicKey('[>]')" name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow"
+       title="例如 A [>] B ,则判断A是否大于B">[大于]</a>
+    <a onclick="resetPublicKey('[>=] ')" name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow" title="例如 A [>=] B ,则判断A是否大于等于B">[大于等于]</a>
+    <a onclick="resetPublicKey('[<] ')" name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow"
+       title="例如 A [<] B ,则判断A是否小于B">[小于]</a>
+    <a onclick="resetPublicKey('[<=] ')" name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow" title="例如 A [<=] B ,则判断A是否小于等于B">[小于等于]</a>
+    <a onclick="resetPublicKey('{OR}')" name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow" title="或判断">[或判断]</a>
+    <a onclick="resetPublicKey('ASSERT(assertString);\n')" name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow" title="断言">断言</a>
+    <a onclick="resetPublicKey('ASSERT_STRUCT(assertString);\n')" name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow" title="断言">断言结构</a>
+</div>

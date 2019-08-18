@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="/static/AdminLTE/bower_components/jquery/dist/jquery.min.js"></script>
+    <script src="/static/frame_work/jQueryPOST.js"></script>
+    <script src="/static/js/jquery-cookie/jquery.cookie.js"></script>
+    <meta charset="utf-8">
+    <title>自动化测试平台后台管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script type="application/x-javascript"> addEventListener("load", function () {
+        setTimeout(hideURLbar, 0);
+    }, false);
+
+    function hideURLbar() {
+        window.scrollTo(0, 1);
+    }
+
+    </script>
+    <meta name="keywords"
+          content="Ensaluto Login Form Responsive Templates, Iphone Widget Template, Smartphone login forms,Login form, Widget Template, Responsive Templates, a Ipad 404 Templates, Flat Responsive Templates"/>
+    <link href="/static/AdminLTE/login/css/style.css" rel='stylesheet' type='text/css'/>
+    <!--webfonts-->
+    <!--//webfonts-->
+</head>
+<body>
+<h1 style="padding-top: 150px">自动化测试平台管理系统</h1>
+<div class="registration">
+    <div class="form-info">
+        <form action=""  method="post" target="id_iframe">
+             {% csrf_token %}
+            <h2>Login form</h2>
+            <p id="tip" style="float: left;color:#dd4b39;display: none;margin-bottom: 10px"></p>
+            <input type="text" class="text" id="loginName" name="loginName" placeholder="Username" required=""/>
+            <input type="password" id="passWord" name="passWord" class="Password" placeholder="Password" required=""/>
+            <div><input type="submit" id="submit"  value="Login"></div>
+            <!--<div class="roundedOne">
+                <input type="checkbox" value="None" id="roundedOne" name="check"/>
+                <label for="roundedOne"> </label>
+                <p>Remember me</p>
+            </div>-->
+        </form>
+        <iframe id="id_iframe" name="id_iframe" style="display: none;">
+        </iframe>
+        <div class="clear"></div>
+    </div>
+    <!--<div class="strip"><span>OR</span></div>
+    <ul class="bottom-sc-icons">
+        <li><a href="#" class="facebook"><img src="images/fb.png"/>Connect With Facebook</a></li>
+        <li><a href="#" class="twitter"><img src="images/tw.png"/>Connect With Twitter</a></li>
+    </ul>-->
+</div>
+<div class="copy-rights">
+    <p>Template by <a href="http://www.smallseashell.com" target="_blank"></a></p>
+</div>
+<script>
+
+    $("#loginName").bind("click",function () {
+        hiddenTip();
+    });
+
+    $("#passWord").bind("click",function () {
+        hiddenTip();
+    });
+
+    $("#submit").bind("click",function () {
+        var loginName = $("#loginName").val();
+        var passWord = $("#passWord").val();
+
+        if (loginName != "" && passWord != ""){
+            var htmlobj = $.ajax({url:"{% url "admin_doLogin" %}",type:"POST",async: false,data:{"loginName":loginName,"passWord":passWord}});
+            if(JSON.parse(htmlobj.responseText)["code"] == 10000){
+{#                {% if isSuperManager == 1 %}#}
+{#                window.location = "{% url 'admin_user_check' %}";#}
+{#                {% else %}#}
+                window.location = "{% url 'admin_home' %}";
+{#                {% endif %}#}
+
+            }else {
+                $("#tip").text(JSON.parse(htmlobj.responseText)["body"]);
+                $("#tip").css("display","block");
+            }
+        }
+    });
+
+    function hiddenTip() {
+        $("#tip").css("display","none");
+    }
+
+
+
+</script>
+</body>
+</html>

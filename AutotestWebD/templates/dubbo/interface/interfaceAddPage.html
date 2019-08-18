@@ -1,0 +1,1183 @@
+{% include 'InterfaceTest/head.html' %}
+<!-- Main content starts -->
+<style>
+.black_overlay {
+
+    display: none;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 1001;
+    -moz-opacity: 0.8;
+    opacity: .80;
+    filter: alpha(opacity=80);
+}
+
+    .white_content {
+        display: none;
+        position: absolute;
+        top: 15%;
+        left: 20%;
+        width: 60%;
+        height: auto;
+        border: 16px solid lightblue;
+        background-color: white;
+        z-index: 1002;
+
+    }
+
+</style>
+
+<div class="content">
+    <!-- Sidebar -->
+    {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Main bar -->
+    <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <div class="col-xs-12 form-group pull-right top_search">
+                    <h3>{{ text.pageTitle }}</h3>
+                  </div>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>{{ text.subPageTitle }}</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <div  data-parsley-validate class="form-horizontal form-label-left">
+                      <div>
+                        <h2>基本信息</h2>
+                        <br>
+                      </div>
+                        {% if option != "add" %}
+                            {% if option != "copy" %}
+                                <div class="form-group" >
+                                    <label class="control-label col-md-min-1" style="white-space: nowrap;margin-right: 2%">接口编号</label>
+                                    <div class="col-lg-8">
+                                        <input type="text" id="interfaceId" class="form-control col-md-7 col-xs-12" disabled value="">
+                                    </div>
+                                </div>
+                                {% else %}
+                            {% endif %}
+                        {% endif %}
+                      <div class="form-group">
+                        <label class="control-label col-md-min-1" style="white-space: nowrap;margin-right: 2%">接口名称 <span class="required">*</span>
+                        </label>
+                        <div class="col-lg-8">
+                          <input  id="name" placeholder="请输入接口名称" type="text"  required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-min-1" for="last-name" style="white-space: nowrap;margin-right: 2%">接口描述 <span class="required">*</span>
+                        </label>
+                        <div class="col-lg-8">
+                            <textarea type="text" id="describe" required="required" class="form-control col-md-7 col-xs-12 Fixed-width"
+                            placeholder="请输入接口描述"
+                            ></textarea>
+                        </div>
+                      </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-min-1" style="margin-left: 2%;white-space: nowrap;">{{ groupLevel1 }}</label>
+                            <div class="col-lg-2">
+                                <select class="form-control" id="businessLine" onchange="switchModule($(this).val())">
+                                    {% for business in businessLine %}
+                                        <option value="{{ business.id }}">{{ business.bussinessLineName }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <label class="control-label col-md-min-1" style="width:4.3%;white-space: nowrap;">{{ groupLevel2 }}</label>
+                            <div class="col-lg-2">
+                                <select class="form-control" id="modules">
+                                </select>
+                            </div>
+                            <label class="control-label col-md-min-1" style="width:5.3%;white-space: nowrap;">优先级</label>
+                            <div class="col-lg-2" style="width: 13.5%">
+                                <select class="form-control" id="caselevel">
+                                    <option value="0">高</option>
+                                    <option value="5" selected>中</option>
+                                    <option value="9">低</option>
+                                </select>
+                            </div>
+                        </div>
+                      <div>
+                        <h2>准备</h2>
+                      </div>
+                         <div class="form-group"  style="margin-left: 2%">
+                            <div  class="col-lg-8 dubboPrepareCss">
+                                <textarea type="text" onfocus="resetGlobalElement($(this),'')"
+                                  class="form-control Fixed-width"
+                                  id="commonValBeforeInput"
+                                  name="BeforeValInput"
+                                  placeholder="请输入通用变量">{{ varsPre }}</textarea>
+                            </div>
+                             <div  class="col-lg-8 dubboPrepareCss" id="commonValBeforeInputLinkDiv">
+                            </div>
+                        </div>
+
+                      <div>
+                        <h2>执行信息</h2>
+                      </div>
+                         <div class="form-group"  >
+                            <div  class="col-lg-8" style="width:85%;">
+                                <div id="interfaceTabContent" class="tab-content">
+                                    <div class="tab-pane fade active in" id="requestBody" style="margin-left: 10px;margin-right: 10px">
+                                        <div class="form-group" style="margin-left: 10%">
+                                            <div class="col-lg-2" style="width:16%;padding-right: 0px;padding-left: 0px" >
+                                                <select class="form-control" style="border-radius:0px;" id="SYSTEM_KEY" onchange="refreshDubboInfos()">
+                                                    {% for u in uri %}
+                                                    <option value="{{ u.uriKey }}" title="{{ u.uriKey }}">{{ u.alias }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div  class="col-lg-2" style="width:17%;padding-right: 0px;padding-left: 0px">
+                                                <button id="useCustomUriBtn" style="width:100%;padding-top: 6px;padding-bottom: 6px;background-color: #CCFFFF;border-color: #99FFFF" onclick="useCustomToggle()" type="button" class="btn btn-lg">
+                                                    <i class="fa fa-hand-o-left"></i>使用服务配置地址</button>
+                                                <input type="checkbox" id="useCustomUri" checked style="display:none;" />
+
+                                            </div>
+                                            <div class="col-lg-2" style="width:48%;padding-right: 0px;padding-left: 0px" >
+                                                <input type="text"  style="border-radius:0px;height: 38px;resize:none" id="customUri" class="form-control" placeholder="自定义请求地址,例:10.10.10.10:8888" title="请输入自定义请求地址,例:http://127.0.0.1"/>
+                                            </div>
+                                        </div>
+                                        <div class="form-group" style="margin-left: 10%">
+                                            <div class="col-lg-1" style="width:16%;padding-right: 0px;padding-left: 0px" >
+                                                <input onfocus="resetGlobalElement($(this),'')" type="text" class="form-control" style="border-top-left-radius:0em;border-bottom-left-radius:0em;display: none;" placeholder="超时时间(秒),默认20" id="timeout">
+                                                <select class="form-control" style="border-radius:0px;" id="ENVKEY_FOR_GETDUBBOINFO"  onchange="refreshDubboInfos()">
+                                                    <option value="" title="">选择环境</option>
+                                                    {% for hc in envConfList %}
+                                                    <option value="{{ hc.httpConfKey }}" title="{{ hc.httpConfKey }}">{{ hc.alias }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-2" style="width:35%;padding-right: 0px;padding-left: 0px" >
+                                                <input onfocus="hideFuzhuBar();inputServiceList($(this),$('#input_list_service'));" list="input_list_service" type="text" name="SERVICE_PATH" style="border-radius:0px;height: 38px;resize:none" id="SERVICE_PATH" class="form-control" placeholder="请输入服务的全路径,例:com.xxx.xxxx.XxxxxFacade"/>
+                                                <datalist id="input_list_service"></datalist>
+                                            </div>
+                                            <div class="col-lg-1" style="width:20%;padding-right: 0px;padding-left: 0px" >
+                                                <input onfocus="resetGlobalElement($(this),'');inputMethodList($(this),$('#input_list_method'));" list="input_list_method"  type="text" name="METHOD" style="border-radius:0px;height: 38px;resize:none" id="METHOD" class="form-control" placeholder="请输入接口,例:getSharePoolHouseInfo"/>
+                                                <datalist id="input_list_method"></datalist>
+                                            </div>
+                                            <div class="col-lg-1" style="width:10%;padding-right: 0px;padding-left: 0px" >
+                                                <select class="form-control" style="border-radius:0px;height: 38px;" id="encoding">
+                                                    <option value="gb18030">GB18030</option>
+                                                    <option value="utf8">UTF-8</option>
+                                                    <option value="gbk">GBK</option>
+                                                    <option value="gb2312">GB2312</option>
+                                                </select>
+                                            </div>
+
+                                        </div>
+                                         <div class="form-group dubboExeCss">
+                                                <div class="col-lg-12">
+
+                                                    <textarea type="text" class="form-control Fixed-width" style="width:100%;" onfocus="resetGlobalElement($(this),'')" name="URL" id="parameter" placeholder="请输入测试参数,多个参数使用半角逗号（,）间隔"></textarea>
+
+                                                </div>
+
+                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                      <div>
+                        <h2>断言恢复</h2>
+                      </div>
+                         <div class="form-group"  >
+                            <div  class="col-lg-8 dubboAssetCss">
+                                <textarea type="text" onfocus="resetGlobalElement($(this),'')"
+                                  name="commonAfterValInput"
+                                  class="form-control Fixed-width"
+                                  id="commonValAfterInput"
+                                  placeholder="请输入通用变量"></textarea>
+                            </div>
+                             <div  class="col-lg-8 dubboAssetCss" id="commonAfterValInputLinkDiv">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ln_solid" ></div>
+                    <div style="width:65%;" class="col-lg-12">
+
+                    {% if option == "add" %}
+                        <button style="float: right" type="button" class="btn btn-success btn-lg" onclick="saveOrDebug('save')">&nbsp;&nbsp;&nbsp;&nbsp;保存&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                    {% elif option == "check" %}
+                        {% if "edit" in permissionsList %}
+                            <a href="{% url 'dubboOperationInterface' %}?id={{ id }}&option=edit&addBy={{ addBy }}">
+                                <button style="float: right" type="button" class="btn btn-success btn-lg">&nbsp;&nbsp;&nbsp;&nbsp;编辑&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                            </a>
+                        {% endif %}
+                        {% if "copy" in permissionsList %}
+                            <a href="{% url 'dubboOperationInterface' %}?id={{ id }}&option=copy&addBy={{ addBy }}">
+                                <button style="float: right" type="button" class="btn btn-success btn-lg">&nbsp;&nbsp;&nbsp;&nbsp;拷贝&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                            </a>
+                        {% endif %}
+                    {% elif option == "copy" %}
+                            <a href="javascript:void(0);">
+                                <button style="float: right" type="button" class="btn btn-success btn-lg" onclick="saveOrDebug('save')">&nbsp;&nbsp;&nbsp;&nbsp;保存&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                            </a>
+                    {% elif option == "edit" %}
+                            {% if "edit" in permissionsList %}
+                                <button style="float: right" type="button" class="btn btn-success btn-lg" onclick="saveOrDebug('edit')">&nbsp;&nbsp;&nbsp;&nbsp;保存&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                            {% else %}
+                                    <button style="float: right" type="button" class="btn btn-success btn-lg" onclick="window.close()">&nbsp;&nbsp;&nbsp;&nbsp;关闭&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                            {% endif %}
+                    {% elif option == "check" %}
+                        <button style="float: right" type="button" class="btn btn-success btn-lg" onclick="window.close()">&nbsp;&nbsp;&nbsp;&nbsp;关闭&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                    {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+                <!--调试-->
+              <div class="x_panel">
+                  <div class="x_title">
+                    <h2>接口调试</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    {% include "config/debugBtnPage.html" %}
+                      <div id="debugResult" style="display: none">
+                        <table class="table table-striped table-bordered table-hover"
+                               style="table-layout:fixed;word-break:break-all;">
+                            <thead>
+                            <tr style="color: snow" bgcolor="#2A3F54">
+                                <th style="width:2%;">编号</th>
+                                <th style="width:3%;">测试结果</th>
+                                <th style="width:3%;">执行环境</th>
+                                <th style="width:8%;display: none;">预期结果</th>
+                                <th style="width:8%;">实际结果</th>
+                                <th style="width:15%;">断言结果</th>
+                                <th style="width:3%;">执行前耗时</th>
+                                <th style="width:3%;">执行耗时</th>
+                                <th style="width:3%;">执行后耗时</th>
+                                <th style="width:3%;">总耗时</th>
+                                <th style="width:5%;">操作</th>
+                            </tr>
+                            </thead>
+                            <tbody id="debugResultTbody">
+
+                            </tbody>
+                        </table>
+                    </div>
+                  </div>
+                </div>
+            </div>
+
+          </div>
+    </div>
+</div>
+<script type="text/javascript">
+var optionFromContext = "{{ option }}";
+var commonValBeforeInputEditor = null;
+var commonValAfterInputEditor = null;
+var parameterEditor = null;
+function initAllEditor(){
+    commonValBeforeInputEditor = CodeMirror.fromTextArea($("#commonValBeforeInput")[0], {
+        lineNumbers: true,
+        matchBrackets: true,
+        mode: "text/x-python",
+        indentUnit: 4,
+        indentWithTabs: false,
+    });
+    commonValBeforeInputEditor.on("focus",function(editor,change){
+        resetGlobalElement($("#commonValBeforeInput"),commonValBeforeInputEditor);
+    });
+    commonValBeforeInputEditor.on("blur",function(editor,change){
+{#        commonValBeforeInputEditor.setValue(commonValBeforeInputEditor.getValue().trim().replace("\t","    "));#}
+        renderDivByData(commonValBeforeInputEditor.getValue(),"commonValBeforeInputLinkDiv");
+    });
+
+    commonValAfterInputEditor = CodeMirror.fromTextArea($("#commonValAfterInput")[0], {
+        lineNumbers: true,
+        matchBrackets: true,
+        mode: "text/x-python",
+        indentUnit: 4,
+        indentWithTabs: false,
+    });
+    commonValAfterInputEditor.on("focus",function(editor,change){
+        resetGlobalElement($("#commonValAfterInput"),commonValAfterInputEditor);
+    });
+    commonValAfterInputEditor.on("blur",function(editor,change){
+{#        commonValAfterInputEditor.setValue(commonValAfterInputEditor.getValue().trim().replace("\t","    "));#}
+        renderDivByData(commonValAfterInputEditor.getValue(),"commonAfterValInputLinkDiv");
+    });
+
+    parameterEditor = CodeMirror.fromTextArea($("#parameter")[0], {
+        lineNumbers: true,
+        matchBrackets: true,
+        mode: "text/x-python",
+        indentUnit: 4,
+        indentWithTabs: false,
+    });
+    parameterEditor.on("focus",function(editor,change){
+        resetGlobalElement($("#parameter"),parameterEditor);
+    });
+    commonValBeforeInputEditor.setOption("extraKeys", {
+        Tab: newTab
+    });
+    commonValAfterInputEditor.setOption("extraKeys", {
+        Tab: newTab
+    });
+    parameterEditor.setOption("extraKeys", {
+        Tab: newTab
+    });
+    if( optionFromContext === "check"){
+        commonValBeforeInputEditor.setOption("readOnly", true);
+        commonValAfterInputEditor.setOption("readOnly", true);
+        parameterEditor.setOption("readOnly", true);
+    }
+}
+if("{{ text.subPageTitle }}" == "添加DUBBO接口"){
+    initAllEditor();
+}
+    $("#caselevel").select2();
+    function initJudgeVersion() {
+     if ("{{ request.session.version }}" !== "CurrentVersion"){
+         alert("现在为历史版本页面")
+     }
+    }
+    initJudgeVersion();
+
+    var businessLine_module_relation = $.ajax({
+                  url: '{% url 'bmRelation' %}' ,
+                  type: 'get',
+                  async: false,
+             });
+    try{
+        var bmDict = JSON.parse(businessLine_module_relation.responseText).body;
+    }catch (e){
+        alert(bmDict);
+        alert("获取业务线模块关联失败")
+    }
+    switchModule($("#businessLine").val());
+
+    function switchModule(blId) {
+        $("#modules option").remove();
+        var mdSelect = $("#modules");
+        for(var index = 0; index < bmDict[blId].length;index ++){
+            jQuery("<option></option>").val(bmDict[blId][index]["id"]).text(bmDict[blId][index]["moduleName"]).appendTo(mdSelect);
+        }
+        $("#businessLine").select2();
+        $("#modules").select2();
+    }
+    
+    var checkResultId = 0;
+    var data = {};
+
+    function toggleUrlEncode(element,tableName) {
+        if(element.text()=="原始"){
+            element.parent().parent().parent().parent().css("display","none");
+            element.parent().parent().parent().parent().next().css("display","block");
+            var tableData = tableDataTourlencode(tableName);
+            element.parent().parent().parent().parent().next().children().val(tableData);
+        }else {
+            element.parent().css("display","none");
+            element.parent().prev().attr("style","table-layout: fixed;");
+            tableInitList(tableName,urlencodeToList(element.next().val()));
+        }
+    }
+    
+    function formDataTabInit(jsonModel) {
+        for(var i = 0 ; i < jsonModel.length ; i++){
+            addTableTr($("#body-form-Tbody"));
+            var element = $("[name='body-form-Tr']").eq(i);
+            var elementKeyTd = element.children().eq(0).children();
+            var elementValueTd = element.children().eq(1).children();
+            elementKeyTd.eq(0).val(jsonModel[i]["key"]);
+            elementKeyTd.eq(1).val(jsonModel[i]["type"]);
+
+            formDataInput_file( element.children().eq(0).children().eq(1));
+            if(jsonModel[i]["type"] == "text"){
+                elementValueTd.eq(0).val(jsonModel[i]["value"]);
+            }else{
+                elementValueTd.eq(2).children().eq(1).val(jsonModel[i]["value"]["showPath"]);
+                elementValueTd.eq(2).children().eq(2).text(JSON.stringify(jsonModel[i]["value"]));
+            }
+
+        }
+    }
+    
+    function tableInit(elementName,jsonModel) {
+        if(JSON.stringify(jsonModel) != "{}") {
+            var i = 0;
+            for (var key in jsonModel) {
+                if (i == ($("[name='" + elementName + "Tr']").length - 1)) {
+                    addTableTr($("#" + elementName + "Tbody"));
+                }
+                var element = $("[name='" + elementName + "Tr']").eq(i).find('td');
+                var headerKey = element.eq(0).children();
+                var headerValue = element.eq(1).children().eq(0);
+                headerKey.val(key);
+                headerValue.val(jsonModel[key]);
+                if(key != "" || jsonModel[key] != ""){
+                     i++;
+                }
+            }
+            var htmlElement = $("[name='" + elementName + "Tr']");
+            for(var j=0;j<htmlElement.length;j++){
+                if(j > i){
+                    htmlElement.eq(j-1).remove();
+                }
+            }
+
+        }else {
+            var htmlElement = $("[name='" + elementName + "Tr']");
+            for(var i=0;i<htmlElement.length-1;i++){
+                htmlElement.eq(i).remove();
+            }
+        }
+    }
+
+
+     function tableInitList(elementName,urlencodeList) {
+        for(var i=0;i<urlencodeList.length;i++){
+             if (i == ($("[name='" + elementName + "Tr']").length - 1)) {
+                    addTableTr($("#" + elementName + "Tbody"));
+                }
+             var element = $("[name='" + elementName + "Tr']").eq(i).find('td');
+             var headerKey = element.eq(0).children();
+             var headerValue = element.eq(1).children().eq(0);
+            headerKey.val(urlencodeList[i][0]);
+            headerValue.val(urlencodeList[i][1]);
+        }
+    }
+
+    function loadFile(element) {
+        var file = element[0].files[0];
+        if (file.size > 1024*1024) {
+            alert("文件大小不能超过1M");
+            element.val('');
+            return false;
+        }
+        element.parent().next().val(element.val());
+        element.parent().next().next().text('');
+
+    }
+
+      function addTableTr(element) {
+                var lastElement = element.children().last();
+                var lastElementHtml = lastElement.prop("outerHTML");
+                lastElement.after(lastElementHtml);
+                tableStyle(element)
+            }
+
+          function tableStyle(element) {
+                var elementList = element.children();
+                for(var i=0;i<elementList.length;i++){
+                    var elementInput = elementList.eq(i).find("input");
+                    if(i != (elementList.length - 1)){
+                         elementInput.css("background-color", "");
+                         elementInput.attr("onclick", "");
+                         elementList.eq(i).find("button").css("display", "block");
+                         elementList.eq(i).find("select").attr("disabled", false);
+                         elementList.eq(i).find("select").css("background-color", "");
+                    }else {
+                         elementInput.css("background-color", "rgb(183, 186, 189)");
+                         elementList.eq(i).find("button").css("display", "none");
+                         elementList.eq(i).find("select").css("background-color", "rgb(183, 186, 189)");
+                         elementList.eq(i).find("select").attr("disabled", true);
+                    }
+                }
+            }
+
+
+    
+    function clickBodyRadio() {
+        var checkedRadio =  $("input[name='body']:checked").val();
+        if (checkedRadio == "form-data"){
+            $("#body-form-data").css("display","block");
+            $("#body-x-www-form-urlencoded").css("display","none");
+            $("#body-raw-select").css("display","none");
+            $("#body-raw").css("display","none");
+            $("#body-binary").css("display","none");
+        }else if(checkedRadio == "x-www-form-urlencoded"){
+            $("#body-x-www-form-urlencoded").css("display","block");
+            $("#body-form-data").css("display","none");
+            $("#body-raw-select").css("display","none");
+            $("#body-raw").css("display","none");
+            $("#body-binary").css("display","none");
+        }else if(checkedRadio == "raw"){
+            $("#body-raw-select").css("display","block");
+            $("#body-raw").css("display","block");
+
+            $("#body-x-www-form-urlencoded").css("display","none");
+            $("#body-form-data").css("display","none");
+            $("#body-binary").css("display","none");
+        }else {
+            $("#body-raw-select").css("display","none");
+            $("#body-raw").css("display","none");
+
+            $("#body-x-www-form-urlencoded").css("display","none");
+            $("#body-form-data").css("display","none");
+            $("#body-binary").css("display","block");
+        }
+
+    }
+
+    function formDataInput_file(element) {
+        if(element.val() == "text"){
+            element.parent().next().find("input").eq(0).css("display","block");
+            element.parent().next().find("div").css("display","none");
+            element.parent().next().find("button").css("margin-top","-32.5px")
+        }else{
+            element.parent().next().find("div").css("display","block");
+            element.parent().next().find("input").eq(0).css("display","none");
+            element.parent().next().find("button").css("margin-top","2px")
+        }
+    }
+    
+
+    function tableDataToDict(tabName) {
+        var tableTr = $("[name='"+tabName+"Tr']");
+        var tableJson = {};
+        if(tableTr.length!=0){
+            for(var i = 0;i < tableTr.length; i++){
+                if(tableTr.eq(i).find("td").eq(0).children().val().trim() == "" && tableTr.eq(i).find("td").eq(1).children().val().trim() == ""){
+                    continue;
+                }
+                tableJson[tableTr.eq(i).find("td").eq(0).children().val().trim()] = tableTr.eq(i).find("td").eq(1).children().val().trim()
+            }
+        }
+        return tableJson;
+    }
+
+    function tableDataTourlencode(tabName) {
+        var tableTr = $("[name='"+tabName+"Tr']");
+        var tableStr = "";
+        if(tableTr.length!=0){
+            for(var i = 0;i < tableTr.length; i++){
+                if(tableTr.eq(i).find("td").eq(0).children().val().trim() == "" && tableTr.eq(i).find("td").eq(1).children().val().trim() == ""){
+                    continue;
+                }
+                tableStr += tableTr.eq(i).find("td").eq(0).children().val().trim()+"="+tableTr.eq(i).find("td").eq(1).children().val().trim();
+                if(i != (tableTr.length-2)){
+                    tableStr += "&";
+                }
+            }
+        }
+        return tableStr;
+    }
+
+
+    function changeHeader(codeType) {
+        var headerJson = tableDataToDict("header");
+        if(codeType == "" || codeType == "Text"){
+            if(headerJson["Content-Type"]){
+                delete headerJson["Content-Type"];
+            }
+        }else{
+            headerJson["Content-Type"] = codeType
+        }
+        tableInit("header",headerJson);
+        $("[href='#headerTab']").text("HEADER("+($("[name='headerTr']").length-1)+")")
+
+    }
+    
+    function changeBodyTab(method) {
+        if(method == "GET" || method == "HEAD"){
+             $("[href='#bodyTab']").parent().css("display","none");
+             $("[href='#paramsTab']").click();
+        }else {
+             $("[href='#bodyTab']").parent().css("display","block");
+             $("[href='#bodyTab']").click();
+        }
+        
+    }
+
+    function changeSelectWidth(codeType) {
+        switch (codeType.val()) {
+            case "Text":
+                codeType.css("width","80px");
+                break;
+            case "text/plain":
+                codeType.css("width","150px");
+                break;
+            case "application/json":
+                codeType.css("width","200px");
+                break;
+            case "application/javascript":
+                codeType.css("width","260px");
+                break;
+            case "application/xml":
+                codeType.css("width","200px");
+                break;
+            case "text/xml":
+                codeType.css("width","150px");
+                break;
+            case "text/html":
+                codeType.css("width","150px");
+                break;
+        }
+    }
+
+    function urlencodeToList(str) {
+        if(str == ""){
+            return []
+        }
+        var strList = str.split("&");
+        var retList = [];
+        for (var s in strList){
+            var sp = strList[s].split("=");
+            if(sp.length == 1){
+                retList.push(["",sp[0]])
+            }else {
+                var strText = "";
+                for(var i = 1;i<sp.length;i++){
+                    if(i == sp.length -1){
+                        strText = strText + sp[i]
+                    }else {
+                        strText = strText+ sp[i]+"="
+                    }
+                }
+                retList.push([sp[0],strText])
+            }
+        }
+        return retList;
+    }
+
+    function urlencodeToDict(str) {
+        var strList = str.split("&");
+        var strdict = {};
+        for (var s in strList){
+            var sp = strList[s].split("=");
+            strdict[sp[0]] = sp[1]
+        }
+        return strdict;
+    }
+    function dataInit() {
+        $("#SYSTEM_KEY").select2();
+        $("#ENVKEY_FOR_GETDUBBOINFO").select2();
+        if ("{{ option }}" != "add") {
+            if ('{{ option }}' == "check" || '{{ option }}' == "caseCheck") {
+
+                $("[type='text']").attr("disabled", true);
+                $("select").attr("disabled", true);
+                $("input").attr("onclick", "");
+                $("input").attr("disabled", true);
+                $("[type='radio']").attr("disabled", true);
+
+            }
+            $("#interfaceTab").children().eq(0).attr("class","");
+            $("#interfaceTab").children().eq(0).attr("class","active");
+            $("#interfaceTabContent").children().eq(0).attr("class","tab-pane fade");
+            $("#interfaceTabContent").children().eq(0).attr("class","tab-pane fade active in");
+            var ajaxobj = $.ajax({
+                url: "{% url 'dubboGetInterfaceDataById' %}?id={{ id }}", type: "GET", success: function () {
+                    data = JSON.parse(JSON.parse(ajaxobj.responseText).body);
+                    $("#interfaceId").val(data["interfaceId"]);
+                    $("#name").val(data["title"]);
+                    $("#describe").val(data["casedesc"]);
+                    $("#businessLine").val(data["businessLineId_id"]).change();
+                    try {
+                        $("#modules").val(data["moduleId_id"]);
+                    }catch (e){
+
+                    }
+                    $("#modules").select2();
+//                    $("#sources").val(data["sourceId_id"]);
+                    $("#caselevel").children().each(function () {
+                        if ($(this).val() == data["caselevel"]) {
+                            $(this).attr("selected", true);
+                            $("#caselevel").select2();
+                        }
+                    });
+                    $("#timeout").val(data.timeout);
+                    $("#customUri").val(data["customUri"]);
+                    if (data["useCustomUri"] === 0){
+                        $("#useCustomUri").prop("checked",true);
+                        $("#useCustomUriBtn").html('<i class="fa fa-hand-o-left"></i>使用服务配置地址');
+                    }else {
+                        $("#useCustomUri").prop("checked",false);
+                        $("#useCustomUriBtn").html('使用自定义地址<i class="fa fa-hand-o-right"></i>');
+                    }
+                    $("#SYSTEM_KEY").val(data["dubboSystem"]);
+                    $("#SYSTEM_KEY").select2();
+
+                    $("#commonValBeforeInput").val(data["varsPre"]);
+                    renderDivByData(data["varsPre"],"commonValBeforeInputLinkDiv");
+
+
+                    $("#SERVICE_PATH").val(data["dubboService"]);
+                    $("#METHOD").val(data["dubboMethod"]);
+                    $("#parameter").val(data["dubboParams"]);
+                    $("#encoding").val(data["encoding"]);
+
+                    $("#commonValAfterInput").val(data["varsPost"]);
+                    renderDivByData(data["varsPost"],"commonAfterValInputLinkDiv");
+                    initAllEditor();
+                }
+            });
+
+        }
+    }
+
+    function result() {
+        window.close();
+        window.opener.location.href = '/InterfaceTest/HttpInterfaceCheck';
+    }
+
+    function moreEnv() {
+        if ($('#debugMoreEnv').css("display") == "none") {
+            $('#debugMoreEnv').css("display", "block");
+        } else {
+            $('#debugMoreEnv').css("display", "none");
+        }
+    }
+
+    function HTMLEncode(html) {
+        var temp = document.createElement("div");
+        (temp.textContent != null) ? (temp.textContent = html) : (temp.innerText = html);
+        var output = temp.innerHTML;
+        temp = null;
+        return output;
+    }
+
+    //查看接口调试详情
+    function checkDebugCase(id) {
+        $('#resultDetailstr' + id).toggle();
+        $('#resultDetails' + id).toggle();
+    }
+   //跳到事件的地方
+            function ShowDiv(element){
+                obshowdiv =  element;
+                offtop=obshowdiv.offset().top-155;
+                offleft=obshowdiv.offset().left;
+                obshowdiv.show();
+                docheight = $(document).height();
+                $('html,body').animate({scrollTop:offtop}, 200);
+            }
+
+    function clearResult() {
+        $("#debugResultTbody").children().remove();
+        checkResultId = 0;
+        $("#debugResult").hide();
+        $('#clearResult').hide();
+    }
+
+
+    function valLengthVerify(option) {
+
+        if(option!="debug"){
+            if ($("#name").val() == "") {
+                alert("接口名称不能为空");
+                return false;
+            }
+            if ($("#describe").val() == "") {
+                alert("接口描述不能为空");
+                return false;
+            }
+        }
+
+
+        if ($("#SERVICE_PATH").val() == "") {
+            alert("服务不能为空");
+            return false;
+        }
+        if ($("#METHOD").val() == "") {
+            alert("接口方法不能为空");
+            return false;
+        }
+
+        var result = true;
+        if ($("input[name='body']:checked").val() == "form-data") {
+            var fileInput = $("[name='body-form-Tr']");
+            fileInput.each(function () {
+                var thisElement = $(this).children().eq(0).children();
+                if (thisElement.css("background-color") != "rgb(183, 186, 189)") {
+                    if (thisElement.val() == "") {
+                        alert("form-data的Key值不能为空");
+                        result =  false;
+                    }
+                }
+            })
+        }
+        return result;
+
+
+
+    }
+    var thisTime = 0;
+    var debugFlag = false;
+
+    function saveOrDebug(option, httpConfKey) {
+        $("#publicKeyDiv").css("display","none");
+        if (valLengthVerify(option) == false){
+            return;
+        }
+        var formData = new FormData();
+        var interfaceId = '';
+        if ("{{ option }}" != "add") {
+            interfaceId = $("#interfaceId").val();
+        }
+        var title = $("#name").val();
+        var casedesc = $("#describe").val();
+        var businessLineId = $("#businessLine option:selected").val();
+        var moduleId = $("#modules option:selected").val();
+        if (!moduleId){
+            alert("请选择模块");
+            return
+        }
+        if($("#useCustomUri").prop("checked")){
+            var useCustomUri = 0;
+        }else{
+            var useCustomUri = 1;
+        }
+
+        var customUri = $("#customUri").val();
+        var caselevel = $("#caselevel option:selected").val();
+        var varsPre = commonValBeforeInputEditor.getValue();
+        var timeout = $("#timeout").val() != "" ? $("#timeout").val() : 20;
+
+        var system = $("#SYSTEM_KEY").val();
+        var service = $("#SERVICE_PATH").val();
+        var method = $("#METHOD").val();
+        var encoding = $("#encoding").val();
+        var params = parameterEditor.getValue();
+        var varsPost = commonValAfterInputEditor.getValue();
+
+        var interfaceData = {
+            interfaceId: interfaceId,
+            title: title,
+            casedesc: casedesc,
+            businessLineId_id: businessLineId,
+            moduleId_id: moduleId,
+            caselevel: caselevel,
+            timeout: timeout,
+            varsPre: varsPre,
+            dubboSystem: system,
+            dubboService: service,
+            dubboMethod: method,
+            dubboParams: params,
+            encoding: encoding,
+            varsPost: varsPost,
+            useCustomUri:useCustomUri,
+            customUri:customUri
+        };
+
+        if (option == "save") {
+            formData.append("interfaceData",JSON.stringify(interfaceData));
+             var interfaceAdd = $.ajax({
+                  url: '{% url 'dubboInterfaceDoAdd' %}' ,
+                  type: 'POST',
+                  data: formData,
+                  async: false,
+                  cache: false,
+                  contentType: false,
+                  processData: false
+             });
+
+
+            var interfaceAddJson = JSON.parse(interfaceAdd.responseText);
+            if (interfaceAddJson["code"] == "10000") {
+                if ("{{ option }}" == 'copy') {
+                    window.close();
+                    window.opener.location.reload();
+                } else {
+                    location.href = '{% url 'dubboInterfaceList' %}';
+                }
+
+            } else {
+                alert(interfaceAddJson["message"]);
+            }
+        }
+        else if (option == "debug") {
+            thisTime = 0;
+            debugFlag = true;
+            checkResultId++;
+            interfaceData.httpConfKey_id = httpConfKey;
+            $("[name='debug']").attr("disabled", true);
+            formData.append("interfaceData",JSON.stringify(interfaceData))
+            var interfaceDebugAdd = $.ajax({
+                 url: '{% url 'dubboInterfaceDebugAdd' %}' ,
+                  type: 'POST',
+                  data: formData,
+                  async: false,
+                  cache: false,
+                  contentType: false,
+                  processData: false
+
+            });
+
+            var debugAddJson = JSON.parse(interfaceDebugAdd.responseText);
+            var runing = ' <tr><td  colspan="10" align="center" style="font-size: 30px" >获取结果中...</td></tr>';
+            $("#debugResultTbody").html(runing +  $("#debugResultTbody").html());
+
+            $("#debugResult").show();
+            $("#clearResult").show();
+            if (debugAddJson["code"] == "10000") {
+                $.ajax({
+                    url: "{% url 'dubboSendDebugInterfaceTcpMsg' %}",
+                    async: true,
+                    data: debugAddJson,
+                    type: "POST",
+                    success: function () {
+                        function debugResult() {
+                            var url = "{% url 'dubboGetDebugResult' %}";
+                            var getDebugResult = $.ajax({
+                                url: url, async: true,
+                                type:"POST",
+                                data: debugAddJson,
+                                success: function () {
+                                    var msg = 0;
+                                    var jsonValue = getDebugResult.responseText;
+                                    try{
+                                         var returnMsg = JSON.parse(jsonValue);
+                                    }catch (err) {
+                                        msg = 10000
+                                    }
+                                    if (msg ==10000) {
+
+                                        if (jsonValue.url == "/UserLogin") {
+                                            location.href = jsonValue.url;
+                                            result();
+                                        }
+
+                                        try {
+                                            $("#debugResultTbody").children().first().remove();
+                                            $("#debugResultTbody").html(jsonValue + $("#debugResultTbody").html());
+                                            var debugId = $("[name='debugId']");
+                                            var debugBtnCheckDetails = $("[name='debugBtnCheckDetails']");
+                                            var resultDetails = $("[name='resultDetails']");
+                                            for (var i = 0; i< debugId.length;i++){
+                                                debugBtnCheckDetails.eq(i).attr("onclick","checkDebugCase('"+(i+1)+"');ShowDiv($(this))");
+                                                resultDetails.eq(i).attr("id","resultDetailstr"+(i+1));
+                                            }
+                                            debugId.first().text(debugId.length);
+                                            var HTTPRequestSpan = JSON.parse($("[name='HTTPRequestSpan']").first().text());
+                                            var HTTPRequestText = "";
+
+                                            var HTTPBodyContent = $("[name='HTTPBodyContent']").first().text();
+                                            var HTTPURL = $("[name='HTTPURL']").first().text();
+                                            var HTTPParams = $("[name='HTTPParams']").first().text();
+                                            var HTTPMethod = $("[name='HTTPMethod']").first().text();
+                                            if(HTTPParams == "未设置参数"){
+                                                HTTPRequestText = HTTPMethod+ " " + HTTPURL+" HTTP/1.1";
+                                            }else{
+                                                HTTPRequestText = HTTPMethod + " " + HTTPURL+"?"+HTTPParams+" HTTP/1.1";
+                                            }
+
+
+
+                                            for(var HTTPRequestKey in HTTPRequestSpan){
+                                                HTTPRequestText = HTTPRequestText +"\n"+HTTPRequestKey+":"+HTTPRequestSpan[HTTPRequestKey];
+                                            }
+                                            if(HTTPBodyContent != ""){
+                                                HTTPRequestText = HTTPRequestText + "\n\n"+HTTPBodyContent;
+                                            }
+
+                                             $("[name='HTTPRequestText']").first().text(HTTPRequestText);
+
+
+                                            var HTTPResultSpan = JSON.parse($("[name='HTTPResultSpan']").first().text());
+                                            var HTTPActualText = "HTTP/1.1 " + HTTPResultSpan["reason"] ;
+
+                                            for (var HTTPResultKey in HTTPResultSpan["headers"]) {
+                                                HTTPResultText = HTTPResultText + "\n" + HTTPResultKey + ":" + HTTPResultSpan["headers"][HTTPResultKey];
+                                            }
+                                            if (HTTPResultSpan["content"] != "") {
+                                                HTTPResultText = HTTPResultText + "\n\n" + HTTPResultSpan["content"];
+                                                HTTPActualText = HTTPResultSpan["content"];
+                                            }
+                                            $("[name='HTTPActualText']").first().text(HTTPActualText);
+                                            $("[name='HTTPResultText']").first().text(HTTPResultText);
+
+                                        } catch (err) {
+                                            $("[name='HTTPActualText']").first().text($("[name='HTTPResultSpan']").first().text());
+                                            $("[name='HTTPResultText']").first().text($("[name='HTTPResultSpan']").first().text());
+                                        }
+
+                                        $("[name='debug']").attr("disabled", false);
+                                    } else if (returnMsg["code"] == 16002) {
+                                        thisTime += 1;
+                                        $("#debugResultTbody").children().first().children().first().html("获取结果中...已执行"+thisTime+
+                                            "秒&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击<button class=\"btn btn-danger\" onclick=\"cancelDebug()\">取消</button>调试"
+                                        );
+                                        if(debugFlag){
+                                            debugResult();
+                                        }else {
+                                             $("#debugResultTbody").children().first().remove();
+                                             $("#debugResultTbody").html( '<tr><td name=\'debugId\'>' + checkResultId + '</td><td colspan="9" align="center"  style="font-size: 30px" >调试已取消</td></tr>' + $("#debugResultTbody").html());
+                                        }
+                                    } else {
+                                         $("#debugResultTbody").children().first().remove();
+                                        $("#debugResultTbody").html('<tr><td name=\'debugId\'>' + checkResultId + '</td><td colspan="10" align="center"  style="font-size: 30px" >结果获取失败，请联系管理员&nbsp;&nbsp;errorCode：' + returnMsg["code"] + '</td></tr>' + $("#debugResultTbody").html());
+                                        $("[name='debug']").attr("disabled", false);
+                                    }
+
+                                },
+                                error: function () {
+                                    thisTime = 0;
+                                    debugFlag = false;
+                                    $("#debugResultTbody").children().first().remove();
+                                    $("#debugResultTbody").html('<tr><td name=\'debugId\' >' + checkResultId + '</td>' + checkResultId + '<td colspan="10" align="center"  style="font-size: 30px" >结果获取失败，服务器异常。'+jsonValue+'</td></tr>' +  $("#debugResultTbody").html());
+                                    $("[name='debug']").attr("disabled", false);
+                                }
+                            });
+
+                        }
+
+                        debugResult();
+                    },
+                    error:function () {
+                         $("#debugResultTbody").children().first().remove();
+                                    $("#debugResultTbody").html('<tr><td> name=\'debugId\'' + checkResultId + '</td>' + checkResultId + '<td colspan="10" align="center"  style="font-size: 30px" >结果获取失败，服务器异常。'+jsonValue+'</td></tr>' +  $("#debugResultTbody").html());
+                                    $("[name='debug']").attr("disabled", false);
+                    }
+
+                });
+            } else {
+                 $("#debugResultTbody").children().first().remove();
+                $("#debugResultTbody").html( '<tr><td name=\'debugId\'>' + checkResultId + '</td><td colspan="9" align="center"  style="font-size: 30px" >' + debugAddJson['body'] + '</td></tr>' + $("#debugResultTbody").html());
+                $("[name='debug']").attr("disabled", false);
+            }
+            hideFuzhuBar();
+            return;
+        }
+        else if (option == "edit") {
+            var delTip = JSON.parse($.ajax({url:"{% url 'dubbo_InterfaceDelTip' %}?id="+data["id"],async:false}).responseText).body;
+            if(delTip.num > 0){
+                if(!confirm("将影响"+delTip.num+"条用例，编号为："+delTip.list)) {
+                    return
+                }
+            }
+
+                interfaceData.id = data["id"];
+                interfaceData.addBy = data["addBy_id"];
+                formData.append("interfaceData",JSON.stringify(interfaceData));
+                formData.append("id",data["id"]);
+
+                 var saveEditAjax = $.ajax({
+                      url: '{% url 'dubboInterfaceSaveEdit' %}' ,
+                      type: 'POST',
+                      data: formData,
+                      async: false,
+                      cache: false,
+                      contentType: false,
+                      processData: false
+                 });
+
+                if (JSON.parse(saveEditAjax.responseText)["code"] == 10000) {
+                    if(confirm("保存成功，是否退出编辑？")) {
+                        window.close();
+                        window.opener.location.reload();
+                    }
+                } else {
+                    alert(JSON.parse(saveEditAjax.responseText)["message"])
+                }
+            }
+
+    }
+   function cancelDebug() {
+        thisTime = 0;
+        debugFlag = false;
+        $("[name='debug']").attr("disabled", false);
+    }
+    function pageInit() {
+        dataInit();
+    }
+
+    pageInit();
+    window.onload = function () {
+        $("#surprise").click();
+        $("#surprise2").click();
+    };
+
+     window.onscroll = function () {
+        $("#publicKeyDiv").css("top", $(document).scrollTop() )
+     }
+    //        htmlobj=$.ajax({url:"/InterfaceTest/HttpInterface/thread",async:false,type:"POST"});
+    //        $("#ttt").html(1111111+htmlobj.responseText);
+    //DubboInfos 初始
+    var dubboServiceList = []
+    var dubboServiceDict = {}
+    function refreshDubboInfos(){
+        var system = $("#SYSTEM_KEY").val();
+//        var service = $("#SERVICE_PATH").val();
+//        var method = $("#METHOD").val();
+        var envKey = $("#ENVKEY_FOR_GETDUBBOINFO").val();
+        if (envKey == "") {
+            dubboServiceList = [];
+            dubboServiceDict = {};
+            return;
+        }
+        var ajaxResp = $.ajax({
+                      url: '{% url 'dubboGetServices' %}?env='+envKey+'&system='+system+'' ,
+                      type: 'GET',
+                      async: false
+                 });
+        console.log(ajaxResp.responseText);
+        if (JSON.parse(ajaxResp.responseText)["code"] == 10000) {
+            dubboServiceList = JSON.parse(ajaxResp.responseText)["body"]["serviceList"];
+            dubboServiceDict = JSON.parse(ajaxResp.responseText)["body"]["serviceDict"];
+//            alert(JSON.stringify(dubboServiceList));
+        } else {
+            alert(JSON.parse(ajaxResp.responseText)["message"]);
+        }
+    }
+
+    //Service自动联想
+        function inputServiceList(inputObj,listObj){
+            var valueList = dubboServiceList;
+            inputObj.bind('input propertychange', function() {
+                var key = inputObj.val();
+                var valueLen = valueList.length;
+                var html = "";
+                for(var i=0; i<valueLen; i++){
+                    if(valueList[i].indexOf(key)!=-1){
+                        //不等于-1表示该字符串包含子字符串。
+                      html += '<option value="'+ valueList[i] +'"></option>';
+                    }
+                }
+                listObj.html(html);
+            });
+        }
+        function inputMethodList(inputObj,listObj){
+            var tmpservice = $("#SERVICE_PATH").val();
+            var valueList = dubboServiceDict[tmpservice];
+//            alert(JSON.stringify(valueList));
+            inputObj.bind('input propertychange', function() {
+                var key = inputObj.val();
+                var valueLen = valueList.length;
+                var html = "";
+                for(var i=0; i<valueLen; i++){
+                    if(valueList[i].indexOf(key)!=-1){
+                        //不等于-1表示该字符串包含子字符串。
+                      html += '<option value="'+ valueList[i] +'"></option>';
+                    }
+                }
+                listObj.html(html);
+            });
+        }
+
+    function useCustomToggle() {
+        if ($("#useCustomUri").prop("checked")){
+            $("#useCustomUri").prop("checked",false);
+            $("#useCustomUriBtn").html('使用自定义地址<i class="fa fa-hand-o-right"></i>');
+        }else {
+            $("#useCustomUri").prop("checked",true);
+            $("#useCustomUriBtn").html('<i class="fa fa-hand-o-left"></i>使用服务配置地址');
+        }
+    }
+</script>
+{% include 'fuzhu_page/publicKeyMain.html' %}
+<!-- Content ends -->
+{% include 'InterfaceTest/foot.html' %}

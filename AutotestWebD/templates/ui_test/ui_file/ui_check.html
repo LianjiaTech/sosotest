@@ -1,0 +1,608 @@
+{% include 'InterfaceTest/head.html' %}
+<!-- Main content starts -->
+<script type="text/javascript">
+    var showScreeShotIdList = []
+
+    function toggleSrceeshotShow(spanScreenShotId) {
+        console.log("toggleSrceeshotShowStart");
+        console.log("spanScreenShotId");
+        console.log(showScreeShotIdList);
+
+        if ($("#" + spanScreenShotId).css("display") == 'none') {
+            console.log("none to block add");
+
+            $("#" + spanScreenShotId).css("display", "block");
+            if (showScreeShotIdList.indexOf(spanScreenShotId) > -1) {
+                //存在此元素
+            } else {
+                showScreeShotIdList.push(spanScreenShotId);
+            }
+        } else if ($("#" + spanScreenShotId).css("display") == 'block') {
+            console.log("block to none delete");
+            $("#" + spanScreenShotId).css("display", "none");
+            for (var i = 0; i < showScreeShotIdList.length; i++) {
+                if (showScreeShotIdList[i] === spanScreenShotId) {
+                    delete showScreeShotIdList[i];
+                }
+            }
+
+        }
+        console.log(showScreeShotIdList);
+        console.log("toggleSrceeshotShowEnd");
+    }
+
+    function showSceenShotSpan(spanScreenShotId) {
+//        console.log(showScreeShotIdList.indexOf(spanScreenShotId) > -1)
+        if (showScreeShotIdList.indexOf(spanScreenShotId) > -1) {
+            $("#" + spanScreenShotId).css("display", "block");
+        }
+    }
+
+    function cancelTask(execUiTaskId) {
+        res = window.confirm("确定取消执行中的任务" + execUiTaskId + "么？取消后将无法生成测试报告！");
+        if (res) {
+            //取消任务
+            htmlobj = $.ajax({
+                url: "{% url 'cancelUiTask' %}?id=" + execUiTaskId,
+                async: false,
+                type: "GET",
+                success: function (responseText) {
+                    if (JSON.parse(responseText)["code"] == 10000) {
+                    } else {
+                        alert(JSON.parse(responseText)["msg"]);
+                    }
+                }
+            });
+        }
+    }
+</script>
+<div class="content">
+    <!-- Sidebar -->
+    {% include 'InterfaceTest/HTTPMenu.html' %}    <!-- Sidebar ends -->
+    <!-- Main bar -->
+    <!-- Main bar -->
+    <div class="right_col" role="main" style="min-height: 1657px;">
+        <div class="">
+            <div class="page-title">
+                <div class="title_left">
+                    <div class="col-xs-12 form-group pull-right top_search">
+                        <h3>{{ text.pageTitle }}</h3>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>信息查看</h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                </li>
+
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+
+                            <div class="form-group">
+                                <div id="checkOption">
+                                    <span class="cat-text"
+                                          style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>
+                                </div>
+
+
+                                {#                        <span class="tag"><span>sales&nbsp;&nbsp;</span><a href="#" title="Removing tag">x</a></span>#}
+                                {#                        <span class="tag"><span>sales&nbsp;&nbsp;</span><a href="#" title="Removing tag">x</a></span>#}
+                            </div>
+                            <br>
+                            <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                                <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist" style="margin-bottom: 0px">
+                                    <li role="presentation" class="active"><a href="#caseFounder" role="tab"
+                                                                              data-toggle="tab" aria-expanded="true">接口创建人</a>
+                                    </li>
+                                    {#                          <li role="presentation" class=""><a href="#caseId" role="tab" data-toggle="tab" aria-expanded="true">接口编号</a>#}
+                                    {#                        </li>#}
+                                    {#                        <li role="presentation" class=""><a href="#caseName" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">接口名称</a>#}
+                                    {#                        </li>#}
+                                    {#                        <li role="presentation" class=""><a href="#caseDescribe" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">接口描述</a>#}
+                                    {#                        </li>#}
+                                    {#                        <li role="presentation" class=""><a href="#caseInterFace" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">接口URL</a>#}
+                                    {#                        </li>#}
+                                    {##}
+                                    {#                          <li class="dropdown">#}
+                                    {#                            <a href="#"  class="dropdown-toggle" data-toggle="dropdown"> {{ groupLevel1 }} <b class="caret"></b></a>#}
+                                    {#                            <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1">#}
+                                    {#                                 <li><a href="#businessLineTab" id="businessLineCheckTab"  tabindex="-1" name="tabExecResult" data-toggle="tab" onclick="editBusinessLineCheckTab('')">&nbsp;</a></li>#}
+                                    {#                                {% for bl in checkBusinessLine %}#}
+                                    {#                                    <li><a href="#{{ bl.bussinessLineName }}tab"  tabindex="-1" name="tabExecResult" data-toggle="tab" onclick="editBusinessLineCheckTab('{{ bl.bussinessLineName }}')">{{ bl.bussinessLineName }}</a></li>#}
+                                    {#                                {% endfor %}#}
+                                    {#                            </ul>#}
+                                    {#                        </li>#}
+                                    {#                        <li role="presentation" class=""><a href="#moduleTab" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">{{ groupLevel2 }}</a>#}
+                                    {#                        </li>#}
+                                </ul>
+                                <div id="myTabContent" class="tab-content">
+                                    <div role="tabpanel" class="tab-pane fade active in" id="caseFounder"
+                                         aria-labelledby="home-tab">
+                                        <div class="form-group">
+                                            <div class="col-lg-8">
+                                                <input type="text" class="form-control" id="caseFounderInput"
+                                                       onkeypress="EnterPress(event)" placeholder="请输入接口创建人">
+                                            </div>
+                                            {#                              <div class="col-lg-4" >#}
+                                            {#                                  <span style="font-size: 15px;margin-top: 5px">快捷条件: </span>#}
+                                            {#                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="inputVal('all')">所有</button>#}
+                                            {#                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="inputVal('{{ userName }}')">{{ userName }}</button>#}
+                                            {#                              <button id="hover-a" type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="createPeople(0)">其他</button>#}
+                                            {#                                  <div id="names" style="margin-top: 10px">#}
+                                            {#                                </div>#}
+                                            {#                                  </div>#}
+
+                                        </div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="caseName"
+                                         aria-labelledby="profile-tab">
+                                        <div class="form-group">
+                                            <div class="col-lg-8">
+                                                <input type="text" class="form-control" id="caseNameInput"
+                                                       onkeypress="EnterPress(event)" placeholder="请输入接口名称">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="caseId"
+                                         aria-labelledby="profile-tab">
+                                        <div class="form-group">
+                                            <div class="col-lg-8">
+                                                <input type="text" class="form-control" id="interfaceIdInput"
+                                                       onkeypress="EnterPress(event)" placeholder="请输入接口编号">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="caseDescribe"
+                                         aria-labelledby="profile-tab">
+                                        <div class="form-group">
+                                            <div class="col-lg-8">
+                                                <input type="text" class="form-control" id="caseDescribeInput"
+                                                       onkeypress="EnterPress(event)" placeholder="请输入接口描述">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="caseInterFace"
+                                         aria-labelledby="profile-tab">
+                                        <div class="form-group">
+                                            <div class="col-lg-8">
+                                                <input type="text" class="form-control" id="caseInterFaceInput"
+                                                       onkeypress="EnterPress(event)" placeholder="请输入接口URL">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div role="tabpanel" class="tab-pane fade" id="businessLineTab"
+                                         aria-labelledby="profile-tab">
+                                        <div class="form-group">
+                                            <div class="col-lg-8">
+                                                <input type="text" class="form-control" onkeypress="EnterPress(event)"
+                                                       placeholder="请选择{{ groupLevel1 }}" disabled>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% for bl in checkBusinessLine %}
+                                        <div role="tabpanel" class="tab-pane fade" id="{{ bl.bussinessLineName }}tab"
+                                             aria-labelledby="profile-tab">
+                                            <div class="form-group">
+                                                <div class="col-lg-8">
+                                                    <input type="text" class="form-control"
+                                                           onkeypress="EnterPress(event)"
+                                                           value="{{ bl.bussinessLineName }}" disabled>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% endfor %}
+                                    <div role="tabpanel" class="tab-pane fade" id="moduleTab"
+                                         aria-labelledby="profile-tab">
+                                        <div class="form-group">
+                                            <div class="col-lg-3">
+                                                <select class="form-control"
+                                                        onchange="$('#caseModuleInput').val($(this).val()).change()">
+                                                    <option>&nbsp;</option>
+                                                    {% for m in checkModules %}
+                                                        <option>{{ m.moduleName }}</option>
+                                                    {% endfor %}
+                                                </select>
+                                            </div>
+                                            <div class="col-lg-5">
+                                                <input type="text" class="form-control" id="caseModuleInput"
+                                                       onchange="editCheckVal()" onkeypress="EnterPress(event)"
+                                                       placeholder="请选择或输入{{ groupLevel2 }}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div id="taskList" class="form-group"></div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    var checkVals = {
+        "caseFounder": "{{ request.session.userName }}",
+        "interfaceId": "",
+        "title": "",
+        "casedesc": "",
+        "url": "",
+        "module": "",
+        "businessLine": ""
+    };
+    var page = {{ page }};
+    var clock;
+
+    function clearChecked() {
+        $("#caseFounderInput").val('');
+        $("#interfaceIdInput").val('');
+        $("#caseNameInput").val('');
+        $("#caseDescribeInput").val('');
+        $("#caseInterFaceInput").val('');
+        $("#caseModuleInput").val('');
+        $("#businessLineCheckTab").click();
+        editCheckVal();
+    }
+
+    function editBusinessLineCheckTab(name) {
+        checkVals["businessLine"] = name;
+        editCheckVal();
+    }
+
+    function editCheckVal() {
+
+        //接口创建人
+        if ($("#caseFounderInput").val() == '') {
+            checkVals['caseFounder'] = "{{ userName }}";
+        } else if ($("#caseFounderInput").val() == 'all') {
+            checkVals['caseFounder'] = '';
+        } else {
+            checkVals['caseFounder'] = $("#caseFounderInput").val();
+        }
+
+        //接口Id
+        if ($("#interfaceIdInput").val() == '') {
+            checkVals['interfaceId'] = '';
+        } else {
+            checkVals['interfaceId'] = $("#interfaceIdInput").val();
+        }
+
+        //接口名称
+        if ($("#caseNameInput").val() == '') {
+            checkVals['title'] = '';
+        } else {
+            checkVals['title'] = $("#caseNameInput").val();
+        }
+
+        //接口描述
+        if ($("#caseDescribeInput").val() == '') {
+            checkVals['casedesc'] = '';
+        } else {
+            checkVals['casedesc'] = $("#caseDescribeInput").val();
+        }
+
+        //服务
+        if ($("#caseInterFaceInput").val() == '') {
+            checkVals['url'] = '';
+        } else {
+            checkVals['url'] = $("#caseInterFaceInput").val();
+        }
+
+        if ($("#caseModuleInput").val() == '') {
+            checkVals['module'] = '';
+        } else {
+            checkVals['module'] = $("#caseModuleInput").val();
+        }
+        selected();
+    }
+
+
+    function inputVal(val) {
+        $("#caseFounderInput").val(val);
+        editCheckVal();
+    }
+
+    function setState(id) {
+        clearTimeout(clock);
+        clock = setTimeout(function () {
+            setTimeState(id);
+            {#              console.log('click');#}
+        }, 300);
+    }
+
+    function setDblClickState(id) {
+        clearTimeout(clock);
+        {#        console.log('dbclick');#}
+    }
+
+    function setTimeState(id) {
+
+
+        var Name = $('#name' + id).text();
+        //删除
+        if (confirm("确定要删除接口\"" + Name + "\"吗？")) {
+            var delTip = JSON.parse($.ajax({
+                url: "{% url 'HTTP_InterfaceDelTip' %}?id=" + id,
+                async: false
+            }).responseText).body;
+            if (delTip.num > 0) {
+                if (!confirm("将影响" + delTip.num + "条用例，编号为：" + delTip.list)) {
+                    return
+                }
+            }
+            var delInterface = $.ajax({url: "{% url 'HTTP_InterfaceDel' %}?id=" + id, async: false});
+            if (JSON.parse(delInterface.responseText)["code"] == 10000) {
+                location.reload();
+            } else {
+                alert("删除失败，请重试！");
+            }
+        }
+    }
+
+    function checkOptions() {
+
+        var htmls = ' <span class="cat-text"style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>';
+
+        for (var item in checkVals) {
+            if (checkVals[item] != '' && typeof(checkVals[item]) != 'undefined') {
+                var key = '';
+                switch (item) {
+                    case "caseFounder":
+                        key = '接口创建人';
+                        break;
+                    case "interfaceId":
+                        key = '接口编号';
+                        break;
+                    case "title":
+                        key = '接口名称';
+                        break;
+                    case "casedesc":
+                        key = '接口描述';
+                        break;
+                    case "url":
+                        key = '接口URL';
+                        break;
+                    case "module":
+                        key = '{{ groupLevel2 }}';
+                        break;
+                    case "businessLine":
+                        key = "{{ groupLevel1 }}";
+                        break;
+                }
+                htmls = htmls + '<span class="tag"><span>' + key + '：' + checkVals[item] + '&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delCheckOptions(\'' + item + '\')">x</a></span> '
+
+            }
+        }
+        htmls = htmls + '<span class="tag" style="float: right;background-color: #ff7575"><span>默认筛选&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="clearChecked()">x</a></span>';
+        $('#checkOption').html(htmls);
+    }
+
+
+    function EnterPress(event) { //传入 event
+        var e = event || window.event;
+        if (e.keyCode == 13) {
+            editCheckVal();
+        }
+    }
+
+    function delCheckOptions(key) {
+        switch (key) {
+            case "caseFounder":
+                $("#caseFounderInput").val('all');
+                break;
+            case "interfaceId":
+                $("#interfaceIdInput").val('');
+                break;
+            case "title":
+                $("#caseNameInput").val('');
+                break;
+            case "casedesc":
+                $("#caseDescribeInput").val('');
+                break;
+            case "url":
+                $("#caseInterFaceInput").val('');
+                break;
+            case "module":
+                $("#caseModuleInput").val('');
+                break;
+            case "businessLine":
+                $("#businessLineCheckTab").click();
+                break;
+        }
+
+        editCheckVal();
+    }
+
+    function pageCall(pageNum) {
+        page = pageNum;
+        selected();
+    }
+
+    //弹出隐藏层
+    function ShowDiv() {
+        obshowdiv = $("#taskList");
+        offtop = obshowdiv.offset().top - 60;
+        offleft = obshowdiv.offset().left;
+        obshowdiv.show();
+        docheight = $(document).height();
+        $('html,body').animate({scrollTop: offtop}, 200);
+    };
+
+
+    //创建时间排序
+    var orderBy = "i.modTime desc , i.id desc";
+    var addTimeFlag = '-1';
+    var interfaceNameFlag = "-1";
+
+    function orderByName() {
+        if (interfaceNameFlag == '-1' || interfaceNameFlag == '0') {
+            interfaceNameFlag = '1';
+            addTimeFlag = '-1';
+            modTimeFlag = '-1';
+            //用例名称正序查
+            orderBy = 'i.title asc';
+        } else if (interfaceNameFlag == '1') {
+            interfaceNameFlag = '0';
+            //用例名称倒序查
+            orderBy = 'i.title desc';
+        }
+        selected();
+    }
+
+    function orderByAddTime() {
+        if (addTimeFlag == '-1' || addTimeFlag == '0') {
+            addTimeFlag = '1';
+            modTimeFlag = '-1';
+            interfaceNameFlag = "-1";
+            //创建时间正序查
+            orderBy = 'i.id asc';
+        } else if (addTimeFlag == '1') {
+            addTimeFlag = '0';
+            //创建时间倒序查
+            orderBy = 'i.id desc';
+        }
+        selected();
+    }
+
+    var modTimeFlag = '-1';
+
+    //修改时间排序
+    function orderByModTime() {
+        if (modTimeFlag == '-1' || modTimeFlag == '0') {
+            modTimeFlag = '1';
+            addTimeFlag = '-1';
+            interfaceNameFlag = "-1";
+            //修改时间正序查
+            orderBy = 'i.modTime asc , i.id asc';
+        } else if (modTimeFlag == '1') {
+            modTimeFlag = '0';
+            //修改时间倒序查
+            orderBy = "i.modTime desc , i.id desc";
+        }
+        selected();
+    }
+
+    //排序样式显示
+    function orderByShow() {
+        if (addTimeFlag == '0') {
+            $("#addTimeBtn").text('创建时间▼');
+        } else if (addTimeFlag == '1') {
+            $("#addTimeBtn").text('创建时间▲');
+        }
+
+        if (modTimeFlag == '0') {
+            $("#modTimeBtn").text('修改时间▼');
+        } else if (modTimeFlag == '1') {
+            $("#modTimeBtn").text('修改时间▲');
+        }
+
+        if (interfaceNameFlag == '0') {
+            $("#interfaceNameBtn").text('接口名称▼');
+        } else if (interfaceNameFlag == '1') {
+            $("#interfaceNameBtn").text('接口名称▲');
+        }
+    }
+
+    function againRunTask(element,runId) {
+        var lineTr = element.parent().parent().children();
+        var taskTitle = lineTr.eq(1).text();
+        var fileAddBy = lineTr.eq(2).text();
+        var fileName = lineTr.eq(3).text();
+        var sheetName = lineTr.eq(4).text();
+        var httpConf = lineTr.eq(5).text();
+        var businessLine = lineTr.eq(6).text();
+        var module = lineTr.eq(7).text();
+        var sourceGroup = lineTr.eq(8).text();
+        if (confirm(
+                "任务标题     ：     " + taskTitle +
+                "\n\n文件上传人    ：    " + fileAddBy +
+                "\n\n文件名称     ：    " + fileName +
+                "\n\n表单名称     ：    " + sheetName +
+                "\n\n执行环境     ：    " + httpConf +
+                "\n\n业务线     ：    " + businessLine +
+                "\n\n模块     ：    " + module +
+                "\n\n来源     ：    " + sourceGroup +
+                "\n\n是否再次执行?"
+            )) {
+            var htmlobj = $.ajax({url:"{% url 'uiAgainRunTask' %}",data:{"id":runId},type:"post",async:false});
+            var responseJson = JSON.parse(htmlobj.responseText);
+            if (responseJson["code"] === 10000){
+                selected();
+            }else {
+                alert(responseJson["message"])
+            }
+        }
+    }
+
+    function submitImportForm() {
+        $("#importText").html(
+            '<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;" >'
+            + '<h5 style=" color:white; ">导入中···</h5>'
+            + ' </div>'
+        );
+        $("#importForm").submit();
+    }
+
+    function createPeople(num) {
+        htmlobj = $.ajax({url: '{% url 'queryPeopleInterface' %}?num=' + num, async: false});
+        var value = JSON.parse(htmlobj.responseText).body;
+        var nameVal = "";
+        for (var i = 0; i < value.length; i++) {
+            nameVal = nameVal + ' &nbsp <a href="javascript:void(0);" id="hover-a" onclick="inputVal(\'' + value[i].userName + '\')"  style="font-size: 15px;text-decoration:none">[' + value[i].userName + '(' + value[i].count + ')]</a>'
+        }
+        if (value.length < 3) {
+            $("#names").html(nameVal);
+            $("#hover-a").attr('onclick', 'createPeople(' + (0) + ')');
+            $("#names").show();
+            return;
+        } else {
+            $("#names").html(nameVal);
+        }
+        $("#hover-a").attr('onclick', 'createPeople(' + (num + 1) + ')');
+        $("#names").show();
+    }
+
+
+    function refreshResult() {
+        var result_1 = $("[name='result_1']");
+        var result_2 = $("[name='result_2']");
+        var result_10 = $("[name='result_10']");
+        if (result_1.length != 0 || result_2.length != 0 || result_10.length != 0) {
+            setTimeout("selected()", 500);
+        }
+    }
+
+
+    function selected() {
+        checkOptions();
+        var data = {checkArr: encodeURI(JSON.stringify(checkVals)), orderBy: orderBy, page: page};
+        var ajax = $.ajax({url: "{% url 'uiTestResultListCheck' %}", async: false, data: data, type: "POST"});
+        $("#taskList").html(ajax.responseText);
+        refreshResult();
+        orderByShow();
+    }
+
+    selected();
+
+    window.onload = function () {
+        $("#surprise").click();
+    };
+
+
+</script>
+<!-- Content ends -->
+{% include 'InterfaceTest/foot.html' %}

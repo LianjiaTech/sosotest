@@ -1,0 +1,154 @@
+textarea.Fixed-width{
+    height: 75px;
+    min-height: 75px;
+    resize:vertical;
+}
+
+textarea.table-fixed-write{
+    width:100%;
+    height:75px;
+    background:transparent;
+    border-style:none;
+    resize:none;
+    padding:0;
+}
+
+.col-md-min-1{
+    width: 7%;
+    position: relative;
+    min-height: 1px;
+    float: left;
+    padding-right: 10px;
+}
+
+.col-md-min-2{
+    width: 8%;
+    position: relative;
+    min-height: 1px;
+    float: left;
+    padding-right: 10px;
+}
+
+input.more{
+    margin-left: 1%;
+    float: left;
+    border-bottom:#666 1px solid;
+    border-left-width:0px;
+    border-right-width:0px;
+    border-top-width:0px;
+    background:rgba(0, 0, 0, 0);
+    margin-right: 2%;
+    /*display: none;*/
+
+
+}
+
+.black_publicKey{
+    position: absolute;
+    display: none;
+    top: 10%;
+    left: 88%;
+    z-index:1001;
+    -moz-opacity: 0.8;
+    opacity:.80;
+    filter: alpha(opacity=80);
+    width:10%;
+    height:85%;
+    overflow:auto;
+    margin-left: 20px;
+    float: right;
+    background-color: #E0E0E0;
+}
+
+.black_overlay{
+    display: none;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index:1001;
+    -moz-opacity: 0.8;
+    opacity:.80;
+    filter: alpha(opacity=80);
+}
+.white_content {
+    display: none;
+    position: absolute;
+    top: 10%%;
+    left: 10%%;
+    width: 80%%;
+    height: 80%%;
+    border: 10px solid ;
+    background-color: white;
+    z-index:1002;
+    overflow: auto;
+}
+
+.white_publicKey {
+    display: none;
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
+    border: 10px solid ;
+    background-color: white;
+    z-index:1002;
+    overflow: auto;
+}
+.white_content_small {
+    display: none;
+    position: absolute;
+    top: 20%;
+    left: 30%;
+    width: 40%;
+    height: 50%;
+    border: 16px solid lightblue;
+    background-color: white;
+    z-index:1002;
+    overflow: auto;
+}
+
+
+/*css编写开关按钮*/
+.button-label{
+            position: relative;
+            display: inline-block;
+            width: 42px;
+            height: 18px;
+            background-color: #b7babd;
+            box-shadow: #b7babd 0px 0px 0px 0px;
+            border-radius: 30px;
+            overflow: hidden;
+}
+.circle{
+    position: absolute;
+    top: 2;
+    left: 0;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: #fff;
+}
+.button-label .text {
+    line-height: 15px;
+    font-size: 9px;
+    text-shadow: 0 0 2px #ddd;
+}
+
+.on { color: #fff; display: none; text-indent: 5px;}
+.off { color: #fff; display: inline-block; text-indent: 17px;}
+.button-label .circle{
+    left: 0;
+    transition: all 0.3s;
+}
+.stepSwitch:checked + label.button-label .circle{
+    left: 25px;
+}
+.stepSwitch:checked + label.button-label .on{ display: inline-block; }
+.stepSwitch:checked + label.button-label .off{ display: none; }
+.stepSwitch:checked + label.button-label{
+    background-color: #1ABB9C;
+}

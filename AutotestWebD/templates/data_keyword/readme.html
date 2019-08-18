@@ -1,0 +1,63 @@
+{% include 'InterfaceTest/head.html' %}
+<!-- Main content starts -->
+
+<style>
+    .CodeMirror {
+        height: 300px;
+    }
+</style>
+<div class="content">
+    <!-- Sidebar -->
+    {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Main bar -->
+    <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <div class="col-xs-12 form-group pull-right top_search">
+                    <h3>{{ pageTitle }}</h3>
+                  </div>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>{{ subPageTitle }}</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <div  data-parsley-validate class="form-horizontal form-label-left">
+                        <div>
+                            <h2>MOCK添加</h2>
+                        </div>
+                        <img src="/static/mock_server/addMockReq.png" />
+                        <img src="/static/mock_server/addMockResp.png" />
+                        <img src="/static/mock_server/advancedMode.png" />
+                        <img src="/static/mock_server/advancedMode2.png" />
+                    </div>
+                    <div  data-parsley-validate class="form-horizontal form-label-left">
+                        <div>
+                            <h2>MOCK调用</h2>
+                        </div>
+                        <img src="/static/mock_server/callMockInfo.png" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+    </div>
+</div>
+
+
+<!-- Content ends -->
+{% include 'InterfaceTest/foot.html' %}

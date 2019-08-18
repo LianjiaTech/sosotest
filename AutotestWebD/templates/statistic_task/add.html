@@ -1,0 +1,266 @@
+{% include 'InterfaceTest/head.html' %}
+<!-- Main content starts -->
+
+<style>
+    .CodeMirror {
+        height: 300px;
+    }
+</style>
+<div class="content">
+    <!-- Sidebar -->
+    {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Main bar -->
+    <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <div class="col-xs-12 form-group pull-right top_search">
+                    <h3>{{ text.pageTitle }}</h3>
+                  </div>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>{{ text.subPageTitle }}</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <div  data-parsley-validate class="form-horizontal form-label-left">
+                      <div>
+                        <h2>基本信息</h2>
+                      </div>
+                        {% if option != "add" %}
+                            {% if option != "copy" %}
+                                <div class="form-group" >
+                                    <label class="control-label col-md-min-1">统计任务ID</label>
+                                    <div class="col-lg-8">
+                                        <input type="text" id="dataId" class="form-control col-md-7 col-xs-12" disabled value="">
+                                    </div>
+                                </div>
+                                {% else %}
+                            {% endif %}
+                        {% endif %}
+                      <div class="form-group">
+                        <label class="control-label col-md-min-1">{{ groupLevel1 }}</label>
+                        <div class="col-lg-2" style="width: 13.5%">
+                                <select class="form-control" id="businessLine" onchange="switchModule($(this).val())">
+                                    {% for business in businessLine %}
+                                        <option value="{{ business.id }}">{{ business.bussinessLineName }}</option>
+                                    {% endfor %}
+                                </select>
+                        </div>
+                        <label class="control-label col-md-min-1" style="width:4.3%;">{{ groupLevel2 }}</label>
+                        <div class="col-lg-2" style="width: 13.5%">
+                            <select class="form-control" id="modules">
+                            </select>
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-min-1">概要 <span class="required">*</span>
+                        </label>
+                        <div class="col-lg-8">
+                          <input  id="title" placeholder="请输入概要" type="text"  required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                    <div class="form-group">
+                        <label class="control-label col-md-min-1" for="last-name">描述 <span class="required">*</span>
+                        </label>
+                        <div class="col-lg-8">
+                            <textarea type="text" id="descText" required="required" class="form-control col-md-7 col-xs-12 Fixed-width"
+                            placeholder="请输入描述"
+                            ></textarea>
+                        </div>
+                      </div>
+
+
+                    </div>
+                    <div class="ln_solid" ></div>
+                    <div style="width:65%;" class="col-lg-12">
+                    {% if option == "add" %}
+                        {% if 'HTTP_interface_add' in  permission %}
+                        <button style="float: right" type="button" class="btn btn-success btn-lg" onclick="saveOrDebug('save')">&nbsp;&nbsp;&nbsp;&nbsp;保存&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                        {% endif %}
+                    {% elif option == "select" %}
+{#                        {% if "HTTP_interface_edit" in permission %}#}
+                            <a href="{% url 'statistictask_operationCheck' %}?id={{ id }}&option=edit">
+                                <button style="float: right" type="button" class="btn btn-success btn-lg">&nbsp;&nbsp;&nbsp;&nbsp;编辑&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                            </a>
+{#                        {% endif %}#}
+{#                        {% if "HTTP_interface_copy" in permission %}#}
+                            <a href="{% url 'statistictask_operationCheck' %}?id={{ id }}&option=copy">
+                                <button style="float: right" type="button" class="btn btn-success btn-lg">&nbsp;&nbsp;&nbsp;&nbsp;拷贝&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                            </a>
+{#                        {% endif %}#}
+                    {% elif option == "copy" %}
+{#                        {% if "HTTP_interface_add" in permission %}#}
+                            <a href="javascript:void(0);">
+                                <button style="float: right" type="button" class="btn btn-success btn-lg" onclick="saveOrDebug('save')">&nbsp;&nbsp;&nbsp;&nbsp;保存&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                            </a>
+{#                        {% endif %}#}
+                    {% elif option == "edit" %}
+{#                            {% if "HTTP_interface_edit" in permission %}#}
+                                <button style="float: right" type="button" class="btn btn-success btn-lg" onclick="saveOrDebug('edit')">&nbsp;&nbsp;&nbsp;&nbsp;保存&nbsp;&nbsp;&nbsp;&nbsp;</button>
+{#                            {% else %}#}
+{#                                    <button style="float: right" type="button" class="btn btn-success btn-lg" onclick="window.close()">&nbsp;&nbsp;&nbsp;&nbsp;关闭&nbsp;&nbsp;&nbsp;&nbsp;</button>#}
+{#                            {% endif %}#}
+                    {% endif %}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function dataInit() {
+        if ("{{ option }}" != "add") {
+            loadData();
+        }
+    }
+    function loadData(){
+        if ('{{ option }}' == "select" || '{{ option }}' == "check") {
+            $("[type='text']").attr("disabled", true);
+            $("select").attr("disabled", true);
+            $("input").attr("onclick", "");
+            $("input").attr("disabled", true);
+            $("[type='radio']").attr("disabled", true);
+        }
+        var ajaxobj = $.ajax({
+            url: "{% url 'statistictask_getDataById' %}?id={{ id }}", type: "GET", success: function () {
+                data = JSON.parse(JSON.parse(ajaxobj.responseText).body);
+                $("#dataId").val(data["id"]);
+                $("#title").val(data["title"]);
+                $("#descText").val(data["descText"]);
+                $("#businessLine").val(data["businessLineId"]);
+                switchModule($("#businessLine").val());
+                $("#modules").val(data["moduleId"]);
+            }
+        });
+    }
+
+    function result() {
+        window.close();
+        window.opener.location.href = '/statistictask/listPage';
+    }
+
+    function valLengthVerify(option) {
+        if(option !== "debug"){
+             if ($("#name").val() == "") {
+                alert("名称不能为空");
+                return false;
+            }
+        }
+        var result = true;
+        return result;
+    }
+
+    function saveOrDebug(option, httpConfKey) {
+        if (valLengthVerify(option) == false){
+            return;
+        }
+
+        var formData = new FormData();
+
+        var dataId = '';
+        if ("{{ option }}" != "add") {
+            dataId = $("#dataId").val();
+        }
+
+        var title = $("#title").val();
+        var descText = $("#descText").val();
+
+
+        var postData = {
+            businessLineId:$("#businessLine").val(),
+            moduleId:$("#modules").val(),
+            title: title,
+            descText: descText
+        };
+
+        if (option == "save") {
+            formData.append("postData",JSON.stringify(postData));
+             var dataAdd = $.ajax({
+                  url: '{% url 'statistictask_addData' %}' ,
+                  type: 'POST',
+                  data: formData,
+                  async: false,
+                  cache: false,
+                  contentType: false,
+                  processData: false
+             });
+
+            var dataAddJson = JSON.parse(dataAdd.responseText);
+            if (dataAddJson["code"] == "10000") {
+                if ("{{ option }}" == 'copy') {
+                    window.close();
+                    window.opener.location.reload();
+                } else {
+                    location.href = '{% url 'statistictask_listPage' %}';
+                }
+            } else {
+                alert(dataAddJson['message']);
+            }
+        } else if (option == "edit") {
+            postData['id'] = $("#dataId").val();
+            formData.append("postData",JSON.stringify(postData));
+             var saveEditAjax = $.ajax({
+                  url: '{% url 'statistictask_saveEditData' %}' ,
+                  type: 'POST',
+                  data: formData,
+                  async: false,
+                  cache: false,
+                  contentType: false,
+                  processData: false
+             });
+
+            if (JSON.parse(saveEditAjax.responseText)["code"] == 10000) {
+                window.close();
+                window.opener.location.reload();
+            } else {
+                alert(JSON.parse(saveEditAjax.responseText)["message"])
+            }
+        }
+    }
+
+    function pageInit() {
+        dataInit();
+    }
+    pageInit();
+
+    //业务线模块需要的################
+    var businessLine_module_relation = $.ajax({
+                  url: '{% url 'bmRelation' %}' ,
+                  type: 'get',
+                  async: false,
+             });
+    try{
+        var bmDict = JSON.parse(businessLine_module_relation.responseText).body;
+    }catch (e){
+        alert(bmDict);
+        alert("获取业务线模块关联失败")
+    }
+    switchModule($("#businessLine").val());
+    function switchModule(blId) {
+        $("#modules option").remove();
+        var mdSelect = $("#modules");
+        for(var index = 0; index < bmDict[blId].length;index ++){
+            jQuery("<option></option>").val(bmDict[blId][index]["id"]).text(bmDict[blId][index]["moduleName"]).appendTo(mdSelect);
+        }
+    }
+    //业务线模块需要的################
+
+</script>
+
+<!-- Content ends -->
+{% include 'InterfaceTest/foot.html' %}

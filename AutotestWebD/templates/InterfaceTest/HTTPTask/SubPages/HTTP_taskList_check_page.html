@@ -1,0 +1,86 @@
+ <div class="col-lg-12">
+    <span class="pagination" style="font-size: 10px"> &nbsp;&nbsp;任务合并: &nbsp;&nbsp; </span>
+    <button  class="btn btn-info"  style="font-size: 10px;" onclick="checkMergeCheckbox()" >选取合并任务</button>
+    <button  class="btn btn-info" id="resultMerge"  onclick="mergeTask()" style="font-size: 10px;" disabled>合并任务</button>
+ <span class="pagination" style="font-size: 10px"> &nbsp;&nbsp;排序: &nbsp;&nbsp; </span>
+    <button id="taskNameBtn" class="btn btn-primary" onclick="orderByTaskName()" style="font-size: 10px;">任务名称</button>
+    <button id="addTimeBtn" class="btn btn-primary" onclick="orderByAddTime()" style="font-size: 10px;">创建时间</button>
+    <button id="modTimeBtn" class="btn btn-primary" onclick="orderByModTime()" style="font-size: 10px;">修改时间</button>
+
+    {#    <div class="pagination" style="float:right;" ></div>#}
+    <div class="pagination" style="float:right;">
+         {% include 'InterfaceTest/pagination.html' %}
+    </div>
+</div>
+ <table class="table table-striped table-bordered table-hover" style="table-layout:fixed;width:100%;word-break:break-all;margin-top:8px">
+    <thead>
+    <tr style="color: snow" bgcolor="#2A3F54">
+        <th style="width:3%;display: none" id="mergeTh">任务合并</th>
+        <th style="width:8%;">任务编号</th>
+        <th style="width:10%;">任务名称</th>
+        <th style="width:12%;">任务描述</th>
+        <th style="width:5%;">包含接口数量</th>
+        <th style="width:10%;">创建时间/创建人</th>
+        <th style="width:10%;">修改时间/修改人</th>
+        <th style="width:10%;">操作</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% if pageCount == 0 %}
+        <td colspan="7" align="center" >没有符合条件的搜索结果</td>
+    {% else %}
+      {% for pageData in pageDatas %}
+        <tr>
+            <td id="{{ pageData.taskId }}" name="mergeCheckbox" style="display: none"><input style="zoom:150%" type="checkbox" id="merge{{ pageData.taskId }}" onclick="checkMergeCheckboxList('{{ pageData.taskId }}')" name="interfaceCheckbox"></td>
+            <td id="taskId{{ pageData.id }}">{{ pageData.taskId }}</td>
+            <td id="title{{ pageData.id }}">{{ pageData.title }}</td>
+            <td id="taskdesc{{ pageData.id }}"><textarea class="list_textarea" disabled="">{{ pageData.taskdesc }}</textarea></td>
+            <td id="interfaceNum{{ pageData.id }}">{{ pageData.interfaceNum }}</td>
+            <td id="addBy{{ pageData.id }}">{{ pageData.addTime }}/{{ pageData.userName }}</td>
+            <td id="modBy{{ pageData.id }}">{{ pageData.modTime }}/{% if pageData.modByName %}                        {{ pageData.modByName }}                    {% else %}                        {{ pageData.userName }}                    {% endif %}</td>
+            <td>
+                <div style="margin-top: -10px">
+                {% if 'check' in pageData.permissions %}
+                <button class="btn btn-primary optionButtionSize" onclick="checkTask('{{ pageData.id }}')" title="查看">
+                    <i class="fa fa-info-circle"></i>
+                </button>
+                {% endif %}
+                {% if 'copy' in pageData.permissions %}
+                    <a href="{% url 'HTTP_operationTask' %}?id={{ pageData.id }}&option=copy&addBy={{ pageData.addBy }}"><button class="btn btn-info optionButtionSize" title="拷贝">
+                        <i class="fa fa-copy"></i>
+                    </button></a>
+                {% endif %}
+                {% if 'run' in pageData.permissions %}
+                    <button class="btn btn-warning optionButtionSize" onclick="runTask('{{ pageData.id }}')" title="执行任务">
+                        <i class="fa fa-play"></i>
+                    </button>
+                {% endif %}
+                {% if  'edit' in pageData.permissions %}
+                    <a href="{% url 'HTTP_operationTask' %}?id={{ pageData.id }}&option=edit&addBy={{ pageData.addBy }}" ><button class="btn btn-success optionButtionSize" title="编辑">
+                        <i class="fa fa-edit"></i>
+                    </button></a>
+                {% endif %}
+                {% if  'delete' in pageData.permissions %}
+                    <button class="btn btn-danger optionButtionSize" onclick="delTask('{{ pageData.id }}')" title="删除">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                {% endif %}
+                {% if  'distinct' in pageData.permissions %}
+                    <button class="btn btn-danger optionButtionSize" onclick="delTheSameCaseInTask('{{ pageData.id }}')" title="去掉重复用例">
+                        <i class="fa fa-eraser"></i>
+                    </button>
+                {% endif %}
+            </div>
+            </td>
+        </tr>
+  {% endfor %}
+ {% endif %}
+    </tbody>
+</table>
+ <div>
+    <button type="button" value="save" class="button blue " style="margin-top:8px;visibility:hidden"
+            onclick="debugCase('save')"><p style="font-size: 20px;">批量执行</p></button>
+    <div class="pagination" style="float:right;">
+          {% include 'InterfaceTest/pagination.html' %}
+    </div>
+</div>

@@ -1,0 +1,617 @@
+<div class="col-md-3 left_col">
+    <div class="left_col scroll-view">
+        <div class="navbar nav_title" style="border: 0;">
+            <a href="{% url 'HTTP_InterfaceCheck' %}" class="site_title"><img src="/static/img/kelogo.png"  style="padding-bottom:3px;" /> <span>自动化测试平台</span></a>
+        </div>
+
+        <div class="clearfix"></div>
+
+        <!-- menu profile quick info -->
+
+        <!-- /menu profile quick info -->
+
+        <br>
+
+        <!-- sidebar menu -->
+        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+
+            <div class="menu_section active">
+            {% if menuGroup == "HTTP_TEST" %}
+            {% if menu.HttpInterface == 1 %}
+                <h3>HTTP接口测试</h3>
+                <ul class="nav side-menu" style="">
+                    <li><a href="{% url 'HTTP_InterfaceCheck' %}"><i class="fa fa-home"></i> INTERFACE--接口</a></li>
+                    <li><a href="{% url 'HTTP_testCaseCheck' %}"><i class="fa fa-home"></i> TESTCASE--业务流</a></li>
+                    <li><a href="{% url 'HTTP_taskCheck' %}"><i class="fa fa-home"></i> TASK--任务</a></li>
+                    <li><a href="{% url 'HTTP_taskSuiteCheck' %}"><i class="fa fa-home"></i> TASKSUITE--任务集</a></li>
+
+                    <li><a href="{% url 'HTTP_TaskExecuteResult' %}"><i class="fa fa-home"></i> 执行结果</a></li>
+                    {% if request.session.version == "CurrentVersion" %}
+                    <li><a href="{% url 'HTTP_History' %}"><i class="fa fa-home"></i> 历史统计</a></li>
+                    {% endif %}
+
+                {% if deployment_tool == 1 %}
+
+                    <li><a><i class="fa fa-home"></i> 接口覆盖率 <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li class="{{ taskCheck }}"><a href="{% url 'HTTP_SrcFileAnalyze' %}">标准接口</a></li>
+                            <li class="{{ srcFileCoverCheck }}"><a href="{% url 'HTTP_SrcFileCoverCheck' %}">覆盖率查看</a>
+                            </li>
+                            <li class=""><a href="/webportal" target="_blank">数据看板</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+                </ul>
+                        <br>
+            {% endif %}
+            {% endif %}
+
+            {% if menuGroup == "DUBBO_TEST" %}
+            {% if menu.DubboInterface == 1 %}
+                <h3>DUBBO接口测试</h3>
+                <ul class="nav side-menu" style="">
+                    <li><a href="{% url 'dubboInterfaceList' %}"><i class="fa fa-home"></i> INTERFACE--接口</a></li>
+                    <li><a href="{% url 'dubboTestcaseList' %}"><i class="fa fa-home"></i> TESTCASE--业务流</a></li>
+                    <li><a href="{% url 'dubbo_taskCheck' %}"><i class="fa fa-home"></i> TASK--任务</a></li>
+                    <li><a href="{% url 'dubbo_taskSuiteCheck' %}"><i class="fa fa-home"></i> TASKSUITE--任务集</a></li>
+                    <li><a href="{% url 'dubbo_TaskExecuteResult' %}"><i class="fa fa-home"></i> 执行结果</a></li>
+                    <li><a href="{% url 'dubboQuickDebugPage' %}"><i class="fa fa-home"></i> 快速调试工具</a></li>
+                </ul>
+                <br>
+            {% endif %}
+            {% endif %}
+
+            {% if menuGroup == "UI_TEST" %}
+            {% if menu.UI == 1 %}
+                <h3>UI自动化</h3>
+                <ul class="nav side-menu" style="">
+                    <li><a><i class="fa fa-home"></i> UI测试 <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li class="{{ UIFileCheck }}"><a href="{% url 'UITest' %}">用例文件管理</a></li>
+                            <li class="{{ uiShowSimpleTaskPage }}"><a href="{% url 'uiShowSimpleTask' %}">查看任务</a></li>
+                            <li class="{{ uiAddSimpleTaskPage }}"><a href="{% url 'uiAddSimpleTaskPage' %}">新建任务</a>
+                            </li>
+                            <li class="{{ uiTestResultPage }}"><a href="{% url 'uiTestResultPage' %}">执行用例</a></li>
+                        </ul>
+                    </li>
+                    <li><a><i class="fa fa-home"></i> app包管理 <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li class="{{ uiAppPackageCheckPage }}"><a href="{% url 'uiAppPackageCheckPage' %}">app包查看</a></li>
+                            <li class="{{ uiAppPackagePage }}"><a href="{% url 'uiAppPackagePage' %}">app包添加</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="/static/littletool/keyword.html" target="_blank"><i class="fa fa-home"></i>UI关键字</a></li>
+
+                {% if isReleaseEnv %}
+                {% else %}
+                    <li><a><i class="fa fa-home"></i> PageObject管理 <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+{#                            <li class="{{ uiPageObjectIndex }}"><a href="{% url 'ui_pageObjectIndex' %}">查看PO</a></li>#}
+                            <li class="{{ uiPageObjectAdd }}"><a href="{% url 'ui_pageObjectAddIndex' %}">添加PO</a></li>
+                        </ul>
+                    </li>
+                    <li><a><i class="fa fa-home"></i> Function管理TEST <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li class="{{ dubbo_testCaseCheck }}"><a href="{% url 'dubboTestcaseList' %}">查看函数</a></li>
+                            <li class="{{ dubbo_addHTTPTestCase }}"><a href="{% url 'dubbo_TestCaseAddPage' %}">添加函数</a></li>
+                        </ul>
+                    </li>
+                    <li><a><i class="fa fa-home"></i> 用例管理TEST <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li class="{{ dubbo_testCaseCheck }}"><a href="{% url 'dubboTestcaseList' %}">查看用例</a></li>
+                            <li class="{{ dubbo_addHTTPTestCase }}"><a href="{% url 'dubbo_TestCaseAddPage' %}">添加用例</a></li>
+                        </ul>
+                    </li>
+                    <li><a><i class="fa fa-home"></i> 任务管理TEST <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li class="{{ dubbo_testCaseCheck }}"><a href="{% url 'dubboTestcaseList' %}">查看任务</a></li>
+                            <li class="{{ dubbo_addHTTPTestCase }}"><a href="{% url 'dubbo_TestCaseAddPage' %}">添加任务</a></li>
+                            <li class="{{ dubbo_addHTTPTestCase }}"><a href="{% url 'dubbo_TestCaseAddPage' %}">执行任务</a></li>
+                        </ul>
+                    </li>
+                    <li><a><i class="fa fa-home"></i> 全局配置FINISHED <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li class="{{ uiUserCenterGlobalVarsPage }}"><a href="{% url 'ui_GlobalVarsConf' %}">全局变量</a></li>
+                            <li class="{{ uiUserCenterGlobalTextPage }}"><a href="{% url 'ui_GlobalTextConf' %}">组合文本</a></li>
+                        </ul>
+                    </li>
+                {% endif %}
+                </ul>
+            <br>
+            {% endif %}
+            {% endif %}
+
+            {% if menuGroup == "DATA_SERVICE" %}
+                <h3>数据服务</h3>
+                <ul class="nav side-menu" style="">
+                    {% if menu.StatisticTask == 1 %}
+                        <li><a href="{% url 'statistictask_execlistPage' %}"><i class="fa fa-home"></i> 统计任务数据</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'HTTP_GlobalVarsConf' %}"><i class="fa fa-home"></i> $GVAR--全局变量 </a></li>
+                    <li><a href="{% url 'HTTP_GlobalTextConf' %}"><i class="fa fa-home"></i> $TEXT--组合文本 </a></li>
+                    <li><a href="{% url 'DATAKEYWORD_listPage' %}"><i class="fa fa-home"></i> KEYWORD/PYTHON模式</a></li>
+                    <li><a href="{% url 'MOCK_HTTP_InterfaceCheck' %}"><i class="fa fa-home"></i> HTTP_MOCK</a></li>
+                </ul>
+                <br>
+            {% endif %}
+
+            {% if menuGroup == "CONFIG" %}
+                <h3>配置管理</h3>
+                <ul class="nav side-menu" style="">
+
+                    <li><a href="{% url 'HTTP_UserEnvUriConf' %}"><i class="fa fa-home"></i> 请求地址配置 </a></li>
+                    <li><a href="{% url 'HTTP_UserUriConf' %}"><i class="fa fa-home"></i> 服务配置 </a></li>
+                    <li><a href="{% url 'HTTP_UserHttpConf' %}"><i class="fa fa-home"></i> 环境配置 </a></li>
+                    <li><a href="{% url 'HTTP_UserServiceConf' %}"><i class="fa fa-home"></i> 数据配置 </a></li>
+                    <li><a href="{% url 'HTTP_UserCI' %}"><i class="fa fa-home"></i> 持续集成</a></li>
+                    {% if menu.VersionManage %}
+                    <li><a><i class="fa fa-home"></i> 版本管理 <span class="fa fa-chevron-down"></span></a>
+                        <ul class="nav child_menu">
+                            <li class="{{ current_version }}"><a href="{% url 'HTTP_CurrentVersion' %}">当前版本</a></li>
+                            <li class="{{ history_version }}"><a href="{% url 'HTTP_HistoryVersion' %}">历史版本</a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                       {% if deployment_tool == 1 %}
+                            <li><a><i class="fa fa-home"></i>一键部署工具 <span class="fa fa-chevron-down"></span></a>
+                                <ul class="nav child_menu">
+                                    <li class="{{ deploymentPageCheck }}"><a href="{% url 'deploymentCheck' %}">查看部署</a></li>
+                                    <li class="{{ deploymentPage }}"><a href="{% url 'deploymentPage' %}">新增部署</a></li>
+                                </ul>
+                            </li>
+                        {% endif %}
+                </ul>
+            {% endif %}
+
+            </div>
+
+        </div>
+        <!-- /sidebar menu -->
+
+        <!-- /menu footer buttons -->
+        <div class="sidebar-footer hidden-small">
+            <a style="font-size: 10px;color: #F0F8FF;width:33%;" href="{% url 'PublicKeyDetails' %}" target="_blank">数据关键字</a>
+            <a style="font-size: 10px;color: #F0F8FF;width:33%;" href="{% url 'pythonModeDetails' %}" target="_blank">python模式</a>
+            <a style="font-size: 10px;color: #F0F8FF;width:33%;" href="/static/littletool/diff.html" target="_blank">文本比较</a>
+
+            <a style="font-size: 10px;color: #F0F8FF;width:33%;" href="/static/littletool/json.html" target="_blank">dict查看</a>
+            <a style="font-size: 10px;color: #F0F8FF;width:33%;" href="/static/littletool/jsoncn.html" target="_blank">JSON解码器</a>
+            <a style="font-size: 10px;color: #F0F8FF;width:33%;" href="/static/littletool/urlcoder.html" target="_blank">URL解码器</a>
+        </div>
+        <!-- /menu footer buttons -->
+    </div>
+</div>
+<style>
+    .myUL{
+        list-style:none;margin:10px;padding-bottom: 10px;;padding-top: 0px;
+    }
+    .myLIselected{
+        display:inline;border:solid 1px ;background-color: #337ab7;
+    }
+
+    .myLIaSelected{
+        color: #FFFFFF;font-size: 20px;
+    }
+
+    .myLI{
+        display:inline;border:solid 1px ;
+    }
+
+    .myLIa{
+        color: #4f3034;font-size: 20px;
+    }
+
+    #menu ul {
+        list-style:none;
+        margin:0px;
+    }
+    #menu ul li {
+        float:left;
+
+    }
+    div.menu ul
+{
+    list-style:none; /* 去掉ul前面的符号 */
+    margin: 0px; /* 与外界元素的距离为0 */
+    padding: 0px; /* 与内部元素的距离为0 */
+    width:auto; /*宽度根据元素内容调整*/
+}
+/* 所有class为menu的div中的ul中的li样式 */
+div.menu ul li
+{
+    float:left; /* 向左漂移，将竖排变为横排 */
+    width:160px;
+}
+/* 所有class为menu的div中的ul中的a样式(包括尚未点击的和点击过的样式) */
+div.menu ul li a, div.menu ul li a:visited
+{
+    background-color: #2a3f54; /* 背景色 */
+    border: 1px #4e667d solid; /* 边框 */
+    color: #dde4ec; /* 文字颜色 */
+    display: block; /* 此元素将显示为块级元素，此元素前后会带有换行符 */
+    line-height: 1.35em; /* 行高 */
+    padding: 4px 4px; /* 内部填充的距离 */
+    text-decoration: none; /* 不显示超链接下划线 */
+    white-space: nowrap; /* 对于文本内的空白处，不会换行，文本会在在同一行上继续，直到遇到 <br> 标签为止。 */
+    margin-left:2px;
+    text-align: center;
+
+    }
+/* 所有class为menu的div中的ul中的a样式(鼠标移动到元素中的样式) */
+div.menu ul li a:hover
+{
+    background-color: #bfcbd6; /* 背景色 */
+    color: #2a3f54; /* 文字颜色 */
+    text-decoration: none; /* 不显示超链接下划线 */
+}
+/* 所有class为menu的div中的ul中的a样式(鼠标点击元素时的样式) */
+div.menu ul li a:active
+{
+    background-color: #2a3f54; /* 背景色 */
+    color: #cfdbe6; /* 文字颜色 */
+    text-decoration: none; /* 不显示超链接下划线 */
+}
+.menuClassSelectLi{
+    background-color: #bfcbd6; /* 背景色 */
+    color: #2a3f54; /* 文字颜色 */
+    text-decoration: none; /* 不显示超链接下划线 */
+}
+    .topLineMenuSpan{  width: 80%;font-size: 20px;padding-top: 10px;padding-bottom: 10px;  }
+
+    .httpFormDataLabelCss{
+        font-weight:normal;cursor:pointer;width: 20%!important;margin-left: -30px;
+    }
+    .httpUrlencodeLabelCss{
+        font-weight:normal;cursor:pointer;width: 37%!important;
+    }
+    .httpRawLabelCss{
+        font-weight:normal;cursor:pointer;width: 12%!important;
+    }
+    .httpBinaryLabelCss{
+        font-weight:normal;cursor:pointer;width: 19%!important;
+    }
+    .radioMamargin{
+            margin-left: 0%;
+        }
+    .allRadioWidth{
+        width: 71%;
+    }
+    .rawSelect{
+        display: block;
+        margin-left: -31%;
+        margin-top: 1.5%;
+    }
+    .radioLeft{
+        margin-left: -51%;
+    }
+
+    @media screen and (max-width: 1921px) {
+        .radioLeft{
+            margin-left: -47%;
+        }
+        .rawSelect {
+            display: block;
+            margin-left: -13%;
+            margin-top: 1.8%;
+        }
+        .black_publicKey{
+            position: absolute;
+            display: none;
+            top: 0%;
+            left: 88%;
+            z-index:1001;
+            -moz-opacity: 0.8;
+            opacity:.80;
+            filter: alpha(opacity=80);
+            width:12%;
+            height:100%;
+            overflow:auto;
+            margin-left: 20px;
+            float: right;
+            background-color: #E0E0E0;
+        }
+        .prepareCss{
+            width:74%;
+            margin-left: 9%;
+        }
+        .exeCss{
+            width:74%;
+            margin-left: 10%;
+        }
+        .dubboPrepareCss{
+            width: 70%;
+            margin-left: 7%;
+        }
+        .dubboAssetCss{
+            width: 70%;
+            margin-left: 8.5%;
+        }
+        .dubboExeCss{
+            width: 84.8%;
+            margin-left: 8.7% !important;
+        }
+        .topH{
+           width: 5% !important;
+        }
+        .topButton{
+           width: 11%;
+           margin-right: -3% !important;
+       }
+    }
+    @media screen and (max-width: 1025px) {
+        .topLineMenuSpan{  width: 80%;font-size: 15px;padding-top: 10px;padding-bottom: 10px;  }
+        div.menu ul li
+        {
+            float:left; /* 向左漂移，将竖排变为横排 */
+            width:120px;
+        }
+        .col-lg-1{
+            width: 10%;
+        }
+        .col-lg-2{
+            width: 20%;
+        }
+        .col-lg-3{
+            width: 30%;
+        }
+        .col-lg-4{
+            width: 40%;
+        }
+        .col-lg-5{
+            width: 50%;
+        }
+        .col-lg-6{
+            width: 60%;
+        }
+        .col-lg-7{
+            width: 70%;
+        }
+        .col-lg-8{
+            width: 80%;
+        }
+        .col-lg-9{
+            width: 90%;
+        }
+        .col-lg-10{
+            width: 100%;
+        }
+        .col-lg-12{
+            width: 100%;
+        }
+        .httpFormDataLabelCss{
+            font-weight:normal;cursor:pointer;width: 32%!important;margin-left: -30px;
+        }
+        .httpUrlencodeLabelCss{
+            font-weight:normal;cursor:pointer;width: 63%!important;;
+        }
+        .httpRawLabelCss{
+            font-weight:normal;cursor:pointer;width: 19%!important;;
+        }
+        .httpBinaryLabelCss{
+            font-weight:normal;cursor:pointer;width: 25%!important;
+        }
+{#        .Fixed-width{#}
+{#            width: 100%;#}
+{#        }#}
+        .radioMamargin{
+            margin-left: -6%;
+        }
+        .allRadioWidth{
+            width: 90%;
+        }
+        .rawSelect{
+            display: block;
+            margin-left: -3%;
+            margin-top: 3%;
+        }
+        .radioLeft{
+            margin-left: -11%;
+        }
+       .black_publicKey{
+        position: absolute;
+        display: none;
+        top: 0%;
+        left: 85%;
+        z-index:1001;
+        -moz-opacity: 0.8;
+        opacity:.80;
+        filter: alpha(opacity=80);
+        width:15%;
+        height:100%;
+        overflow:auto;
+        margin-left: 20px;
+        float: right;
+        background-color: #E0E0E0;
+        }
+       .prepareCss{
+            width:74%;
+            margin-left: 9%;
+        }
+       .exeCss{
+            width:74%;
+            margin-left: 10%;
+        }
+       .dubboExeCss{
+            width: 100%;
+            margin-left: 7% !important;
+        }
+       .topButton{
+           width: 20% !important;
+           margin-right: -3%;
+       }
+       .topH{
+           width: 10% !important;
+        }
+    }
+    /* 设置了浏览器宽度不大于1025px时 适配1024分辨率 */
+
+    @media screen and (max-width: 801px) {
+        .topLineMenuSpan{  width: 80%;font-size: 12px;padding-top: 10px;padding-bottom: 10px;  }
+        div.menu ul li
+        {
+            float:left; /* 向左漂移，将竖排变为横排 */
+            width:110px;
+        }
+        .black_publicKey{
+        position: absolute;
+        display: none;
+        top: 0%;
+        left: 80%;
+        z-index:1001;
+        -moz-opacity: 0.8;
+        opacity:.80;
+        filter: alpha(opacity=80);
+        width:20%;
+        height:100%;
+        overflow:auto;
+        margin-left: 20px;
+        float: right;
+        background-color: #E0E0E0;
+        }
+        .prepareCss{
+            width:74%;
+            margin-left: 9%;
+        }
+        .exeCss{
+            width:74%;
+            margin-left: 10%;
+        }
+    }
+    /* 设置了浏览器宽度不大于801px时 适配800分辨率 */
+    .amin{
+        width: 100%;
+        min-width: 135px;
+    }
+</style>
+<div class="top_nav">
+    {% if isReleaseEnv %}
+        <div class="nav_menu">
+    {% else %}
+{#        <div class="nav_menu">#}
+        <div class="nav_menu" style="background-color: red">
+    {% endif %}
+    <nav>
+        <div class="nav toggle" >
+            <a id="menu_toggle"><i class="fa fa-bars"></i></a>
+        </div>
+        <div class="menu">
+                     <span class="nav toggle topLineMenuSpan">
+                     <ul >
+                     {% if menu.HttpInterface == 1 %}
+                         {% if menuGroup == "HTTP_TEST" %}
+                             <li>
+                                <a href="/interfaceTest/HTTP_InterfaceCheck" >HTTP</a>
+                             </li>
+                         {% else %}
+                             <li>
+                                <a href="/interfaceTest/HTTP_InterfaceCheck">HTTP</a>
+                             </li>
+                         {% endif %}
+                     {% endif %}
+                     {% if menu.DubboInterface == 1 %}
+                         {% if menuGroup == "DUBBO_TEST" %}
+                             <li>
+                                <a href="/dubbo/interfaceList">DUBBO</a>
+                             </li>
+                         {% else %}
+                             <li>
+                                <a href="/dubbo/interfaceList">DUBBO</a>
+                             </li>
+                         {% endif %}
+
+                     {% endif %}
+
+                     {% if menuGroup == "DATA_SERVICE" %}
+                         <li>
+                            <a href="/mockserver/HTTP_InterfaceCheck">数据服务</a>
+                         </li>
+                     {% else %}
+                         <li>
+                            <a href="/mockserver/HTTP_InterfaceCheck">数据服务</a>
+                         </li>
+                     {% endif %}
+
+                     {% if menuGroup == "CONFIG" %}
+                         <li>
+                            <a href="{% url 'HTTP_UserEnvUriConf' %}">配置管理</a>
+                         </li>
+                     {% else %}
+                         <li>
+                            <a href="{% url 'HTTP_UserEnvUriConf' %}">配置管理</a>
+                         </li>
+                     {% endif %}
+
+                     {% if menu.UI == 1 %}
+                         {% if menuGroup == "UI_TEST" %}
+                             <li>
+                                <a href="/uiTestResultPage">UI自动化</a>
+                             </li>
+                         {% else %}
+                             <li>
+                                <a href="/uiTestResultPage">UI自动化</a>
+                             </li>
+                         {% endif %}
+                     {% endif %}
+
+{#                         <li style="display:inline;border:solid 1px ;padding-left: 10px;">#}
+{#                              {% if request.session.version == "CurrentVersion" %}#}
+{#                                   当前版本：{{ request.session.CurrentVersion }}#}
+{#                                   <a style="color: #00CC33;font-size: 12px;" href="/versionManage/HTTP_ChangeVersion">刷新</a>#}
+{#                                   {% if request.session.LastVersion != '' or request.session.LastVersion != None %}#}
+{#                                       <a style="color: #00CC33;font-size: 12px;"#}
+{#                                          href="/versionManage/HTTP_ChangeVersion?version={{ request.session.LastVersion }}">最近历史版本</a>#}
+{#                                   {% endif %}#}
+{#                               {% else %}#}
+{#                                   历史版本：{{ request.session.version }}#}
+{#                                   <a style="color: #00CC33;font-size: 12px;" href="/versionManage/HTTP_ChangeVersion">返回当前版本</a>#}
+{#                               {% endif %}#}
+{#                         </li>#}
+                     </ul>
+
+                 </span>
+        </div>
+
+                              {% if menu.help_docs == 1 %}
+                             <div style="width: 3rem;height: 3rem;position: fixed;bottom: 2rem;right: 0.2rem;z-index: 9999;">
+                                <a href="/gitbook" target="_blank" title="使用帮助"><i class="fa fa-header"></i><i class="fa fa-header"></i><br>帮助</a>
+                             </div>
+                          {% endif %}
+        <ul class="nav navbar-nav navbar-right" style="width:10%;">
+            <li class="">
+                <a href="javascript:void(0);" class="user-profile dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <span>{{ request.session.userName }}</span><span class=" fa fa-angle-down"></span>
+                </a>
+                <ul class="dropdown-menu dropdown-usermenu pull-right">
+                    <li><a href="javascript:void(0);" onclick="modPwd();">修改密码</a></li>
+                    <li><a href="{% url 'logout' %}"><i class="fa fa-sign-out pull-right"></i>退出登录</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+    </div>
+    </div>
+    <script type="text/javascript">
+
+        function modPwd() {
+            var pwd = prompt("请输入新密码", "123456");//将输入的内容赋给变量 name ，
+            //这里需要注意的是，prompt有两个参数，前面是提示的话，后面是当对话框出来后，在对话框里的默认值
+            if (pwd) {
+                var againPwd = prompt("请再次输入新密码", "");
+                if (pwd == againPwd) {
+                    //如果返回的有内容
+                    var modpwd = $.ajax({url: "{% url 'updatePwd' %}?pwd=" + pwd, async: false});
+                    if (JSON.parse(modpwd.responseText)["code"] == 10000) {
+                        location.href = '{% url 'logout' %}';
+                    } else {
+                        alert("修改失败，请重试！");
+                    }
+                } else {
+                    alert("两次输入的密码不一致！");
+                }
+
+            } else {
+                alert("请改失败，请输入新密码！");
+            }
+        }
+
+    </script>

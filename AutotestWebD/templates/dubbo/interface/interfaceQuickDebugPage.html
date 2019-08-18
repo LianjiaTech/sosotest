@@ -1,0 +1,474 @@
+{% include 'InterfaceTest/head.html' %}
+<!-- Main content starts -->
+<style>
+
+</style>
+<div class="content">
+    <!-- Sidebar -->
+    {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Main bar -->
+    <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>{{ text.subPageTitle }}</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <div  data-parsley-validate class="form-horizontal form-label-left">
+                     <div class="form-group"  >
+                        <div  class="col-lg-8" style="width:74%;">
+                            <div id="interfaceTabContent" class="tab-content">
+                                <div class="tab-pane fade active in" id="requestBody" style="margin-left: 10px;margin-right: 10px">
+                                    <div class="form-group">
+                                    <label class="control-label col-md-min-1" style="width:80px;">环境 <span class="required">*</span>
+                                    </label>
+                                        <div class="col-lg-1" style="width:10%;padding-right: 0px;padding-left: 0px" >
+                                            <input onfocus="resetGlobalElement($(this),'')" type="text" class="form-control" style="border-top-left-radius:0em;border-bottom-left-radius:0em;display: none;" placeholder="超时时间(秒),默认20" id="timeout">
+                                            <select class="form-control" style="border-radius:0px;width: 200px;" id="ENVKEY_FOR_GETDUBBOINFO"  onchange="getDubboRequestAddr()">
+                                                <option value="" title="">选择环境</option>
+                                                {% for hc in envConfList %}
+                                                <option value="{{ hc.httpConfKey }}" title="{{ hc.httpConfKey }}">{{ hc.alias }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-min-1" style="width:80px;">服务 <span class="required">*</span>
+                                    </label>
+                                        <div class="col-lg-2" style="width:20%;padding-right: 0px;padding-left: 0px" >
+                                            <select class="form-control" style="border-radius:0px;width: 200px;" id="SYSTEM_KEY" onchange="getDubboRequestAddr()">
+                                            <option value="" title="">选择服务</option>
+                                                {% for u in uri %}
+                                                <option value="{{ u.uriKey }}" title="{{ u.uriKey }}">{{ u.alias }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                </div>
+                                <div class="form-group">
+                                        <label class="control-label col-md-min-1" style="width:80px;">编码方式 <span class="required">*</span>
+                                        </label>
+                                        <div class="col-lg-4" style="padding-right: 0px;padding-left: 0px" >
+                                            <select class="form-control" style="border-radius:0px;width: 200px;" id="encoding">
+                                                <option value="gb18030">GB18030</option>
+                                                <option value="utf8">UTF-8</option>
+                                                <option value="gbk">GBK</option>
+                                                <option value="gb2312">GB2312</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                <div class="form-group">
+                                    <label class="control-label col-md-min-1" style="width:80px;">请求地址 <span class="required">*</span>
+                                    </label>
+                                        <div class="col-lg-4" style="padding-right: 0px;padding-left: 0px" >
+                                            <input type="text" name="ipAddressInput" style="border-radius:0px;height: 34px;resize:none" id="ipAddressInput" class="form-control" placeholder="请求地址端口，例如10.10.10.10:5566"/>
+                                        </div>
+                                        <div class="col-lg-2" style="padding-right: 0px;padding-left: 0px" >
+                                            <button class="btn btn-primary"  style="border-radius:0px;height: 34px;resize:none;margin-left: 10px;"  onclick="readServiceAndMethods(true)" >读取服务</button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-min-1" style="width:80px;">类名称 <span class="required">*</span>
+                                        </label>
+                                        <div class="col-lg-2" style="width:50%;padding-right: 0px;padding-left: 0px;" >
+                                            <select class="form-control" style="border-radius:0px;width: 400px;" id="SERVICE_PATH" onchange="selectService(true)">
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="control-label col-md-min-1" style="width:80px;">方法名称 <span class="required">*</span>
+                                        </label>
+                                        <div class="col-lg-4" style="padding-right: 0px;padding-left: 0px" >
+                                            <select class="form-control" style="border-radius:0px;width: 200px;" id="METHOD" onchange="selectMethod()">
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-2" style="padding-right: 0px;padding-left: 0px" >
+                                            <button class="btn btn-primary" style="border-radius:0px;height: 34px;resize:none;margin-left: 10px;" onclick="readParam()" >读取参数</button>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="form-group">
+                                     <label class="control-label col-md-min-1" style="width:80px;">参数： <span class="required">*</span>
+                                    </label>
+                                        <div class="col-lg-10" >
+                                            <textarea type="text" class="form-control Fixed-width" style="width:100%;height: 150px;" name="parameter" id="parameter" placeholder="请输入测试参数,多个参数使用半角逗号（,）间隔" rows="5" onchange="resetDebugMsg()"></textarea>
+                                            <label style="font-size: 24px; color: red;" id="paramPromptLabel"></label>
+                                        </div>
+                                        <a href="javascript:void(0);" onclick="showParamJson()" style="background-color: yellow">JSON</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+                <!--调试-->
+              <div class="x_panel">
+                  <div class="x_title">
+                    <h2>
+                        <button onclick="debugDubboInterface()" class="btn btn-primary">调试</button>
+                        <button onclick="saveDebugInfoToDubboInterface()" class="btn btn-primary">转接口用例</button>
+                        <button onclick="doTelnetCommand()" class="btn btn-primary" title="把【参数:*】中的数据当作telnet命令执行，例如
+ls
+invoke com.test.TestFacade.getUser(100001000)">执行telnet</button>
+                    </h2>
+                      <h2 id="takeTime" style="font-size: 28px; margin-left: 15px;"></h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                      <pre id="debugResult" style="outline: 1px solid #ccc; padding: 5px; margin: 5px;"></pre>
+                  </div>
+                </div>
+            </div>
+
+          </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#ENVKEY_FOR_GETDUBBOINFO").select2();
+    $("#SERVICE_PATH").select2();
+    $("#METHOD").select2();
+    $("#SYSTEM_KEY").select2();
+    $("#encoding").select2();
+    var dubboServiceList = [];
+    var dubboServiceDict = {};
+    var paramIndex = 0;
+    var debugResultJsonStr = "";
+    function resetDebugMsg(){
+        debugResultJsonStr = "";
+    }
+    function getDubboRequestAddr(){
+        debugResultJsonStr = "";
+        paramIndex = 0;
+        var system = $("#SYSTEM_KEY").val();
+        var envKey = $("#ENVKEY_FOR_GETDUBBOINFO").val();
+        if (envKey === "" || system === "") {
+            return;
+        }
+        var ajaxResp = $.ajax({
+              url: '{% url 'dubboGetRequestAddr' %}?env='+envKey+'&system='+system+'' ,
+              type: 'GET',
+              async: false
+         });
+        if (JSON.parse(ajaxResp.responseText)["code"] === 10000) {
+            $("#ipAddressInput").val(JSON.parse(ajaxResp.responseText)["body"]);
+            readServiceAndMethods(true);
+        } else {
+            alert(JSON.parse(ajaxResp.responseText)["message"]);
+            $("#ipAddressInput").val("");
+        }
+    }
+
+    function readServiceAndMethods(whetherSelectMethod) {
+        debugResultJsonStr = "";
+        var addr = $("#ipAddressInput").val();
+        var reg = /^.*:(\d{1,5})$/;
+        var r = addr.match(reg);
+        if(r===null)  {
+            alert('对不起，您输入的地址格式不正确!');
+            return;
+        }
+        var addrList = addr.split(":");
+         var ajaxResp = $.ajax({
+              url: '{% url 'dubboGetDubboServicesByAddr' %}?host='+addrList[0]+'&port='+addrList[1]+'' ,
+              type: 'GET',
+              async: false
+         });
+         if (JSON.parse(ajaxResp.responseText)["code"] === 10000) {
+             dubboServiceList = JSON.parse(ajaxResp.responseText)["body"]["serviceList"];
+             dubboServiceDict = JSON.parse(ajaxResp.responseText)["body"]["serviceDict"];
+             var servicePathHtml = '';
+             for(var sIndex= 0; sIndex<dubboServiceList.length; sIndex++){
+                 servicePathHtml += '<option value="'+dubboServiceList[sIndex]+'">'+dubboServiceList[sIndex]+'</option>';
+             }
+             $("#SERVICE_PATH").html(servicePathHtml);
+             $("#SERVICE_PATH").select2();
+             selectService(whetherSelectMethod);
+        } else {
+            alert(JSON.parse(ajaxResp.responseText)["message"]);
+            dubboServiceList = [];
+            dubboServiceDict = {};
+        }
+    }
+
+    //Service自动联想
+    function selectService(whetherSelectMethod){
+        debugResultJsonStr = "";
+        paramIndex = 0;
+        var valueMethods = dubboServiceDict[$("#SERVICE_PATH").val()];
+        var servicePathHtml = '';
+         for(var sIndex= 0; sIndex<valueMethods.length; sIndex++){
+             servicePathHtml += '<option value="'+valueMethods[sIndex]+'">'+valueMethods[sIndex]+'</option>';
+         }
+         $("#METHOD").html(servicePathHtml);
+         $("#METHOD").select2();
+         if(whetherSelectMethod){selectMethod();}
+    }
+
+    function selectMethod(){
+        debugResultJsonStr = "";
+        paramIndex = 0;
+        readParam();
+    }
+
+    function readParam() {
+        debugResultJsonStr = "";
+        var service = $("#SERVICE_PATH").val();
+        var method = $("#METHOD").val();
+        if(service === "" || method === ""){
+            alert("服务和方法不能为空！");
+            return;
+        }
+        var ajaxResp = $.ajax({
+              url: '{% url 'dubboGetParamByServiceMethod' %}?service='+service+'&method='+method+'&paramIndex='+paramIndex ,
+              type: 'GET',
+              async: false
+         });
+        if (JSON.parse(ajaxResp.responseText)["code"] === 10000) {
+            var respDict = JSON.parse(ajaxResp.responseText);
+            console.log(respDict);
+            $("#parameter").val(respDict["body"]["param"]);
+            if(respDict["body"]["param"] === ""){
+                $("#paramPromptLabel").text("没有历史记录，无法自动读取参数，请手动输入。");
+            }else{
+                $("#paramPromptLabel").text("");
+            }
+            paramIndex += 1;
+        } else {
+            alert(JSON.parse(ajaxResp.responseText)["message"]);
+            paramIndex = 0;
+        }
+    }
+
+    function debugDubboInterface() {
+        debugResultJsonStr = "";
+        var requestAddr = $("#ipAddressInput").val();
+        var reg = /^.*:(\d{1,5})$/;
+        var r = requestAddr.match(reg);
+        if(r===null)  {
+            alert('对不起，您输入的地址格式不正确!');
+            return;
+        }
+
+        var service = $("#SERVICE_PATH").val();
+        var method = $("#METHOD").val();
+        var params = $("#parameter").val();
+        var encoding = $("#encoding").val();
+        if(service === "" || method === ""){
+            alert("服务/方法不能为空！");
+            return;
+        }
+        var formData = {
+            addr:requestAddr,
+            service:service,
+            method:method,
+            params:params,
+            encoding:encoding
+        };
+        $.ajax({
+              url: '{% url 'dubboQuickDebug' %}' ,
+              type: 'POST',
+              data: formData,
+              async: false,
+              success:function (response) {
+                var resDict = JSON.parse(response);
+                if(resDict['code']===10000){
+                    try {
+                        var toJsonStr = JSON.stringify(JSON.parse(resDict['body']['actualMsg']), null, 2);
+                        debugResultJsonStr = toJsonStr;
+                        $("#debugResult").html(syntaxHighlight(toJsonStr));
+                    }catch (e){
+                        $("#debugResult").html(resDict['body']['actualMsg']);
+                    }
+                        $("#takeTime").text("执行耗时："+resDict['body']['taketime']+" ms");
+
+                }
+              }
+         });
+    }
+
+    function doTelnetCommand() {
+        debugResultJsonStr = "";
+        var requestAddr = $("#ipAddressInput").val();
+        var reg = /^.*:(\d{1,5})$/;
+        var r = requestAddr.match(reg);
+        if(r===null)  {
+            alert('对不起，您输入的地址格式不正确!');
+            return;
+        }
+
+        var params = $("#parameter").val();
+        var encoding = $("#encoding").val();
+
+        var formData = {
+            addr:requestAddr,
+            params:params,
+            encoding:encoding
+        };
+        $.ajax({
+              url: '{% url 'dubboDoTelnetCommand' %}' ,
+              type: 'POST',
+              data: formData,
+              async: false,
+              success:function (response) {
+                var resDict = JSON.parse(response);
+                if(resDict['code']===10000){
+                    try {
+                        var toJsonStr = JSON.stringify(JSON.parse(resDict['body']['actualMsg']), null, 2);
+                        debugResultJsonStr = toJsonStr;
+                        $("#debugResult").html(syntaxHighlight(toJsonStr));
+                    }catch (e){
+                        $("#debugResult").html(resDict['body']['actualMsg']);
+                    }
+                        $("#takeTime").text("执行耗时："+resDict['body']['taketime']+" ms");
+
+                }
+              }
+         });
+    }
+
+    function saveDebugInfoToDubboInterface() {
+        var system = $("#SYSTEM_KEY").val();
+        if(system == ""){
+            alert("请选择服务！");
+            return;
+        }
+        var service = $("#SERVICE_PATH").val();
+        if(service == ""){
+            alert("请选择类名称！");
+            return;
+        }
+        var method = $("#METHOD").val();
+        if(method == ""){
+            alert("请选择方法名称！");
+            return;
+        }
+        var method = $("#METHOD").val();
+        if(method == ""){
+            alert("请选择方法名称！");
+            return;
+        }
+        if(debugResultJsonStr == ""){
+            alert("请先进行调试！");
+            return;
+        }
+        if(confirm("确认将调试信息保存为dubbo接口用例？")) {
+            var params = $("#parameter").val();
+            var varsPost = "";
+            try{
+                JSON.parse(debugResultJsonStr);
+                varsPost = "ASSERT_STRUCT("+debugResultJsonStr+")";
+            }catch (e){
+                varsPost = "ASSERT("+debugResultJsonStr+")";
+            }
+
+            var interfaceData = {
+                interfaceId: '',
+                title: "[调试工具自动生成]"+service+"."+method,
+                casedesc: "★★★请修改基础配置★★★",
+                businessLineId_id: "1",
+                moduleId_id: "1",
+                caselevel: "5",
+                timeout: 20,
+                varsPre: "",
+                dubboSystem: system,
+                dubboService: service,
+                dubboMethod: method,
+                dubboParams: params,
+                encoding: $("#encoding").val(),
+                varsPost: varsPost,
+            };
+            var formData = new FormData();
+            formData.append("interfaceData",JSON.stringify(interfaceData));
+             var interfaceAdd = $.ajax({
+                  url: '{% url 'dubboInterfaceDoAdd' %}' ,
+                  type: 'POST',
+                  data: formData,
+                  async: false,
+                  cache: false,
+                  contentType: false,
+                  processData: false
+             });
+            var interfaceAddJson = JSON.parse(interfaceAdd.responseText);
+            if (interfaceAddJson["code"] == "10000") {
+                location.href = '{% url 'dubboInterfaceList' %}';
+            } else {
+                alert(interfaceAddJson["message"]);
+            }
+        }
+    }
+
+    function showParamJson(){
+        window.open("/static/littletool/jsoncn.html?"+$("#parameter").val());
+    }
+    function syntaxHighlight(json) {
+        if (typeof json != 'string') {
+            json = JSON.stringify(json, undefined, 2);
+        }
+        json = json.replace(/&/g, '&').replace(/</g, '<').replace(/>/g, '>');
+        return json.replace(/("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g, function(match) {
+            var cls = 'number';
+            if (/^"/.test(match)) {
+                if (/:$/.test(match)) {
+                    cls = 'key';
+                } else {
+                    cls = 'string';
+                }
+            } else if (/true|false/.test(match)) {
+                cls = 'boolean';
+            } else if (/null/.test(match)) {
+                cls = 'null';
+            }
+            return '<span class="' + cls + '">' + match + '</span>';
+        });
+    }
+
+    function dataInit(){
+        var ajaxResp = $.ajax({
+              url: '{% url 'dubboGetRbecentQueryDebug' %}' ,
+              type: 'GET',
+              async: false
+         });
+        if (JSON.parse(ajaxResp.responseText)["code"] === 10000) {
+            var getData = JSON.parse(ajaxResp.responseText)["body"];
+            $("#ipAddressInput").val(getData['requestAddr']);
+            readServiceAndMethods(false);
+            $("#SERVICE_PATH").val(getData['dubboService']);
+            $("#SERVICE_PATH").select2();
+            selectService(false);
+            $("#METHOD").val(getData['dubboMethod']);
+            $("#METHOD").select2();
+            $("#encoding").val(getData['encoding']);
+            $("#encoding").select2();
+            $("#parameter").val(getData['dubboParams']);
+        }
+    }
+
+    dataInit();
+</script>
+<style>
+    /*<![CDATA[*/
+    pre { }
+    .string { color: green; }
+    .number { color: darkorange; }
+    .boolean { color: blue; }
+    .null { color: magenta; }
+    .key { color: red; }
+    /*]]>*/
+</style>
+<!-- Content ends -->
+{% include 'InterfaceTest/foot.html' %}

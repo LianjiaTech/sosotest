@@ -1,0 +1,916 @@
+{% include 'InterfaceTest/head.html'%}
+<!-- Main content starts -->
+
+<style type="text/css">
+    body { font-family: "HelveticaNeue","Helvetica-Neue", "Helvetica", "Arial", sans-serif; }
+    .a-upload input {
+        position: absolute;
+        font-size: 100px;
+        right: 0;
+        top: 0;
+        opacity: 0;
+        filter: alpha(opacity=0);
+        cursor: pointer
+    }
+
+    h4 {margin: 0px; padding: 0px;}
+
+    .black_overlay{
+        display: none;
+        position: absolute;
+        top: 0%;
+        left: 0%;
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        z-index:1001;
+        -moz-opacity: 0.8;
+        opacity:.80;
+        filter: alpha(opacity=80);
+    }
+    .white_content {
+        display: none;
+        position: absolute;
+        top: 10%;
+        left: 10%;
+        width: 80%;
+        height: 80%;
+        border: 10px solid ;
+        background-color: white;
+        z-index:1002;
+        overflow: auto;
+    }
+</style>
+<div class="content">
+    <!-- Sidebar -->
+    {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Sidebar ends -->
+    <!-- Main bar -->
+
+    <div class="right_col" role="main" style="min-height: 1657px;">
+        <div id="bgdiv" class="black_overlay"></div>
+         <div class="">
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel" id="taskCheck">
+                  <div class="x_title">
+                    <h2>DUBBO任务集执行结果</h2>
+                      <h2 class="subNavH2Style">
+                            <a href="{% url 'dubbo_TaskExecuteResult' %}">
+                                <button class="btn btn-info">
+                                   任务执行结果查看
+                                  </button>
+                            </a>
+                        </h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <div class="form-group">
+                        <div  id="checkOption">
+                            <span class="cat-text" style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>
+                        </div>
+                    </div>
+                      <br>
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist" style="margin-bottom: 0px">
+                        <li role="presentation" class="active"><a href="#taskFounder" role="tab" data-toggle="tab" aria-expanded="true">任务集执行人</a>
+                        </li>
+{#                          <li role="presentation" class=""><a href="#taskId" role="tab" data-toggle="tab" aria-expanded="true">任务编号</a>#}
+{#                        </li>#}
+                        <li role="presentation" class=""><a href="#taskName" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">任务集名称</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#taskDescribe" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">任务集描述</a>
+                        </li>
+                         <li class="dropdown">
+                            <a href="#"  class="dropdown-toggle" data-toggle="dropdown"> 执行结果 <b class="caret"></b></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1">
+                                <li><a href="#resultPass"  tabindex="-1" name="tabExecResult" data-toggle="tab" onclick="getExecResultName('PASS')">通过(0)</a></li>
+                                <li><a href="#resultFail"  tabindex="-1" name="tabExecResult" data-toggle="tab" onclick="getExecResultName('FAIL')">失败(0)</a></li>
+                                <li><a href="#resultError"  tabindex="-1" name="tabExecResult" data-toggle="tab" onclick="getExecResultName('ERROR')">错误(0)</a></li>
+                                <li><a href="#resultException"  tabindex="-1" name="tabExecResult" data-toggle="tab" onclick="getExecResultName('EXCEPTION')">异常(0)</a></li>
+                                <li><a href="#resultCancel"  tabindex="-1" name="tabExecResult" data-toggle="tab" onclick="getExecResultName('CANCEL')">取消(0)</a></li>
+                                <li><a href="#allResult" id="allResultA" tabindex="-1" data-toggle="tab" onclick="getExecResultName('')">全部结果</a></li>
+                            </ul>
+                        </li>
+
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="taskFounder" aria-labelledby="home-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="taskFounderInput" onkeypress="EnterPress(event)" placeholder="请输入任务创建人  输入'all'查看所有任务">
+                            </div>
+                              <div class="col-lg-4" >
+                                  <span style="font-size: 15px;margin-top: 5px">快捷条件: </span>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="inputVal('all')">所有</button>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="inputVal('{{ request.session.userName }}')">{{ request.session.userName }}</button>
+                              <button id="hover-a" type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="createPeople(0)">其他</button>
+                                  <div id="names" style="margin-top: 10px">
+                            </div>
+                                  </div>
+
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="taskName" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="taskNameInput" onkeypress="EnterPress(event)" placeholder="请输任务名称" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="taskId" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="taskIdInput" onkeypress="EnterPress(event)" placeholder="请输入任务编号" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="taskDescribe" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="taskDescribeInput" onkeypress="EnterPress(event)" placeholder="请输入任务描述">
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="resultNoRun" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" readonly="true"  onkeypress="EnterPress(event)" value="结果为未执行" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="resultPass" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" readonly="true" onkeypress="EnterPress(event)" value="结果为通过">
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="resultFail" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control"readonly="true" onkeypress="EnterPress(event)" value="结果为失败">
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="resultError" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control"readonly="true" onkeypress="EnterPress(event)" value="结果为错误">
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="resultException" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control"readonly="true" onkeypress="EnterPress(event)" value="结果为异常">
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="resultCancel" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control"readonly="true" onkeypress="EnterPress(event)" value="结果为取消">
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="allResult" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control"readonly="true" onkeypress="EnterPress(event)" value="全部结果">
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="httpConfNull" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control"readonly="true" onkeypress="EnterPress(event)" value="全部结果">
+                            </div>
+                          </div>
+                        </div>
+                        {% for hc in httpConf %}
+                            <div role="tabpanel" class="tab-pane fade" id="{{ hc.httpConfKey }}tab" aria-labelledby="profile-tab">
+                              <div class="form-group">
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control"readonly="true" onkeypress="EnterPress(event)" value="{{ hc.alias }}">
+                                </div>
+                              </div>
+                            </div>
+                        {% endfor %}
+
+                          <div role="tabpanel" class="tab-pane fade" id="businessLineTab" aria-labelledby="profile-tab">
+                              <div class="form-group">
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control"   onkeypress="EnterPress(event)" placeholder="请选择{{ groupLevel1 }}"  disabled >
+                                </div>
+                              </div>
+                            </div>
+                          {% for bl in checkBusinessLine %}
+                             <div role="tabpanel" class="tab-pane fade" id="{{ bl.bussinessLineName }}tab" aria-labelledby="profile-tab">
+                              <div class="form-group">
+                                <div class="col-lg-8">
+                                    <input type="text" class="form-control"   onkeypress="EnterPress(event)" value="{{ bl.bussinessLineName }}" disabled >
+                                </div>
+                              </div>
+                            </div>
+                          {% endfor %}
+                        <div role="tabpanel" class="tab-pane fade" id="moduleTab" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-3">
+                                <select class="form-control" onchange="$('#taskModuleInput').val($(this).val()).change()">
+                                    <option>&nbsp;</option>
+                                    {% for m in checkModules %}
+                                        <option>{{ m.moduleName }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-lg-5">
+                                <input type="text" class="form-control" id="taskModuleInput" onchange="editCheckVal()" onkeypress="EnterPress(event)" placeholder="请选择或输入{{ groupLevel2 }}">
+                            </div>
+                          </div>
+                        </div>
+
+                      </div>
+                    </div>
+                    <div id="taskList" class="form-group"></div>
+                  </div>
+                </div>
+
+
+              </div>
+
+                  <div class="x_panel white_content" id="getTaskDetails" style="display: none;width:80%;margin-top: -0px;padding-bottom: 60px">
+                     <div class="x_title">
+                        <h2>查看详情</h2>
+                        <div class="clearfix"></div>
+                      </div>
+                      <div class="x_content">
+                        <table class="table table-striped table-bordered table-hover" style="table-layout:fixed;width:100%;word-break:break-all;">
+
+                            <thead>
+                            <tr  >
+                                <th style="width:20%;">执行编号</th>
+                                <th style="width:80%;" id="headId"></th>
+
+                            </tr>
+                            </thead>
+                            <tbody id="taskResultDetail">
+                            </tbody>
+                        </table>
+                      </div>
+                     <button class="btn btn-info pull-right" style="margin-left: 20px" onclick="closeInterfaceList()">关闭</button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var checkVals =  {"taskFounder":"{{ request.session.userName }}","taskSuiteId":"","title":"","taskSuiteDesc":"","testResult":""};
+    var page = {{ page }};
+    var isRefresh = true;
+    function initCheckValsFromCookie(){
+        var checkValsCookie = $.cookie('checkVals_dubbo_tasksuite_execute');
+        if(checkValsCookie){
+            checkVals = JSON.parse(checkValsCookie);
+            $("#taskFounderInput").val(checkVals['taskFounder']);
+            $("#taskSuiteIdInput").val(checkVals['taskSuiteId']);
+            $("#taskNameInput").val(checkVals['title']);
+            $("#taskDescribeInput").val(checkVals['taskSuiteDesc']);
+            checkOptions();
+        }
+    }
+    function getExecResultName(exec) {
+        checkVals["testResult"] = exec;
+        editCheckVal();
+    }
+
+    function editCheckVal() {
+
+        //用例创建人
+        if($("#taskFounderInput").val()==''){
+            checkVals['taskFounder'] = '{{ request.session.userName }}';
+        }else if($("#taskFounderInput").val()=='all'){
+            checkVals['taskFounder'] = '';
+        }else{
+            checkVals['taskFounder'] =$("#taskFounderInput").val() ;
+        }
+
+        //用例Id
+        if($("#taskIdInput").val()==''){
+            checkVals['taskSuiteId'] = '';
+        }else {
+            checkVals['taskSuiteId'] =$("#taskIdInput").val() ;
+        }
+
+        //用例名称
+        if($("#taskNameInput").val()==''){
+            checkVals['title'] = '';
+        }else {
+            checkVals['title'] =$("#taskNameInput").val() ;
+        }
+
+        //用例描述
+        if ($("#taskDescribeInput").val()==''){
+            checkVals['taskSuiteDesc']='';
+        }else {
+            checkVals['taskSuiteDesc']=$("#taskDescribeInput").val();
+        }
+        if ($("#taskModuleInput").val()==''){
+            checkVals['module']='';
+        }else {
+            checkVals['module']=$("#taskModuleInput").val();
+        }
+
+
+
+        selected();
+    }
+
+    function inputVal(val) {
+        $("#taskFounderInput").val(val);
+        editCheckVal();
+    }
+
+
+     function editHttpConfCheckTab(name) {
+        checkVals["httpConfKey"] = name;
+        editCheckVal();
+    }
+
+    function checkOptions() {
+
+        var htmls = ' <span class="cat-text" style="font-size: 15px;float: left;">搜索条件:</span>';
+        var num =0;
+        var writeNum = 0;
+
+        for(var item in checkVals){
+            if(checkVals[item] != '' && typeof(checkVals[item]) != "undefined"){
+                num ++;
+            }
+        }
+        for(var item in checkVals){
+
+            if(checkVals[item] != '' && typeof(checkVals[item]) != 'undefined'){
+                writeNum ++ ;
+                var key = '';
+
+                switch (item){
+                    case "taskFounder":
+                         key = '任务集执行人';
+                        break;
+                    case "taskSuiteId":
+                         key = '任务集编号';
+                         break;
+                    case "title":
+                        key = '任务集名称';
+                        break;
+                    case "taskSuiteDesc":
+                        key = '任务集描述';
+                        break;
+                    case "httpConfKey":
+                        key = "执行环境";
+                        break
+
+                }
+
+                if(item == 'testResult'){
+                    key = '执行结果';
+                    if(checkVals[item] == "PASS"){
+                        htmls = htmls+'<span class="tag"><span>'+key+'：通过&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delCheckOptions(\''+item+'\')">x</a></span> ';
+
+                    }else if(checkVals[item] == "FAIL"){
+                        htmls = htmls+'<span class="tag"><span>'+key+'：失败&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delCheckOptions(\''+item+'\')">x</a></span> ';
+
+                    }else if(checkVals[item] == "ERROR"){
+                        htmls = htmls+'<span class="tag"><span>'+key+'：错误&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delCheckOptions(\''+item+'\')">x</a></span> ';
+
+                    }else if(checkVals[item] == "EXCEPTION"){
+                        htmls = htmls+'<span class="tag"><span>'+key+'：异常&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delCheckOptions(\''+item+'\')">x</a></span> ';
+
+                    }else if(checkVals[item] == "CANCEL"){
+                        htmls = htmls+'<span class="tag"><span>'+key+'：取消&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delCheckOptions(\''+item+'\')">x</a></span> ';
+
+                    }
+                    continue ;
+                }
+
+                 htmls = htmls+'<span class="tag"><span>'+key+'：'+checkVals[item]+'&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delCheckOptions(\''+item+'\')">x</a></span> ';
+
+            }
+        }
+        htmls = htmls +'<span class="tag" style="float: right;background-color: #ff7575"><span>默认筛选&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="clearChecked()">x</a></span>';
+
+        $('#checkOption').html(htmls);
+    }
+
+
+
+    function clearChecked() {
+        $("#taskFounderInput").val('');
+        $("#taskIdInput").val('') ;
+        $("#taskNameInput").val('');
+        $("#taskDescribeInput").val('');
+        checkVals["testResult"] = "";
+        editCheckVal();
+        $("#taskModuleInput").val('');
+        $("#businessLineCheckTab").click();
+        $("[href='#taskFounder']").click();
+
+    }
+
+    //创建时间排序
+    var orderBy = "t.addTime desc , t.id desc";
+    var addTimeFlag = '-1';
+
+    function orderByAddTime() {
+        if (addTimeFlag == '-1' || addTimeFlag == '0') {
+            addTimeFlag = '1';
+            modTimeFlag = '-1';
+            //创建时间正序查
+            orderBy = 't.id asc';
+        } else if (addTimeFlag == '1') {
+            addTimeFlag = '0';
+            //创建时间倒序查
+            orderBy = 't.id desc';
+        }
+        selected();
+    }
+    var modTimeFlag = '-1';
+    //修改时间排序
+    function orderByModTime() {
+        if(modTimeFlag == '-1' || modTimeFlag == '0'){
+            modTimeFlag = '1';
+            addTimeFlag = '-1';
+            //修改时间正序查
+            orderBy = 't.modTime asc , t.id asc';
+        }else if(modTimeFlag == '1' ){
+            modTimeFlag = '0';
+            //修改时间倒序查
+            orderBy = "t.modTime desc , t.id desc";
+        }
+        selected();
+    }
+
+    //排序样式显示
+    function orderByShow() {
+        if(addTimeFlag == '0'){
+            $("#addTimeBtn").text('创建时间▼');
+        }else if(addTimeFlag == '1'){
+            $("#addTimeBtn").text('创建时间▲');
+        }
+
+        if(modTimeFlag == '0'){
+            $("#modTimeBtn").text('修改时间▼');
+        }else if(modTimeFlag == '1'){
+            $("#modTimeBtn").text('修改时间▲');
+        }
+    }
+
+
+    function EnterPress(event){ //传入 event
+        var e = event || window.event;
+        if(e.keyCode == 13){
+            editCheckVal();
+        }
+    }
+    function delCheckOptions(key) {
+
+        switch (key){
+            case 'taskFounder':
+                $("#taskFounderInput").val('all');
+                break;
+            case 'taskSuiteId':
+                $("#taskIdInput").val('');
+                break;
+            case 'title':
+                $("#taskNameInput").val('');
+                break;
+            case 'taskSuiteDesc':
+                $("#taskDescribeInput").val('');
+                break;
+            case 'testResult':
+                $("#allResultA").click();
+                break;
+            case "module":
+                $("#taskModuleInput").val('');
+                break;
+            case "businessLine":
+                $("#businessLineCheckTab").click();
+                break;
+            case "httpConfKey":
+                $("#httpConfCheckTab").click();
+                break;
+        }
+
+        editCheckVal();
+    }
+
+
+    function refreshResult() {
+
+        var result_1 = $("[name='result_1']");
+        var result_2 = $("[name='result_2']");
+        var result_10 = $("[name='result_10']");
+        var taskExecuteIdList = new Array();
+
+        if(result_1.length != 0 || result_2.length != 0 || result_10.length != 0){
+            for (var index = 0;index < result_1.length;index ++){
+                taskExecuteIdList.push(result_1.eq(index).attr("name1"))
+            }
+            for (var index = 0;index < result_2.length;index ++){
+                taskExecuteIdList.push(result_2.eq(index).attr("name1"))
+            }
+            for (var index = 0;index < result_10.length;index ++){
+                taskExecuteIdList.push(result_10.eq(index).attr("name1"))
+            }
+            var updateProgressData = $.ajax({
+                url:"{% url 'dubbo_UpdateTaskSuiteExecuteProgressData' %}",
+                data:{"taskExecuteIds":taskExecuteIdList.join(",")},
+                type:"POST",
+                async:true,
+                success:function () {
+                try{
+                    var updateProgressDataJson = JSON.parse(updateProgressData.responseText);
+                    var progressDict = updateProgressDataJson["body"];
+                    for(var progressIndex in progressDict){
+                        var progressTD = $("#progressTD_"+progressIndex);
+                        if(progressDict[progressIndex]["status"] === "2" && $("#progressTitle_"+progressIndex).length === 0){
+                            progressTD.html('<div id="progressTitle_'+progressIndex+'" class="progress  progress-striped active" title="通过0,失败0,错误0">\
+                                    <div id="progressData_'+progressIndex+'" class="progress-bar progress-bar-success" data-percentage="100" style="width: 0%;">0%</div>\
+                            </div>')
+                        }
+                        $("#progressTitle_"+progressIndex).attr("title",progressDict[progressIndex]["passPercent"]+"%");
+                        $("#progressData_"+progressIndex).attr("class","progress-bar progress-bar-"+progressDict[progressIndex]["execColor"]);
+                        $("#progressData_"+progressIndex).text(progressDict[progressIndex]["passPercent"]+"%");
+                        $("#progressData_"+progressIndex).css("width",progressDict[progressIndex]["passPercent"]+"%");
+                    }
+                    if(updateProgressDataJson["code"] === 11000){
+                        setTimeout("selected()",1000);
+                    }else if(updateProgressDataJson["code"] === 10000) {
+                        setTimeout("refreshResult()",1000);
+                    }
+
+
+                }catch (e){
+
+                    alert("页面刷新发生异常，请联系管理员，异常信息为："+e)
+
+                }
+            }})
+//            setTimeout("selected()",1000);
+        }
+    }
+
+    function selected() {
+
+        checkOptions();
+        var data = {checkArr : encodeURI(JSON.stringify(checkVals)),orderBy : orderBy,page:page};
+        $.cookie('checkVals_dubbo_tasksuite_execute', JSON.stringify(checkVals));
+        htmlobj=$.ajax({url:"{% url 'dubbo_getTaskSuiteExecuteResult' %}",async:true,data:data,type:"POST",success:function () {
+            if (isRefresh === false){
+                return;
+            }
+            $("#taskList").html(htmlobj.responseText);
+            orderByShow();
+            refreshResult();
+            getSelectExecuteStatus();
+            showAssertCheckbox();
+        }});
+
+    }
+    initCheckValsFromCookie();
+    selected();
+    function pageCall(pageNum) {
+        page = pageNum;
+        selected();
+     //判断是不是要把任务对比的多选亮出来
+    }
+    
+    function getSelectExecuteStatus() {
+            var getExecuteStatus = $.ajax({url:"{% url 'dubbo_TaskSuiteGetSelectExecuteStatus' %}",async:true,type:"GET",success:function () {
+                var result = JSON.parse(getExecuteStatus.responseText)["body"];
+                var resultHtml = $("[name='tabExecResult']");
+                for(var i=0;i<resultHtml.length;i++) {
+                    if(typeof(result[i]) == "undefined"){
+                        continue;
+                    }
+                    if (result[i]["testResult"] == "PASS") {
+                        resultHtml.eq(0).text("通过(" + result[i].count + ")")
+                    } else if (result[i].testResult == "FAIL") {
+                        resultHtml.eq(1).text("失败(" + result[i].count + ")")
+                    }else if (result[i].testResult == "ERROR") {
+                        resultHtml.eq(2).text("错误(" + result[i].count + ")")
+                    }else if (result[i].testResult == "EXCEPTION") {
+                        resultHtml.eq(3).text("异常(" + result[i].count + ")")
+                    }else if (result[i].testResult == "CANCEL") {
+                        resultHtml.eq(4).text("取消(" + result[i].count + ")")
+                    }
+                }
+        }})
+    }
+
+    //弹出隐藏层
+    function ShowDiv(){
+        obshowdiv =  $("#taskList");
+        offtop=obshowdiv.offset().top-60;
+        offleft=obshowdiv.offset().left;
+        obshowdiv.show();
+        docheight = $(document).height();
+        $('html,body').animate({scrollTop:offtop}, 200);
+    };
+
+    function stopTask(id,taskId) {
+        if(!confirm("确定要停止执行任务'"+$("#taskSuiteName_"+id).text()+"'?")){
+            return false;
+        };
+        var stopTask=$.ajax({url:"{% url 'dubbo_TaskStopTaskSuiteRun' %}?taskSuiteExecuteId="+id,async:false});
+        if (JSON.parse(stopTask.responseText)["code"] != 10000){
+            alert(JSON.parse(stopTask.responseText)["message"]);
+            return
+        }
+        selected();
+    }
+
+    function toggleShow() {
+        $("#taskCheck").toggle();
+        $("#runTask").toggle();
+    }
+
+    //弹出隐藏层
+    function openDiv(show_div,bg_div,id){
+        isRefresh = false;
+        $("#headId").text(id);
+        //弹出详情层
+        obshowdiv =  $('#'+show_div);
+        objclosediv = $('#'+show_div+'> label');
+        obbgdiv = $('#'+bg_div);
+        offtop=obshowdiv.offset().top;
+        offleft=obshowdiv.offset().left;
+        obshowdiv.css("top",offtop+40+"px");
+        objclosediv.css("top","40px");
+        objclosediv.css("left","90%");
+        obshowdiv.show();
+        obbgdiv.show();
+        docheight = $(document).height();
+        obbgdiv.height(docheight);
+        $('html,body').animate({scrollTop:offtop}, 800);
+        htmlobj=$.ajax({url:"{% url 'dubbo_getTaskSuiteExecuteResultData' %}?id="+id,async:false});
+        var data = JSON.parse(JSON.parse(htmlobj.responseText)["body"]);
+        var htmlText = '<tr><td>任务编号</td><td>'+data["taskSuiteId"]+'</td></tr>\
+            <tr><td>任务名称</td><td>'+data.title+'</td></tr>\
+            <tr><td>任务描述</td><td>'+data.taskSuiteDesc+'</td></tr>';
+
+        htmlText += '\
+            <tr><td>任务数量</td><td>'+data.taskCount+'<a href="javascript:void(0)" onclick="checkDetails(\'task\',\''+id+'\')" style=" margin-left:30px" class="label label-primary" >查看</a></td></tr>\
+            <tr id="taskIdList"  style="display:none;"><td  id="taskListSpan" colspan=2 align="center" ></td></tr>\
+            <tr><td>执行环境</td><td>'+data.httpConfKeyList+'</td></tr>\
+            <tr><td>是否加入历史统计</td><td>'+(data.isSaveHistory==1?"是":"否")+'</td></tr>\
+            <tr><td>是否发送邮件</td><td>'+(data.isSendEmail==1?"是":"否")+'</td></tr>\
+            <tr><td>执行备注</td><td>'+data.execComments+'</td></tr>\
+            <tr><td>执行人</td><td>'+data.userName+'</td></tr>';
+        if(data.execStatus == 3){
+            htmlText +=  '<tr><td>执行状态</td><td><span class="label label-success" style="font-size: 13px;">完成</span></td></tr>';
+        }else if(data.execStatus == 4) {
+            htmlText +=  '<tr><td>执行状态</td><td><span class="label label-danger" style="font-size: 13px;border-color: yellow;">异常</span></td></tr>';
+        }else if(data.execStatus == 11){
+            htmlText +=  '<tr><td>执行状态</td><td><span class="label label-default" style="font-size: 13px;">已取消</span></td></tr>';
+        }
+
+        if(data.execPlatform == 1){
+            htmlText +=  '<tr><td>调用平台</td><td>测试平台</td></tr>';
+        }else if(data.execPlatform == 2){
+            htmlText +=  '<tr><td>调用平台</td><td>jenkins</td></tr>';
+        }else if(data.execPlatform == 100){
+            htmlText +=  '<tr><td>调用平台</td><td>其他</td></tr>';
+        }
+
+        if(data.testResult == "PASS"){
+            htmlText +=  '<tr><td>测试结果</td><td><span class="label label-success" style="font-size: 13px;">通过</span></td></tr>';
+        }else if(data.testResult == "FAIL"){
+            htmlText +=  '<tr><td>测试结果</td><td><span class="label label-danger" style="font-size: 13px;">失败</span></td></tr>';
+        }else if(data.testResult == "ERROR"){
+            htmlText +=  '<tr><td>测试结果</td><td><span class="label label-danger" style="font-size: 13px;">错误</span></td></tr>';
+        }else if(data.testResult == "EXCEPTION"){
+            htmlText +=  '<tr><td>测试结果</td><td><span class="label label-warning" style="font-size: 13px;">异常</span></td></tr>';
+        }
+        try{
+             var testResultMsgJSON = JSON.parse(data.testResultMsg);
+             htmlText +=  '<tr><td>统计信息</td><td><textarea class="read-size" readonly="readonly">'+
+             '总计:    '+testResultMsgJSON['task']["total"]+
+             ',    通过:    '+testResultMsgJSON['task']["PASS"]+
+             ',    失败:    '+testResultMsgJSON['task']["FAIL"]+
+             ',    错误:    '+testResultMsgJSON['task']["ERROR"]+
+             ',    取消:    '+testResultMsgJSON['task']["CANCELED"]+
+             '</textarea>' +
+                 '</td></tr>';
+
+        }catch (err){
+
+            var testResultMsgJSON  = "";
+            htmlText +=  '<tr><td>统计信息</td><td><textarea class="read-size" readonly="readonly">'+
+            data.testResultMsg+
+             '</textarea></td></tr>';
+        }
+
+
+        if(data.testReportUrl != ""){
+            htmlText +='<tr><td>测试报告</td><td> <a href="'+data.testReportUrl+'" class="btn btn-info"  style="font-size: 15px;" target="_blank">查看报告</a></td></tr>';
+        }
+
+
+        $("#taskResultDetail").html(htmlText);
+        $("#surprise3").click();
+        $("[name='detailsCheck']").attr("disabled", true);
+    }
+
+    //关闭弹出层
+    function CloseDiv(show_div,bg_div){
+        isRefresh = true;
+        selected();
+        $("[name='detailsCheck']").attr("disabled", false);
+        $('#'+show_div).hide();
+        $('#'+bg_div).hide();
+    }
+
+    function closeInterfaceList() {
+        $("#surprise3").click();
+        CloseDiv("getTaskDetails", "bgdiv");
+    }
+
+    function checkDetails(option,id) {
+        if(option == "task"){
+            if($("#taskIdList").is(":visible")){
+                $("#taskIdList").hide();
+                return ;
+            }
+            htmlobj=$.ajax({url:"{% url 'dubbo_getTaskListDataForTaskSuite' %}?id="+id,async:false});
+            $("#taskListSpan").html(htmlobj.responseText);
+            $("#taskIdList").show();
+        }
+
+    }
+
+    function checkSelected(id) {
+        if($("#taskCaseIdList").is(":visible")){
+            $("#taskCaseIdList").hide();
+            return ;
+        }
+        htmlobj=$.ajax({url:"/InterfaceTest/HttpTaskExecResult/checkSelected?id="+id,async:false});
+        $("#taskCaseListSpan").html(htmlobj.responseText);
+        $(".button2").hide();
+        $("#taskCaseIdList").show();
+    }
+
+    function checkCase(id) {
+        htmlobj=$.ajax({url:"/InterfaceTest/HttpTaskExecResult/checkCase?id="+id,async:false});
+        $("#caseListWindowPage").html(htmlobj.responseText);
+
+    }
+
+    function againRunTask(thisObj) {
+        var version = thisObj.parent().parent().children().eq(2).text().trim();
+        var taskId = thisObj.parent().parent().children().eq(3).text().trim();
+        var taskName = thisObj.parent().parent().children().eq(4).text().trim();
+        var comments = thisObj.parent().parent().children().eq(5).text().trim();
+        var httpConfName = thisObj.parent().parent().children().eq(6).text().trim();
+        var isSaveHistory = thisObj.parent().parent().children().eq(7).text().trim();
+        var isSendEmail = thisObj.parent().parent().children().eq(8).text().trim();
+        var retryCount = thisObj.parent().parent().children().eq(9).text().trim();
+        if(confirm("执行版本:    "+version+"\n\n任务编号:    "+taskId+"\n\n任务名称:    "+taskName+"\n\n备注消息:    "+(comments==""?"-":comments)+"\n\n执行环境:    "+httpConfName+
+                "\n\n是否发送邮件:    "+isSendEmail+"\n\n重试次数:    "+retryCount+"\n\n是否再次执行?")){
+            var id = thisObj.parent().parent().children().eq(1).text();
+            htmlobj=$.ajax({url:"{% url 'dubbo_TaskSuiteAgainRun' %}?taskSuiteId="+id,async:false});
+            if(JSON.parse(htmlobj.responseText)["code"]=='10000'){
+                selected();
+            }else {
+                alert(htmlobj.responseText);
+                location.reload();
+                $("#t1").html(htmlobj.responseText);
+            }
+        }
+
+    }
+
+    function createPeople(num) {
+        htmlobj=$.ajax({url:'{% url 'queryPeopleInterfaceByTableName' %}?tbName=tb2_dubbo_task_suite_execute&num='+num,async:false});
+        var value = JSON.parse(htmlobj.responseText).body;
+        var nameVal = "";
+        for(var i = 0;i<value.length;i++){
+            nameVal = nameVal + ' &nbsp <a href="javascript:void(0);" id="hover-a" onclick="inputVal(\''+value[i].userName+'\')"  style="font-size: 15px;text-decoration:none">['+value[i].userName+'('+value[i].count+')]</a>'
+        }
+        if(value.length<3){
+            $("#names").html(nameVal);
+            $("#hover-a").attr('onclick','createPeople('+(0)+')');
+            $("#names").show();
+            return;
+        }else {
+            $("#names").html(nameVal);
+        }
+        $("#hover-a").attr('onclick','createPeople('+(num+1)+')');
+        $("#names").show();
+    }
+
+    //是否显示多选的开关
+    var assertCheckboxIsShow = false;
+    
+    function showAssertCheckbox() {
+        if (assertCheckboxIsShow){
+            $("#assertTh").css("display","");
+            $("[name='assertCheckbox']").css("display","");
+        }else {
+            $("#assertTh").css("display","none");
+            $("[name='assertCheckbox']").css("display","none");
+        }
+
+        selectCheckbox();
+
+    }
+    //自动勾选已勾选的box
+    function selectCheckbox() {
+        for (var index = 0;index < assertCheckbox.length;index++){
+            $("#"+assertCheckbox[index]).prop("checked",true);
+        }
+    }
+    
+    function checkAssertCheckbox() {
+       if (assertCheckboxIsShow){
+           assertCheckboxIsShow = false;
+       }else {
+           assertCheckboxIsShow = true;
+       }
+       showAssertCheckbox();
+    }
+
+    //定义一个全局变量，记录已经被勾选的要对比的任务
+    var assertCheckbox = new Array();
+    function checkAssertCheckboxList(taskExecuteId) {
+        if($("#"+taskExecuteId).is(':checked')){
+            assertCheckbox.push(taskExecuteId);
+            if(assertCheckbox.length > 2){
+                alert("最多只能勾选两个任务结果做对比");
+                $("#"+taskExecuteId).prop("checked",false);
+                assertCheckbox.splice($.inArray(taskExecuteId,assertCheckbox),1);
+            }
+        }else {
+            assertCheckbox.splice($.inArray(taskExecuteId,assertCheckbox),1);
+        }
+        if (assertCheckbox.length === 2){
+            $("#resultAssert").prop("disabled",false);
+        }else {
+            $("#resultAssert").prop("disabled",true);
+        }
+    }
+
+    function assertTaskResult() {
+
+        var res = $.ajax({
+            url:"{% url 'HTTP_ContrastTaskResult' %}",
+            data:{"taskId":assertCheckbox.join(",")},
+            type:"POST",
+            async:false
+        })
+        openTaskContrastDiv('getCaseList','bgdiv');
+        $("#taskContrast").html(res.responseText);
+    }
+
+    //弹出隐藏层
+    function openTaskContrastDiv(show_div,bg_div){
+        //弹出详情层
+        obshowdiv =  $('#'+show_div);
+        objclosediv = $('#'+show_div+'> label');
+        obbgdiv = $('#'+bg_div);
+        offtop=obshowdiv.offset().top;
+        offleft=obshowdiv.offset().left;
+        obshowdiv.css("top",offtop+40+"px");
+        objclosediv.css("top","40px");
+        objclosediv.css("left","90%");
+        obshowdiv.show();
+        obbgdiv.show();
+        docheight = $(document).height();
+        obbgdiv.height(docheight);
+        $('html,body').animate({scrollTop:offtop}, 800);
+
+
+    };
+    //关闭弹出层
+    function CloseTaskContrastDiv(show_div,bg_div){
+        $("#openDivBtn").attr("disabled", false);
+        $('#'+show_div).hide();
+        $('#'+bg_div).hide();
+    }
+
+    function trToggle(name) {
+        $("[name='"+name+"']").toggle();
+    }
+
+</script>
+<!-- Content ends -->
+{% include 'InterfaceTest/foot.html'%}

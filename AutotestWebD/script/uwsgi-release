@@ -1,0 +1,52 @@
+#!/bin/sh
+#
+# php-fpm - this script starts and stops the php-fpm daemin
+#
+# chkconfig: - 85 15
+# processname: php-fpm
+# config:      /usr/local/php/etc/php-fpm.conf
+
+set -e
+
+DESC="uwsgi daemon"
+NAME=uwsgi
+SCRIPTNAME=/etc/init.d/$NAME
+DAEMON=/usr/local/python36/bin/$NAME
+SCRIPTPATH=/root/ATPlatform/AutotestPlatform/AutotestWebD/script
+INIFILE=${SCRIPTPATH}/uwsgi-release.ini
+PIDFILE=${SCRIPTPATH}/uwsgi-release.pid
+
+d_start(){
+    $DAEMON --ini $INIFILE --post-buffering 32768 --buffer-size 32768
+}
+
+d_stop(){
+    kill -QUIT `cat $PIDFILE` || echo -n " no running"
+}
+
+
+case "$1" in
+    start)
+        echo -n "Starting $DESC: $NAME"
+        d_start
+        echo "."
+        ;;
+    stop)
+        echo -n "Stopping $DESC: $NAME"
+        d_stop
+        echo "."
+        ;;
+    restart)
+        echo -n "Restarting $DESC: $NAME"
+        d_stop
+        # Sleep for two seconds before starting again, this should give the nginx daemon some time to perform a graceful stop
+        sleep 2
+        d_start
+        echo "."
+        ;;
+    *)
+        echo "Usage: $SCRIPTNAME {start|stop|restart)" >&2
+        exit 3
+        ;;
+esac
+exit 0

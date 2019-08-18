@@ -1,0 +1,82 @@
+a.orange-d{
+    color:  	#D26900;
+    cursor:pointer;
+}
+
+a.orange-s{
+    color:  #8F4586;
+    cursor:pointer;
+}
+
+
+a.backgundgreen{
+    color: green;
+    cursor:pointer;
+}
+
+a.backgundyellow{
+    color:  	#5151A2;
+    cursor:pointer;
+}
+
+a.backgundred{
+    color: darkred;
+    cursor:pointer;
+}
+
+a.backgundredcyan{
+    color: #003f5c;
+    cursor:pointer;
+}
+
+a.backgund-purple{
+    color: 	#5B00AE;
+    cursor: pointer;
+}
+
+a.hover-blue:hover{color:blue;}
+
+.read-size {
+    min-width:100%;
+    max-width:100%;
+    min-height:75px;
+    background:transparent;
+    border-style:none;
+}
+
+
+
+ .btn_addPic
+        {
+            display: block;
+            position: relative;
+            width: 120px;
+            height: 28px;
+            overflow: hidden;
+            border: 1px solid #EBEBEB;
+            background: none repeat scroll 0 0 #F3F3F3;
+            color: #999999;
+            cursor: pointer;
+            text-align: center;
+            float: left;
+            margin-right:5px;
+        }
+        .btn_addPic span
+        {
+            cursor: pointer;
+            display: block;
+            line-height: 28px;
+        }
+        .filePrew
+        {
+            cursor: pointer;
+            position: absolute;
+            top: 0;
+            left:0;
+            width: 120px;
+            height: 30px;
+            font-size: 100px; /* 增大不同浏览器的可点击区域 */
+            opacity: 0; /* 实现的关键点 */
+            filter: alpha(opacity=0); /* 兼容IE */
+        }
+

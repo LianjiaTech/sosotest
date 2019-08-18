@@ -1,0 +1,571 @@
+{% include 'InterfaceTest/head.html' %}
+<!-- Main content starts -->
+<style>
+    a.button {
+        position: relative;
+        color: rgba(255, 255, 255, 1);
+        text-decoration: none;
+        background-color: rgba(219, 87, 5, 1);
+        font-family: 'Yanone Kaffeesatz';
+        font-weight: 700;
+        font-size: 4em;
+        display: block;
+        padding: 4px;
+        -webkit-border-radius: 8px;
+        -moz-border-radius: 8px;
+        border-radius: 8px;
+        -webkit-box-shadow: 0px 9px 0px rgba(219, 31, 5, 1), 0px 9px 25px rgba(0, 0, 0, .7);
+        -moz-box-shadow: 0px 9px 0px rgba(219, 31, 5, 1), 0px 9px 25px rgba(0, 0, 0, .7);
+        box-shadow: 0px 9px 0px rgba(219, 31, 5, 1), 0px 9px 25px rgba(0, 0, 0, .7);
+        margin: 100px auto;
+        width: 160px;
+        text-align: center;
+
+        -webkit-transition: all .1s ease;
+        -moz-transition: all .1s ease;
+        -ms-transition: all .1s ease;
+        -o-transition: all .1s ease;
+        transition: all .1s ease;
+    }
+
+    a.button:active {
+        -webkit-box-shadow: 0px 3px 0px rgba(219, 31, 5, 1), 0px 3px 6px rgba(0, 0, 0, .9);
+        -moz-box-shadow: 0px 3px 0px rgba(219, 31, 5, 1), 0px 3px 6px rgba(0, 0, 0, .9);
+        box-shadow: 0px 3px 0px rgba(219, 31, 5, 1), 0px 3px 6px rgba(0, 0, 0, .9);
+        position: relative;
+        top: 6px;
+    }
+</style>
+<div class="content">
+    <!-- Sidebar -->
+    {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Main bar -->
+    <div id="loading" class="loadingWrap" style="display:none;"></div>
+    <div class="right_col" role="main" style="min-height: 1657px;">
+        <div class="">
+
+            <div class="row">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="x_panel">
+                        <div class="x_title">
+                            <h2>新建UI测试任务</h2>
+                            <ul class="nav navbar-right panel_toolbox">
+                                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                                </li>
+                            </ul>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="x_content">
+                            <div data-parsley-validate class="form-horizontal form-label-left">
+                                <form action="" method="post" target="id_iframe">
+                                    {% csrf_token %}
+                                    <div class="col-lg-12">
+                                        <div class="ln_solid"></div>
+                                        <div class="col-xs-3">
+                                            <h4 style="margin-left: 40%">任务名称</h4>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-min-1"
+                                                       style="width:4.3%;"></label>
+                                                <div class="col-lg-1" style="width: 50%">
+                                                    <input type="text" class="form-control  " id="taskTitle"
+                                                           required="required"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <div class="ln_solid"></div>
+                                        <div class="col-xs-3">
+                                            <h4 style="margin-left: 40%">任务描述</h4>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-min-1"
+                                                       style="width:4.3%;"></label>
+                                                <div class="col-lg-2" style="width: 50%">
+                                                    <input type="text" class="form-control" id="taskDesc"
+                                                           required="required"/>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                <div class="col-lg-12">
+                                        <div class="ln_solid"></div>
+                                        <div class="col-xs-3">
+                                            <h4 style="margin-left: 40%">默认邮件列表</h4>
+                                        </div>
+                                        <div class="col-xs-9">
+                                            <div class="form-group">
+                                                <label class="control-label col-md-min-1"
+                                                       style="width:4.3%;"></label>
+                                                <div class="col-lg-2" style="width: 50%">
+                                                    <input type="text" class="form-control" id="emailList"/>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="col-lg-12">
+                                        <div class="ln_solid"></div>
+                                    </div>
+                                    <div id="fileList" >
+                                        <div class="col-lg-12">
+                                            <div class="col-xs-3">
+                                                <h4 style="margin-left: 40%">数据</h4>
+                                            </div>
+                                            <label class="control-label col-md-min-1" style="width:3%;"></label>
+                                            <div class="col-xs-3">
+                                                <ul class="nav nav-tabs tabs-left" id="fileUL">
+                                                </ul>
+                                            </div>
+                                            <div class="col-xs-5">
+                                                <!-- Tab panes -->
+                                                <div class="tab-content" id="fileTab">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <div class="ln_solid"></div>
+                                            <div class="col-xs-3">
+                                                <h4 style="margin-left: 40%">分级</h4>
+                                            </div>
+                                            <div class="col-xs-9">
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-min-1">{{ groupLevel1 }}</label>
+                                                    <div class="col-lg-2" style="width: 20%">
+                                                        <select class="form-control" id="businessLine"
+                                                                onchange="switchModule($(this).val())">
+                                                            {% for business in businessLine %}
+                                                                <option value="{{ business.id }}">{{ business.bussinessLineName }}</option>
+                                                            {% endfor %}
+                                                        </select>
+                                                    </div>
+                                                    <label class="control-label col-md-min-1"
+                                                           style="width:4.3%;">{{ groupLevel2 }}</label>
+                                                    <div class="col-lg-2" style="width: 20%">
+                                                        <select class="form-control" id="modules"></select>
+                                                    </div>
+
+                                                </div>
+
+                                            </div>
+
+
+                                        </div>
+                                        <div class="col-lg-12">
+
+                                            <div class="ln_solid"></div>
+                                            <div class="col-xs-3">
+                                                <h4 style="margin-left: 40%">来源</h4>
+                                            </div>
+                                            <div class="col-xs-9">
+                                                <div class="form-group">
+                                                    <label class="control-label col-md-min-1"
+                                                           style="width:4.3%;"></label>
+                                                    <div class="col-lg-2" style="width: 50%">
+                                                        <label style="font-weight:normal"><input id="webCheckBox"
+                                                                                                 name="sourceCheckbox"
+                                                                                                 style="zoom:150%; vertical-align:bottom;"
+                                                                                                 type="checkbox"
+                                                                                                 value="电脑Web">电脑Web&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                                        <label style="font-weight:normal"><input id="androidCheckBox"
+                                                                                                 name="sourceCheckbox"
+                                                                                                 style="zoom:150%; vertical-align:bottom;"
+                                                                                                 type="checkbox"
+                                                                                                 value="安卓App">安卓App&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                                        <label style="font-weight:normal"><input id="iosCheckBox"
+                                                                                                 name="sourceCheckbox"
+                                                                                                 style="zoom:150%; vertical-align:bottom;"
+                                                                                                 type="checkbox"
+                                                                                                 value="苹果App">苹果App&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                                        <label style="font-weight:normal"><input id="mobileCheckBox"
+                                                                                                 name="sourceCheckbox"
+                                                                                                 style="zoom:150%; vertical-align:bottom;"
+                                                                                                 type="checkbox"
+                                                                                                 value="移动端">移动端&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                                        <label style="font-weight:normal"><input id="allSourceCheckBox"
+                                                                                                 name="sourceCheckbox"
+                                                                                                 style="zoom:150%; vertical-align:bottom;"
+                                                                                                 type="checkbox"
+                                                                                                 value="所有端">所有端&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+
+                                        <div class="col-lg-12">
+                                            <div class="ln_solid"></div>
+                                            <div style="width:75%;">
+                                                {% if option != "add" %}
+                                                    <a href="{% url 'uiShowSimpleTask' %}" style="float: right"
+                                                       class="btn btn-primary btn-lg">
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;返回&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    </a>
+                                                {% endif %}
+                                                {% if option == "add" or option == "copy" %}
+                                                    <button id="saveSimpleTaskBtn" style="float: right" type="submit"
+                                                            class="btn btn-success btn-lg" onclick="saveSimpleTask()">
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;保存任务&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    </button>
+                                                {% elif option == "edit" %}
+                                                    <button id="saveSimpleTaskBtn" style="float: right" type="submit"
+                                                            class="btn btn-success btn-lg"
+                                                            onclick="saveEditSimpleTask()">
+                                                        &nbsp;&nbsp;&nbsp;&nbsp;保存任务&nbsp;&nbsp;&nbsp;&nbsp;
+                                                    </button>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+
+
+                                </form>
+                                <iframe id="id_iframe" name="id_iframe" style="display: none;"></iframe>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <!--调试-->
+        </div>
+
+    </div>
+</div>
+</div>
+<script type="text/javascript">
+
+
+    var businessLine_module_relation = $.ajax({
+        url: '{% url 'bmRelation' %}',
+        type: 'get',
+        async: false
+    });
+    try {
+        var bmDict = JSON.parse(businessLine_module_relation.responseText).body;
+    } catch (e) {
+        alert(bmDict);
+        alert("获取业务线模块关联失败")
+    }
+    switchModule($("#businessLine").val());
+
+    function switchModule(blId) {
+        $("#modules option").remove();
+        var mdSelect = $("#modules");
+        for (var index = 0; index < bmDict[blId].length; index++) {
+            jQuery("<option></option>").val(bmDict[blId][index]["id"]).text(bmDict[blId][index]["moduleName"]).appendTo(mdSelect);
+        }
+    }
+
+    function requiredInput() {
+        var verifyElement = $("[required='required']");
+        for (var index = 0; index < verifyElement.length; index++) {
+            if (verifyElement.eq(index).val() === "") {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
+    function userIsDir() {
+
+        var htmlobj = $.ajax({url: "{% url 'createDir' %}", async: false, type: 'get'});
+
+        try {
+            if (JSON.parse(htmlobj.responseText)["code"] === 10000) {
+                $('#uploads').click();
+            } else {
+                alert("用户目录创建失败，请联系管理员！")
+            }
+        } catch (e) {
+            alert("用户目录创建失败，请联系管理员！")
+        }
+
+    }
+
+    function loadFile(element) {
+        var file = element[0].files[0];
+        var point = element.val().lastIndexOf(".");
+
+        var type = element.val().substr(point);
+        {#        if (file.size > 1024*1024) {#}
+        {#            alert("文件大小不能超过1M");#}
+        {#            element.val('');#}
+        {#            return false;#}
+        {#        } #}
+        if (type.trim() !== ".xls") {
+            alert("文件必须是xls格式");
+            element.val('');
+            return false;
+        }
+        if (element[0].files[0].name.indexOf(" ") >= 0) {
+            alert('文件名称中包含空格，请删除重新上传');
+            element.val('');
+            return false;
+        }
+        $("#fileNameInput").text(element[0].files[0].name);
+    }
+
+
+    function checkUIFileList() {
+{#        $("#createDir").css("display", "none");#}
+        getFileList();
+{#        $("#fileList").css("display", "");#}
+    }
+
+    function getFileList() {
+        $("#loading").show();
+        var htmlobj = $.ajax({
+            url: "{% url 'checkFileList' %}", async: true, type: 'get', success: function () {
+                 $("#loading").hide();
+                try {
+                    var files = JSON.parse(htmlobj.responseText)["body"];
+                    var flag = 0;
+                    $("#fileUL").html("");
+                    $("#fileTab").html("");
+                    $.each(files["excelFilesDict"], function (key, value) {
+                        if (key === files["loginName"]) {
+                            $.each(value["sheet"], function (key2, value2) {
+                                if (flag === 0) {
+                                    var active = " active"
+                                } else {
+                                    var active = ""
+                                }
+
+                                $("#fileUL").append('<li class="' + active + '" name="fileTabLi"><a href="#file' + flag + '" data-toggle="tab" name="' + key2 + '"   aria-expanded="true">' + key2 + '&nbsp;&nbsp;&nbsp;&nbsp;<span name="' + key + '">' + value["userName"] + '</span></a></li>');
+
+                                var tabHtml = '<div class="tab-pane' + active + '" id="file' + flag + '" name="fileTabDiv">';
+                                for (var sheetIndex = 0; sheetIndex < value2.length; sheetIndex++) {
+                                    tabHtml += '<label style="font-weight:normal"><input style="zoom:150%; vertical-align:bottom;" type="checkbox"  name="' + value2[sheetIndex] + '">' + value2[sheetIndex] + "&nbsp;&nbsp;&nbsp;&nbsp;</label>";
+                                }
+                                tabHtml += '<a href="{% url "downLoadExcel" %}?loginName=' + key + '&fileName=' + key2 + '">下载</a>';
+                                tabHtml += '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:void(0)" onclick=file_delete("' + key + '","' + key2 + '")>删除</a>';
+                                tabHtml += '</div>';
+                                $("#fileTab").append(tabHtml);
+
+                                flag++;
+                            });
+                        }
+
+                    });
+
+
+                    $.each(files["excelFilesDict"], function (key, value) {
+                        if (key !== files["loginName"]) {
+                            $.each(value["sheet"], function (key2, value2) {
+                                if (flag === 0) {
+                                    var active = " active"
+                                } else {
+                                    var active = ""
+                                }
+                                $("#fileUL").append('<li class="' + active + '" name="fileTabLi"><a href="#file' + flag + '" data-toggle="tab" name="' + key2 + '" aria-expanded="true">' + key2 + '&nbsp;&nbsp;&nbsp;&nbsp;<span name="' + key + '">' + value["userName"] + '</span></a></li>');
+
+                                var tabHtml = '<div class="tab-pane' + active + '" id="file' + flag + '" name="fileTabDiv">';
+                                for (var sheetIndex = 0; sheetIndex < value2.length; sheetIndex++) {
+                                    tabHtml += '<label style="font-weight:normal"><input style="zoom:150%; vertical-align:bottom;" type="checkbox"  name="' + value2[sheetIndex] + '">' + value2[sheetIndex] + "&nbsp;&nbsp;&nbsp;&nbsp;</label>";
+                                }
+                                tabHtml += '<a href="{% url "downLoadExcel" %}?loginName=' + key + '&fileName=' + key2 + '">下载</a>';
+
+                                tabHtml += '</div>';
+                                $("#fileTab").append(tabHtml);
+
+                                flag++;
+                            });
+                        }
+                    });
+                    if ("{{ option }}" === "check") {
+                        $("input").prop("disabled", true);
+                        $("select").prop("disabled", true);
+                    }
+                    dataInit();
+                } catch (e) {
+
+                }
+            }
+        });
+
+    }
+
+
+    function initPage() {
+        var htmlobj = $.ajax({url: "{% url 'userIsFileShowSubPage' %}", async: false, type: 'get'});
+        try {
+            if (JSON.parse(htmlobj.responseText)["code"] !== 100000) {
+                checkUIFileList();
+
+            }
+        } catch (e) {
+
+        }
+
+    }
+
+
+    function getPageData() {
+        var fileTabDiv = $("[name='fileTabDiv']");
+        var sheetNameList = [];
+        for (var divIndex = 0; divIndex < fileTabDiv.length; divIndex++) {
+            if (fileTabDiv.eq(divIndex).attr("class") === "tab-pane active") {
+                var checkboxs = fileTabDiv.eq(divIndex).find("input:checked");
+                for (var checkboxIndex = 0; checkboxIndex < checkboxs.length; checkboxIndex++) {
+                    sheetNameList.push(checkboxs.eq(checkboxIndex).attr("name"))
+                }
+            }
+        }
+
+
+        var fileNameList = $("[name='fileTabLi']");
+        var fileName = "";
+        var userName = "";
+        for (var fileNameIndex = 0; fileNameIndex < fileNameList.length; fileNameIndex++) {
+            if (fileNameList.eq(fileNameIndex).attr("class") === "active" || fileNameList.eq(fileNameIndex).attr("class") === " active") {
+                fileName = fileNameList.eq(fileNameIndex).find("a").attr("name");
+                userName = fileNameList.eq(fileNameIndex).find("span").eq(0).attr("name");
+            }
+        }
+        var businessLineId = $("#businessLine option:selected").val();
+
+        var moduleId = $("#modules option:selected").val();
+
+        var sourceList = [];
+        $('input[name="sourceCheckbox"]:checked').each(function () {
+            sourceList.push($(this).val());
+        });
+        if (!requiredInput()) {
+            return false;
+        }
+        if (fileName === "") {
+            alert("请等待文件加载选择文件！");
+            return false;
+        }
+        if (sourceList.length === 0) {
+            alert("至少选择一个来源！");
+            return false;
+        }
+        var taskTitle = $("#taskTitle").val();
+        var taskDesc = $("#taskDesc").val();
+        var emailList = $("#emailList").val();
+        var dataDict = {
+            "sheetNameList": JSON.stringify(sheetNameList),
+            "fileName": fileName,
+            "userName": userName,
+            "businessLineId": businessLineId,
+            "moduleId": moduleId,
+            "sourceList": sourceList.join(","),
+            "taskTitle": taskTitle,
+            "taskDesc": taskDesc,
+            "emailList":emailList
+        };
+        return dataDict;
+    }
+
+
+    function file_delete(loginName, fileName) {
+        if (confirm("确认删除" + fileName + "?")) {
+            var data = {"loginName": loginName, "fileName": fileName};
+            var htmlobj = $.ajax({url: "{% url 'file_delete' %}", data: data, async: false, type: 'post'});
+            if (JSON.parse(htmlobj.responseText)["code"] === 10000) {
+                window.location.reload();
+            }
+        }
+    }
+
+    function saveSimpleTask() {
+        var dataDict = getPageData();
+        if (dataDict == false) {
+            return;
+        }
+        var htmlobj = $.ajax({
+            url: '{% url 'uiSaveSimpleTask' %}',
+            type: 'POST',
+            data: dataDict,
+            async: false
+        });
+        try {
+            if (JSON.parse(htmlobj.responseText)["code"] === 10000) {
+                window.location.href = "{% url 'uiShowSimpleTask' %}"
+            } else {
+                alert("添加失败！")
+            }
+        } catch (e) {
+            alert("任务添加失败，请联系管理员！")
+        }
+
+    }
+
+    function saveEditSimpleTask() {
+        var dataDict = getPageData();
+        if (dataDict == false) {
+            return;
+        }
+        dataDict["taskId"] = "{{ taskId }}";
+        var htmlobj = $.ajax({
+            url: '{% url 'uiSaveSimpleTask' %}',
+            type: 'POST',
+            data: dataDict,
+            async: false
+        });
+        try {
+            if (JSON.parse(htmlobj.responseText)["code"] === 10000) {
+                window.location.href = "{% url 'uiShowSimpleTask' %}"
+            } else {
+                alert("添加失败！")
+            }
+        } catch (e) {
+            alert("任务添加失败，请联系管理员！")
+        }
+
+    }
+
+    initPage();
+
+    function dataInit() {
+        if ("{{ option }}" !== "add") {
+            $("[class='current-page']").parent().parent().attr("class", "active");
+            $("[class='current-page']").parent().css("display", "block");
+            var requestData = {"taskId": "{{ taskId }}"};
+            var htmlobj = $.ajax({
+                url: "{% url 'getTaskForTaskId' %}", type: "POST", data: requestData, success: function () {
+                    var requestData = JSON.parse(htmlobj.responseText);
+                    if (requestData["code"] !== 10000) {
+                        window.location.href = "{% url 'uiShowSimpleTask' %}";
+                    }
+                    var uiTaskData = requestData.body;
+                    $("#taskTitle").val(uiTaskData["title"]);
+                    $("#taskDesc").val(uiTaskData["taskdesc"]);
+                    $("#emailList").val(uiTaskData["emailList"]);
+                    $("[name='" + uiTaskData["fileName"] + "']").find("[name='" + uiTaskData["fileAddBy"] + "']").click();
+                    var sheetNameList = uiTaskData["sheetName"].split(",");
+                    var fileTabDiv = $("[name='fileTabDiv'][class='tab-pane active']");
+                    for (var index = 0; index < sheetNameList.length; index++) {
+                        fileTabDiv.find("[name='" + sheetNameList[index] + "']").prop("checked", true);
+                    }
+                    $("#businessLine").val(uiTaskData["businessLineId"]);
+                    $("#modules").val(uiTaskData["moduleId"]);
+                    var sourceGroup = uiTaskData["sourceGroup"].split(",")
+                    for (var index = 0; index < sourceGroup.length; index++) {
+                        $("input[value='" + sourceGroup[index] + "']").prop("checked", true);
+                    }
+                }
+            });
+
+
+        }
+        if ("{{ option }}" === "check") {
+            $("input").prop("disabled", true);
+            $("select").prop("disabled", true);
+        }
+    }
+
+
+</script>
+<link href="/static/style/loading.css" rel="stylesheet">
+<!-- Content ends -->
+{% include 'InterfaceTest/foot.html' %}

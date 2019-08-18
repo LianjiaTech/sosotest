@@ -1,0 +1,74 @@
+{% include "myadmin/header.html" %}
+{% include "myadmin/menu.html" %}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper" xmlns:height="http://www.w3.org/1999/xhtml">
+    <style>
+        .ue-container {
+            width: 60%;
+            margin: 0 auto;
+            margin-top: 3%;
+            padding: 20px 40px;
+            border: 1px solid #ddd;
+            background: #fff;
+        }
+
+        .black_overlay {
+
+            display: none;
+            position: absolute;
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 1001;
+            -moz-opacity: 0.8;
+            opacity: .80;
+            filter: alpha(opacity=80);
+        }
+
+        .white_content {
+            display: none;
+            position: absolute;
+            top: 15%;
+            left: 20%;
+            width: 60%;
+            height: auto;
+            border: 16px solid lightblue;
+            background-color: white;
+            z-index: 1002;
+
+        }
+
+        .gray_content {
+            width: 100%;
+            height: 100%;
+            z-index: 1001;
+            background-color: grey;
+        }
+
+        .white_content_small {
+            display: none;
+            position: absolute;
+            top: 20%;
+            left: 30%;
+            width: 40%;
+            height: 50%;
+            border: 16px solid lightblue;
+            background-color: white;
+            z-index: 1002;
+            overflow: auto;
+        }
+    </style>
+
+            <div class="box" id="userRoleSubPage">
+            </div>
+
+
+</div>
+
+{% include "myadmin/footer.html" %}
+<script src="/static/myadmin/js/myadminCommon.js"></script>
+<script src="/static/myadmin/js/userRole/userRole_check.js"></script>
+

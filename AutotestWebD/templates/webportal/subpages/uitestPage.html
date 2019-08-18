@@ -1,0 +1,336 @@
+
+<script type="text/javascript">
+    function checkModuleDetail(element) {
+        var elementList = element.parent().parent().nextAll();
+        for (var index = 0;index<elementList.length;index++){
+            if(elementList.eq(index).attr("name") == "moduleDetail"){
+                elementList.eq(index).css("display","");
+            }else {
+                 break;
+            }
+        }
+        element.attr("onclick","hiddenModuleDetail($(this))");
+        element.text("隐藏详情");
+    }
+
+    function hiddenModuleDetail(element) {
+        var elementList = element.parent().parent().nextAll();
+        for (var index = 0;index<elementList.length;index++){
+            if(elementList.eq(index).attr("name") == "moduleDetail"){
+                elementList.eq(index).css("display","none");
+            }else {
+                 break;
+            }
+        }
+        element.attr("onclick","checkModuleDetail($(this))");
+        element.text("查看详情");
+    }
+
+    function checkBusinessLineDetail(element) {
+        var elementList = element.parent().parent().nextAll();
+        for (var index = 0;index<elementList.length;index++){
+            if(elementList.eq(index).attr("name") !== "businessLine"){
+                if(elementList.eq(index).attr("name") !== "moduleDetail"){
+                    elementList.eq(index).css("display","");
+                }
+            }else {
+                 break;
+            }
+        }
+        element.attr("onclick","hiddenBusinessLineDetail($(this))");
+        element.text("隐藏详情");
+    }
+
+    function hiddenBusinessLineDetail(element) {
+        var elementList = element.parent().parent().nextAll();
+        for (var index = 0;index<elementList.length;index++){
+            if(elementList.eq(index).attr("name") !== "businessLine"){
+                elementList.eq(index).css("display","none");
+                elementList.eq(index).find("a").attr("onclick","checkModuleDetail($(this))");
+                elementList.eq(index).find("a").text("查看详情");
+            }else {
+                 break;
+            }
+        }
+        element.attr("onclick","checkBusinessLineDetail($(this))");
+        element.text("查看详情");
+    }
+
+
+
+</script>
+
+<div class="row tile_count" style="margin-bottom: 0px;margin-top: 0px">
+    <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-user"></i> 测试用例总数</span>
+        <div class="count">{{ generalSituation.allTestCaseNum }}</div>
+    </div>
+    {#    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">#}
+    {#        <span class="count_top"><i class="fa fa-clock-o"></i>总用例数</span>#}
+    {#        <div class="count">1,86</div>#}
+    {#    </div>#}
+    <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-user"></i> UI自动化覆盖总数</span>
+        <div class="count green">{{ generalSituation.allAutoMetedNum }}</div>
+    </div>
+    {#     <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">#}
+    {#        <span class="count_top"><i class="fa fa-user"></i> UI覆盖率</span>#}
+    {#        <div class="count">884</div>#}
+    {#    </div>#}
+    <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-user"></i> 自动化率</span>
+        <div class="count">{{ generalSituation.coverageRate }}%</div>
+    </div>
+    {#    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">#}
+    {#        <span class="count_top"><i class="fa fa-user"></i> 构建成功率</span>#}
+    {#        <div class="count">260</div>#}
+    {#    </div>#}
+
+
+</div>
+
+<div class="clearfix"></div>
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2><a href="http://jira.ingageapp.com/secure/Dashboard.jspa?selectPageId=11692" target="_blank">UI测试覆盖度</a>
+
+            </h2>
+            <ul class="nav navbar-right panel_toolbox">
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+                <!--<li class="dropdown">-->
+                <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>-->
+                <!--<ul class="dropdown-menu" role="menu">-->
+                <!--<li><a href="#">Settings 1</a>-->
+                <!--</li>-->
+                <!--<li><a href="#">Settings 2</a>-->
+                <!--</li>-->
+                <!--</ul>-->
+                <!--</li>-->
+                <li><a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+        <div class="x_content">
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th style="width: 20%">业务线</th>
+                    <th style="width: 20%">测试用例总数</th>
+                    <th style="width: 20%">UI自动化覆盖总数</th>
+                    <th style="width: 20%">自动化率</th>
+                    <th style="width: 20%">操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for uiCoveredIndexKey,uiCoveredIndexValue in uiCovered.coverDetail.items %}
+                    <tr name="businessLine">
+                        <th scope="row">{{ uiCoveredIndexKey }}</th>
+                        <td>{{ uiCoveredIndexValue.coverDetail.allTestCaseNum }}</td>
+                        <td>{{ uiCoveredIndexValue.coverDetail.allAutoMetedNum }}</td>
+                        {% if uiCoveredIndexValue.coverDetail.coverageRate >= 90.00 %}
+                            <td style="color:green;">{{ uiCoveredIndexValue.coverDetail.coverageRate }}%</td>
+                        {% elif uiCoveredIndexValue.coverDetail.coverageRate >= 80.00 %}
+                            <td style="color: orange">{{ uiCoveredIndexValue.coverDetail.coverageRate }}%</td>
+                        {% else %}
+                            <td style="color:red;">{{ uiCoveredIndexValue.coverDetail.coverageRate }}%</td>
+                        {% endif %}
+                        <td><a target="_blank" href="javascript:void(0)" onclick="checkBusinessLineDetail($(this))">查看详情</a></td>
+                    </tr>
+                    <tr  name="businessLineDetail" style="display:none;background-color: #b0e0e6">
+                        <th scope="row">&nbsp;&nbsp;&nbsp;&nbsp;IOS</th>
+                        <td>{{ uiCoveredIndexValue.terminal.IOS.allTestCaseNum }}</td>
+                        <td>{{ uiCoveredIndexValue.terminal.IOS.allAutoMetedNum }}</td>
+                        {% if uiCoveredIndexValue.terminal.IOS.coverageRate >= 90.00 %}
+                            <td style="color:green;">{{ uiCoveredIndexValue.terminal.IOS.coverageRate }}%</td>
+                        {% elif uiCoveredIndexValue.terminal.IOS.coverageRate >= 80.00 %}
+                            <td style="color: orange">{{ uiCoveredIndexValue.terminal.IOS.coverageRate }}%</td>
+                        {% else %}
+                            <td style="color:red;">{{ uiCoveredIndexValue.terminal.IOS.coverageRate }}%</td>
+                        {% endif %}
+                        <td>-</td>
+                    </tr>
+                    <tr  name="businessLineDetail" style="display:none;background-color: #b0e0e6">
+                        <th scope="row">&nbsp;&nbsp;&nbsp;&nbsp;Android</th>
+                        <td>{{ uiCoveredIndexValue.terminal.Android.allTestCaseNum }}</td>
+                        <td>{{ uiCoveredIndexValue.terminal.Android.allAutoMetedNum }}</td>
+                        {% if uiCoveredIndexValue.terminal.Android.coverageRate >= 90.00 %}
+                            <td style="color:green;">{{ uiCoveredIndexValue.terminal.Android.coverageRate }}%</td>
+                        {% elif uiCoveredIndexValue.terminal.Android.coverageRate >= 80.00 %}
+                            <td style="color: orange">{{ uiCoveredIndexValue.terminal.Android.coverageRate }}%</td>
+                        {% else %}
+                            <td style="color:red;">{{ uiCoveredIndexValue.terminal.Android.coverageRate }}%</td>
+                        {% endif %}
+                        <td>-</td>
+                    </tr>
+                    <tr  name="businessLineDetail" style="display:none;background-color: #b0e0e6">
+                        <th scope="row">&nbsp;&nbsp;&nbsp;&nbsp;Web</th>
+                        <td>{{ uiCoveredIndexValue.terminal.Web.allTestCaseNum }}</td>
+                        <td>{{ uiCoveredIndexValue.terminal.Web.allAutoMetedNum }}</td>
+                        {% if  uiCoveredIndexValue.terminal.Web.coverageRate >= 90.00 %}
+                            <td style="color:green;">{{ uiCoveredIndexValue.terminal.Web.coverageRate }}%</td>
+                        {% elif uiCoveredIndexValue.terminal.Web.coverageRate >= 80.00 %}
+                            <td style="color: orange">{{ uiCoveredIndexValue.terminal.Web.coverageRate }}%</td>
+                        {% else %}
+                            <td style="color:red;">{{ uiCoveredIndexValue.terminal.Web.coverageRate }}%</td>
+                        {% endif %}
+                        <td>-</td>
+                    </tr>
+                    {% for mdIndexKey,mdIndexValue in uiCoveredIndexValue.moduleDict.items %}
+                        <tr name="businessLineDetail" style="display:none;background-color: #b0e0e6">
+                            <th scope="row">&nbsp;&nbsp;&nbsp;&nbsp;{{ mdIndexKey }}</th>
+                            <td>{{ mdIndexValue.coverDetail.allTestCaseNum }}</td>
+                            <td>{{ mdIndexValue.coverDetail.allAutoMetedNum }}</td>
+                            {% if  mdIndexValue.coverDetail.coverageRate >= 90.00  %}
+                                <td style="color:green;">{{ mdIndexValue.coverDetail.coverageRate }}%</td>
+                            {% elif  mdIndexValue.coverDetail.coverageRate >= 80.00 %}
+                                <td style="color: orange">{{ mdIndexValue.coverDetail.coverageRate }}%</td>
+                            {% else %}
+                                <td style="color:red;">{{ mdIndexValue.coverDetail.coverageRate }}%</td>
+                            {% endif %}
+                            <td><a target="_blank" href="javascript:void(0)" onclick="checkModuleDetail($(this))">查看详情</a></td>
+                        </tr>
+                        <tr name="moduleDetail" style="display:none;background-color: #40E0D0">
+                            <th scope="row">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;IOS</th>
+                            <td>{{ mdIndexValue.terminal.IOS.allTestCaseNum }}</td>
+                            <td>{{ mdIndexValue.terminal.IOS.allAutoMetedNum }}</td>
+                            {% if  mdIndexValue.terminal.IOS.coverageRate >= 90.00 %}
+                                <td style="color:green;">{{ mdIndexValue.terminal.IOS.coverageRate }}%</td>
+                            {% elif mdIndexValue.terminal.IOS.coverageRate >= 80.00 %}
+                                <td style="color: orange">{{ mdIndexValue.terminal.IOS.coverageRate }}%</td>
+                            {% else %}
+                                <td style="color:red;">{{ mdIndexValue.terminal.IOS.coverageRate }}%</td>
+                            {% endif %}
+                            <td>-</td>
+                        </tr>
+                        <tr name="moduleDetail" style="display:none;background-color: #40E0D0">
+                            <th scope="row">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Android</th>
+                            <td>{{ mdIndexValue.terminal.Android.allTestCaseNum }}</td>
+                            <td>{{ mdIndexValue.terminal.Android.allAutoMetedNum }}</td>
+                            {% if mdIndexValue.terminal.Android.coverageRate >= 90.00 %}
+                                <td style="color:green;">{{ mdIndexValue.terminal.Android.coverageRate }}%</td>
+                            {% elif mdIndexValue.terminal.Android.coverageRate >= 80.00 %}
+                                <td style="color: orange">{{ mdIndexValue.terminal.Android.coverageRate }}%</td>
+                            {% else %}
+                                <td style="color:red;">{{ mdIndexValue.terminal.Android.coverageRate }}%</td>
+                            {% endif %}
+                            <td>-</td>
+                        </tr>
+                        <tr name="moduleDetail" style="display:none;background-color: #40E0D0">
+                            <th scope="row">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Web</th>
+                            <td>{{ mdIndexValue.terminal.Web.allTestCaseNum }}</td>
+                            <td>{{ mdIndexValue.terminal.Web.allAutoMetedNum }}</td>
+                            {% if mdIndexValue.terminal.Web.coverageRate >= 90.00 %}
+                                <td style="color:green;">{{ mdIndexValue.terminal.Web.coverageRate }}%</td>
+                            {% elif mdIndexValue.terminal.Web.coverageRate >= 80.00 %}
+                                <td style="color: orange">{{ mdIndexValue.terminal.Web.coverageRate }}%</td>
+                            {% else %}
+                                <td style="color:red;">{{ mdIndexValue.terminal.Web.coverageRate }}%</td>
+                            {% endif %}
+                            <td>-</td>
+                        </tr>
+                    {% endfor %}
+                {% endfor %}
+
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+        <div class="x_title">
+            <h2>UI自动化测试执行情况</h2>
+            <ul class="nav navbar-right panel_toolbox">
+                <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                </li>
+                <li><a class="close-link"><i class="fa fa-close"></i></a>
+                </li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+
+        <div class="x_content">
+            <div class="table-responsive">
+                <table class="table table-striped jambo_table bulk_action">
+                    <thead>
+                    <tr class="headings">
+                        <th>
+                            <div class="icheckbox_flat-green" style="position: relative;"><input type="checkbox"
+                                                                                                 id="check-all"
+                                                                                                 class="flat"
+                                                                                                 style="position: absolute; opacity: 0;">
+                                <ins class="iCheck-helper"
+                                     style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
+                            </div>
+                        </th>
+                         <th class="column-title">业务线</th>
+                        {% for envIndex in allEnv %}
+                            <th class="column-title">{{ envIndex.alias }}</th>
+                        {% endfor %}
+                        <th class="column-title no-link last"><span class="nobr">操作</span></th>
+
+
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    {% for blEnvDetailKey,blEnvDetailValue in uiTest.blEnvDetail.items %}
+                        <tr class="even pointer">
+                        <td class="a-center ">
+                            <div class="icheckbox_flat-green" style="position: relative;"><input type="checkbox" class="flat"  name="table_records" style="position: absolute; opacity: 0;">
+                                <ins class="iCheck-helper"
+                                     style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
+                            </div>
+                        </td>
+                        <td class=" ">{{ blEnvDetailKey }}</td>
+
+                        {% for blMsgIndexKey,blMsgIndexValue in blEnvDetailValue.testMessage.items %}
+                            <td class=" " style="color: {{ blMsgIndexValue.color }}">[{{ blMsgIndexValue.caseStepPassCount }}/{{ blMsgIndexValue.caseStepTotalCount }}] {{ blMsgIndexValue.passRate }}%</td>
+                        {% endfor %}
+                        <td class=" last"><a target="_blank" href="javascript:void(0)" onclick="checkModuleDetail($(this))">查看详情</a></td>
+
+
+                    </tr>
+
+                    {% for mdDetailKey,mdDetailValue in blEnvDetailValue.mdTestDetail.items %}
+                        <tr style="display: none" name="moduleDetail">
+                        <td class="a-center " >
+                            <div class="icheckbox_flat-green" style="position: relative;"><input type="checkbox" class="flat"  name="table_records" style="position: absolute; opacity: 0;">
+                                <ins class="iCheck-helper"
+                                     style="position: absolute; top: 0%; left: 0%; display: block; width: 100%; height: 100%; margin: 0px; padding: 0px; background: rgb(255, 255, 255); border: 0px; opacity: 0;"></ins>
+                            </div>
+                        </td>
+                        <td class=" ">&nbsp;&nbsp;&nbsp;&nbsp;{{ mdDetailKey }}</td>
+                        {% for mdEnvTestKey,mdEnvTestValue in mdDetailValue.envTest.items %}
+                            {% if mdEnvTestValue.testMessage.testResult == "NOTRUN" %}
+                                <td class=" " ><a href="{{ mdEnvTestValue.testMessage.report }}" target="_blank" style="color: {{ mdEnvTestValue.testMessage.color }}">Null  [0/0]</a></td>
+                            {% elif mdEnvTestValue.testMessage.testResult == "NOTENV" %}
+                                <td class=" " ><a href="{{ mdEnvTestValue.testMessage.report }}" target="_blank" style="color: {{ mdEnvTestValue.testMessage.color }}">- [-/-]</a></td>
+                            {% else %}
+                                <td class=" " ><a href="{{ mdEnvTestValue.testMessage.report }}" target="_blank" style="color: {{ mdEnvTestValue.testMessage.color }}">[{{ mdEnvTestValue.testMessage.caseStepPassCount }}/{{ mdEnvTestValue.testMessage.caseStepTotalCount }}] {{ mdEnvTestValue.testMessage.passRate }}%</a></td>
+                            {% endif %}
+                        {% endfor %}
+                        <td class=" ">-</td>
+                        </tr>
+                    {% endfor %}
+
+                    {% endfor %}
+
+
+                    </tbody>
+                </table>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+
+

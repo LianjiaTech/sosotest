@@ -1,0 +1,851 @@
+{% include 'InterfaceTest/head.html' %}
+<!-- Main content starts -->
+
+<div class="content">
+    <!-- Sidebar -->
+    {% include 'InterfaceTest/HTTPMenu.html' %}    <!-- Sidebar ends -->
+    <!-- Main bar -->
+    <!-- Main bar -->
+    <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                  <div class="col-xs-12 form-group pull-right top_search">
+                    <h3>PostMan导入</h3>
+                  </div>
+              </div>
+
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                      <h2 style="width: 10% !important;margin-right: 1%!important">导入postman数据</h2>
+
+                      <h2 class="subNavH2Style">
+                          <div class="btn_addPic" style="display: block;background: #f0ad4e;color: white;">
+                              <span style="color: white;">上传文件…</span>
+                              <span id="inputFileSpan">
+                                  <input name="formDataInput" multiple="" tabindex="3" title="支持postman v1 v2 v2.1 三个版本的json文件" size="3" class="filePrew" type="file" onchange="uploadPostmanFile($(this))">
+                              </span>
+                          </div>
+                      </h2>
+
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                    </ul>
+
+                    <div class="clearfix"></div>
+                  </div>
+
+                    <!-- 隐藏搜索条件 -->
+                  <div class="x_content" style="display: none;">
+
+                    <div class="form-group">
+                        <div  id="checkOption">
+                            <span class="cat-text" style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>
+                        </div>
+                    </div>
+                      <br>
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist" style="margin-bottom: 0px">
+                        <li role="presentation" class="active"><a href="#caseName" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false" style="padding: 5px 5px;">接口名称</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#caseDescribe" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false" style="padding: 5px 5px;">接口描述</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#uri" role="tab"  data-toggle="tab" aria-expanded="false" style="padding: 5px 5px;">请求域名</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#caseInterFace" role="tab" id="profile-tab3" data-toggle="tab" aria-expanded="false" style="padding: 5px 5px;">接口URL</a>
+                        </li>
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+
+                        <div role="tabpanel" class="tab-pane fade active in" id="caseName" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="caseNameInput" onkeypress="EnterPress(event)" placeholder="请输入接口名称" >
+                            </div>
+                          </div>
+                        </div>
+
+
+                        <div role="tabpanel" class="tab-pane fade" id="caseDescribe" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="caseDescribeInput" onkeypress="EnterPress(event)" placeholder="请输入接口描述">
+                            </div>
+                          </div>
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane fade" id="uri" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="uriInput" onkeypress="EnterPress(event)" placeholder="请输入请求域名">
+                            </div>
+                          </div>
+                        </div>
+
+                        <div role="tabpanel" class="tab-pane fade" id="caseInterFace" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="caseInterFaceInput"  onkeypress="EnterPress(event)" placeholder="请输入接口URL" >
+                            </div>
+                          </div>
+                        </div>
+
+
+                      </div>
+                    </div>
+
+                  </div>
+                <div class="form-group">
+                    <textarea type="text"
+                              class="form-control Fixed-width"
+                              id="varsText"
+                              placeholder="若postman引用变量，请先声明postman变量，再上传文件，多个变量用分号间隔。声明方式如下：
+key1 = value;
+key2 = value2;"></textarea>
+
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-min-1" style="margin-left: 2%;white-space: nowrap;margin-top: 8px;">{{ groupLevel1 }}</label>
+                    <div class="col-lg-2" style="width: 13.5%">
+                        <select class="form-control" id="businessLine" onchange="switchModule($(this).val())">
+                            {% for business in businessLine %}
+                                <option value="{{ business.id }}">{{ business.bussinessLineName }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <label class="control-label col-md-min-1" style="width:4.3%;white-space: nowrap;margin-top: 8px;margin-left: 10px;">{{ groupLevel2 }}</label>
+                    <div class="col-lg-2" style="width: 13.5%">
+                        <select class="form-control" id="modules">
+                        </select>
+                    </div>
+
+                    <label class="control-label col-md-min-1" style="width:4.3%;white-space: nowrap;margin-top: 8px;margin-left: 10px;">导入header</label>
+                    <div class="col-lg-2" style="width: 13.5%">
+                        <select class="form-control" id="headersEnable">
+                            <option value="否">否</option>
+                            <option value="是">是</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="caseList" class="form-group">
+
+                </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+    </div>
+
+</div>
+<script type="text/javascript">
+    var checkVals = {"title":"","casedesc":"","uri":"","url":""};
+    var postmanFileContent = "";
+    var postmanJson = {}; //导入的postman的解析的内容
+    var selectLineList = []; //选择的要导入的行
+    var domainList = [];
+    var domainUriDict = {};
+    var version = "v1";
+    var varsPool = {};
+    function generateVarspool(){
+        varsPool = {};
+        var varstrList = $("#varsText").val().split(";");
+        for(var vIndex = 0; vIndex<varstrList.length; vIndex++ ){
+            var tmpVarlist = varstrList[vIndex].split("=");
+            if(tmpVarlist.length >= 2){
+                var tmpKey = tmpVarlist[0];
+                var tmpValue = "";
+                for(var tmpVindex=1; tmpVindex<tmpVarlist.length; tmpVindex++){
+                    tmpValue += tmpVarlist[tmpVindex];
+                    if(tmpVindex != tmpVarlist.length-1){
+                        tmpValue += "=";
+                    }
+                }
+                varsPool[tmpKey.trim()] = tmpValue.trim();
+            }
+        }
+        var varKeyList = [];
+        for(var key in varsPool){
+            varKeyList.push(key);
+        }
+        if(varKeyList.length == 0 && $("#varsText").val().trim()!="" ){
+            alert("没有发现合法的变量！");
+        }
+    }
+
+    var businessLine_module_relation = $.ajax({
+              url: '{% url 'bmRelation' %}' ,
+              type: 'get',
+              async: false,
+         });
+    try{
+        var bmDict = JSON.parse(businessLine_module_relation.responseText).body;
+    }catch (e){
+        alert(bmDict);
+        alert("获取{{ groupLevel1 }}{{ groupLevel2 }}关联失败")
+    }
+
+    function switchModule(blId) {
+        $("#modules option").remove();
+        var mdSelect = $("#modules");
+        for(var index = 0; index < bmDict[blId].length;index ++){
+            jQuery("<option></option>").val(bmDict[blId][index]["id"]).text(bmDict[blId][index]["moduleName"]).appendTo(mdSelect);
+        }
+        $("#businessLine").select2();
+        $("#modules").select2();
+    }
+    switchModule($("#businessLine").val());
+
+    function clearChecked() {
+        $("#caseNameInput").val('') ;
+        $("#caseDescribeInput").val('');
+        $("#uriInput").val('');
+        $("#caseInterFaceInput").val('');
+        editCheckVal();
+    }
+    function editCheckVal() {
+        //接口名称
+        if($("#caseNameInput").val()==''){
+            checkVals['title'] = '';
+        }else {
+            checkVals['title'] =$("#caseNameInput").val() ;
+        }
+
+        //接口描述
+        if ($("#caseDescribeInput").val()==''){
+            checkVals['casedesc']='';
+        }else {
+            checkVals['casedesc']=$("#caseDescribeInput").val();
+        }
+
+        //URI
+        if ($("#uriInput").val()==''){
+            checkVals['uri']='';
+        }else {
+            checkVals['uri']=$("#uriInput").val();
+        }
+
+        //服务
+        if ($("#caseInterFaceInput").val()==''){
+            checkVals['url']='';
+        }else {
+            checkVals['url']=$("#caseInterFaceInput").val();
+        }
+
+        selected();
+    }
+    function checkOptions() {
+
+        var htmls = ' <span class="cat-text"style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>';
+
+        for(var item in checkVals){
+            if(checkVals[item] != '' && typeof(checkVals[item]) != 'undefined'){
+                var key = '';
+                switch(item){
+                    case "title":
+                        key = '接口名称';
+                        break;
+                    case "casedesc":
+                        key = '接口描述';
+                        break;
+                    case "uri":
+                        key = '请求域名';
+                        break;
+                    case "url":
+                        key = '接口URL';
+                        break;
+                }
+                htmls = htmls+'<span class="tag"><span>'+key+'：'+checkVals[item]+'&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delCheckOptions(\''+item+'\')">x</a></span> '
+
+            }
+        }
+        htmls = htmls +'<span class="tag" style="float: right;background-color: #ff7575"><span>默认筛选&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="clearChecked()">x</a></span>';
+        $('#checkOption').html(htmls);
+    }
+    function EnterPress(event){ //传入 event
+        var e = event || window.event;
+        if(e.keyCode == 13){
+            editCheckVal();
+        }
+    }
+    function delCheckOptions(key) {
+        switch (key){
+            case "title":
+                $("#caseNameInput").val('');
+                break;
+            case "casedesc":
+                $("#caseDescribeInput").val('');
+                break;
+            case "uri":
+                $("#uriInput").val('');
+                break;
+            case "url":
+                $("#caseInterFaceInput").val('');
+                break;
+
+        }
+
+        editCheckVal();
+    }
+    //js 读取文件
+    function jsReadFiles(input) {
+        var retRes = "";
+        //支持chrome IE10
+        if (window.FileReader) {
+            var file = input.files[0];
+            filename = file.name.split(".")[0];
+            var reader = new FileReader();
+            reader.onload = function() {
+                postmanFileContent = this.result;
+            };
+            reader.readAsText(file);
+        }
+        //支持IE 7 8 9 10
+        else if (typeof window.ActiveXObject != 'undefined'){
+            var xmlDoc;
+            xmlDoc = new ActiveXObject("Microsoft.XMLDOM");
+            xmlDoc.async = false;
+            xmlDoc.load(input.value);
+            retRes = xmlDoc.xml;
+            return retRes;
+        }
+        //支持FF
+        else if (document.implementation && document.implementation.createDocument) {
+            var xmlDoc;
+            xmlDoc = document.implementation.createDocument("", "", null);
+            xmlDoc.async = false;
+            xmlDoc.load(input.value);
+            retRes = xmlDoc.xml;
+            return retRes;
+        } else {
+            alert('无法识别的文件！必须是文本文件！');
+            return false;
+        }
+    }
+    function uploadPostmanFile(element){
+        var files = element[0].files;
+        var file = files[0];
+        if (file.size > 1024*1024) {
+            alert("文件大小不能超过1M");
+            element.val('');
+            return false;
+        }else{
+            if (window.FileReader) {
+                filename = file.name.split(".")[0];
+                var reader = new FileReader();
+                reader.onload = function() {
+                    postmanFileContent = this.result;
+                    try{
+                        postmanJson = JSON.parse(postmanFileContent.trim());
+                        selected();
+                    }catch(e){
+                        console.error(e);
+                        alert("不合法的json，请检查导入的文件！");
+                    }
+
+                };
+                reader.readAsText(file);
+            }
+        }
+        $("#inputFileSpan").html('<input name="formDataInput" multiple="" tabindex="3" title="支持postman v1 v2 v2.1 三个版本的json文件" size="3" class="filePrew" type="file" onchange="uploadPostmanFile($(this))">');
+    }
+    function processStrWithVarspool(strToBeProcessed){
+        var proList = strToBeProcessed.split("\{\{");
+        var baseList = [];
+        var replacedList = [];
+        for(var index=1; index < proList.length; index++ ){
+            var tmpStr = proList[index];
+            var tmpEndPos = tmpStr.indexOf("}}");
+            var tmpVarkey = tmpStr.substring(0,tmpEndPos);
+            var tmpVarkeyTrimed = tmpVarkey.trim();
+            if(varsPool.hasOwnProperty(tmpVarkeyTrimed)){
+                baseList.push("\{\{"+tmpVarkey+"}}");
+                replacedList.push(varsPool[tmpVarkeyTrimed]);
+            }
+        }
+        for(var baseIndex = 0; baseIndex < baseList.length; baseIndex++){
+            strToBeProcessed = strToBeProcessed.replace(new RegExp(baseList[baseIndex], 'g'), replacedList[baseIndex])
+        }
+        return strToBeProcessed;
+    }
+    function analyzeReqline(reqLine){
+        //先对reqline进行变量替换
+        reqLine = processStrWithVarspool(reqLine);
+        console.log(reqLine);
+        var protocol = "http";
+        var host = "";
+        var urlParamList = reqLine.split("?");
+        //处理params 参数请求行参数
+        var params = "";
+        for(var index = 1; index < urlParamList.length; index++ ){
+            if(index === urlParamList.length-1) {
+                params += urlParamList[index];
+            }else{
+                params += urlParamList[index]+"?";
+            }
+        }
+
+        //处理host 和 ur
+        var hosturl = urlParamList[0].trim();
+        var url = "";
+        if(hosturl.charAt(0) == "/" ){
+            //这是url，没有host
+            url = hosturl;
+        }else if(hosturl.charAt(0) == "{" && hosturl.charAt(1) == "{"){
+            //域名是变量，这种情况通过变量池解析域名。
+            url = hosturl;
+        }else if(hosturl.toLowerCase().trim().startWith("http://") || hosturl.toLowerCase().trim().startWith("https://")){
+            //host开头
+            var protocolhosturllist = hosturl.split("://");
+            protocol = protocolhosturllist[0].trim().toLowerCase();
+            var hosturlList = protocolhosturllist[1].split("/");
+            host = hosturlList[0].toLowerCase();
+            url = "/";
+            for(var index = 1;index <hosturlList.length; index++ ){
+                if(index === hosturlList.length-1) {
+                    url += hosturlList[index];
+                }else{
+                    url += hosturlList[index]+"/";
+                }
+            }
+        }else{
+            host = "不合法的请求url";
+        }
+        return [protocol+"://"+host,url,params];
+    }
+    var caseList = [];
+    
+    function analyzeV1(){
+        caseList = [];
+        var requestsList = postmanJson['requests'];
+        for(var reqIndex =0; reqIndex < requestsList.length; reqIndex++ ){
+            var tmpDict = {};
+            var tmpRequest = requestsList[reqIndex];
+            tmpDict['title'] = tmpRequest["name"];
+            if(tmpRequest.hasOwnProperty("description")){
+                tmpDict['casedesc'] = tmpRequest["description"];
+            }else{
+                tmpDict['casedesc'] = "";
+            }
+            tmpDict['method'] = tmpRequest["method"];
+
+            //根据请求url分析 host url params
+            var reqLine = tmpRequest["url"];
+            caseListForReqLine = analyzeReqline(reqLine);
+            tmpDict['domain'] = caseListForReqLine[0];
+            tmpDict['url'] = caseListForReqLine[1];
+            tmpDict['params'] = caseListForReqLine[2];
+
+            //处理 headers
+            var headerDict = {};
+            if(tmpRequest.hasOwnProperty("headers") && $("#headersEnable").val() == "是"){
+                var headerList = tmpRequest['headers'].split("\n");
+                for(var headerIndex=0; headerIndex<headerList.length; headerIndex ++ ){
+                    var tmpHeadList = headerList[headerIndex].split(":");
+                    if(tmpHeadList.length == 2){
+                        headerDict[tmpHeadList[0]] = tmpHeadList[1];
+                    }
+                }
+            }
+            tmpDict['header'] = JSON.stringify(headerDict);
+
+
+            //处理bodytype 和 body content
+            if(tmpRequest['dataMode'] == "params"){
+                tmpDict['bodyType'] = "form-data";
+                tmpDict['bodyContent'] = "";
+                console.log(tmpRequest);
+                var bodyDataList = tmpRequest['data'];
+                var tmpMyFormdataList = [];
+                if(bodyDataList){
+                    for(var findex = 0; findex<bodyDataList.length; findex++){
+                        var tmpFormdataDict = {};
+                        tmpFormdataDict['key'] = bodyDataList[findex]['key'];
+                        tmpFormdataDict['value'] = bodyDataList[findex]['value'];
+                        tmpFormdataDict['type'] = bodyDataList[findex]['type'];
+                        tmpMyFormdataList.push(tmpFormdataDict);
+                    }
+                }
+                tmpDict['bodyContent'] = JSON.stringify(tmpMyFormdataList)
+            }
+            else if(tmpRequest['dataMode'] == "urlencoded"){
+                tmpDict['bodyType'] = "x-www-form-urlencoded";
+                tmpDict['bodyContent'] = "";
+                var bodyDataList = tmpRequest['data'];
+                for(var findex = 0; findex<bodyDataList.length; findex++){
+                    tmpDict['bodyContent'] += bodyDataList[findex]['key']+"="+bodyDataList[findex]['value'];
+                    if(findex != bodyDataList.length - 1){
+                        tmpDict['bodyContent'] += "&";
+                    }
+                }
+            }
+            else if(tmpRequest['dataMode'] == "binary"){
+                tmpDict['bodyType'] = "binary";
+                tmpDict['bodyContent'] = "";
+            }
+            else if(tmpRequest['dataMode'] == "raw"){
+                tmpDict['bodyType'] = "raw";
+                tmpDict['bodyContent'] = tmpRequest['rawModeData'];
+            }
+            else{
+               tmpDict['bodyType'] = "";
+               tmpDict['bodyContent'] = "";
+            }
+
+            //处理前置后置
+            tmpDict['varsPost'] = "";
+            tmpDict['varsPre'] = "";
+            var events = tmpRequest['events'];
+            if(events != null){
+                for(var eventIndex=0; eventIndex < events.length; eventIndex++){
+                    if(tmpRequest['events'][eventIndex]['listen'] === "test"){
+                        tmpDict['varsPost'] = tmpRequest['events'][eventIndex]['script']['exec'];
+
+                    }else if (tmpRequest['events'][eventIndex]['listen'] === "prerequest"){
+                        tmpDict['varsPre'] = tmpRequest['events'][eventIndex]['script']['exec'];
+                    }
+                }
+            }
+
+            //处理响应
+            tmpDict['response'] = "";
+            if(tmpRequest.hasOwnProperty("responses") && tmpRequest['responses'].length > 0){
+                try{
+                    JSON.parse(tmpRequest['responses'][0]["text"]);
+                    tmpDict['response'] = tmpRequest['responses'][0]["text"];
+                }catch(e){
+                }
+            }
+            caseList.push(tmpDict);
+        }
+        return caseList;
+    }
+    
+    function recureV2Item(requestsList){
+        for(var reqIndex =0; reqIndex < requestsList.length; reqIndex++ ){
+            var tmpDict = {};
+            var tmpItem = requestsList[reqIndex];
+            if(tmpItem.hasOwnProperty("item")){
+                recureV2Item(tmpItem['item']);
+            }
+            else{
+                tmpDict['title'] = tmpItem["name"];
+                var tmpRequest = tmpItem['request'];
+                if(tmpRequest.hasOwnProperty("description")){
+                    tmpDict['casedesc'] = tmpRequest["description"];
+                }else{
+                    tmpDict['casedesc'] = "";
+                }
+                tmpDict['method'] = tmpRequest["method"];
+
+                //根据请求url分析 host url params
+                var reqLine = tmpRequest["url"];
+                if(reqLine.hasOwnProperty("raw")){
+                    reqLine = reqLine["raw"];
+                }
+
+                var retReqlineList = analyzeReqline(reqLine);
+                tmpDict['domain'] = retReqlineList[0];
+                tmpDict['url'] = retReqlineList[1];
+                tmpDict['params'] = retReqlineList[2];
+
+                //处理 headers
+                var headerDict = {};
+                if(tmpRequest.hasOwnProperty("header")  && $("#headersEnable").val() == "是"){
+                    var headerList = tmpRequest['header'];
+                    for(var headerIndex=0; headerIndex<headerList.length; headerIndex ++ ){
+                        headerDict[headerList[headerIndex]['key']] = headerList[headerIndex]['value'];
+                    }
+                }
+                tmpDict['header'] = JSON.stringify(headerDict);
+
+
+                //处理bodytype 和 body content
+                console.log(tmpRequest);
+                if(tmpRequest.hasOwnProperty("body")){
+                    if(tmpRequest['body']['mode'] == "formdata"){
+                        tmpDict['bodyType'] = "form-data";
+                        tmpDict['bodyContent'] = "";
+                        var bodyDataList = tmpRequest['body']['formdata'];
+                        var tmpMyFormdataList = [];
+                        for(var findex = 0; findex<bodyDataList.length; findex++){
+                            var tmpFormdataDict = {};
+                            tmpFormdataDict['key'] = bodyDataList[findex]['key'];
+                            tmpFormdataDict['value'] = bodyDataList[findex]['value'];
+                            tmpFormdataDict['type'] = bodyDataList[findex]['type'];
+                            tmpMyFormdataList.push(tmpFormdataDict);
+                        }
+                        tmpDict['bodyContent'] = JSON.stringify(tmpMyFormdataList)
+                    }
+                    else if(tmpRequest['body']['mode'] == "urlencoded"){
+                        tmpDict['bodyType'] = "x-www-form-urlencoded";
+                        tmpDict['bodyContent'] = "";
+                        var bodyDataList = tmpRequest['body']['urlencoded'];
+                        for(var findex = 0; findex<bodyDataList.length; findex++){
+                            tmpDict['bodyContent'] += bodyDataList[findex]['key']+"="+bodyDataList[findex]['value'];
+                            if(findex != bodyDataList.length - 1){
+                                tmpDict['bodyContent'] += "&";
+                            }
+                        }
+                    }
+                    else if(tmpRequest['body']['mode'] == "file"){
+                        tmpDict['bodyType'] = "binary";
+                        tmpDict['bodyContent'] = "";
+                    }
+                    else if(tmpRequest['body']['mode'] == "raw"){
+                        tmpDict['bodyType'] = "raw";
+                        tmpDict['bodyContent'] = tmpRequest['body']['raw'];
+                    }
+                    else{
+                       tmpDict['bodyType'] = "";
+                       tmpDict['bodyContent'] = "";
+                    }
+                }else{
+                    tmpDict['bodyType'] = "";
+                    tmpDict['bodyContent'] = "";
+                }
+                //处理前置后置
+                tmpDict['varsPost'] = "";
+                tmpDict['varsPre'] = "";
+                if(tmpItem.hasOwnProperty("event")){
+                    var events = tmpItem['event'];
+                    if(events != null){
+                        for(var eventIndex=0; eventIndex < events.length; eventIndex++){
+                            if(events[eventIndex]['listen'] === "test"){
+                                tmpDict['varsPost'] = events[eventIndex]['script']['exec'];
+
+                            }else if (events[eventIndex]['listen'] === "prerequest"){
+                                tmpDict['varsPre'] = events[eventIndex]['script']['exec'];
+                            }
+                        }
+                    }
+                }
+
+                //处理响应
+                tmpDict['response'] = "";
+                var responseList = tmpItem['response'];
+                if(responseList.length > 0){
+                    try{
+                        JSON.parse(responseList[0]["body"]);
+                        tmpDict['response'] = responseList[0]["body"];
+                    }catch(e){
+                    }
+                }
+
+                caseList.push(tmpDict);
+            }
+        }
+    }
+    function analyzeV2() {
+        caseList = [];
+        var requestsList = postmanJson['item'];
+        recureV2Item(requestsList);
+        return caseList;
+    }
+    function analyzeV21() {
+        return analyzeV2();
+    }
+    function delCaseTr(indexId){
+        if(confirm("确认删除第"+(indexId+1)+"行么？")){
+            $("#trshow_"+indexId).remove();
+            $("#otherInfo_"+indexId).remove();
+        }
+    }
+    function getShowHtmlByPostManJsonAndCheckVals(){
+        if(postmanFileContent == ""){
+            return;
+        }
+        var importedHttpList = [];
+        try{
+            generateVarspool();
+            if(postmanJson.hasOwnProperty("id")){
+                console.log("v1");
+                version = "v1";
+                importedHttpList = analyzeV1();
+            }else{
+                //不是v1，是v2 or 2.1
+                if(postmanJson.hasOwnProperty("item")){
+                    //v2或者v2.1
+                    if(postmanJson['item'].length >= 1){
+                        //有数据
+                        if(postmanJson['item'][0].hasOwnProperty("protocolProfileBehavior")){
+                            //v2
+                            console.log("v2");
+                            version = "v2";
+                            importedHttpList = analyzeV2();
+                        }else{
+                            //v2.1
+                            console.log("v2.1");
+                            version = "v2.1";
+                            importedHttpList = analyzeV21();
+                        }
+                    }else{
+                        //没数据
+                        alert("没有有效数据");
+                        return;
+                    }
+                }else{
+                    //啥也不是，非法的
+                    alert("不是合法的postman导出json。");
+                }
+            }
+        }catch(e){
+            console.error(e);
+            alert(e);
+            return
+        }
+        //这个函数解析postman的文本，并且生成要展示的html字符串返回。
+        var retHtml =
+            '<table class="table table-bordered " style="table-layout:fixed;width:100%;word-break:break-all;">' +
+            '    <thead>' +
+            '    <tr style="color: snow" bgcolor="#2A3F54">' +
+            '        <th style="width:5%;">序号</th>' +
+            '        <th style="width:15%;">接口名称</th>' +
+            '        <th style="width:20%;">接口描述</th>' +
+            '        <th style="width:10%;">请求域名</th>' +
+            '        <th style="width:10%;">METHOD</th>' +
+            '        <th style="width:30%;">接口URL</th>' +
+            '        <th style="width:5%;">操作</th>' +
+            '    </tr>' +
+            '    </thead>' +
+            '    <tbody id="tablebody">' ;
+        if(importedHttpList.length == 0){
+                    retHtml +=        ' <tr><td colspan="7" align="center" >没有符合条件的导入结果</td></tr>';
+        }else{
+            for(var indexHttp = 0; indexHttp < importedHttpList.length; indexHttp++ ){
+                retHtml +=    '<tr id="trshow_'+indexHttp+'" lineno="'+indexHttp+'">'+
+                    '                <td name="trIds">'+(indexHttp+1)+'</td>'+
+                    '                <td id="title_'+indexHttp+'">'+importedHttpList[indexHttp]['title']+'</td>'+
+                    '                <td id="casedesc_'+indexHttp+'">'+importedHttpList[indexHttp]['casedesc']+'</td>'+
+                    '                <td id="domain_'+indexHttp+'">'+importedHttpList[indexHttp]['domain']+'</td>'+
+                    '                <td id="method_'+indexHttp+'">'+importedHttpList[indexHttp]['method']+'</td>'+
+                    '                <td id="url_'+indexHttp+'">'+importedHttpList[indexHttp]['url']+'</td>'+
+                    '                <td>' +
+                    '                    <button class="btn btn-primary optionButtionSize" title="查看" onclick=\'$("#otherInfo_'+indexHttp+'").toggle();\' style="margin:0 0 0 0;">' +
+                    '                                <i class="fa fa-info-circle"></i>' +
+                    '                    </button>' +
+                    '                    <button class="btn btn-danger optionButtionSize" title="删除" onclick="delCaseTr('+indexHttp+');"  style="margin:0 0 0 0;">' +
+                    '                                <i class="fa fa-trash"></i>' +
+                    '                    </button>' +
+                    '             </td>'+
+                    '            </tr>';
+                retHtml +=    '<tr id="otherInfo_'+indexHttp+'" style="display:none;">' +
+                    '<td colspan="7" align="center" >' +
+                    '<table class="table table-bordered " style="table-layout:fixed;width:100%;word-break:break-all;">' +
+                        '<tr style="background-color:yellow;">'+
+                        '                <td>Params</td>'+
+                        '                <td>Headers</td>'+
+                        '                <td>BodyType</td>'+
+                        '                <td>Body</td>'+
+                        '                <td>Pre-request Script</td>'+
+                        '                <td>Tests</td>'+
+                        '                <td>Response</td>' +
+                        '</tr>'+
+                        '<tr>'+
+                        '                <td id="params_'+indexHttp+'">'+importedHttpList[indexHttp]['params']+'</td>'+
+                        '                <td id="header_'+indexHttp+'">'+importedHttpList[indexHttp]['header']+'</td>'+
+                        '                <td id="bodyType_'+indexHttp+'">'+importedHttpList[indexHttp]['bodyType']+'</td>'+
+                        '                <td id="bodyContent_'+indexHttp+'">'+importedHttpList[indexHttp]['bodyContent']+'</td>'+
+                        '                <td id="varsPre_'+indexHttp+'">'+importedHttpList[indexHttp]['varsPre']+'</td>'+
+                        '                <td id="varsPost_'+indexHttp+'">'+importedHttpList[indexHttp]['varsPost']+'</td>' +
+                        '                <td id="response_'+indexHttp+'">'+importedHttpList[indexHttp]['response']+'</td>'+
+                        '</tr>' +
+                    '</table>'+
+                    '</td>'+
+                    '</tr>';
+            }
+        }
+        retHtml+=    '    </tbody>' +
+            '</table>'+
+            '<div class="pagination" style="float:right;margin-top:-10px;">' +
+            '  <button class="btn btn-warning" title="开始导入" onclick="importAllCase();">' +
+            '     开始导入' +
+            '  </button>' +
+            '</div>' ;
+        return retHtml;
+    }
+    function importAllCase(){
+        var importedDataList = [];
+        var isContinue = true;
+        var alertMsg = "";
+        var businessLine = $("#businessLine").val();
+        var modules = $("#modules").val();
+        $("#tablebody").children("tr").each(function () {
+            var lineno = $(this).attr("lineno");
+            if(lineno){
+                var tmpInfoDict = {};
+                tmpInfoDict['lineno'] = lineno;
+                tmpInfoDict['title'] = $("#title_"+lineno).text();
+                tmpInfoDict['casedesc'] = $("#casedesc_"+lineno).text();
+                tmpInfoDict['businessLineId_id'] = businessLine;
+                tmpInfoDict['moduleId_id'] = modules;
+                tmpInfoDict['domain'] = $("#domain_"+lineno).text();
+                tmpInfoDict['method'] = $("#method_"+lineno).text();
+                tmpInfoDict['url'] = $("#url_"+lineno).text();
+                tmpInfoDict['params'] = $("#params_"+lineno).text();
+                tmpInfoDict['header'] = $("#header_"+lineno).text();
+                tmpInfoDict['bodyType'] = $("#bodyType_"+lineno).text();
+                tmpInfoDict['bodyContent'] = $("#bodyContent_"+lineno).text();
+                tmpInfoDict['varsPre'] = $("#varsPre_"+lineno).text();
+                tmpInfoDict['varsPost'] = $("#varsPost_"+lineno).text();
+                tmpInfoDict['response'] = $("#response_"+lineno).text();
+                if(domainUriDict.hasOwnProperty(tmpInfoDict['domain'])){
+                    tmpInfoDict['uri'] = domainUriDict[tmpInfoDict['domain']];
+                    importedDataList.push(tmpInfoDict);
+                }else{
+                    var uriConfResp = $.ajax({
+                      url:  "{% url 'HTTP_getUrikeyByConfigInfo' %}?host="+tmpInfoDict['domain'] ,
+                      async: false
+                    });
+                    var retUri = uriConfResp.responseText;
+                    if(retUri!=""){
+                        domainUriDict[tmpInfoDict['domain']] = retUri;
+                        tmpInfoDict['uri'] = domainUriDict[tmpInfoDict['domain']];
+                        importedDataList.push(tmpInfoDict);
+                    }else{
+                        alertMsg += "第"+(parseInt(lineno)+1)+"行的域名"+tmpInfoDict['domain']+"没有找到对应的服务，请先进行服务和请求地址配置！\n";
+                        isContinue = false;
+                    }
+                }
+            }
+        });
+        if(isContinue){
+            //数据获取完毕，开始进行post到服务端并插入数据库，然后返回。
+            $.ajax({
+                url:  "{% url 'HTTP_savePostmanDataToHttpInterface' %}" ,
+                async: false,
+                method:"POST",
+                dataType:"JSON",
+                data:JSON.stringify(importedDataList),
+                success:function (response) {
+                    if(response.code != "10000"){
+                        alert(response.message);
+                    }else{
+                        window.close();
+                        window.opener.location.href = '/interfaceTest/HTTP_InterfaceCheck';
+                    }
+                }
+            });
+        }else{
+            alert(alertMsg);
+        }
+    }
+    function selected() {
+        checkOptions();
+        $("#caseList").html(getShowHtmlByPostManJsonAndCheckVals());
+    }
+
+    selected();
+
+    window.onload = function() {
+        $("#surprise").click();
+    };
+</script>
+<!-- Content ends -->
+{% include 'InterfaceTest/foot.html' %}

@@ -1,0 +1,67 @@
+class Do(object):
+    # 0-19 为HTTP key  20-39为Dubbo  40-59为 UI    200-230为服务通信
+
+    KEY_DO = "do"
+    TYPE_DEBUG_INTERFACE = 1
+    TYPE_DEBUG_CASE = 2
+    TYPE_TASK_EXECUTE = 3
+    TYPE_TASK_CANCEL = 4
+    TYPE_TASK_EXECUTE_DONE = 5
+    TYPE_TASK_INIT_DONE = 6
+    TYPE_TASK_CANCEL_DONE = 8
+
+    TYPE_DEBUG_INTERFACE_DONE = 9
+    TYPE_DEBUG_CASE_DONE = 10
+
+    KEY_VERSION = "version"
+
+    KEY_INTERFACE_DEBUG_ID = "InterfaceDebugId"
+
+    KEY_CASE_DEBUG_ID = "CaseDebugId"
+    KEY_CASE_STEP_DEBUG_ID_LIST = "CaseStepDebugIdList"
+
+    KEY_TASK_EXECUTE_ID = "TaskExecuteId"
+    KEY_TASK_EXECUTE_ENV = "TaskExecuteEnv"
+    KEY_TASK_ID = "TaskId"
+    KEY_TASK_EXECUTE_ID_LIST = "TaskExecuteIdList"
+
+    KEY_TASK_SUITE_EXECUTE_ID = "TaskSuiteExecuteId"
+
+    KEY_TASK_OBJECT = "TaskObject"
+
+    #UI相关
+    TYPE_UITASK_EXECUTE = 31
+    TYPE_UITASK_CANCEL = 32
+    KEY_UITASK_EXEC_ID = "UITaskExecuteId"
+    KEY_UI_TEST_TASK_OBJECT = "UITestTaskObject"
+    KEY_UI_EXECUTE_TYPE_WEB = '[""]'
+
+
+    #服务通信相关
+    TYPE_RUN_SERVICE_HEART_BEAT = 200
+    TYPE_RUN_SERVICE_RESTART = 201
+    TYPE_RUN_SERVICE_DATA_REPORT = 202
+    TYPE_MASTER_GET_SERVICE_DATA = 203
+    #master设置
+    TYPE_MASTER_SET_SERVICE_DATA = 204
+    #admin更新服务配置
+    TYPE_MASTER_UPDATE_MESSAGE = 205
+    #djangoh获取ServiceList
+    TYPE_WEB_GET_SERVICE_LIST = 300
+    TYPE_WEB_GET_SERVICE_TASK_LIST = 301
+    TYPE_WEB_DELETE_SERVICE_INDEX = 302
+
+    TYPE_PROTOCOL = "protocol"
+
+    KEY_RUN_SERVICE_IP = "serviceIp"
+    KEY_RUN_SERVICE_PORT = "servicePort"
+    KEY_RUN_SERVICE_PROTOCOL = "serviceProtocol"
+    KEY_RUN_SERVICE_MAX_TASK_PROGRESS_NUM = "serviceMaxTaskProgressNum"
+    KEY_RUN_SERVICE_CURRENT_TASK_PROGRESS_NUM = "serviceCurrentTaskProgressNum"
+    KEY_RUN_SERVICE_CURRENT_TASK_LIST = "serviceCurrentTaskList"
+    KEY_RUN_SERVICE_MAX_CASE_PROGRESS_NUM = "serviceMaxCaseProgressNum"
+    KEY_RUN_SERVICE_CURRENT_CASE_PROGRESS_NUM = "serviceCurrentCaseProgressNum"
+    KEY_RUN_SERVICE_CURRENT_CASE_LIST = "serviceCurrentCaseList"
+    KEY_RUN_SERVICE_LAST_UPDATE_TIME = "serviceLastUpdateTime"
+    KEY_RUN_SERVICE_AVAILABLE_TASK_PROGRESS_NUM = "availableTaskProgressNum"
+    KEY_RUN_SERVICE_AVAILABLE_CASE_PROGRESS_NUM = "availableCaseProgressNum"

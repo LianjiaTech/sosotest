@@ -1,0 +1,569 @@
+{% include 'InterfaceTest/head.html'%}
+<!-- Main content starts -->
+
+<div class="content">
+    <!-- Sidebar -->
+     {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Sidebar ends -->
+    <!-- Main bar -->
+   <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>全局变量管理</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <div class="form-group">
+                        <div  id="queryOption">
+                            <span class="cat-text" style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>
+                        </div>
+
+
+{#                        <span class="tag"><span>sales&nbsp;&nbsp;</span><a href="#" title="Removing tag">x</a></span>#}
+{#                        <span class="tag"><span>sales&nbsp;&nbsp;</span><a href="#" title="Removing tag">x</a></span>#}
+                    </div>
+                      <br>
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist" style="margin-bottom: 0px">
+                        <li role="presentation" class="active"><a href="#addBy" role="tab" data-toggle="tab" aria-expanded="true">创建人</a>
+                        </li>
+                          <li role="presentation" class=""><a href="#varKey" role="tab" data-toggle="tab" aria-expanded="true">变量Key</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#varValue" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">变量Value</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#varDesc" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">变量描述</a>
+                        </li>
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="addBy" aria-labelledby="home-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="addByInput" onkeypress="EnterPress(event)" placeholder="请输入创建人">
+                            </div>
+                              <div class="col-lg-4" >
+                                  <span style="font-size: 15px;margin-top: 5px">快捷条件: </span>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="inputVal('all')">所有</button>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="inputVal('{{ request.session.userName }}')">{{ request.session.userName }}</button>
+                              <button id="hover-a" type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="createPeople(0)">其他</button>
+                                  <div id="names" style="margin-top: 10px">
+                            </div>
+                                  </div>
+
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="varDesc" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="varDescInput" onkeypress="EnterPress(event)" placeholder="请输入变量描述" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="varKey" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="varKeyInput" onkeypress="EnterPress(event)" placeholder="请输入变量Key" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="varValue" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="varValueInput" onkeypress="EnterPress(event)" placeholder="请输入变量Value">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="EditVars" class="form-group"></div>
+                  </div>
+                </div>
+                <div class="x_panel">
+                  <div class="x_title">
+                      <a name="addEnvConfDiv">
+                          <h2>全局变量添加</h2>
+                      </a>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <div data-parsley-validate="" class="form-horizontal form-label-left">
+                        <div class="form-group">
+                            <label class="control-label col-md-min-1">变量KEY</label>
+                            <div class="col-lg-8">
+                                <input type="text" id="addVarKey" class="form-control"  placeholder="请输入变量Key值" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-min-1">变量Value</label>
+                            <div class="col-lg-8">
+                                <table class="table table-striped table-bordered table-hover "
+                                                       style=" border: 1px solid rgb(201, 201, 201);table-layout: fixed;word-break: break-all;">
+                                    <thead style="color: snow;" bgcolor="#2A3F54">
+                                        <th style="width:15%;">环境</th>
+                                        <th style="width:85%">值</th>
+                                    </thead>
+                                    <tbody>
+                                            <tr>
+                                                <td>通用全局变量</td>
+                                                <td name="common"><input type="text" name="serviceTextAdd" class="form-control" placeholder="通用全局变量"></td>
+                                            </tr>
+                                          {% for thisService in service %}
+                                              <tr>
+                                                <td title="{{ thisService.serviceIncludeHTTPConf }}">{{ thisService.alias }}</td>
+                                                <td name="{{ thisService.serviceConfKey }}"><input type="text" name="serviceTextAdd" class="form-control" placeholder="{{ thisService.alias }}"></td>
+                                              </tr>
+                                          {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label class="control-label col-md-min-1">变量描述</label>
+                            <div class="col-lg-8">
+                                <input type="text" id="addVarDesc" class="form-control"  placeholder="请输入变量Key值" >
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label class="col-lg-4 control-label"></label>
+                            <div class="col-lg-9" style="text-align:center">
+                                <button type="button"   class="btn btn-success" onclick="addVarsConf()">&nbsp;&nbsp;&nbsp;&nbsp;添加&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                                <button type="button"   class="btn btn-danger" onclick="resetAddHttpConf()">&nbsp;&nbsp;&nbsp;&nbsp;重置&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                            </div>
+
+                        </div>
+
+
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+    </div>
+</div>
+    <script type="text/javascript">
+        var queryArr = {"varDesc":"","varKey":"","varValue":"","addBy":""};
+        //创建时间排序
+        var orderBy = "g.modTime desc , g.id desc";
+        var addTimeFlag = '-1';
+        var page = {{ page }};
+
+        var nameFlag = "-1";
+
+        //获取url中的参数
+        function getUrlParam(name) {
+            var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+            var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+            if (r != null) return unescape(r[2]); return null; //返回参数值
+        }
+        function orderByName() {
+            if (nameFlag == '-1' || nameFlag == '0') {
+                nameFlag = '1';
+                addTimeFlag = '-1';
+                modTimeFlag = '-1';
+                //创建时间正序查
+                orderBy = 'g.varKey asc';
+            } else if (nameFlag == '1') {
+                nameFlag = '0';
+                //创建时间倒序查
+                orderBy = 'g.varKey desc';
+            }
+            selected();
+        }
+
+        function orderByAddTime() {
+            if (addTimeFlag == '-1' || addTimeFlag == '0') {
+                addTimeFlag = '1';
+                modTimeFlag = '-1';
+                nameFlag = '-1';
+                //创建时间正序查
+                orderBy = 'g.id asc';
+            } else if (addTimeFlag == '1') {
+                addTimeFlag = '0';
+                //创建时间倒序查
+                orderBy = 'g.id desc';
+            }
+            selected();
+        }
+        var modTimeFlag = '-1';
+        //修改时间排序
+        function orderByModTime() {
+            if(modTimeFlag == '-1' || modTimeFlag == '0'){
+                modTimeFlag = '1';
+                addTimeFlag = '-1';
+                nameFlag = '-1';
+                //修改时间正序查
+                orderBy = 'g.modTime asc , g.id asc';
+            }else if(modTimeFlag == '1' ){
+                modTimeFlag = '0';
+                //修改时间倒序查
+                orderBy = "g.modTime desc , g.id desc";
+            }
+            selected();
+        }
+
+        //排序样式显示
+        function orderByShow() {
+            if(addTimeFlag == '0'){
+                $("#addTimeBtn").text('创建时间▼');
+            }else if(addTimeFlag == '1'){
+                $("#addTimeBtn").text('创建时间▲');
+            }
+
+            if(modTimeFlag == '0'){
+                $("#modTimeBtn").text('修改时间▼');
+            }else if(modTimeFlag == '1'){
+                $("#modTimeBtn").text('修改时间▲');
+            }
+
+            if(nameFlag == '0'){
+                $("#nameBtn").text('变量KEY▼');
+            }else if(nameFlag == '1'){
+                $("#nameBtn").text('变量KEY▲');
+            }
+        }
+
+
+        function queryDataInit() {
+            if(getUrlParam("key")){
+                $("#varKeyInput").val(getUrlParam("key"));
+            }
+            $("#addByInput").val("");
+            //查询条件
+            editQueryData();
+            selected();
+        }
+
+        queryDataInit();
+
+
+        //搜索条件出的回车事件监听
+        function EnterPress(event){ //传入 event
+            var e = event || window.event;
+            if(e.keyCode == 13){
+                editQueryData();
+            }
+        }
+
+        function queryUserConf(data) {
+            if(data == "all"){
+                $('#addByInput').val('');
+            }else {
+                $('#addByInput').val(data);
+            }
+
+            editQueryData();
+        }
+
+        //编辑查询条件
+        function editQueryData() {
+            if($("#addByInput").val() == "" || $("#addByInput").val() == "all"){
+                queryArr.addBy = "";
+            } else {
+                queryArr.addBy = $("#addByInput").val();
+            }
+
+            if($("#varDescInput").val() == ""  ){
+                queryArr.varDesc = "";
+            }else{
+                queryArr.varDesc = $("#varDescInput").val();
+            }
+
+            if($("#varKeyInput").val() == ""  ){
+                queryArr.varKey = "";
+            }else{
+                queryArr.varKey = $("#varKeyInput").val();
+            }
+
+            if($("#varValueInput").val() == ""  ){
+                queryArr.varValue = "";
+            }else{
+                queryArr.varValue = $("#varValueInput").val();
+            }
+
+            selected();
+        }
+
+        //清空查询条件
+        function CleanQueryData() {
+            $("#addByInput").val("");
+            $("#varDescInput").val("");
+            $("#varKeyInput").val("");
+            $("#varValueInput").val("");
+
+            editQueryData();
+
+        }
+
+        function delQueryOptions(key) {
+            if(key=='addBy'){
+                $("#addByInput").val('');
+            }
+            if(key=='varDesc'){
+                $("#varDescInput").val('');
+            }
+            if(key=='varKey'){
+                $("#varKeyInput").val('');
+            }
+            if(key=='varValue'){
+                $("#varValueInput").val('');
+            }
+            editQueryData();
+        }
+
+        //查询条件
+        function QueryOption(){
+            var htmls = ' <span class="cat-text"style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>';
+            var num =0;
+            var writeNum = 0;
+            for(var item in queryArr){
+                if(queryArr[item] != '' ){
+                    num ++;
+                }
+            }
+
+            for(var item in queryArr){
+                if(queryArr[item] != ''){
+                    var key = '';
+                    if(item == 'addBy'){
+                        key = '创建人';
+                    }
+                    if(item == 'varDesc'){
+                        key = '配置描述';
+                    }
+                    if(item == 'varKey'){
+                        key = '配置Key';
+                    }
+                    if(item == 'varValue'){
+                        key = '配置Value';
+                    }
+
+                    writeNum ++ ;
+                    htmls = htmls+'<span class="tag"><span>'+key+'：'+queryArr[item]+'&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delQueryOptions(\''+item+'\')">x</a></span> '
+
+                }
+            }
+                htmls = htmls +'<span class="tag" style="float: right;background-color: #ff7575"><span>默认筛选&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="CleanQueryData()">x</a></span>';
+            $('#queryOption').html(htmls);
+        }
+
+    function inputVal(val) {
+        page = 1;
+        $("#addByInput").val(val);
+        editQueryData();
+    }
+    function createPeople(num) {
+        htmlobj=$.ajax({url:'{% url 'queryPeopleInterfaceByTableName' %}?tbName=tb_global_vars&num='+num,async:false});
+        var value = JSON.parse(htmlobj.responseText).body;
+        var nameVal = "";
+        for(var i = 0;i<value.length;i++){
+            nameVal = nameVal + ' &nbsp <a href="javascript:void(0);" id="hover-a" onclick="inputVal(\''+value[i].userName+'\')"  style="font-size: 15px;text-decoration:none">['+value[i].userName+'('+value[i].count+')]</a>'
+        }
+        if(value.length<3){
+            $("#names").html(nameVal);
+            $("#hover-a").attr('onclick','createPeople('+(0)+')');
+            $("#names").show();
+            return;
+        }else {
+            $("#names").html(nameVal);
+        }
+        $("#hover-a").attr('onclick','createPeople('+(num+1)+')');
+        $("#names").show();
+    }
+
+        //翻页
+        function pageCall(pageNum) {
+            page = pageNum;
+            selected();
+        }
+        //弹出隐藏层
+        function ShowDiv(){
+            obshowdiv =  $("#EditVars");
+            offtop=obshowdiv.offset().top-60;
+            offleft=obshowdiv.offset().left;
+            obshowdiv.show();
+            docheight = $(document).height();
+            $('html,body').animate({scrollTop:offtop}, 200);
+        };
+
+        function selected() {
+            QueryOption();
+            var data = {queryArr : encodeURI(JSON.stringify(queryArr)),orderBy:orderBy,page:page};
+            htmlobj=$.ajax({url:"{% url 'HTTP_GlobalVarsConfListPage' %}",async:false,data:data,type:"POST"});
+            $("#EditVars").html(htmlobj.responseText);
+            orderByShow();
+        }
+
+        function delGlobalVar(id) {
+
+            if(confirm("确认删除配置 "+$("[name='varKey"+id+"']").text()+" ?")){
+                if(confirm("一旦删除无法恢复，确认删除?")){
+                    htmlobj=$.ajax({url:"{% url 'HTTP_GlobalVarsDel' %}?id="+id,async:false});
+                    try {
+                        if (JSON.parse(htmlobj.responseText)["code"] === 10000) {
+                            selected();
+                        } else {
+                            alert(htmlobj.responseText)
+                        }
+                    }catch (e){
+                        alert(htmlobj.responseText)
+                    }
+
+                }
+            }
+        }
+
+        function editGlobalVar(id) {
+
+            $("#hiddenTR"+id).find("button").show();
+            $("[name='varDesc"+id+"']").html("<pre><textarea id='varDesc"+id+"' style='max-width: 100%;width: 100%'>"+$("[name='varDesc"+id+"']").text()+"</textarea></pre>");
+            var serviceInput = $("#hiddenTR"+id).find("[name='serviceText']");
+            serviceInput.attr("disabled",false);
+            var getServiceConf = JSON.parse($.ajax({url:"{% url 'getServiceConf' %}?id="+id,async:false}).responseText);
+            var getData = JSON.parse($.ajax({url:"{% url 'getVarsConf' %}?id="+id,async:false}).responseText);
+
+            for(var serviceIndex = 0; serviceIndex<getServiceConf.length;serviceIndex++){
+                 serviceInput.each(function () {
+                   if($(this).parent().attr("name") == getServiceConf[serviceIndex]["serviceConfKey"]){
+                        $(this).val(getData["body"]["serviceConf"][getServiceConf[serviceIndex]["serviceConfKey"]])
+                   }
+                   if($(this).parent().attr("name") == "common"){
+                        $(this).val(getData["body"]["serviceConf"]["common"])
+                   }
+                });
+            }
+            $("#hiddenTR"+id).attr("style","");
+        }
+
+         function checkGlobalVar(id) {
+              if ($("#hiddenTR"+id).attr("style") == ""){
+                $("#hiddenTR"+id).attr("style","display:none");
+                return
+            }
+            $("#hiddenTR"+id).find("button").hide();
+            var serviceInput = $("#hiddenTR"+id).find("[name='serviceText']");
+            serviceInput.attr("disabled",true);
+            var getServiceConf = JSON.parse($.ajax({url:"{% url 'getServiceConf' %}?id="+id,async:false}).responseText);
+            var getData = JSON.parse($.ajax({url:"{% url 'getVarsConf' %}?id="+id,async:false}).responseText);
+
+            for(var serviceIndex = 0; serviceIndex<getServiceConf.length;serviceIndex++){
+                 serviceInput.each(function () {
+                   if($(this).parent().attr("name") == getServiceConf[serviceIndex]["serviceConfKey"]){
+                        $(this).val(getData["body"]["serviceConf"][getServiceConf[serviceIndex]["serviceConfKey"]])
+                   }
+                   if($(this).parent().attr("name") == "common"){
+                        $(this).val(getData["body"]["serviceConf"]["common"])
+                   }
+                });
+            }
+
+            $("#hiddenTR"+id).attr("style","");
+        }
+
+
+        function cancelEdit(id) {
+            $("[name='varDesc"+id+"']").html($("[name='varDesc"+id+"']").text());
+            $("[name='varKey"+id+"']").html($("[name='varKey"+id+"']").text());
+            $("#hiddenTR"+id).css("display","none");
+        }
+
+        function saveEdit(id) {
+
+             var varValue = "";
+
+             var serviceTextList = $("#hiddenTR"+id).find("[name='serviceText']");
+             serviceTextList.each(function () {
+                if($(this).val().trim() != ""){
+                    var confName = $(this).parent().attr("name");
+                    varValue += "[CONF=" + confName + "]" + $(this).val().trim() + "[ENDCONF]";
+                }
+              });
+              if(varValue == ""){
+                    alert("环境值至少填写一个");
+                    return
+                }
+
+
+            var data = {"id":id,"varDesc":$("#varDesc"+id).val(),
+                "varValue":varValue};
+            htmlobj=$.ajax({url:"{% url 'HTTP_GlobalVarsEdit' %}?id=" + id,data:{"data":encodeURI(JSON.stringify(data))},async:false,type:"POST"});
+            if(htmlobj.responseText != 0){
+                selected();
+            }else {
+                alert("没有修改任何值");
+            }
+
+        }
+
+        function resetAddHttpConf() {
+            if(confirm("重置后输入的值会消失")){
+                $("#addVarDesc").val("");
+                $("#addVarKey").val("");
+
+                $("[name='serviceTextAdd']").val("");
+            }
+        }
+
+        function addVarsConf() {
+            if(confirm("添加后Key值不可更改，是否继续保存")) {
+                var varDesc = $("#addVarDesc").val();
+                var varKey = $("#addVarKey").val();
+                var varValue = "";
+
+                var serviceTextList = $("[name='serviceTextAdd']");
+                serviceTextList.each(function () {
+                    if($(this).val().trim() != ""){
+                        var confName = $(this).parent().attr("name");
+                        varValue += "[CONF=" + confName + "]" + $(this).val().trim() + "[ENDCONF]";
+                    }
+                });
+
+                if(varKey == ""){
+                    alert("key不能为空");
+                    return
+                }
+                if(varValue == ""){
+                    alert("环境值至少填写一个");
+                    return
+                }
+
+                var data = {"varDesc": varDesc, "varKey": varKey, "varValue": varValue};
+                htmlobj = $.ajax({
+                    url: "{% url 'HTTP_GlobalVarsAdd' %}",
+                    data: {"data": encodeURI(JSON.stringify(data))},
+                    async: false,
+                    type:"POST"
+                });
+                if (JSON.parse(htmlobj.responseText)["code"] !== 10000) {
+                    alert(htmlobj.responseText);
+                    return;
+                }
+                selected();
+                  ShowDiv();
+            }
+        }
+
+        window.onload = function() {
+            $("#surprise").click();
+            $("#surprise2").click();
+        };
+
+    </script>
+    <!-- Content ends -->
+{% include 'InterfaceTest/foot.html'%}

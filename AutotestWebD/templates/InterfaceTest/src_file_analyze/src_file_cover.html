@@ -1,0 +1,516 @@
+{% include 'InterfaceTest/head.html'%}
+<!-- Main content starts -->
+<div class="content">
+    <link href="/static/style/standard.css" rel="stylesheet">
+
+    <!-- Sidebar -->
+     {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Sidebar ends -->
+    <!-- Main bar -->
+{#    <div class="mainbar">#}
+{#        <!-- Page heading -->#}
+{#        <div class="page-head">#}
+{#            <h2 class="pull-left"><i class="icon-home"></i>平台覆盖率查看</h2>#}
+{##}
+{#            <div class="clearfix"></div>#}
+{#        </div>#}
+{#        <!-- Page heading ends -->#}
+{#        <!-- Matter -->#}
+{#        <div class="matter" style="padding: 0% 0% 0% 0%;margin:0% 0% 0% 0% ;">#}
+{#            <div class="container">#}
+{#                <div class="row">#}
+{##}
+{#                    <div  class="col-md-12" style="padding: 0% 0% 0% 0%;margin:0% 0% 0% 0% ;">#}
+{#                        <div class="widget wgreen">#}
+{##}
+{#                            <div class="widget-head">#}
+{#                                <div class="pull-left">平台覆盖率查看</div>#}
+{#                                <a href="{% url 'HTTP_SrcTaskFileAnalyze' %}"><button id="openDivBtn" class="label" style="font-size: 18px;margin-left: 30px;background-color:#5cb85c;border-color:#5cb85c;margin-top: -5px">任务覆盖率查看</button></a>#}
+{#                                <div class="widget-icons pull-right" style="display: none">#}
+{#                                    <a href="#" id="surprise" class="wminimize" ><i class="icon-chevron-down"></i></a>#}
+{#                                </div>#}
+{#                                <div class="clearfix"></div>#}
+{#                            </div>#}
+{#                            <div class="widget-content" style="display:none;">#}
+{#                                <div class="padd">#}
+{##}
+{#                                    <!-- Form starts.  -->#}
+{#                                    <div class="form-horizontal" role="form">#}
+{##}
+{#                                        <div class="widget" id="listsrp-nav">#}
+{#                                            <div class="m-nav g-clearfix ">#}
+{#                                                <div class="crumb g-clearfix " id="queryOption">#}
+{#                                                    <span class="cat-text"style="font-size: 15px">搜索条件:</span>#}
+{##}
+{#                                                </div>#}
+{##}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                        <ul id="myTab" class="nav nav-tabs">#}
+{#                                            <li class="active"><a href="#addByTab" data-toggle="tab">创建人</a></li>#}
+{#                                            <li class="dropdown">#}
+{#                                                <a href="#"  class="dropdown-toggle" data-toggle="dropdown"> {{ groupLevel1 }} <b class="caret"></b></a>#}
+{#                                                <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1"  id="businessLineCheckTab">#}
+{#                                                 <li><a href="#caseBusinessLine_"  onclick="editBusinessLineCheckTab('')" tabindex="-1" name="tabExecResult" data-toggle="tab" >&nbsp;</a></li>#}
+{#                                                    {% for bl in checkBusinessLine %}#}
+{#                                                        <li><a href="#caseBusinessLine_{{ bl.id }}"  tabindex="-1" name="tabExecResult" onclick="editBusinessLineCheckTab($(this).text())" data-toggle="tab" >{{ bl.bussinessLineName }}</a></li>#}
+{#                                                    {% endfor %}#}
+{#                                                </ul>#}
+{#                                            </li>#}
+{#                                            <li><a href="#moduleTab" data-toggle="tab">{{ groupLevel2 }}</a></li>#}
+{#                                        </ul>#}
+{#                                        <div id="myTabContent" class="tab-content">#}
+{#                                            <div class="tab-pane fade in active" id="addByTab">#}
+{#                                                <div class="form-group">#}
+{#                                                    <div class="col-lg-8">#}
+{#                                                        <input type="text" class="form-control" id="addByInput"  onkeypress="EnterPress(event)" placeholder="请输入创建人" >#}
+{#                                                    </div>#}
+{#                                                    <span style="font-size: 15px">快捷条件: </span>#}
+{#                                                    <a href="#" onclick="queryUserConf('all')"  style="font-size: 15px;text-decoration:none">[所有]</a>#}
+{#                                                    &nbsp;&nbsp;<a href="#"  onclick="queryUserConf('{{ request.session.userName }}')" style="font-size: 15px;text-decoration:none">[{{ request.session.userName }}]</a>#}
+{##}
+{#                                                    &nbsp <a href="#" id="hover-a" onclick="QueryPeopleConf(1)"  style="font-size: 15px;text-decoration:none">[其他]</a>#}
+{#                                                    <div id="names" style="display: none">#}
+{#                                                    </div>#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                            <div class="tab-pane fade" id="fileRealPathTab">#}
+{#                                                <div class="form-group">#}
+{#                                                    <div class="col-lg-8">#}
+{#                                                        <input type="text" class="form-control" id="fileRealPathInput"  onkeypress="EnterPress(event)" placeholder="请输入文件路径" >#}
+{#                                                    </div>#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                             <div class="tab-pane fade" id="caseBusinessLine_">#}
+{#                                                <div class="form-group">#}
+{#                                                    <div class="col-lg-8">#}
+{#                                                        <input type="text" class="form-control" id="caseBusinessLineInput"  onkeypress="EnterPress(event)" value="请选择{{ groupLevel1 }}" disabled>#}
+{#                                                    </div>#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                            {% for bl in checkBusinessLine %}#}
+{#                                                 <div class="tab-pane fade" id="caseBusinessLine_{{ bl.id }}">#}
+{#                                                    <div class="form-group">#}
+{#                                                        <div class="col-lg-8">#}
+{#                                                            <input type="text" class="form-control" id="caseBusinessLineInput"  onkeypress="EnterPress(event)" value="{{ bl.bussinessLineName }}" disabled>#}
+{#                                                        </div>#}
+{#                                                    </div>#}
+{#                                                 </div>#}
+{#                                            {% endfor %}#}
+{#                                            <div class="tab-pane fade" id="moduleTab">#}
+{#                                                <div class="form-group">#}
+{#                                                    <div class="col-lg-3">#}
+{#                                                        <select class="form-control" onchange="$('#caseModuleInput').val($(this).val());editQueryData()">#}
+{#                                                            <option value="">&nbsp;</option>#}
+{#                                                            {% for m in checkModules %}#}
+{#                                                                <option value="{{ m.moduleName }}" >{{ m.moduleName }}</option>#}
+{#                                                            {% endfor %}#}
+{#                                                        </select>#}
+{#                                                    </div>#}
+{#                                                    <div class="col-lg-5">#}
+{#                                                        <input type="text" class="form-control" id="caseModuleInput"  onkeypress="EnterPress(event)" placeholder="请输入接口{{ groupLevel2 }}" >#}
+{#                                                    </div>#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                        <div id="EditVars" class="widget">#}
+{##}
+{#                                        </div>#}
+{##}
+{#                                    </div>#}
+{#                                </div>#}
+{##}
+{#                                <div class="widget-foot">#}
+{#                                    <!-- Footer goes here -->#}
+{#                                </div>#}
+{#                            </div>#}
+{##}
+{#                        </div>#}
+{##}
+{#                    </div>#}
+{#                </div>#}
+{##}
+{#            </div>#}
+{#            <!-- Matter ends -->#}
+{#        </div>#}
+{#    </div>#}
+
+     <div class="right_col" role="main" style="min-height: 1657px;">
+        <div id="bgdiv" class="black_overlay"></div>
+         <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                  <div class="col-xs-12 form-group pull-right top_search">
+                    <h3>接口历史</h3>
+
+                  </div>
+              </div>
+
+
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel" id="taskCheck">
+                  <div class="x_title">
+                    <h2>平台覆盖率查看</h2>
+                      <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </ul>
+                    <a href="{% url 'HTTP_SrcTaskFileAnalyze' %}"><button  id="openDivBtn" class="btn btn-success" style="font-size: 18px;margin-left: 30px;margin-top: -5px">任务覆盖率查看</button></a>
+
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <div class="form-group">
+                        <div  id="checkOption">
+                            <span class="cat-text" style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>
+                        </div>
+                    </div>
+                      <br>
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist" style="margin-bottom: 0px">
+                        <li role="presentation" class="active"><a href="#addByTab" role="tab" data-toggle="tab" aria-expanded="true">创建人</a>
+                        </li>
+                        <li class="dropdown">
+                            <a href="#"  class="dropdown-toggle" data-toggle="dropdown"> {{ groupLevel1 }} <b class="caret"></b></a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1"  id="businessLineCheckTab">
+                             <li><a href="#caseBusinessLine_"  onclick="editBusinessLineCheckTab('')" tabindex="-1" name="tabExecResult" data-toggle="tab" >&nbsp;</a></li>
+                                {% for bl in checkBusinessLine %}
+                                    <li><a href="#caseBusinessLine_{{ bl.id }}"  tabindex="-1" name="tabExecResult" onclick="editBusinessLineCheckTab($(this).text())" data-toggle="tab" >{{ bl.bussinessLineName }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </li>
+                        <li role="presentation" class=""><a href="#moduleTab" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">{{ groupLevel2 }}</a>
+                        </li>
+
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="addByTab" aria-labelledby="home-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="addByInput" onkeypress="EnterPress(event)" placeholder="请输入创建人">
+                            </div>
+                              <div class="col-lg-4" >
+                                  <span style="font-size: 15px;margin-top: 5px">快捷条件: </span>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="queryUserConf('all')">所有</button>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="queryUserConf('{{ request.session.userName }}')">{{ request.session.userName }}</button>
+                              <button id="hover-a" type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="QueryPeopleConf(0)">其他</button>
+                                  <div id="names" style="margin-top: 10px">
+                            </div>
+                                  </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="caseBusinessLine_" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="caseBusinessLineInput" onkeypress="EnterPress(event)" placeholder="请选择{{ groupLevel1 }}" disabled>
+                            </div>
+                          </div>
+                        </div>
+                        {% for bl in checkBusinessLine %}
+                             <div class="tab-pane fade" id="caseBusinessLine_{{ bl.id }}">
+                                <div class="form-group">
+                                    <div class="col-lg-8">
+                                        <input type="text" class="form-control" id="caseBusinessLineInput"  onkeypress="EnterPress(event)" value="{{ bl.bussinessLineName }}" disabled>
+                                    </div>
+                                </div>
+                             </div>
+                        {% endfor %}
+                        <div class="tab-pane fade" id="moduleTab">
+                            <div class="form-group">
+                                <div class="col-lg-3">
+                                    <select class="form-control" onchange="$('#caseModuleInput').val($(this).val());editQueryData()">
+                                        <option value="">&nbsp;</option>
+                                        {% for m in checkModules %}
+                                            <option value="{{ m.moduleName }}" >{{ m.moduleName }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                                <div class="col-lg-5">
+                                    <input type="text" class="form-control" id="caseModuleInput"  onkeypress="EnterPress(event)" placeholder="请输入接口{{ groupLevel2 }}" >
+                                </div>
+                            </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="EditVars" class="form-group" style="margin-top: 50px"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+    <script type="text/javascript">
+        var queryArr = {"businessLine":""};
+        //创建时间排序
+        var orderBy = "i.modTime desc , i.id desc";
+        var addTimeFlag = '-1';
+        var page = {{ page }};
+
+
+        var nameFlag = "-1";
+
+        function orderByName() {
+            if (nameFlag == '-1' || nameFlag == '0') {
+                nameFlag = '1';
+                addTimeFlag = '-1';
+                modTimeFlag = '-1';
+                //创建时间正序查
+                orderBy = 'i.varKey asc';
+            } else if (nameFlag == '1') {
+                nameFlag = '0';
+                //创建时间倒序查
+                orderBy = 'i.varKey desc';
+            }
+            selected();
+        }
+
+        function orderByAddTime() {
+            if (addTimeFlag == '-1' || addTimeFlag == '0') {
+                addTimeFlag = '1';
+                modTimeFlag = '-1';
+                nameFlag = '-1';
+                //创建时间正序查
+                orderBy = 'i.id asc';
+            } else if (addTimeFlag == '1') {
+                addTimeFlag = '0';
+                //创建时间倒序查
+                orderBy = 'i.id desc';
+            }
+            selected();
+        }
+        var modTimeFlag = '-1';
+        //修改时间排序
+        function orderByModTime() {
+            if(modTimeFlag == '-1' || modTimeFlag == '0'){
+                modTimeFlag = '1';
+                addTimeFlag = '-1';
+                nameFlag = '-1';
+                //修改时间正序查
+                orderBy = 'i.modTime asc , i.id asc';
+            }else if(modTimeFlag == '1' ){
+                modTimeFlag = '0';
+                //修改时间倒序查
+                orderBy = "i.modTime desc , i.id desc";
+            }
+            selected();
+        }
+
+        //排序样式显示
+        function orderByShow() {
+            if(addTimeFlag == '0'){
+                $("#addTimeBtn").text('创建时间▼');
+            }else if(addTimeFlag == '1'){
+                $("#addTimeBtn").text('创建时间▲');
+            }
+
+            if(modTimeFlag == '0'){
+                $("#modTimeBtn").text('修改时间▼');
+            }else if(modTimeFlag == '1'){
+                $("#modTimeBtn").text('修改时间▲');
+            }
+
+            if(nameFlag == '0'){
+                $("#nameBtn").text('变量KEY▼');
+            }else if(nameFlag == '1'){
+                $("#nameBtn").text('变量KEY▲');
+            }
+        }
+
+
+        function queryDataInit() {
+
+            $("#addByInput").val("");
+            //查询条件
+            editQueryData();
+        }
+
+        queryDataInit();
+
+
+        //搜索条件出的回车事件监听
+        function EnterPress(event){ //传入 event
+            var e = event || window.event;
+            if(e.keyCode == 13){
+                editQueryData();
+            }
+        }
+
+        function editBusinessLineCheckTab(name) {
+            queryArr["businessLine"] = name;
+            editQueryData();
+        }
+
+
+        function queryUserConf(data) {
+            if(data == "all"){
+                $('#addByInput').val('');
+            }else {
+                $('#addByInput').val(data);
+            }
+
+            editQueryData();
+        }
+
+        //编辑查询条件
+        function editQueryData() {
+            if($("#addByInput").val() == ""){
+                queryArr.addBy = "{{ request.session.userName }}";
+            } else if($("#addByInput").val() == "all") {
+                queryArr.addBy = "";
+            }else {
+                queryArr.addBy = $("#addByInput").val();
+            }
+            if ($("#caseModuleInput").val()==''){
+                queryArr['module']='';
+            }else {
+                queryArr['module']=$("#caseModuleInput").val();
+            }
+
+            selected();
+        }
+
+        //清空查询条件
+        function CleanQueryData() {
+            $("#addByInput").val("");
+            $("#caseModuleInput").val("");
+             $("#businessLineCheckTab").children().eq(0).children().eq(0).click();
+            editQueryData();
+        }
+
+        function delQueryOptions(key) {
+            if(key=='addBy'){
+                $("#addByInput").val('all');
+            }
+            if(key=='module'){
+               $("#caseModuleInput").val('');
+            }
+            if(key=='businessLine'){
+                $("#businessLineCheckTab").children().eq(0).children().eq(0).click();
+            }
+
+            editQueryData();
+        }
+
+        //查询条件
+        function QueryOption(){
+        var htmls = ' <span class="cat-text"style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>';
+            var num =0;
+            var writeNum = 0;
+            for(var item in queryArr){
+                if(queryArr[item] != '' ){
+                    num ++;
+                }
+            }
+
+            for(var item in queryArr){
+                if(queryArr[item] != ''){
+                    var key = '';
+                    if(item == 'addBy'){
+                        key = '创建人';
+                    }
+                    if(item == 'module'){
+                        key = '{{ groupLevel2 }}';
+                    }
+                    if(item == 'businessLine'){
+                        key = '{{ groupLevel1 }}';
+                    }
+
+                    writeNum ++ ;
+{#                    if(writeNum != num){#}
+{#                        htmls = htmls+'<a href="#" onclick="delQueryOptions(\''+item+'\')"  data-url="nav" data-key="ppath" style="font-size: 15px;text-decoration:none" >'+key+'：'+queryArr[item]+' <button class="btn btn-xs" style="background-color: #dddddd"><i style="color: #5e5e5e" class="icon-remove"></i> </button> </a><span style="font-size: 15px">-></span> '#}
+{#                    }else{#}
+{#                        htmls = htmls+'<a href="#" onclick="delQueryOptions(\''+item+'\')" data-url="nav" data-key="ppath" style="font-size: 15px;text-decoration:none" >'+key+'：'+queryArr[item]+' <button class="btn btn-xs" style="background-color: #dddddd"><i style="color: #5e5e5e" class="icon-remove"></i> </button> </a> ';#}
+{#                    }#}
+                    htmls = htmls+'<span class="tag"><span>'+key+'：'+queryArr[item]+'&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delQueryOptions(\''+item+'\')">x</a></span> '
+
+                }
+            }
+{#            htmls = htmls +'<a href="#" onclick="CleanQueryData()" style="font-size: 15px;text-decoration:none;float:right;">[默认筛选]</a>';#}
+            htmls = htmls +'<span class="tag" style="float: right;background-color: #ff7575"><span>默认筛选&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="CleanQueryData()">x</a></span>';
+
+            $('#checkOption').html(htmls);
+        }
+
+
+        //查询条件处的其他人员按钮
+        function QueryPeopleConf(num) {
+
+            htmlobj=$.ajax({url:'/Config/GlobalVarsConf/queryPeopleConf?num='+num,async:false});
+
+            if(htmlobj.responseText == "[]"){
+                alert("暂无其他用户");
+                return;
+            }
+            var value = JSON.parse(htmlobj.responseText);
+
+            var nameVal = "";
+            for(var i = 0;i<value.length;i++){
+                nameVal = nameVal + ' &nbsp <a href="#" id="hover-a" onclick="queryUserConf(\''+value[i].userName+'\')"  style="font-size: 15px;text-decoration:none">['+value[i].userName+'('+value[i].count+')]</a>'
+            }
+            if(value.length<3){
+                $("#names").html(nameVal);
+                $("#hover-a").attr('onclick','createPeople('+(1)+')');
+                $("#names").show();
+                return;
+            }else {
+                $("#names").html(nameVal);
+            }
+
+            $("#hover-a").attr('onclick','createPeople('+(num+1)+')');
+            $("#names").show();
+        }
+
+        //翻页
+        function pageCall(pageNum) {
+            page = pageNum;
+            selected();
+        }
+        //弹出隐藏层
+        function ShowDiv(){
+            obshowdiv =  $("#EditVars");
+            offtop=obshowdiv.offset().top-60;
+            offleft=obshowdiv.offset().left;
+            obshowdiv.show();
+            docheight = $(document).height();
+            $('html,body').animate({scrollTop:offtop}, 200);
+        }
+
+        function selected() {
+            QueryOption();
+            var data = {queryArr : encodeURI(JSON.stringify(queryArr)),orderBy:orderBy,page:page};
+            htmlobj=$.ajax({url:"{% url 'HTTP_SrcFileCoverList' %}",async:false,data:data,type:"POST"});
+            $("#EditVars").html(htmlobj.responseText);
+            orderByShow();
+        }
+
+
+        function editfileRealPath(id) {
+            $("#editTr"+id).toggle();
+
+        }
+
+         function refreshSrcFile(id) {
+            var htmlobj = $.ajax({
+                url: "{% url 'HTTP_SrcFileRefresh' %}",
+                data: {"id": id},
+                async: false,
+                type:"GET"
+            });
+            if(JSON.parse(htmlobj.responseText)["code"] == 10000){
+                selected();
+            }
+        }
+
+
+
+        window.onload = function() {
+            $("#surprise").click();
+            $("#surprise2").click();
+        };
+
+    </script>
+    <!-- Content ends -->
+{% include 'InterfaceTest/foot.html'%}

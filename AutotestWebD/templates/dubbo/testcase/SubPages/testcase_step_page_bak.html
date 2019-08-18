@@ -1,0 +1,157 @@
+<tr name="testCaseStep" style="margin-top: -2px;" class="ui-sortable-handle">
+    <td>
+    <div name="border" style="border: 1px solid #b7babd ;" >
+
+    <div style="background-color: #1a71a8;border: 1px solid rgb(183, 186, 189);">
+        <div class="form-group" style="margin-bottom: 5px;margin-top: 5px;">
+            <label class="col-md-min-1 control-label" style="color: #0088cc;font-size: 15px" name="stepLabel">步骤描述</label>
+            <div class="col-lg-8" style="padding-right: 0px">
+                <textarea type="text" onfocus="resetGlobalElement($(this),'')" name="stepDesc"
+                          style="max-width: 100%;height: 75px" class="form-control" placeholder="请输入步骤描述"></textarea>
+            </div>
+            <div class="col-lg-2" style="margin-top: 10px;width: 18%">
+                <label style="color: #FFFF00">来源:</label>
+                <a href="javascript:void(0)" target="_blank" style="color: #FFFF00" name="fromInterfaceId">无</a>
+                <br>
+                <input type="checkbox" style="margin-top: 0px;visibility:hidden" checked onclick="syncText($(this))" name="isSync" disabled><label style="color: #FFFF00;visibility:hidden ;">&nbsp;&nbsp;同步</label>
+            </div>
+            <div>
+                <button type="button" name="stepDetailsEditBtn"  title="编辑" style="margin-top: 20px" class="btn btn-success btn-sm">&nbsp;<i class="fa fa-edit"></i></button>
+                <button type="button" name="stepDetailsDeleteBtn"  title="删除" style="margin-top: 20px" class="btn btn-danger btn-sm">&nbsp;<i class="fa fa-trash">&nbsp;</i></button>
+            </div>
+        </div>
+    </div>
+        <div name="stepDetailsNum" style="display: none">
+            <div class="form-group" style="margin-bottom: 0px;margin-top: 15px">
+
+            <label class="control-label col-md-min-1">{{ groupLevel1 }}</label>
+            <div class="col-lg-3" style="width:21%;">
+                <select class="form-control" name="businessLine" >
+                    {% for business in businessLine %}
+                        <option value="{{ business.id }}">{{ business.bussinessLineName }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <label class="control-label col-md-min-1">{{ groupLevel2 }}</label>
+            <div class="col-lg-3" style="width:21%;">
+                <select class="form-control" name="modules">
+{#                    {% for m in modules %}#}
+{#                        <option value="{{ m.id }}">{{ m.moduleName }}</option>#}
+{#                    {% endfor %}#}
+                </select>
+            </div>
+
+            </div>
+
+            <div class="form-group">
+                <div class="col-lg-11" style="width: 88%;margin-top: 20px;margin-left: 10px;">
+                    <ul id="interfaceTab" class="nav nav-tabs">
+                        <li><a href="#valBeforeTab" name="masterTabBeforeVal"
+                               onclick="$('#btnDiv').css('margin-top','0px')" data-toggle="tab">准备</a></li>
+                        <li class="active"><a href="#requestBody" name="masterTabRequestBody"
+                                              onclick="$('#btnDiv').css('margin-top','0px')" data-toggle="tab">执行信息</a>
+                        </li>
+                        <li><a href="#valAfterTab" name="masterTabAfterVal"
+                               onclick="$('#btnDiv').css('margin-top','0px')" data-toggle="tab">断言恢复</a></li>
+                    </ul>
+
+                    <div id="interfaceTabContent" class="tab-content" style="margin-top: 5px">
+                        <div class="tab-pane fade" name="masterTabContentBeforeVal"
+                             style="margin-left: 10px;margin-right: 10px">
+                            <div class="form-group">
+                                <div class="col-lg-7" style="width: 100%">
+
+                                    <div id="myTabContent1" class="tab-content">
+                                        <div class="tab-pane fade active in" name="commonValBeforeDiv">
+                                            <div class="form-group">
+                                                <div class="col-lg-12">
+                                                    <textarea type="text"
+                                                              onfocus="resetGlobalElement($(this),'')"
+
+                                                              style="height: 100px;max-width: 100%"
+                                                              name="commonValBefore"
+                                                              class="form-control"
+                                                              placeholder="请输入通用变量">{{ beforeCommonVal }}</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <div class="tab-pane fade active in" name="masterTabContentRequestBody" style="margin-left: 10px;margin-right: 10px">
+                            <div class="form-group">
+                            <div class="col-lg-1" style="width:10%;padding-right: 0px;padding-left: 0px" >
+                                <input onfocus="resetGlobalElement($(this),'')" type="text" class="form-control" style="border-top-left-radius:0em;border-bottom-left-radius:0em;display: none;" placeholder="超时时间(秒),默认20" id="timeout">
+                                <select class="form-control" style="border-radius:0px;" name="ENVKEY_FOR_GETDUBBOINFO"  onchange="refreshDubboInfos()">
+                                    <option value="" title="">选择环境</option>
+                                    {% for hc in envConfList %}
+                                    <option value="{{ hc.httpConfKey }}" title="{{ hc.httpConfKey }}">{{ hc.alias }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-lg-2" style="width:20%;padding-right: 0px;padding-left: 0px" >
+                                <select class="form-control" style="border-radius:0px;" name="SYSTEM_KEY" onchange="refreshDubboInfos()">
+                                    {% for u in uri %}
+                                    <option value="{{ u.uriKey }}" title="{{ u.uriKey }}">{{ u.alias }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div class="col-lg-2" style="width:40%;padding-right: 0px;padding-left: 0px" >
+                                <input onfocus="hideFuzhuBar();inputServiceList($(this),$('#input_list_service'));" list="input_list_service" type="text" name="SERVICE_PATH" style="border-radius:0px;height: 34px;resize:none" id="SERVICE_PATH" class="form-control" placeholder="请输入服务的全路径,例:com.xxx.xxxx.XxxxxFacade"/>
+                                <datalist id="input_list_service"></datalist>
+                            </div>
+                            <div class="col-lg-1" style="width:15%;padding-right: 0px;padding-left: 0px" >
+                                <input onfocus="resetGlobalElement($(this),'');inputMethodList($(this),$('#input_list_method'));" list="input_list_method"  type="text" name="METHOD" style="border-radius:0px;height: 34px;resize:none" id="METHOD" class="form-control" placeholder="请输入接口,例:getSharePoolHouseInfo"/>
+                                <datalist id="input_list_method"></datalist>
+                            </div>
+                            <div class="col-lg-1" style="width:15%;padding-right: 0px;padding-left: 0px" >
+                                <select class="form-control" style="border-radius:0px;height: 34px;" id="encoding"  name="encoding">
+                                    <option value="gb18030">GB18030</option>
+                                    <option value="utf8">UTF-8</option>
+                                    <option value="gbk">GBK</option>
+                                    <option value="gb2312">GB2312</option>
+                                </select>
+                            </div>
+
+                        </div>
+                         <div class="form-group">
+                                <div class="col-lg-12" >
+                                    <textarea type="text" class="form-control Fixed-width"
+                                              style="width:100%;" onfocus="resetGlobalElement($(this),'')"
+                                              name="parameter" placeholder="请输入测试参数,多个参数使用半角逗号（,）间隔"></textarea>
+                                </div>
+                         </div>
+                        </div>
+                        <div class="tab-pane fade" name="masterTabContentAfterValTab"
+                             style="margin-right: 10px;margin-left: 10px">
+                            <div class="form-group">
+                                <div class="col-lg-7" style="width: 100%">
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade active in"
+                                             name="commonValAfterDiv">
+                                            <div class="form-group">
+                                                <div class="col-lg-12">
+                                                    <textarea type="text"
+                                                              onfocus="resetGlobalElement($(this),'')"
+                                                              style="height: 100px;max-width: 100%"
+                                                              class="form-control"
+                                                              name="commonValAfter"
+                                                              placeholder="请输入断言恢复等"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </td>
+</tr>

@@ -1,0 +1,46 @@
+.black_overlay_new {
+
+    display: none;
+    position: absolute;
+    top: 0%;
+    left: 0%;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    z-index: 1001;
+    -moz-opacity: 0.8;
+    opacity: .80;
+    filter: alpha(opacity=80);
+}
+
+.white_content1 {
+    display: none;
+    position: absolute;
+    top: 15%;
+    left: 20%;
+    width: 60%;
+    height: auto;
+    border: 16px solid lightblue;
+    background-color: white;
+    z-index: 1002;
+}
+
+.gray_content {
+    width: 100%;
+    height: 100%;
+    z-index: 1001;
+    background-color: grey;
+}
+
+.white_content_small {
+    display: none;
+    position: absolute;
+    top: 20%;
+    left: 30%;
+    width: 40%;
+    height: 50%;
+    border: 16px solid lightblue;
+    background-color: white;
+    z-index: 1002;
+    overflow: auto;
+}

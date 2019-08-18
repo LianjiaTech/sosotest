@@ -1,0 +1,455 @@
+{% include 'InterfaceTest/head.html'%}
+<!-- Main content starts -->
+
+<div class="content">
+    <!-- Sidebar -->
+       {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Sidebar ends -->
+    <!-- Main bar -->
+    <div class="right_col" role="main" style="min-height: 1657px;">
+        <div id="bgdiv" class="black_overlay"></div>
+         <div class="">
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel" id="taskCheck">
+                  <div class="x_title">
+                    <h2>HTTP接口历史统计</h2>
+                      <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                    </ul>
+                    <a href="{% url 'HTTP_History' %}"><button  id="openDivBtn" class="btn btn-primary" style="font-size: 18px;margin-left: 30px;margin-top: -5px">接口历史查看</button></a>
+
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <div class="form-group">
+                        <div  id="checkOption">
+                            <span class="cat-text" style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>
+                        </div>
+                    </div>
+                      <br>
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist" style="margin-bottom: 0px">
+                        <li role="presentation" class="active"><a href="#URI" role="tab" data-toggle="tab" aria-expanded="true">URI</a>
+                        </li>
+                          <li role="presentation" class=""><a href="#interfaceUrl" role="tab" data-toggle="tab" aria-expanded="true">接口URL</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#taskId" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">任务编号</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#taskExecId" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">任务执行编号</a>
+                        </li>
+                         <li class="dropdown">
+                            <a href="#"  class="dropdown-toggle" data-toggle="dropdown"> 环境配置名称 <b class="caret"></b></a>
+                            <ul id="httpConfLiList" class="dropdown-menu" role="menu" aria-labelledby="myTabDrop1">
+                            </ul>
+                        </li>
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="URI" aria-labelledby="home-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="URIInput" onkeypress="EnterPress(event)" placeholder="请输入URI">
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="interfaceUrl" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="interfaceUrlInput" onkeypress="EnterPress(event)" placeholder="请输入接口URL" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="taskId" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="taskIdInput" onkeypress="EnterPress(event)" placeholder="请输入任务编号" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="taskExecId" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="taskExecIdInput" onkeypress="EnterPress(event)" placeholder="请输入任务执行编号">
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="reportURL" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="reportURLInput" onkeypress="EnterPress(event)" placeholder="请输入测试报告名称">
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="execBy" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="execByInput" onkeypress="EnterPress(event)" placeholder="请输入执行人">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="form-group" style="margin-top: 50px">
+                        <div class="col-lg-12">
+                        <label class="control-label col-md-min-1" style="margin-top: 5px">开始时间</label>
+                        <div class="col-lg-2" style="padding-left: 0px">
+                            <input type="text" onkeypress="EnterPress(event)" class="form-control" id="startTime">
+                        </div>
+
+                        <label class="control-label col-md-min-1"  style="margin-top: 5px">结束时间</label>
+                        <div class="col-lg-2">
+                            <input type="text" onkeypress="EnterPress(event)" class="form-control" id="endTime">
+                        </div>
+                        <button class="btn btn-primary" onclick="editQueryData()">搜索</button>
+                        </div>
+                    </div>
+
+
+                    <div id="statistics" class="form-group"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+    </div>
+    <script type="text/javascript">
+        var page = {{ page }};
+        function getNowFormatDate() {
+            var date = new Date();
+            var seperator1 = "-";
+            var seperator2 = ":";
+            var month = date.getMonth() + 1;
+            var strDate = date.getDate();
+            if (month >= 1 && month <= 9) {
+                month = "0" + month;
+            }
+            if (strDate >= 0 && strDate <= 9) {
+                strDate = "0" + strDate;
+            }
+            var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate
+                + " " + (date.getHours()<10?"0"+date.getHours():date.getHours()) + seperator2 + (date.getMinutes()<10?"0"+date.getMinutes():date.getMinutes())
+                + seperator2 + (date.getSeconds()<10?"0"+date.getSeconds():date.getSeconds());
+            return currentdate;
+        }
+
+        $('#startTime').datetimepicker({
+            format: 'yyyy-mm-dd hh:ii:ss',      /*此属性是显示顺序，还有显示顺序是mm-dd-yyyy*/
+            autoclose:true,
+            language:'zh-CN',
+            pickerPosition:'bottom-right',
+            todayHighlight:true
+        });
+        $("#startTime").val("2017-09-01 00:00:00");
+
+
+        $('#endTime').datetimepicker({
+            format: 'yyyy-mm-dd hh:ii:ss',      /*此属性是显示顺序，还有显示顺序是mm-dd-yyyy*/
+            autoclose:true,
+            language:'zh-CN',
+            pickerPosition:'bottom-right',
+            todayHighlight:true
+        });
+        $("#endTime").val(getNowFormatDate());
+
+        var queryArr = {"interfaceUrl":"","requestHost":"","taskId":"","taskExecuteId":"","httpConfKey":"","testReportUrl":"","execBy":""};
+        var QueryHttpConfKey = "";
+        //创建时间排序
+        var orderBy = "s.modTime desc , s.id desc";
+        var addTimeFlag = '-1';
+
+        function orderByAddTime() {
+            if (addTimeFlag == '-1' || addTimeFlag == '0') {
+                addTimeFlag = '1';
+                modTimeFlag = '-1';
+                //创建时间正序查
+                orderBy = 's.id asc';
+            } else if (addTimeFlag == '1') {
+                addTimeFlag = '0';
+                //创建时间倒序查
+                orderBy = 's.id desc';
+            }
+            selected();
+        }
+        var modTimeFlag = '-1';
+        //修改时间排序
+        function orderByModTime() {
+            if(modTimeFlag == '-1' || modTimeFlag == '0'){
+                modTimeFlag = '1';
+                addTimeFlag = '-1';
+                //修改时间正序查
+                orderBy = 's.modTime asc , s.id asc';
+            }else if(modTimeFlag == '1' ){
+                modTimeFlag = '0';
+                //修改时间倒序查
+                orderBy = "s.modTime desc , s.id desc";
+            }
+            selected();
+        }
+
+        //排序样式显示
+        function orderByShow() {
+            if(addTimeFlag == '0'){
+                $("#addTimeBtn").text('创建时间▼');
+                $("#modTimeBtn").text('修改时间');
+            }else if(addTimeFlag == '1'){
+                $("#addTimeBtn").text('创建时间▲');
+                $("#modTimeBtn").text('修改时间');
+            }
+
+            if(modTimeFlag == '0'){
+                $("#modTimeBtn").text('修改时间▼');
+                $("#addTimeBtn").text('创建时间');
+            }else if(modTimeFlag == '1'){
+                $("#modTimeBtn").text('修改时间▲');
+                $("#addTimeBtn").text('创建时间');
+            }
+        }
+
+
+        function queryDataInit() {
+            $("#interfaceUrlInput").val("");
+            $("#URIInput").val("");
+            queryInit();
+            //查询条件
+            editQueryData();
+            selected();
+        }
+
+        queryDataInit();
+
+        function queryInit() {
+            var query = $.ajax({url:"{% url 'getHttpConf' %}",async:true,type:"GET",success:function () {
+                var httpConfArr = JSON.parse(query.responseText)["body"];
+                var httpConfLiList = $("#httpConfLiList");
+
+                var myTabContent = $("#myTabContent");
+                for(var i = 0;i < httpConfArr["key"].length;i++){
+                    httpConfLiList.html( httpConfLiList.html()+
+                        ' <li><a href="#href'+httpConfArr["key"][i]["httpConfKey"]+'" onclick="getHttpConf(\''+httpConfArr["key"][i]["httpConfKey"]+'\')" data-toggle="tab">'+ httpConfArr["key"][i]["alias"]+'</a></li>'
+                       );
+
+                    myTabContent.html(myTabContent.html()+
+                    '   <div class="tab-pane fade" id="href'+httpConfArr["key"][i]["httpConfKey"]+'">\
+                        <div class="form-group">\
+                        <div class="col-lg-8">\
+                        <input type="text"  class="form-control" id="'+httpConfArr["key"][i]["httpConfKey"]+'" value="'+httpConfArr["key"][i]["alias"]+'" disabled>\
+                        </div>\
+                        </div>\
+                        </div>'
+                    )
+                }
+            }});
+
+        }
+
+        //搜索条件出的回车事件监听
+        function EnterPress(event){ //传入 event
+            var e = event || window.event;
+            if(e.keyCode == 13){
+                editQueryData();
+            }
+        }
+
+
+
+        //编辑查询条件
+        function editQueryData() {
+            if($("#interfaceIdInput").val() == ""){
+                queryArr.interfaceUrl = "";
+            } else {
+                queryArr.interfaceUrl = $("#interfaceUrlInput").val();
+            }
+
+            if($("#URIInput").val() == ""  ){
+                queryArr.requestHost = "";
+            }else{
+                queryArr.requestHost = $("#URIInput").val();
+            }
+
+            if($("#taskIdInput").val() == ""  ){
+                queryArr.taskId = "";
+            }else{
+                queryArr.taskId = $("#taskIdInput").val();
+            }
+
+            if($("#taskExecIdInput").val() == ""  ){
+                queryArr.taskExecuteId = "";
+            }else{
+                queryArr.taskExecuteId = $("#taskExecIdInput").val();
+            }
+
+            if($("#reportURLInput").val() == ""  ){
+                queryArr.testReportUrl = "";
+            }else{
+                queryArr.testReportUrl = $("#reportURLInput").val();
+            }
+
+            if($("#execByInput").val() == ""  ){
+                queryArr.execBy = "";
+            }else{
+                queryArr.execBy = $("#execByInput").val();
+            }
+            if(QueryHttpConfKey == ""){
+                queryArr.httpConfKey = "";
+            }else {
+                queryArr.httpConfKey=QueryHttpConfKey;
+            }
+            queryArr.startTime = $("#startTime").val();
+            queryArr.endTime = $("#endTime").val();
+
+            selected();
+        }
+
+        function getHttpConf(key) {
+            QueryHttpConfKey = key;
+            editQueryData();
+        }
+
+        //查询条件
+        function QueryOption(){
+            var htmls = ' <span class="cat-text" style="font-size: 15px;float: left;">搜索条件:</span>';
+            var num =0;
+            var writeNum = 0;
+            for(var item in queryArr){
+                if(queryArr[item] != '' ){
+                    num ++;
+                }
+            }
+            for(var item in queryArr){
+                if(queryArr[item] != ''){
+                    var key = '';
+                    if(item == 'interfaceUrl'){
+                        key = '接口URL';
+                    }
+                    if(item == 'requestHost'){
+                        key = 'URI';
+                    }
+                    if(item == 'taskId'){
+                        key = '任务Id';
+                    }
+                    if(item == 'taskExecuteId'){
+                        key = '任务执行Id';
+                    }
+                    if(item == 'testReportUrl'){
+                        key = '测试报告';
+                    }
+                    if(item == 'execBy'){
+                        key = '执行人';
+                    }
+                    if(item == 'httpConfKey'){
+                        key = '环境配置名称';
+                        writeNum ++ ;
+                        htmls = htmls+'<span class="tag"><span>'+key+'：'+queryArr[item]+'&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delQueryOptions(\''+item+'\')">x</a></span> ';
+
+                        continue;
+                    }
+                    if(item == "startTime"){
+                        key = "开始时间";
+                        writeNum ++ ;
+                        htmls = htmls+'<span class="tag"><span>'+key+'：'+queryArr[item]+'&nbsp;&nbsp;</span></span> ';
+
+                        continue;
+                    }
+
+                    if(item == "endTime"){
+                        key = "结束时间";
+                        writeNum ++ ;
+                        htmls = htmls+'<span class="tag"><span>'+key+'：'+queryArr[item]+'&nbsp;&nbsp;</span></span> ';
+
+                        continue;
+                    }
+
+
+                    writeNum ++ ;
+                    htmls = htmls+'<span class="tag"><span>'+key+'：'+queryArr[item]+'&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delQueryOptions(\''+item+'\')">x</a></span> ';
+
+                }
+            }
+        htmls = htmls +'<span class="tag" style="float: right;background-color: #ff7575"><span>默认筛选&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="clearChecked()">x</a></span>';
+            $('#checkOption').html(htmls);
+        }
+
+        //清空查询条件
+        function CleanQueryData() {
+            $("#URIInput").val("");
+            $("#interfaceUrlInput").val("");
+            $("#taskIdInput").val("");
+            $("#taskExecIdInput").val("");
+            $("#reportURLInput").val("");
+            $("#execByInput").val("");
+            $("#startTime").val("2017-09-01 00:00:00");
+            $("#endTime").val(getNowFormatDate());
+            editQueryData();
+
+        }
+
+        function delQueryOptions(key) {
+            if(key=='interfaceUrl'){
+                $("#interfaceUrlInput").val('');
+            }
+            if(key=='requestHost'){
+                $("#URIInput").val('');
+            }
+            if(key=='taskId'){
+                $("#taskIdInput").val('');
+            }
+            if(key=='taskExecuteId'){
+                $("#taskExecIdInput").val('');
+            }
+            if(key == "httpConfKey"){
+                QueryHttpConfKey = "";
+                $("[href='#URI']").click();
+            }
+            if(key=='testReportUrl'){
+                $("#reportURLInput").val('');
+            }
+            if(key=='execBy'){
+                $("#execByInput").val('');
+            }
+            editQueryData();
+        }
+
+
+
+        //翻页
+        function pageCall(pageNum) {
+            page = pageNum
+            selected();
+        }
+
+
+        function selected() {
+            QueryOption();
+            var startTime = $("#startTime").val();
+            var endTime = $("#endTime").val();
+            if(endTime < startTime){
+                alert("结束时间不能大于开始时间！")
+                return false;
+            }
+            if(getNowFormatDate()<startTime){
+                alert("开始时间不能大于当前时间");
+                return false;
+            }
+            if(getNowFormatDate()<endTime){
+                alert("结束时间不能大于当前时间");
+                return false;
+            }
+            queryArr.startTime = startTime;
+            queryArr.endTime = endTime;
+            var data = {queryArr : encodeURI(JSON.stringify(queryArr)),orderBy:orderBy,page:page};
+            htmlobj=$.ajax({url:"{% url 'HTTP_History_queryStatistics' %}",async:false,data:data,type:"POST"});
+            $("#statistics").html(htmlobj.responseText);
+            orderByShow();
+        }
+
+
+
+        window.onload = function() {
+            $("#surprise").click();
+        };
+
+    </script>
+
+    <!-- Content ends -->
+ {% include 'InterfaceTest/foot.html'%}

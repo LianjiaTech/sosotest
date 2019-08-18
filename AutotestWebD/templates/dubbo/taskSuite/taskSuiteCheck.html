@@ -1,0 +1,551 @@
+{% include 'InterfaceTest/head.html'%}
+<!-- Main content starts -->
+
+<script type="text/javascript">
+
+    var checkVals =  {"taskFounder":"{{ request.session.userName }}","taskSuiteId":"","title":"","taskSuiteDesc":""};
+    var page = {{ page }};
+    function initCheckValsFromCookie(){
+        var checkValsCookie = $.cookie('checkVals_dubbo_tasksuite');
+        if(checkValsCookie){
+            checkVals = JSON.parse(checkValsCookie);
+            $("#taskFounderInput").val(checkVals['taskFounder']);
+            $("#taskSuiteIdInput").val(checkVals['taskSuiteId']);
+            $("#taskNameInput").val(checkVals['title']);
+            $("#taskDescribeInput").val(checkVals['taskSuiteDesc']);
+            checkOptions();
+        }
+    }
+    function editCheckVal() {
+
+        //用例创建人
+        if($("#taskFounderInput").val()==''){
+            checkVals['taskFounder'] = '{{ request.session.userName }}';
+        }else if($("#taskFounderInput").val()=='all'){
+            checkVals['taskFounder'] = '';
+        }else{
+            checkVals['taskFounder'] =$("#taskFounderInput").val() ;
+        }
+
+        //用例Id
+        if($("#taskIdInput").val()==''){
+            checkVals['taskSuiteId'] = '';
+        }else {
+            checkVals['taskSuiteId'] =$("#taskIdInput").val() ;
+        }
+
+        //用例名称
+        if($("#taskNameInput").val()==''){
+            checkVals['title'] = '';
+        }else {
+            checkVals['title'] =$("#taskNameInput").val() ;
+        }
+
+        //用例描述
+        if ($("#taskDescribeInput").val()==''){
+            checkVals['taskSuiteDesc']='';
+        }else {
+            checkVals['taskSuiteDesc']=$("#taskDescribeInput").val();
+        }
+        if ($("#taskModuleInput").val()==''){
+            checkVals['module']='';
+        }else {
+            checkVals['module']=$("#taskModuleInput").val();
+        }
+
+        selected();
+    }
+
+
+    function editBusinessLineCheckTab(name) {
+        checkVals["businessLine"] = name;
+        editCheckVal();
+    }
+
+
+
+    function checkOptions() {
+
+        var htmls = ' <span class="cat-text" style="font-size: 15px;float: left;">搜索条件:</span>';
+
+        for(var item in checkVals){
+            if(checkVals[item] != '' && typeof(checkVals[item]) != 'undefined'){
+                var key = '';
+                switch (item){
+                    case "taskFounder":
+                        key = '任务集创建人';
+                        break;
+                    case "taskSuiteId":
+                        key = '任务集编号';
+                        break;
+                    case "title":
+                        key = '任务集名称';
+                        break;
+                    case "taskSuiteDesc":
+                        key = '任务集描述';
+                        break;
+
+                }
+                htmls = htmls+'<span class="tag"><span>'+key+'：'+checkVals[item]+'&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delCheckOptions(\''+item+'\')">x</a></span> ';
+            }
+        }
+        htmls = htmls +'<span class="tag" style="float: right;background-color: #ff7575"><span>默认筛选&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="clearChecked()">x</a></span>';
+
+        $('#checkOption').html(htmls);
+    }
+
+
+    function clearChecked() {
+        $("#taskFounderInput").val('');
+        $("#taskIdInput").val('') ;
+        $("#taskNameInput").val('');
+        $("#taskDescribeInput").val('');
+        $("#taskModuleInput").val('');
+        editCheckVal();
+    }
+
+
+    function inputVal(val) {
+        $("#taskFounderInput").val(val);
+        editCheckVal();
+
+    }
+
+
+    function EnterPress(event){ //传入 event
+        var e = event || window.event;
+        if(e.keyCode == 13){
+            editCheckVal();
+        }
+    }
+
+    function delCheckOptions(key) {
+         switch (key){
+                case "taskFounder":
+                    $("#taskFounderInput").val('all');
+                    break;
+                case "taskSuiteId":
+                    $("#taskIdInput").val('');
+                    break;
+                case "title":
+                    $("#taskNameInput").val('');
+                    break;
+                case "taskSuiteDesc":
+                    $("#taskDescribeInput").val('');
+                    break;
+
+            }
+        editCheckVal();
+    }
+
+    function toggleShow() {
+        $("#taskList").toggle();
+        $("#runTask").toggle();
+    }
+    function runTaskSuite(id) {
+
+        htmlobj = $.ajax({url: '{% url 'dubbo_getTaskSuiteForTaskSuiteId' %}?id=' + id + '&option=run', async: false});
+        $('#taskList').hide();
+        $('#runTask').show();
+        $('#taskDetails').html(htmlobj.responseText);
+        $("html,body").animate({scrollTop:0}, 200);
+    }
+
+
+
+    function addTaskSuiteRunForDB() {
+
+        var taskSuiteId=$('#taskIdSpan').text();
+        var protocol='DUBBO';
+        var execComments = $("#execComments").val();
+        var retryCount = $("#retryCount").val();
+        var httpConfKeyElement=$('input[name="httpConf"]:checked');
+        var httpConfKey = "";
+        httpConfKeyElement.each(function () {
+            if(httpConfKey == ""){
+                httpConfKey = $(this).val();
+            }else {
+                httpConfKey += ","+ $(this).val();
+            }
+        });
+
+        if(httpConfKey == ""){
+            alert("至少选择一个任务执行环境");
+            return;
+        }
+        var isSendEmail=$('input[name="taskEmail"]:checked ').val();
+        var emailList = "";
+        if(isSendEmail === "1"){
+            emailList = $("#emailList").val();
+            if (emailList.indexOf("，")>=0){
+                alert("间隔符为半角逗号");
+                return;
+            }
+            isSendEmail = $('input[name="taskEmail"]:checked ').val() +
+                $('input[name="emailFile"]:checked ').val() +
+                $('input[name="passSendEmail"]:checked ').val() +
+                $('input[name="failSendEmail"]:checked ').val()+
+                $('input[name="errorSendEmail"]:checked ').val() +
+                $('input[name="exceptionSendEmail"]:checked ').val();
+        }
+
+        var isSaveHistory = $('input[name="isSaveHistory"]:checked ').val();
+        var method= 'POST';
+        var url = "{% url 'dubbo_TaskSuiteRunTask' %}";
+        var data = {
+            taskSuiteId:taskSuiteId,
+            protocol: protocol,
+            httpConfKey_id:httpConfKey,
+            isSaveHistory:isSaveHistory,
+            isSendEmail:isSendEmail,
+            emailList:emailList,
+            retryCount:retryCount,
+            execComments:execComments
+        };
+        $("#runTaskSuiteBtn").prop("disabled",true);
+        var runTask = $.ajax({
+            type: method,
+            url: url,
+            data: data,
+            async:true,
+            success:function () {
+                if(JSON.parse(runTask.responseText)["code"] == 10000){
+                    location.href="{% url 'dubbo_TaskSuiteExecuteResult' %}";
+                }else{
+                    alert(JSON.parse(runTask.responseText)["message"]);
+                     location.href="{% url 'dubbo_TaskSuiteExecuteResult' %}";
+                }
+            },failure:function () {
+                alert(runTask.responseText);
+            }
+        });
+//        $("#ttttest").html(htmlobj.responseText);
+
+//        location.href="/InterfaceTest/HttpTaskExecResult";
+    }
+
+   function pageCall(pageNum) {
+        page = pageNum;
+        selected();
+    }
+    //弹出隐藏层
+    function ShowDiv(){
+        obshowdiv =  $("#taskList");
+        offtop=obshowdiv.offset().top-60;
+        offleft=obshowdiv.offset().left;
+//        obshowdiv.css("top",offtop+"px");
+        obshowdiv.show();
+        docheight = $(document).height();
+        $('html,body').animate({scrollTop:offtop}, 200);
+    };
+
+    function checkTask(taskId) {
+        htmlobj = $.ajax({url: '{% url 'dubbo_TaskGetTaskFotTaskId' %}?taskId=' + taskId + '&option=check', async: false});
+
+        $('#taskList').hide();
+        $('#runTask').show();
+        $('#taskDetails').html(htmlobj.responseText);
+        assginData(taskId);
+{#        $("html,body").animate({scrollTop:0}, 200);#}
+    }
+
+    function delTaskSuite(id) {
+        var Name = $('#title'+id).text();
+        if(confirm("确定要删除任务\""+Name+"\"吗？")) {
+            htmlobj = $.ajax({url: '{% url 'dubbo_TaskSuiteDel' %}?id=' + id, async: false});
+            if(JSON.parse(htmlobj.responseText)["code"] == 10000 ){
+                location.reload();
+            }else{
+                alert(htmlobj.responseText);
+            }
+
+        }
+
+    }
+    function checkSelected(option,id) {
+        if(option == "task"){
+            if($("#taskIdList").is(":visible")){
+                $("#taskIdList").hide();
+                return ;
+            }
+            htmlobj=$.ajax({url:"{% url 'dubbo_getTaskListDataForTaskSuite' %}?id="+id,async:false});
+            $("#taskListSpan").html(htmlobj.responseText);
+            $("#taskIdList").show();
+        }
+
+    }
+
+    //创建时间排序
+    var orderBy = "t.modTime desc , t.id desc";
+    var addTimeFlag = '-1';
+    var taskNameFlag = "-1";
+
+    function orderByTaskName() {
+        if (taskNameFlag == '-1' || taskNameFlag == '0') {
+            taskNameFlag = '1';
+            addTimeFlag = '-1';
+            modTimeFlag = '-1';
+            //创建时间正序查
+            orderBy = 't.title asc';
+        } else if (taskNameFlag == '1') {
+            taskNameFlag = '0';
+            //创建时间倒序查
+            orderBy = 't.title desc';
+        }
+        selected();
+    }
+
+    function orderByAddTime() {
+        if (addTimeFlag == '-1' || addTimeFlag == '0') {
+            addTimeFlag = '1';
+            modTimeFlag = '-1';
+            taskNameFlag = '-1';
+            //创建时间正序查
+            orderBy = 't.id asc';
+        } else if (addTimeFlag == '1') {
+            addTimeFlag = '0';
+            //创建时间倒序查
+            orderBy = 't.id desc';
+        }
+        selected();
+    }
+    var modTimeFlag = '-1';
+    //修改时间排序
+    function orderByModTime() {
+        if(modTimeFlag == '-1' || modTimeFlag == '0'){
+            modTimeFlag = '1';
+            addTimeFlag = '-1';
+            taskNameFlag = '-1';
+            //修改时间正序查
+            orderBy = 't.modTime asc , t.id asc';
+        }else if(modTimeFlag == '1' ){
+            modTimeFlag = '0';
+            //修改时间倒序查
+            orderBy = "t.modTime desc , t.id desc";
+        }
+        selected();
+    }
+
+    //排序样式显示
+    function orderByShow() {
+        if(addTimeFlag == '0'){
+            $("#addTimeBtn").text('创建时间▼');
+        }else if(addTimeFlag == '1'){
+            $("#addTimeBtn").text('创建时间▲');
+        }
+
+        if(modTimeFlag == '0'){
+            $("#modTimeBtn").text('修改时间▼');
+        }else if(modTimeFlag == '1'){
+            $("#modTimeBtn").text('修改时间▲');
+        }
+
+        if(taskNameFlag == '0'){
+            $("#taskNameBtn").text('任务名称▼');
+        }else if(taskNameFlag == '1'){
+            $("#taskNameBtn").text('任务名称▲');
+        }
+    }
+
+
+   function createPeople(num) {
+        htmlobj=$.ajax({url:'{% url 'queryPeopleInterfaceByTableName' %}?tbName=tb2_dubbo_task_suite&num='+num,async:false});
+        var value = JSON.parse(htmlobj.responseText).body;
+        var nameVal = "";
+        for(var i = 0;i<value.length;i++){
+            nameVal = nameVal + ' &nbsp <a href="javascript:void(0);" id="hover-a" onclick="inputVal(\''+value[i].userName+'\')"  style="font-size: 15px;text-decoration:none">['+value[i].userName+'('+value[i].count+')]</a>'
+        }
+        if(value.length<3){
+            $("#names").html(nameVal);
+            $("#hover-a").attr('onclick','createPeople('+(0)+')');
+            $("#names").show();
+            return;
+        }else {
+            $("#names").html(nameVal);
+        }
+        $("#hover-a").attr('onclick','createPeople('+(num+1)+')');
+        $("#names").show();
+    }
+
+
+</script>
+
+<div class="content">
+    <!-- Sidebar -->
+    {% include 'InterfaceTest/HTTPMenu.html' %}    <!-- Sidebar ends -->
+    <!-- Main bar -->
+    <!-- Main bar -->
+    <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>DUBBO任务集</h2>
+                    <h2 class="subNavH2Style">
+                        <a href="{% url 'dubbo_TaskSuiteAddPage' %}"  target="_blank">
+                            <button class="btn btn-warning">
+                               添加任务集
+                              </button>
+                        </a>
+                    </h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <div class="form-group">
+                        <div  id="checkOption">
+                            <span class="cat-text" style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>
+                        </div>
+
+
+{#                        <span class="tag"><span>sales&nbsp;&nbsp;</span><a href="#" title="Removing tag">x</a></span>#}
+{#                        <span class="tag"><span>sales&nbsp;&nbsp;</span><a href="#" title="Removing tag">x</a></span>#}
+                    </div>
+                      <br>
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist" style="margin-bottom: 0px">
+                        <li role="presentation" class="active"><a href="#taskFounder" role="tab" data-toggle="tab" aria-expanded="true">任务集创建人</a>
+                        </li>
+                          <li role="presentation" class=""><a href="#taskId" role="tab" data-toggle="tab" aria-expanded="true">任务集编号</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#taskName" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">任务集名称</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#taskDescribe" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">任务集描述</a>
+                        </li>
+
+
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="taskFounder" aria-labelledby="home-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="taskFounderInput" onkeypress="EnterPress(event)" placeholder="请输入任务创建人  输入'all'查看所有任务">
+                            </div>
+                              <div class="col-lg-4" >
+                                  <span style="font-size: 15px;margin-top: 5px">快捷条件: </span>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="inputVal('all')">所有</button>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="inputVal('{{ request.session.userName }}')">{{ request.session.userName }}</button>
+                              <button id="hover-a" type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="createPeople(0)">其他</button>
+                                  <div id="names" style="margin-top: 10px">
+                            </div>
+                                  </div>
+
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="taskName" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="taskNameInput" onkeypress="EnterPress(event)" placeholder="请输任务名称" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="taskId" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="taskIdInput" onkeypress="EnterPress(event)" placeholder="请输入任务编号" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="taskDescribe" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="taskDescribeInput" onkeypress="EnterPress(event)" placeholder="请输入任务描述">
+                            </div>
+                          </div>
+                        </div>
+
+
+
+                      </div>
+                    </div>
+                    <div id="taskList" class="form-group"></div>
+                  </div>
+                </div>
+                 <div class="x_panel" id="runTask" style="display: none">
+                  <div class="x_title" style="padding: 0% 0% 0% 0%;margin:0% 0% 0% 0% ;">
+                    <h2>任务详情</h2>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content" id="taskDetails">
+
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+     var mergeCheckbox = new Array();
+
+    function selected() {
+        checkOptions();
+        var data = {checkArr : encodeURI(JSON.stringify(checkVals)),orderBy : orderBy,page:page};
+        $.cookie('checkVals_dubbo_tasksuite', JSON.stringify(checkVals));
+        htmlobj=$.ajax({url:"{% url 'dubbo_TaskSuiteListCheck' %}",async:false,data:data,type:"POST"});
+        $("#taskList").html(htmlobj.responseText);
+        orderByShow();
+        showMergeCheckbox();
+    }
+    initCheckValsFromCookie();
+    selected();
+    window.onload = function() {
+        $("#surprise").click();
+    };
+    var mergeCheckboxIsShow = false;
+    function checkMergeCheckbox() {
+        if (mergeCheckboxIsShow) {
+            mergeCheckboxIsShow = false;
+        } else {
+            mergeCheckboxIsShow = true;
+        }
+        showMergeCheckbox();
+    }
+
+    function showMergeCheckbox() {
+        if (mergeCheckboxIsShow) {
+            $("#mergeTh").css("display", "");
+            $("[name='mergeCheckbox']").css("display", "");
+        } else {
+            $("#mergeTh").css("display", "none");
+            $("[name='mergeCheckbox']").css("display", "none");
+        }
+
+        selectCheckbox();
+
+    }
+       //自动勾选已勾选的box
+    function selectCheckbox() {
+        for (var index = 0;index < mergeCheckbox.length;index++){
+            $("#merge"+mergeCheckbox[index]).prop("checked",true);
+        }
+    }
+
+    function checkMergeCheckboxList(taskId) {
+        if ($("#merge" + taskId).is(':checked')) {
+            mergeCheckbox.push(taskId);
+        } else {
+            mergeCheckbox.splice($.inArray(taskId, mergeCheckbox), 1);
+        }
+
+        if (mergeCheckbox.length >= 2){
+            $("#resultMerge").prop("disabled",false);
+        }else {
+            $("#resultMerge").prop("disabled",true);
+        }
+
+    }
+
+
+</script>
+<!-- Content ends -->
+{% include 'InterfaceTest/foot.html'%}

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <!-- Title and other stuffs -->
+    <title>
+        {% if title %}
+            {{ title }}--{{ site_name }}接口测试平台
+        {% else %}
+            {{ site_name }}接口测试平台
+        {% endif %}
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="">
+
+    <link rel="stylesheet" href="/static/style/publicKey.css">
+
+     <!-- Bootstrap -->
+    <link href="/static/new_template/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="/static/new_template/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <!-- NProgress -->
+    <link href="/static/new_template/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <!-- iCheck -->
+    <link href="/static/new_template/vendors/iCheck/skins/flat/green.css" rel="stylesheet">
+    <!-- bootstrap-progressbar -->
+    <link href="/static/new_template/vendors/bootstrap-progressbar/css/bootstrap-progressbar-3.3.4.min.css" rel="stylesheet">
+    <!-- JQVMap -->
+    <link href="/static/new_template/vendors/jqvmap/dist/jqvmap.min.css" rel="stylesheet"/>
+    <!-- bootstrap-daterangepicker -->
+    <link href="/static/new_template/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+
+    <!-- Custom Theme Style -->
+    <link href="/static/new_template/build/css/custom.min.css" rel="stylesheet">
+    <link href="/static/new_template/style/commonStyle.css?v={{ static_version }}" rel="stylesheet">
+    <link href="/static/style/publicKey.css" rel="stylesheet">
+    <link href="/static/ui/css/commonPageObject.css" rel="stylesheet">
+
+    <!--loading-->
+    <link href="/static/style/loading.css" rel="stylesheet">
+
+    <!-- HTML5 Support for IE -->
+    <!--[if lt IE 9]>
+    <script src="/s/js/html5shim.js"></script>
+    <![endif]-->
+    <!-- Favicon -->
+
+    <script src="/static/new_template/vendors/jquery/dist/jquery.min.js"></script>
+    <script src="/static/js/jquery-cookie/jquery.cookie.js"></script>
+    <link rel="stylesheet" href="/static/datetime-picker/bootstrap-datetimepicker.min.css">
+    <!--<script type="text/javascript" src="/s/js/bootstrap.js"></script>-->
+    <script type="text/javascript" src="/static/datetime-picker/bootstrap-datetimepicker.min.js"></script>
+    <script type="text/javascript" src="/static/datetime-picker/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script type="text/javascript" src="/static/datetime-picker/moment-with-local.js"></script>
+
+     <!--这个是jquery发送post的js文件-->
+    <script type="text/javascript" src="/static/frame_work/jQueryPOST.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="/static/new_template/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+
+    <link href="/static/new_template/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+
+        <!-- 关键字变色使用 -->
+    <script src="/static/codeEditor/codemirror.min.js"></script>
+    <link rel="stylesheet" href="/static/codeEditor/codemirror.min.css">
+    <link href="/static/codeEditor/normalize.min.css" rel="stylesheet">
+
+    <script src="/static/codeEditor/soso.js?v={{ static_version }}"></script>
+    <script src="/static/js/common/common.js?v={{ static_version }}"></script>
+
+
+    <link rel="stylesheet" href="/static/AdminLTE/bower_components/select2/dist/css/select2.min.css">
+    <script src="/static/AdminLTE/bower_components/select2/dist/js/select2.full.min.js"></script>
+    <style>
+        .CodeMirror {
+            border:1px solid #eee;
+            height: auto;
+        }
+        .CodeMirror-scroll {
+            height: auto;
+            overflow-y: hidden;
+            overflow-x: auto;
+        }
+        .mySelect2ForURI{
+{#            width: 200px;#}
+            border-radius:0px;
+        }
+        .pageNavMenuHref{
+            color: red;
+            background-color: yellow;
+        }
+        .optionButtionSize{
+            width: 25px;
+            height: 25px;
+            padding: 0px 0px 0px 0px;
+            margin: 12px 0px 0px 0px;
+            vertical-align: middle;
+            text-align: center;
+        }
+        H2.subNavH2Style{
+            padding-left: 20px;
+            margin-top: -3px;
+            margin-bottom: 0px;
+        }
+        textarea.list_textarea{
+            width:100%;
+            min-height:50px;
+            max-height:100px;
+            background:transparent;
+            border-style:none;
+            resize:none;
+            padding:0;
+        }
+    </style>
+    <script type="text/javascript">
+        //code mirror的tab转换为4个空格
+        function newTab(cm) {
+            var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+            if (cm.somethingSelected()) {
+                cm.indentSelection('add');
+            } else {
+                cm.replaceSelection(spaces, "end", "+input");
+            }
+        }
+    </script>
+</head>
+<body class="nav-md" style="overflow-x: hidden;">
+    <div class="container body">
+      <div class="main_container">

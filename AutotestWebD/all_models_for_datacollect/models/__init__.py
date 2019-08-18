@@ -1,0 +1,1 @@
+from all_models_for_datacollect.models.DC0001_datacollect import *

@@ -1,0 +1,42 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!-- saved from url=(0053)http://www.tareeinternet.com/scripts/comparison-tool/ -->
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>文本比较工具</title>
+<meta name="description" content="本工具可以方便大家快速对比两个文本文件中的不同之处。">
+<script type="text/javascript" src="/static/littletool/diff_resource/dojo.js"></script>
+<script type="text/javascript" src="/static/littletool/diff_resource/diffview.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/littletool/diff_resource/diffview.css">
+<script type="text/javascript" src="/static/littletool/diff_resource/difflib.js"></script>
+<script language="javascript">
+var $=dojo.byId;dojo.require("dojo.io");var url=window.location.toString().split("#")[0];function diffUsingJS(){var base=difflib.stringAsLines($("baseText").value);var newtxt=difflib.stringAsLines($("newText").value);var sm=new difflib.SequenceMatcher(base,newtxt);var opcodes=sm.get_opcodes();var diffoutputdiv=$("diffoutput");while(diffoutputdiv.firstChild)diffoutputdiv.removeChild(diffoutputdiv.firstChild);var contextSize=$("contextSize").value;contextSize=contextSize?contextSize:null;diffoutputdiv.appendChild(diffview.buildView({baseTextLines:base,newTextLines:newtxt,opcodes:opcodes,baseTextName:"Base Text",newTextName:"New Text",contextSize:contextSize,viewType:$("inline").checked?1:0}));window.location=url+"#diff";}function diffUsingPython(){dojo.io.bind({url:"/diff/postYieldDiffData",method:"POST",content:{baseText:$("baseText").value,newText:$("newText").value,ignoreWhitespace:"Y"},load:function(type,data,evt){try{data=eval('('+data+')');while(diffoutputdiv.firstChild)diffoutputdiv.removeChild(diffoutputdiv.firstChild);$("output").appendChild(diffview.buildView({baseTextLines:data.baseTextLines,newTextLines:data.newTextLines,opcodes:data.opcodes,baseTextName:data.baseTextName,newTextName:data.newTextName,contextSize:contextSize}));}catch(ex){alert("An error occurred updating the diff view:\n"+ex.toString());}},error:function(type,evt){alert('Error occurred getting diff data.  Check the server logs.');},type:'text/javascript'});}
+</script>
+
+<!-- bdtj-->
+</head>
+<body>
+<div align="center">
+	<table border="0" width="900" id="table1">
+		<tr>
+			<td><h1>文本比较工具</h1>
+
+	<input type="hidden" id="contextSize" value="">
+	<strong>结果查看方式:</strong>
+	<input type="radio" name="_viewtype" id="sidebyside" checked="checked" > 左右并排
+	&nbsp;&nbsp;
+	<input type="radio" name="_viewtype" id="inline"> 上下对比
+	<h2>Base Text（基础文本）</h2>
+	<textarea id="baseText" style="width:900px;height:100px"></textarea>
+
+	<h2>New Text（对比文本）</h2>
+	<textarea id="newText" style="width:900px;height:100px"></textarea><br>
+	<input type="button" value="Submit" onclick="javascript:diffUsingJS();"><br><br>
+	<a name="diff"> </a>
+	<div id="diffoutput" style="width:100%"> </div>
+</td>
+		</tr>
+	</table>
+</div>
+
+</body></html>

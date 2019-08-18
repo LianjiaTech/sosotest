@@ -1,0 +1,27 @@
+.coveredStandard{
+    background-color: #99FFCC ;
+}
+
+.noCoveredStandard{
+     background-color: #FF99CC ;
+}
+
+.redundantStandard{
+    background-color: #FFFF99 ;
+}
+
+.coveredStandardBtn{
+    border-color : #99FFCC;
+}
+
+.noCoveredStandardBtn{
+    border-color : #FF99CC;
+}
+
+.redundantStandardBtn{
+    border-color : #FFFF99;
+}
+
+.allDetailTd{
+    background-color: #8db2e3;
+}

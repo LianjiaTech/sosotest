@@ -1,0 +1,434 @@
+            <div class="form-group" style="margin-bottom: 0px;margin-top: 15px">
+
+            <label class="control-label col-md-min-1">{{ groupLevel1 }}</label>
+            <div class="col-lg-3" style="width:21%;">
+                <select class="form-control" name="businessLine" >
+                    {% for business in businessLine %}
+                        <option value="{{ business.id }}">{{ business.bussinessLineName }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <label class="control-label col-md-min-1">{{ groupLevel2 }}</label>
+            <div class="col-lg-3" style="width:21%;">
+                <select class="form-control" name="modules">
+{#                    {% for m in modules %}#}
+{#                        <option value="{{ m.id }}">{{ m.moduleName }}</option>#}
+{#                    {% endfor %}#}
+                </select>
+            </div>
+
+            <label class="control-label col-md-min-1">来源</label>
+            <div class="col-lg-3" style="width:21%;" >
+                <select class="form-control" name="sources">
+                     {% for s in source %}
+                        <option value="{{ s.id }}">{{ s.sourceName }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-lg-11" style="width: 88%;margin-top: 20px;margin-left: 10px;">
+{#                    <ul id="interfaceTab" class="nav nav-tabs">#}
+{#                        <li><a href="#valBeforeTab" name="masterTabBeforeVal" name1="switchTab"#}
+{#                               onclick="$('#btnDiv').css('margin-top','0px')" data-toggle="tab">准备</a></li>#}
+{#                        <li class="active"><a href="#requestBody" name="masterTabRequestBody" name1="switchTab"#}
+{#                                              onclick="$('#btnDiv').css('margin-top','0px')" data-toggle="tab">执行信息</a>#}
+{#                        </li>#}
+{#                        <li><a href="#valAfterTab" name="masterTabAfterVal" name1="switchTab"#}
+{#                               onclick="$('#btnDiv').css('margin-top','0px')" data-toggle="tab">断言恢复</a></li>#}
+{#                    </ul>#}
+                  <div>
+                        <h2>准备</h2>
+                  </div>
+                    <div id="interfaceTabContent" class="tab-content" style="margin-top: 5px">
+{#                        <div class="tab-pane fade" name="masterTabContentBeforeVal" id="valBeforeTab" name1="switchDiv"#}
+{#                             style="margin-left: 10px;margin-right: 10px">#}
+                            <div class="form-group" >
+                                <div class="col-lg-7" style="width: 100%">
+                                    <div id="myTabContent1" class="tab-content">
+                                        <div class="tab-pane fade active in" name="commonValBeforeDiv" name1="switchDiv" id="commonValBefore">
+                                            <div class="form-group" name="beforeNotSort">
+                                                <div class="col-lg-12" style="max-width: 1000px">
+                                                    <textarea type="text"
+                                                              onfocus="resetGlobalElement($(this),'')"
+
+                                                              style="height: 100px;"
+                                                              name="commonValBefore"
+                                                              class="form-control"
+                                                              placeholder="请输入通用变量">{{ beforeCommonVal }}</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+{#                        </div>#}
+
+{#                        <div class="tab-pane fade active in" name="masterTabContentRequestBody" id="requestBody" name1="switchDiv"#}
+{#                             style="margin-left: 10px;margin-right: 10px">#}
+                    <div>
+                        <h2>执行信息</h2>
+                    </div>
+                        <div class="form-group">
+                            <div class="col-lg-2" style="padding-right: 0px">
+                                <select class="form-control" style="border-radius:0px;" name="URI">
+                                    {% for u in uri %}
+                                            <option value="{{ u.uriKey }}" title="{{ u.uriKey }}">{{ u.alias }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <div  class="col-lg-2" style="width:20%;padding-right: 0px;padding-left: 0px">
+                                <button name="useCustomUriBtn" style="width: 100%;padding-top: 6px;padding-bottom: 6px;background-color: #CCFFFF;border-color: #99FFFF" onclick="useCustomToggle($(this))" type="button" class="btn btn-lg">
+                                    <i class="fa fa-hand-o-left"></i>使用服务配置地址</button>
+                                <input type="checkbox" name="useCustomUri" checked style="display:none;" />
+
+                            </div>
+                            <div class="col-lg-2" style="width:33%;padding-right: 0px;padding-left: 0px">
+                                <input type="text" name="customUri" style="border-radius:0px;height: 38px;resize:none"  class="form-control" placeholder="请输入自定义请求地址,例:http://127.0.0.1" title="请输入自定义请求地址,例:http://127.0.0.1">
+                            </div>
+                            <div  class="col-lg-2" style="width:24%;padding-right: 0px;padding-left: 0px">
+                                 <select class="form-control " name="redirectSelect">
+                                    <option value="1" title="自动重定向" style="min-height: 34px !important;">自动重定向</option>
+                                    <option value="0" title="不自动重定向" style="min-height: 34px !important;">不自动重定向</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-2" style="padding-right: 0px">
+                                <select class="form-control" name="methodSelect" onchange="changeBodyTab($(this))"
+                                        style="border-top-right-radius:0em;border-bottom-right-radius:0em;">
+                                    <option value="GET">GET</option>
+                                    <option value="POST" selected="">POST</option>
+                                    <option value="PUT">PUT</option>
+                                    <option value="PATCH">PATCH</option>
+                                    <option value="DELETE">DELETE</option>
+                                    <option value="HEAD">HEAD</option>
+                                    <option value="OPTIONS">OPTIONS</option>
+                                </select>
+                            </div>
+
+                            <div class="col-lg-2" style="width:53%;padding-right: 0px;padding-left: 0px">
+                                <input type="text" name="URL" style="border-radius:0px;height: 38px;resize:none" onfocus="resetGlobalElement($(this),'')"
+                                       class="form-control"
+                                       placeholder="请输入接口URL,例:/appapi/product/getSpuListByScence"/>
+                            </div>
+                            <div class="col-lg-1" style="width:12%;padding-right: 0px;padding-left: 0px">
+                                <input type="text" class="form-control"
+                                       style="border-top-left-radius:0em;border-bottom-left-radius:0em;height: 38px"
+                                       placeholder="超时时间:为可以等待的最大的接口返回时间,单位秒,默认20"
+                                       title="超时时间:为可以等待的最大的接口返回时间,单位秒,默认20"
+                                       name="timeout">
+                            </div>
+                            <div class="col-lg-1" style="width:12%;padding-right: 0px;padding-left: 0px">
+                                <input type="text" class="form-control"
+                                       style="border-top-left-radius:0em;border-bottom-left-radius:0em;height: 38px"
+                                       placeholder="性能时间:为预期的接口请求的返回时间,单位秒,默认1"
+                                       title="性能时间:为预期的接口请求的返回时间,单位秒,默认1"
+                                       name="performanceTime">
+                            </div>
+                        </div>
+                            <div class="form-group">
+                                <div class="col-lg-12">
+                                    <ul id="myTab2" class="nav nav-tabs">
+                                        <li><a href="#paramsTab" name="paramsTab" data-toggle="tab" name1="switchTab">PARAMS</a></li>
+                                        <li><a href="#headerTab" name="headerTab" data-toggle="tab" name1="switchTab">HEADER(0)</a></li>
+                                        <li class="active"><a name="bodyTab" href="#bodyTab" data-toggle="tab" name1="switchTab">BODY</a>
+                                        </li>
+                                    </ul>
+
+                                    <div id="myTabContent2" class="tab-content" name="dataContent" style="margin-top: 5px">
+                                        <div class="tab-pane fade" id="headerTab" name="headerTabContent" name1="switchDiv">
+                                            <div class="form-group">
+                                                <div class="col-lg-12">
+                                                    <table class="table" style="table-layout:fixed;">
+                                                        <thead>
+                                                        <tr bgcolor="#b0e0e6">
+                                                            <th style="font-weight: bold;width: 20%">Key</th>
+                                                            <th style="font-weight: bold">Value</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody name="headerTbody">
+                                                        <tr name="headerTr">
+                                                            <td style="padding: 0px"><input type='text' class="form-control" name="headerKey"
+                                                                                            onclick="addTableTr($(this).parent().parent().parent());$(this).parent().parent().parent().parent().parent().parent().parent().parent().prev().children().find('[name=\'headerTab\']').text('HEADER('+($(this).parent().parent().parent().children().length-1)+')')"
+                                                                                            style="background-color: rgb(183, 186, 189);border-radius:0px;"/>
+                                                            </td>
+                                                            <td style="padding: 0px"><input type='text' class="form-control" name="headerValue"
+                                                                                            onclick="addTableTr($(this).parent().parent().parent());$(this).parent().parent().parent().parent().parent().parent().parent().parent().prev().children().find('[name=\'headerTab\']').text('HEADER('+($(this).parent().parent().parent().children().length-1)+')')"
+                                                                                            style="background-color: rgb(183, 186, 189);border-radius:0px;"/>
+                                                                <button class="btn btn-danger"
+                                                                        style="float: right; margin-top: -32.5px; margin-bottom: -8px; display: none;"
+                                                                        onclick="$(this).parent().parent().parent().parent().parent().parent().parent().parent().prev().children().find('[name=\'headerTab\']').text('HEADER('+($(this).parent().parent().parent().children().length-2)+')');$(this).parent().parent().remove();">
+                                                                    del
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade" id="paramsTab" name="paramsTabContent" name1="switchDiv">
+                                            <div class="form-group">
+                                                <div class="col-lg-12">
+                                                    <table class="table" style="table-layout:fixed;">
+                                                        <thead>
+                                                        <tr bgcolor="#b0e0e6">
+                                                            <th style="font-weight: bold;width: 20%">Key</th>
+                                                            <th style="font-weight: bold">Value
+                                                                <button class="btn btn-info"
+                                                                        onclick="toggleUrlEncode($(this))"
+                                                                        style="float: right;margin-top: -6px;margin-bottom: -8px">
+                                                                    原始
+                                                                </button>
+                                                            </th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody name="paramsTbody">
+                                                        <tr name="paramsTr">
+                                                            <td style="padding: 0px">
+                                                                <input type='text' class="form-control" name="paramsKey"
+                                                                       onclick="addTableTr($(this).parent().parent().parent())"
+                                                                       style="background-color: rgb(183, 186, 189);border-radius:0px;"/>
+                                                            </td>
+                                                            <td style="padding: 0px">
+                                                                <input type='text' class="form-control" name="paramsValue"
+                                                                       onclick="addTableTr($(this).parent().parent().parent())"
+                                                                       style="background-color: rgb(183, 186, 189);border-radius:0px;"/>
+                                                                <button class="btn btn-danger"
+                                                                        style="display:none;float: right;margin-top: -32.5px;margin-bottom: -8px"
+                                                                        onclick="$(this).parent().parent().remove()">del
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    <div class="col-lg-12" style="display:none;">
+                                                        <button class="btn btn-info" onclick="toggleUrlEncode($(this))"
+                                                                style="float: right;margin-top: 0px;">key-value
+                                                        </button>
+                                                        <textarea type="text" class="form-control"
+                                                                  onfocus="resetGlobalElement($(this),'')" name="parameter"
+                                                                  placeholder="请输入测试参数"
+                                                                  style="max-width: 100%;height:75px;min-width: 100%;min-height: 75px;"></textarea>
+                                                    </div>
+                                                </div>
+
+
+                                            </div>
+                                        </div>
+                                        <div class="tab-pane fade active in" id="bodyTab" name="bodyTabContent" name1="switchDiv"
+                                             style="margin-left: 20px;margin-right: 20px">
+                                            <div class="form-group" style="margin-bottom: 10px">
+                                                <div class="col-lg-12" style="font-size: 15px">
+                                                    <div class="col-lg-9" style="margin-top: 10px;margin-left: 20px"
+                                                         name="radioParentDiv">
+                                                        <label style="font-weight:normal;cursor:pointer"><input
+                                                                type="radio" name="body" name1="bodyNone"
+                                                                onclick="clickBodyRadio($(this));"
+                                                                value="none"/>none</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <label style="font-weight:normal;cursor:pointer"><input
+                                                                type="radio" name="body"
+                                                                onclick="clickBodyRadio($(this));changeHeader($(this).parents('[name=\'dataContent\']').find(('[name=\'headerTbody\']')),'')"
+                                                                value="form-data"/>form-data</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <label style="font-weight:normal;cursor:pointer"><input
+                                                                type="radio" name="body" name1="xurlencode"
+                                                                onclick="clickBodyRadio($(this));changeHeader($(this).parents('[name=\'dataContent\']').find(('[name=\'headerTbody\']')),'application/x-www-form-urlencoded')"
+                                                                value="x-www-form-urlencoded"/>x-www-form-urlencoded</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <label style="font-weight:normal;cursor:pointer"><input
+                                                                type="radio" name="body"
+                                                                onclick="clickBodyRadio($(this));changeHeader($(this).parents('[name=\'dataContent\']').find(('[name=\'headerTbody\']')),'')"
+                                                                value="raw"/>raw</label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                                        <label style="font-weight:normal;cursor:pointer"><input
+                                                                type="radio" name="body"
+                                                                onclick="clickBodyRadio($(this));changeHeader($(this).parents('[name=\'dataContent\']').find(('[name=\'headerTbody\']')).eq(0),'')"
+                                                                value="binary"/>binary</label>
+                                                    </div>
+                                                    <div class="col-lg-2" style="display:none;" name="body-raw-select">
+                                                        <select class="form-control" name="headerSelected"
+                                                                onchange="changeHeader($(this).parent().parent().parent().parent().parent().find('[name=\'headerTbody\']'),$(this).val());changeSelectWidth($(this));"
+                                                                style="margin-top: 5px;width: 80px">
+                                                            <option value="Text" selected="">Text</option>
+                                                            <option value="text/plain">Text(text/plain)</option>
+                                                            <option value="application/json">JSON(application/json)
+                                                            </option>
+                                                            <option value="application/javascript">
+                                                                Javascript(application/javascript)
+                                                            </option>
+                                                            <option value="application/xml">XML(application/xml)
+                                                            </option>
+                                                            <option value="text/xml">XML(text/xml)</option>
+                                                            <option value="text/html">HTML(text/html)</option>
+                                                        </select>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+                                            <div class="form-group" name="body-form-data" style="display:none;">
+                                                <table class="table" style="table-layout:fixed;">
+                                                    <thead>
+                                                    <tr bgcolor="#b0e0e6">
+                                                        <th style="font-weight: bold;width: 30%">Key</th>
+                                                        <th style="font-weight: bold">Value</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody name="body-form-Tbody">
+                                                    <tr name="body-form-Tr">
+                                                        <td style="padding: 0px">
+                                                            <input type='text' class="form-control" name="bodyFormKey" onfocus="resetGlobalElement($(this),'')"
+                                                                   onclick="addTableTr($(this).parent().parent().parent())"
+                                                                   style="background-color: rgb(183, 186, 189);border-radius:0px;width: 70%;"/>
+                                                            <select class="form-control" name="bodyFormSelected"
+                                                                    disabled onchange="formDataInput_file($(this))"
+                                                                    style="background-color: rgb(183, 186, 189);width: 30%;float: right;margin-top: -34px">
+                                                                <option value="text">text</option>
+                                                                <option value="file">file</option>
+                                                            </select>
+                                                        </td>
+                                                        <td style="padding: 0px">
+                                                            <input type='text' class="form-control"  name="bodyFormValue" onfocus="resetGlobalElement($(this),'')"
+                                                                   onclick="addTableTr($(this).parent().parent().parent())"
+                                                                   style="background-color: rgb(183, 186, 189);border-radius:0px;"/>
+                                                            <button class="btn btn-danger"
+                                                                    style="display:none;float: right; margin-top: -32.5px; margin-bottom: -8px;"
+                                                                    onclick="$(this).parent().parent().remove()">del
+                                                            </button>
+                                                            <div style="display:none;width:80%;margin-top: 3px">
+                                                                <div class="btn_addPic">
+                                                                    <span>上传文件…</span><input   onfocus="resetGlobalElement($(this),'')"
+                                                                        name="formDataInput" multiple
+                                                                        tabindex="3"
+                                                                        title="支持jpg、jpeg、gif、png格式，文件小于1M"
+                                                                        size="3"
+                                                                        name="pic" class="filePrew"
+                                                                        type="file"
+                                                                        onchange="loadFile($(this))">
+                                                                </div>
+                                                                <input type='text' type="text" name="formDataFileName" disabled  onfocus="resetGlobalElement($(this),'')"
+                                                                       style="height: 28px;width:300px;border:1px solid #f1f1f1"/>
+                                                                <span name="formDataFileSpan"
+                                                                      style="display:none;"></span>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="form-group" name="body-none" style="display:block;">
+                                                <div class="col-lg-12" style="padding-left: 0px;padding-right: 0px;text-align: center">
+                                                    <hr/>
+                                                    <span>当前请求没有body</span>
+                                                    <hr/>
+                                                </div>
+                                            </div>
+                                            <div class="form-group" name="body-x-www-form-urlencoded"
+                                                 style="display:none;">
+                                                <table class="table" style="table-layout:fixed;">
+                                                    <thead>
+                                                    <tr bgcolor="#b0e0e6">
+                                                        <th style="font-weight: bold;width: 20%">Key</th>
+                                                        <th style="font-weight: bold">Value
+                                                            <button class="btn btn-info"
+                                                                    onclick="toggleUrlEncode($(this))"
+                                                                    style="float: right;margin-top: -6px;margin-bottom: -8px">
+                                                                原始
+                                                            </button>
+                                                        </th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody name="x-www-form-urlencodedTbody">
+                                                    <tr name="x-www-form-urlencodedTr">
+                                                        <td style="padding: 0px"><input type='text' class="form-control"  name="urlEncodeKey" onfocus="resetGlobalElement($(this),'')"
+                                                                                        onclick="addTableTr($(this).parent().parent().parent())"
+                                                                                        style="background-color: rgb(183, 186, 189);border-radius:0px;"/>
+                                                        </td>
+                                                        <td style="padding: 0px">
+                                                            <input type='text' class="form-control"  onfocus="resetGlobalElement($(this),'')" name="urlEncodeValue"
+                                                                   onclick="addTableTr($(this).parent().parent().parent())"
+                                                                   style="background-color: rgb(183, 186, 189);border-radius:0px;"/>
+                                                            <button class="btn btn-danger"
+                                                                    style="display:none;float: right;margin-top: -32.5px;margin-bottom: -8px"
+                                                                    onclick="$(this).parent().parent().remove()">del
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+
+                                                <div class="col-lg-12"
+                                                     style="padding-left: 0px;padding-right: 0px;display: none">
+                                                    <button class="btn btn-info" onclick="toggleUrlEncode($(this))"
+                                                            style="float: right;margin-top: -30px;margin-bottom: -8px">
+                                                        key-value
+                                                    </button>
+                                                    <textarea type="text" onfocus="resetGlobalElement($(this),'')"
+                                                              name="x-www-form-urlencoded-input" class="form-control"
+                                                              placeholder="请输入完整body"
+                                                              style="max-width: 100%;height:75px;min-width: 100%;min-height: 75px"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-group" name="body-raw" style="display:none;">
+                                                <div class="col-lg-12" style="padding-left: 0px;padding-right: 0px;">
+                                                    <textarea type="text" onfocus="resetGlobalElement($(this),'')"
+                                                              name="body-raw-input" class="form-control"
+                                                              placeholder="请输入测试参数"
+                                                              style="max-width: 100%;height:75px;min-width: 100%;min-height: 75px"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="form-group" name="body-binary"
+                                                 style="display:none;">
+                                                <div class="btn_addPic">
+                                                    <span>上传文件…</span><input
+                                                        name="binaryFileInput" multiple
+                                                        tabindex="3"
+                                                        title="支持jpg、jpeg、gif、png格式，文件小于1M"
+                                                        size="3"
+                                                        name="pic" class="filePrew"
+                                                        type="file"
+                                                        onchange="loadFile($(this))">
+                                                </div>
+                                                <input type="text" name="binaryTextName" disabled
+                                                       style="height: 28px;width:300px;border:1px solid #f1f1f1"/>
+                                                <span name="binarySpan" style="display:none;"></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+{#                        </div>#}
+                     <div>
+                        <h2>断言恢复</h2>
+                    </div>
+{#                        <div class="tab-pane fade" name="masterTabContentAfterValTab" id="valAfterTab" name1="switchDiv"#}
+{#                             style="margin-right: 10px;margin-left: 10px">#}
+                            <div class="form-group">
+                                <div class="col-lg-7" style="width: 100%">
+                                    <div class="tab-content">
+                                        <div class="tab-pane fade active in"
+                                             name="commonValAfterDiv" name1="switchDiv" id="commonValAfter">
+                                            <div class="form-group"  >
+                                                <div class="col-lg-12" style="max-width: 1000px">
+                                                    <textarea type="text"
+                                                              onfocus="resetGlobalElement($(this),'')"
+                                                              style="height: 100px;"
+                                                              class="form-control"
+                                                              name="commonValAfter"
+                                                              placeholder="请输入断言恢复"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+{#                        </div>#}
+
+                    </div>
+                </div>
+            </div>

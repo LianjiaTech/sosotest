@@ -1,0 +1,197 @@
+<script type="text/javascript">
+    function checkDetail(element) {
+        var elementList = element.parent().parent().nextAll();
+        for (var index = 0;index<elementList.length;index++){
+            if(elementList.eq(index).attr("name") == "task"){
+                elementList.eq(index).removeAttr("style");
+            }else {
+                 break;
+            }
+        }
+        element.attr("onclick","hiddenDetail($(this))");
+        element.text("隐藏详情");
+    }
+
+    function hiddenDetail(element) {
+        var elementList = element.parent().parent().nextAll();
+        for (var index = 0;index<elementList.length;index++){
+            if(elementList.eq(index).attr("name") == "task"){
+                elementList.eq(index).attr("style","display:none");
+            }else {
+                 break;
+            }
+        }
+        element.attr("onclick","checkDetail($(this))");
+        element.text("查看详情");
+    }
+</script>
+<div class="row tile_count" style="margin-bottom: 0px;margin-top: 0px">
+    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top" title="源文件解析出的标准接口总数"><i class="fa fa-user"></i> 接口总数  <i class="fa fa-question-circle"></i></span>
+        <div class="count">{{ generalSituation.statisticalDetail.standardCount }}</div>
+    </div>
+    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top" title="用例中覆盖到的接口数量"><i class="fa fa-clock-o"></i> 维护中总数 <i class="fa fa-question-circle"></i></span>
+        <div class="count">{{ generalSituation.statisticalDetail.maintenanceCount }}</div>
+    </div>
+    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top" title="标准任务中的用例覆盖到的接口数量"><i class="fa fa-user"></i> 废弃总数 <i class="fa fa-question-circle"></i></span>
+        <div class="count green">{{ generalSituation.statisticalDetail.abandonedCount }}</div>
+    </div>
+    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top" title="业务线标准任务中用例包含的接口总数"><i class="fa fa-user"></i> 已覆盖接口数 <i class="fa fa-question-circle"></i></span>
+        <div class="count">{{ generalSituation.statisticalDetail.coverCount }}</div>
+        <span class="count_bottom"> 接口覆盖率 <i class="green"><i class="fa fa-sort-asc"></i>{{ generalSituation.statisticalDetail.platformCoverageRate }}%</i></span>
+    </div>
+    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-user"></i> 执行用例接口总数</span>
+        <div class="count">{{ generalSituation.statisticalDetail.standardTaskInterfaceNum }}</div>
+{#        <span class="count_bottom"> 执行用例平均数  <i class="green"><i class="fa fa-sort-asc"></i>{{ generalSituation.statisticalDetail.executeInterfaceAverage }}</i></span>#}
+    </div>
+</div>
+<div class="clearfix"></div>
+<div class="col-md-12 col-sm-12 col-xs-12">
+    <div class="x_panel">
+      <div class="x_title">
+        <h2>业务线接口覆盖度<small></small></h2>
+        <ul class="nav navbar-right panel_toolbox">
+          <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+          </li>
+          <!--<li class="dropdown">-->
+            <!--<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>-->
+            <!--<ul class="dropdown-menu" role="menu">-->
+              <!--<li><a href="#">Settings 1</a>-->
+              <!--</li>-->
+              <!--<li><a href="#">Settings 2</a>-->
+              <!--</li>-->
+            <!--</ul>-->
+          <!--</li>-->
+          <li><a class="close-link"><i class="fa fa-close"></i></a>
+          </li>
+        </ul>
+        <div class="clearfix"></div>
+      </div>
+      <div class="x_content">
+
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>业务线</th>
+              <th title="源文件解析出的标准接口总数">接口总数 <i class="fa fa-question-circle"></i></th>
+              <th title="用例中覆盖到的接口数量">已覆盖接口数 <i class="fa fa-question-circle"></i></th>
+              <th>覆盖率 </th>
+              <th title="标准任务中的用例覆盖到的接口数量">已执行覆盖接口数 <i class="fa fa-question-circle"></i></th>
+              <th>用例执行接口覆盖率 </th>
+              <th title="业务线中所有用例包含的接口总数">用例接口总数 <i class="fa fa-question-circle"></i></th>
+              <th title="业务线标准任务中用例包含的接口总数">执行用例接口总数 <i class="fa fa-question-circle"></i></th>
+{#              <th>场景总数 </th>#}
+            </tr>
+          </thead>
+          <tbody>
+             {% for coverageDataKey,coverageDataValue in coverageRate.items %}
+                 <tr>
+                    <td scope="row">{{ coverageDataKey }}</td>
+                           <td>{{ coverageDataValue.standardInterfaceNum }}</td>
+                            <td>{{ coverageDataValue.coveredInterfaceNum }}</td>
+                            {% if coverageDataValue.coverage >= "90.00" or coverageDataValue.coverage >= 90.00 or coverageDataValue.coverage == "100.00"  %}
+                                <td style="color: green">{{ coverageDataValue.coverage }}%</td>
+                            {% elif coverageDataValue.coverage >= "80.00" or coverageDataValue.coverage >= 80.00 %}
+                                <td style="color:orange">{{ coverageDataValue.coverage }}%</td>
+                            {% else %}
+                                <td style="color: red">{{ coverageDataValue.coverage }}%</td>
+                            {% endif %}
+                            <td>{{ coverageDataValue.executeInterfaceNum }}</td>
+                            <td>{{ coverageDataValue.executeInterfaceCoverage }}%</td>
+                            <td>{{ coverageDataValue.interfaceNum }}</td>
+                            <td>{{ coverageDataValue.executeInterfaceSum }}</td>
+{#                            <td>{{ coverageDataValue.testCaseSum }}</td>#}
+{#                                    <td class=" last"><a target="_blank" href="/detail?businessLine=SFA">查看</a></td>#}
+                </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+</div>
+
+
+<div class="clearfix"></div>
+
+<div class="col-md-6 col-sm-6 col-xs-12">
+    <div class="x_panel">
+      <div class="x_title">
+        <h2>service接口覆盖度<small></small></h2>
+        <ul class="nav navbar-right panel_toolbox">
+          <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+          </li>
+          <li><a class="close-link"><i class="fa fa-close"></i></a>
+          </li>
+        </ul>
+        <div class="clearfix"></div>
+      </div>
+      <div class="x_content">
+
+        <table class="table table-striped">
+          <thead>
+            <tr>
+               <th>service</th>
+              <th width="20%">标准接口数</th>
+              <th width="20%">已覆盖接口数</th>
+              <th width="20%">接口覆盖率</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for leftIndex in leftList %}
+                <tr>
+                    <td>{{ leftIndex.serviceName }}</td>
+                    <td>{{ leftIndex.totalNum }}</td>
+                    <td>{{ leftIndex.coverageNum }}</td>
+                    <td>{{ leftIndex.coverage }}%</td>
+                </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+</div>
+<div class="col-md-6 col-sm-6 col-xs-12">
+    <div class="x_panel">
+      <div class="x_title">
+        <h2>service接口覆盖度<small></small></h2>
+        <ul class="nav navbar-right panel_toolbox">
+          <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+          </li>
+          <li><a class="close-link"><i class="fa fa-close"></i></a>
+          </li>
+        </ul>
+        <div class="clearfix"></div>
+      </div>
+      <div class="x_content">
+
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>service</th>
+              <th width="20%">标准接口数</th>
+              <th width="20%">已覆盖接口数</th>
+              <th width="20%">接口覆盖率</th>
+            </tr>
+          </thead>
+          <tbody>
+              {% for rightIndex in rightList %}
+                <tr>
+                    <td>{{ rightIndex.serviceName }}</td>
+                    <td>{{ rightIndex.totalNum }}</td>
+                    <td>{{ rightIndex.coverageNum }}</td>
+                    <td>{{ rightIndex.coverage }}%</td>
+                </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+</div>
+

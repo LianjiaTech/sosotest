@@ -1,0 +1,266 @@
+{% include "myadmin/header.html" %}
+{% include "myadmin/menu.html" %}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <style>
+        .ue-container {
+            width: 60%;
+            margin: 0 auto;
+            margin-top: 3%;
+            padding: 20px 40px;
+            border: 1px solid #ddd;
+            background: #fff;
+        }
+
+        .black_overlay {
+
+            display: none;
+            position: absolute;
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 1001;
+            -moz-opacity: 0.8;
+            opacity: .80;
+            filter: alpha(opacity=80);
+        }
+
+        .white_content {
+            display: none;
+            position: absolute;
+            top: 15%;
+            left: 20%;
+            width: 60%;
+            height: auto;
+            border: 16px solid lightblue;
+            background-color: white;
+            z-index: 1002;
+
+        }
+
+        .gray_content {
+            width: 100%;
+            height: 100%;
+            z-index: 1001;
+            background-color: grey;
+        }
+
+        .white_content_small {
+            display: none;
+            position: absolute;
+            top: 20%;
+            left: 30%;
+            width: 40%;
+            height: 50%;
+            border: 16px solid lightblue;
+            background-color: white;
+            z-index: 1002;
+            overflow: auto;
+        }
+    </style>
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+            通过率环境版本配置管理
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">通过率环境版本配置管理</li>
+        </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content" style="padding-bottom: 0px">
+
+        <!-- Small boxes (Stat box) -->
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+            <div class="box" style="margin-bottom: auto">
+                <section class="content-header" style="padding-bottom: 15px;">
+                    <div style="height: 30px" id="queryStyle">
+                        <span style="font-size: 15px;float:left;padding-top: 4px;margin-right: 10px">搜索条件:</span>
+
+                    </div>
+                    <div class="nav-tabs-custom" style="cursor: move;margin-top: 10px">
+                        <!-- Tabs within a box -->
+                        <ul style="margin-left: 20px;" class="nav nav-tabs  ui-sortable-handle">
+                            <li class="active" style="margin-top: 10px"><a href="#permissionNameTab"
+                                                                           style="padding: 5px 15px 5px 15px;"
+                                                                           data-toggle="tab"
+                                                                           aria-expanded="true">http服务的key</a>
+                            </li>
+                        </ul>
+                        <div class="tab-content no-padding">
+                            <!-- Morris chart - Sales -->
+                            <div class="chart tab-pane active" id="permissionNameTab">
+                                <div class="box-body">
+                                    <div class="form-horizontal">
+                                        <div class="box-body">
+                                            <div class="form-group">
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="queryHttpConfKey"
+                                                           placeholder="httpConfKey" onkeypress="EnterPress(event)">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /.box-footer -->
+                                    </div>
+                                    <!-- /.row -->
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                </section>
+
+            </div>
+            <div class="box" id="standardEnvSubPage">
+                <!-- /.box-header -->
+
+                <!-- /.box-body -->
+            </div>
+
+            <div id="fade" class="black_overlay" style="display: none; height: 974px;"></div>
+            <div class="box white_content" style="display: none;" id="standardEnvAddSubPage">
+                <div class="box-header with-border">
+                    <h3 class="box-title" id="supPageTitle"></h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" onclick="CloseDiv('standardEnvAddSubPage','bgdiv')"><i
+                                class="fa fa-remove"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="form-horizontal">
+                        <form action="" method="post" target="id_iframe">
+                            {% csrf_token %}
+                            <div class="box-body">
+
+                                <div class="form-group">
+                                    <label  class="col-sm-2 control-label">http服务的key</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="httpConfKey" placeholder="httpConfKey"
+                                               required="required">
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label  class="col-sm-2 control-label">openApi服务的key</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="openApiKey" placeholder="openApiKey"
+                                               required="required">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label  class="col-sm-2 control-label">rmi服务的key</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="rmiKey" placeholder="rmiKey"
+                                               required="required">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label  class="col-sm-2 control-label">版本</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="version" placeholder="version"
+                                               required="required">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label  class="col-sm-2 control-label">action环境列是否显示</label>
+                                    <div class="col-sm-9">
+                                        <select id="actionIsShow" class="form-control">
+                                        <option value="1">显示</option>
+                                        <option value="0">隐藏</option>
+                                    </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label  class="col-sm-2 control-label">rmi环境列是否显示</label>
+                                    <div class="col-sm-9">
+                                        <select id="rmiIsShow" class="form-control">
+                                        <option value="1">显示</option>
+                                        <option value="0">隐藏</option>
+                                    </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label  class="col-sm-2 control-label">openapi环境列是否显示</label>
+                                    <div class="col-sm-9">
+                                        <select id="openapiIsShow" class="form-control">
+                                        <option value="1">显示</option>
+                                        <option value="0">隐藏</option>
+                                    </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label  class="col-sm-2 control-label">ui环境列是否显示</label>
+                                    <div class="col-sm-9">
+                                        <select id="uiIsShow" class="form-control">
+                                        <option value="1">显示</option>
+                                        <option value="0">隐藏</option>
+                                    </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label  class="col-sm-2 control-label">名称</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="alias" placeholder="alias"
+                                               required="required">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label  class="col-sm-2 control-label">列的排序，从小到大排序</label>
+                                    <div class="col-sm-9">
+                                       <input type="number" class="form-control" id="lineSort" placeholder="lineSort"
+                                               required="required">
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- /.box-body -->
+                            <div class="box-footer">
+                                <button type="button" class="btn btn-default" onclick="CloseDiv('standardEnvAddSubPage','bgdiv')">取消</button>
+                                <input type="submit" id="submit" class="btn btn-info pull-right" onclick="addStandardEnv()"
+                                       value="保存">
+                            </div>
+                        </form>
+                        <iframe id="id_iframe" name="id_iframe" style="display: none;"></iframe>
+                        <!-- /.box-footer -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+
+                </div>
+            </div>
+
+
+
+        </div>
+        <!-- /.row (main row) -->
+    </section>
+    <!-- /.content -->
+</div>
+{% include "myadmin/footer.html" %}
+
+<script src="/static/myadmin/js/standardEnv/standardEnv_check.js"></script>
+

@@ -1,0 +1,332 @@
+{% include 'InterfaceTest/head.html'%}
+<!-- Main content starts -->
+<script type="text/javascript">
+    var checkVals = {"caseFounder":""};
+    var page = {{ page }};
+    var clock;
+    function clearChecked() {
+        $("#caseFounderInput").val('');
+        $("#opsListInput").val('');
+        $("#serviceDeployListInput").val('');
+        editCheckVal();
+    }
+
+
+    function editCheckVal() {
+
+        //接口创建人
+        if($("#caseFounderInput").val()==''){
+            checkVals['caseFounder'] = "{{ userName }}";
+        }else if($("#caseFounderInput").val()=='all'){
+            checkVals['caseFounder'] = '';
+        }else{
+            checkVals['caseFounder'] =$("#caseFounderInput").val() ;
+        }
+
+        //接口Id
+        if($("#opsListInput").val()==''){
+            checkVals['opsList'] = '';
+        }else {
+            checkVals['opsList'] =$("#opsListInput").val() ;
+        }
+     //接口Id
+        if($("#serviceDeployListInput").val()==''){
+            checkVals['serviceDeployList'] = '';
+        }else {
+            checkVals['serviceDeployList'] =$("#serviceDeployListInput").val() ;
+        }
+        selected();
+    }
+
+
+    function inputVal(val) {
+        $("#caseFounderInput").val(val);
+        editCheckVal();
+    }
+    function setState(id) {
+        clearTimeout(clock);
+          clock = setTimeout(function () {
+              setTimeState(id);
+{#              console.log('click');#}
+          },300);
+    }
+    function setDblClickState(id) {
+        clearTimeout(clock);
+{#        console.log('dbclick');#}
+    }
+    function setTimeState(id) {
+
+
+        var Name = $('#name'+id).text();
+        //删除
+        if(confirm("确定要删除接口\""+Name+"\"吗？")) {
+            var delTip = JSON.parse($.ajax({url:"{% url 'HTTP_InterfaceDelTip' %}?id="+id,async:false}).responseText).body;
+            if(delTip.num > 0){
+                if(!confirm("将影响"+delTip.num+"条用例，编号为："+delTip.list)) {
+                    return
+                }
+            }
+            var delInterface=$.ajax({url:"{% url 'HTTP_InterfaceDel' %}?id="+id,async:false});
+            if(JSON.parse(delInterface.responseText)["code"] == 10000){
+                location.reload();
+            }else{
+                alert(JSON.parse(delInterface.responseText)["message"]);
+            }
+        }
+    }
+
+    function checkOptions() {
+
+        var htmls = ' <span class="cat-text"style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>';
+
+        for(var item in checkVals){
+            if(checkVals[item] != '' && typeof(checkVals[item]) != 'undefined'){
+                var key = '';
+                switch(item){
+                    case "caseFounder":
+                        key = '创建人';
+                        break;
+                    case "opsList":
+                        key = "OPS列表";
+                        break
+                    case "serviceDeployList":
+                        key = "service列表";
+                        break
+                }
+                htmls = htmls+'<span class="tag"><span>'+key+'：'+checkVals[item]+'&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delCheckOptions(\''+item+'\')">x</a></span> '
+
+            }
+        }
+        htmls = htmls +'<span class="tag" style="float: right;background-color: #ff7575"><span>默认筛选&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="clearChecked()">x</a></span>';
+        $('#checkOption').html(htmls);
+    }
+
+
+    function EnterPress(event){ //传入 event
+        var e = event || window.event;
+        if(e.keyCode == 13){
+            editCheckVal();
+        }
+    }
+    function delCheckOptions(key) {
+        switch (key){
+            case "caseFounder":
+                $("#caseFounderInput").val('all');
+                break;
+            case "opsList":
+                $("#opsListInput").val('');
+                break;
+            case "serviceDeployList":
+                $("#serviceDeployListInput").val('');
+                break;
+
+        }
+
+        editCheckVal();
+    }
+
+    function pageCall(pageNum) {
+        page = pageNum;
+        selected();
+    }
+
+    //弹出隐藏层
+    function ShowDiv(){
+        obshowdiv =  $("#taskList");
+        offtop=obshowdiv.offset().top-60;
+        offleft=obshowdiv.offset().left;
+        obshowdiv.show();
+        docheight = $(document).height();
+        $('html,body').animate({scrollTop:offtop}, 200);
+    };
+
+
+    //创建时间排序
+    var orderBy = "ud.modTime desc , ud.id desc";
+    var addTimeFlag = '-1';
+
+    function orderByAddTime() {
+        if (addTimeFlag == '-1' || addTimeFlag == '0') {
+            addTimeFlag = '1';
+            modTimeFlag = '-1';
+            //创建时间正序查
+            orderBy = 'ud.id asc';
+        } else if (addTimeFlag == '1') {
+            addTimeFlag = '0';
+            //创建时间倒序查
+            orderBy = 'ud.id desc';
+        }
+        selected();
+    }
+    var modTimeFlag = '-1';
+    //修改时间排序
+    function orderByModTime() {
+        if(modTimeFlag == '-1' || modTimeFlag == '0'){
+            modTimeFlag = '1';
+            addTimeFlag = '-1';
+            //修改时间正序查
+            orderBy = 'ud.modTime asc , ud.id asc';
+        }else if(modTimeFlag == '1' ){
+            modTimeFlag = '0';
+            //修改时间倒序查
+            orderBy = "ud.modTime desc , ud.id desc";
+        }
+        selected();
+    }
+
+    //排序样式显示
+    function orderByShow() {
+        if(addTimeFlag == '0'){
+            $("#addTimeBtn").text('创建时间▼');
+        }else if(addTimeFlag == '1'){
+            $("#addTimeBtn").text('创建时间▲');
+        }
+
+        if(modTimeFlag == '0'){
+            $("#modTimeBtn").text('修改时间▼');
+        }else if(modTimeFlag == '1'){
+            $("#modTimeBtn").text('修改时间▲');
+        }
+
+
+    }
+
+    function submitImportForm(){
+        $("#importText").html(
+            '<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;" >'
+            +'<h5 style=" color:white; ">导入中···</h5>'
+            +' </div>'
+        );
+        $("#importForm").submit();
+    }
+    function createPeople(num) {
+        htmlobj=$.ajax({url:'{% url 'queryPeopleInterface' %}?num='+num,async:false});
+        var value = JSON.parse(htmlobj.responseText).body;
+        var nameVal = "";
+        for(var i = 0;i<value.length;i++){
+            nameVal = nameVal + ' &nbsp <a href="javascript:void(0);" id="hover-a" onclick="inputVal(\''+value[i].userName+'\')"  style="font-size: 15px;text-decoration:none">['+value[i].userName+'('+value[i].count+')]</a>'
+        }
+        if(value.length<3){
+            $("#names").html(nameVal);
+            $("#hover-a").attr('onclick','createPeople('+(0)+')');
+            $("#names").show();
+            return;
+        }else {
+            $("#names").html(nameVal);
+        }
+        $("#hover-a").attr('onclick','createPeople('+(num+1)+')');
+        $("#names").show();
+    }
+
+</script>
+<div class="content">
+    <!-- Sidebar -->
+    {% include 'InterfaceTest/HTTPMenu.html' %}    <!-- Sidebar ends -->
+    <!-- Main bar -->
+    <!-- Main bar -->
+    <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                  <div class="col-xs-12 form-group pull-right top_search">
+                    <h3>{{ text.pageTitle }}</h3>
+                  </div>
+              </div>
+
+
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>选择接口</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <div class="form-group">
+                        <div  id="checkOption">
+                            <span class="cat-text" style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>
+                        </div>
+
+
+{#                        <span class="tag"><span>sales&nbsp;&nbsp;</span><a href="#" title="Removing tag">x</a></span>#}
+{#                        <span class="tag"><span>sales&nbsp;&nbsp;</span><a href="#" title="Removing tag">x</a></span>#}
+                    </div>
+                      <br>
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist" style="margin-bottom: 0px">
+                        <li role="presentation" class="active"><a href="#caseFounder" role="tab" data-toggle="tab" aria-expanded="true">创建人</a>
+                        </li>
+                          <li role="presentation" class=""><a href="#opsList" role="tab" data-toggle="tab" aria-expanded="true">ops</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#serviceDeployList" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">service</a>
+                        </li>
+
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="caseFounder" aria-labelledby="home-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="caseFounderInput" onkeypress="EnterPress(event)" placeholder="请输入创建人">
+                            </div>
+
+
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="opsList" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="opsListInput" onkeypress="EnterPress(event)" placeholder="请输入ops" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="serviceDeployList" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="serviceDeployListInput" onkeypress="EnterPress(event)" placeholder="请输入service" >
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="taskList" class="form-group"></div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+    </div>
+
+</div>
+<script type="text/javascript">
+
+    function selected() {
+        checkOptions();
+        var data = {checkArr : encodeURI(JSON.stringify(checkVals)),orderBy : orderBy,page:page};
+        var ajax=$.ajax({url:"{% url 'deploymentListCheck' %}",async:false,data:data,type:"POST"});
+        $("#taskList").html(ajax.responseText);
+        orderByShow();
+        refreshResult()
+    }
+
+    selected();
+
+    function refreshResult() {
+        var reload = $(".waitReload");
+        if(reload.length > 0){
+            setTimeout("selected()",1000);
+        }
+    }
+
+</script>
+<!-- Content ends -->
+{% include 'InterfaceTest/foot.html'%}

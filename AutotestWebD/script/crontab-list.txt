@@ -1,0 +1,9 @@
+#自动监听自动化接口测试平台 执行层运行情况并恢复脚本
+*/1 * * * *  sh /opt/ATPlatform/release/AutotestPlatform/AutotestFramework/test_run/listenAutotestPlatform.sh >>/opt/ATPlatform/release/AutotestPlatform/rootlog/listenAutotestPlatform.sh.log 2>&1 &
+
+#自动执行更新接口覆盖率
+06 04 * * * python3 /opt/ATPlatform/release/AutotestPlatform/AutotestWebD/apps/src_file_analyze/scripts/generate_all_src_file_config_to_standard_interfaces.py >/opt/ATPlatform/release/AutotestPlatform/rootlog/generate_all_src_file_config_to_standard_interfaces.log 2>&1 &
+
+#自动备份小时以自动化测试平台数据库
+06 03 * * * /opt/ATPlatform/mysql_data_backup/bak_mysql.sh
+08 03 * * * /home/AutotestPlatformBak/mysql_data_backup/bak_mysql.sh

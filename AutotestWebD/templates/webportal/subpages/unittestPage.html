@@ -1,0 +1,109 @@
+<div class="row tile_count" style="margin-bottom: 0px;margin-top: 0px">
+    <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-user"></i> 代码总行数</span>
+        <div class="count">{{ codeNum }}</div>
+    </div>
+    <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-clock-o"></i> 代码覆盖数</span>
+        <div class="count">{{ coverage }}</div>
+    </div>
+    <div class="col-md-4 col-sm-4 col-xs-6 tile_stats_count">
+        <span class="count_top"><i class="fa fa-user"></i> 代码覆盖率</span>
+        <div class="count ">{{ coverageRate }}%</div>
+    </div>
+{#    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">#}
+{#        <span class="count_top"><i class="fa fa-user"></i> 平台总接口数量</span>#}
+{#        <div class="count">3,860</div>#}
+{#        <span class="count_bottom"><i class="red"><i class="fa fa-sort-desc"></i>5 </i> 单接口平均用例数</span>#}
+{#    </div>#}
+{#    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">#}
+{#        <span class="count_top"><i class="fa fa-user"></i> 标准任务接口数量</span>#}
+{#        <div class="count">2,315</div>#}
+{#        <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> From last Week</span>#}
+{#    </div>#}
+{#    <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">#}
+{#        <span class="count_top"><i class="fa fa-user"></i> 标准任务覆盖数量</span>#}
+{#        <div class="count">7,325</div>#}
+{#        <span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>34% </i> 覆盖率</span>#}
+{#    </div>#}
+</div>
+
+<div class="clearfix"></div>
+
+<div class="col-md-6 col-sm-6 col-xs-12">
+    <div class="x_panel">
+      <div class="x_title">
+        <h2>单元测试代码覆盖度<small></small></h2>
+        <ul class="nav navbar-right panel_toolbox">
+          <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+          </li>
+          <li><a class="close-link"><i class="fa fa-close"></i></a>
+          </li>
+        </ul>
+        <div class="clearfix"></div>
+      </div>
+      <div class="x_content">
+
+        <table class="table table-striped">
+          <thead>
+            <tr>
+               <th>service</th>
+              <th width="20%">代码行数</th>
+              <th width="20%">已覆盖代码行数</th>
+              <th width="20%">代码覆盖率</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for leftIndex in leftList %}
+                <tr>
+                    <td><a href="{{ leftIndex.reportUrl }}" target="_blank">{{ leftIndex.serviceName }}</a></td>
+                    <td>{{ leftIndex.codeNum }}</td>
+                    <td>{{ leftIndex.coverage }}</td>
+                    <td>{{ leftIndex.coverageRate }}%</td>
+                </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+</div>
+<div class="col-md-6 col-sm-6 col-xs-12">
+    <div class="x_panel">
+      <div class="x_title">
+        <h2>单元测试代码覆盖度<small></small></h2>
+        <ul class="nav navbar-right panel_toolbox">
+          <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+          </li>
+          <li><a class="close-link"><i class="fa fa-close"></i></a>
+          </li>
+        </ul>
+        <div class="clearfix"></div>
+      </div>
+      <div class="x_content">
+
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th>service</th>
+              <th width="20%">代码行数</th>
+              <th width="20%">已覆盖代码行数</th>
+              <th width="20%">代码覆盖率</th>
+            </tr>
+          </thead>
+          <tbody>
+              {% for rightIndex in rightList %}
+                <tr>
+                    <td><a href="{{ rightIndex.reportUrl }}" target="_blank">{{ rightIndex.serviceName }}</a></td>
+                    <td>{{ rightIndex.codeNum }}</td>
+                    <td>{{ rightIndex.coverage }}</td>
+                    <td>{{ rightIndex.coverageRate }}%</td>
+                </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+</div>
+

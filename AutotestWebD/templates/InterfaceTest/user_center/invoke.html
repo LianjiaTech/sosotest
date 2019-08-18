@@ -1,0 +1,112 @@
+{% include 'InterfaceTest/head.html'%}
+<!-- Main content starts -->
+<div class="content">
+    <!-- Sidebar -->
+    {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Sidebar ends -->
+    <!-- Main bar -->
+    <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>invoke接口说明</h2>
+                      <h2 class="subNavH2Style">
+                        <a href="{% url 'HTTP_UserCI' %}">
+                            <button class="btn btn-info">
+                               CI脚本示例
+                              </button>
+                        </a>
+                    </h2>
+                      <h2 class="subNavH2Style">
+                        <a href="{% url 'HTTP_UserToken' %}">
+                            <button class="btn btn-info">
+                               token管理
+                              </button>
+                        </a>
+                    </h2>
+                      <h2 class="subNavH2Style">
+                        <a href="{% url 'JenkinsPluginPage' %}">
+                            <button class="btn btn-info">
+                               Jenkins插件
+                              </button>
+                        </a>
+                    </h2>
+
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <pre>[token] NOT NULL: 必要参数，登陆后从token管理获取token。
+[opt] NOT NULL: 必要参数，要请求的类型，必须是[runtask(执行任务),runinterface(执行接口),runtestcase(执行用例),gettoken(获取token)]当中的一个.
+[httpConfKey] NOT NULL: 平台环境配置的配置key，不能为空！。
+[taskId] NOT NULL: 平台上的任务Id，当opt为runtask时必须不为空。
+[interfaceId] NOT NULL: 平台上的接口Id，当opt为runinterface时必须不为空。
+[caseId] NOT NULL: 平台上的用例Id，当opt为runtestcase时必须不为空。
+[loginName] NOT NULL: 登陆平台的用户名，当opt为getToken时必须不为空。
+[password] NOT NULL: 登陆平台的密码，当opt为getToken时必须不为空。
+[isSendEmail] DEFAULT 0: 是否发送邮件，只能是[0,1]. 0代表不, 1代表是。
+[emailList]: 除了发送人之外的其他收件人，多个收件人中间用半角逗号[,]间隔。
+[isCodeRate] DEFAULT 0: 是否生成代码覆盖率统计【赞不支持】，只能是[0,1]. 0代表不, 1代表是。
+[isSaveHistory] DEFAULT 0: 是否保存接口执行历史记录，供回溯使用。只能是[0,1]. 0代表不, 1代表是。
+[comments] DEFAULT '': 任务执行的备注信息。
+[retryCount] DEFAULT 0: 失败后重试次数。
+[execPlatform] DEFAULT 100: 调用接口的平台，1代表测试平台，2代表jenkins，100代表其他。
+[timeout] DEFAULT 0: 执行结果最长等候时间，0代表不等待，直接获取回调地址，单位秒，例如10代表等待10秒，10秒为执行结束返回回调信息。
+[testLevel] DEFAULT '': 执行任务中的接口和用例的优先级，高、中、低，向上兼容，例如中会执行中和高。
+[version] 执行的版本号。
+[taskSuiteId] 执行的任务集Id。
+    </pre>
+
+                  </div>
+                </div>
+              </div>
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>invoke调用示例</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                {% if token %}
+                  <div class="x_content">
+<pre>
+[gettoken示例] HTTP://{{ host }}/invoke?opt=gettoken&amp;loginName=wangjiliang&amp;password=123456
+
+[runtask示例] HTTP://{{ host }}/invoke?opt=runtask&amp;token={{ token }}&amp;taskId=HTTP_TASK_2&amp;httpConfKey=test1&amp;comments=执行任务备注
+[runtasksuite示例] HTTP://{{ host }}/invoke?opt=runtasksuite&token={{ token }}&taskSuiteId=HTTP_TASK_SUITE_2&httpConfKey=test1&version=CurrentVersion&comments=执行任务集备注
+{% if menu.DubboInterface == 1 %}
+[rundubbotask示例] HTTP://{{ host }}/invoke?opt=rundubbotask&amp;token={{ token }}&amp;taskId=DUBBO_TASK_2&amp;httpConfKey=test1&amp;comments=执行任务备注
+[rundubbotasksuite示例] HTTP://{{ host }}/invoke?opt=rundubbotasksuite&token={{ token }}&taskSuiteId=DUBBO_TASK_SUITE_2&httpConfKey=test1&version=CurrentVersion&comments=执行任务集备注
+{% endif %}
+{% if menu.UI == 1 %}
+[runuitask示例] HTTP://{{ host }}/invoke?opt=runuitask&amp;token={{ token }}&amp;taskId=UI_TASK_1&amp;httpConfKey=test1&amp;comments=执行UI任务备注
+{% endif %}
+{% if menu.StatisticTask == 1 %}
+[上报统计任务数据示例]HTTP://{{ host }}/invoke?opt=addStatis&taskId=1&taskDetail={"total":10,"pass":9,"fail":1,"error":0}&testResult=FAIL&codeCoverage=18.88&startTime=2018-09-09%2012:00:00&taketime=30&httpConfKey=test1&type=daily&comments=上报测试结果&token={{ token }}
+{% endif %}
+</pre>
+                  </div>
+                {% else %}
+                    <h1>请先<a href="/interfaceTest/HTTP_UserToken" style="color: red">设置token</a></h1>
+                {% endif %}
+
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+    </div>
+
+    <!-- Content ends -->
+{% include 'InterfaceTest/foot.html'%}

@@ -1,0 +1,61 @@
+<php> echo file_get_contents("http://localhost".(C('SERVER_PORT')==80?'':":".C('SERVER_PORT'))."/System/main/inithead");</php>
+<div style="height: 18px"></div>
+<!-- Main content starts -->
+<link rel="stylesheet" href="/platform_resource/style/useraudit.css">
+
+<div class="content">
+    <!-- Sidebar -->
+    <php> echo file_get_contents("http://localhost".(C('SERVER_PORT')==80?'':":".C('SERVER_PORT'))."/System/main/initmenu?open=sysuserrel"); </php>
+    <!-- Sidebar ends -->
+    <!-- Main bar -->
+    <div class="mainbar">
+        <!-- Page heading -->
+        <div class="page-head">
+            <h2 class="pull-left"><i class="icon-home"></i> 系统开发管理</h2>
+            <div class="clearfix"></div>
+        </div>
+        <!-- Page heading ends -->
+        <!-- Matter -->
+        <div class="matter">
+            <div class="container">
+                <div class="row">
+                    <div  class="col-md-12" style="padding: 0% 0% 0% 0%;margin:0% 0% 0% 0% ;">
+                        <div class="widget wgreen">
+                            <div class="widget-head">
+                                <div class="pull-left"><h1>DUBBO协议</h1></div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="widget-content">
+                                <div class="padd">
+
+                    <foreach name="data" item="vo" >
+                            <a href="/System/sysuserrel/getsys?sysName={$vo['sysName']}"><button type="button" class="button {$key%6==0?'red':''}{$key%6==1?'green':''}{$key%6==2?'blue':''}{$key%6==3?'gray':''}{$key%6==4?'yellow':''}{$key%6==5?'black':''}"><p style="font-size: 40px"><br>{$vo['sysName']}<br><br></p></button></a>
+                    </foreach>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div  class="col-md-12" style="padding: 0% 0% 0% 0%;margin:0% 0% 0% 0% ;">
+                        <div class="widget wgreen">
+                            <div class="widget-head">
+                                <div class="pull-left"><h1>HTTP协议</h1></div>
+                                <div class="clearfix"></div>
+                            </div>
+                            <div class="widget-content">
+                                <div class="padd">
+
+                <a href="/System/sysuserrel/getsys?sysName=HTTP"><button type="button" class="button yellow "><p style="font-size: 40px"><br>HTTP<br><br></p></button></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Matter ends -->
+    </div>
+</div>
+<!-- Content ends -->
+<php> echo file_get_contents("http://localhost".(C('SERVER_PORT')==80?'':":".C('SERVER_PORT'))."/System/main/initfoot"); </php>

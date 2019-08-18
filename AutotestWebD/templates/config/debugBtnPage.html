@@ -1,0 +1,25 @@
+{% for hcl in httpConfList %}
+    {% if forloop.counter == 1 %}
+        <div class="form-group">
+        {% for hc in hcl %}
+            <button type="button" name="debug" onclick="saveOrDebug('debug','{{ hc.httpConfKey }}')" class="btn btn-info btn-lg">{{ hc.alias }}</button>
+        {% endfor %}
+
+        <button id="clearResult" type="button" class="btn btn-info btn-lg" style="float:right;display: none;" onclick="clearResult()">清空调试信息</button>
+        {% if httpConfListPage == "open" %}
+            <button type="button" id="more" onclick="moreEnv()" class="btn btn-info btn-lg">更多</button>
+        {% endif %}
+        </div>
+    {% endif %}
+{% endfor %}
+<div id="debugMoreEnv" style="display:none;width:100%;">
+    {% for hcl in httpConfList %}
+        {% if forloop.counter > 1 %}
+            <div class="form-group">
+                {% for hc in hcl %}
+                    <button type="button" name="debug" onclick="saveOrDebug('debug','{{ hc.httpConfKey }}')" class="btn btn-info btn-lg">{{ hc.alias }}</button>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endfor %}
+</div>

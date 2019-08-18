@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="cn">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <!-- Title and other stuffs -->
+    <title>自动化测试看板</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="">
+    <!-- Stylesheets -->
+       <!-- Bootstrap -->
+        <!-- Bootstrap -->
+    <link href="/static/cttp/vendors/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="/static/cttp/vendors/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+     <!-- NProgress -->
+    <link href="/static/cttp/vendors/nprogress/nprogress.css" rel="stylesheet">
+    <link href="/static/cttp/vendors/bootstrap-daterangepicker/daterangepicker.css" rel="stylesheet">
+
+     <link href="/static/cttp/build/css/custom.min.css" rel="stylesheet">
+    <script src="/static/cttp/vendors/jquery/dist/jquery.min.js"></script>
+    <script src="/static/js/jquery-cookie/jquery.cookie.js"></script>
+    <script src="/static/cttp/vendors/bootstrap/dist/js/bootstrap.min.js"></script>
+<!-- FastClick -->
+    <script src="/static/cttp/vendors/fastclick/lib/fastclick.js"></script>
+    <!-- NProgress -->
+    <script src="/static/cttp/vendors/nprogress/nprogress.js"></script>
+    <!-- Chart.js -->
+    <script src="/static/cttp/vendors/Chart.js/dist/Chart.min.js"></script>
+    <!-- jQuery Sparklines -->
+    <script src="/static/cttp/vendors/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
+    <!-- Flot -->
+    <script src="/static/cttp/vendors/Flot/jquery.flot.js"></script>
+    <script src="/static/cttp/vendors/Flot/jquery.flot.pie.js"></script>
+    <script src="/static/cttp/vendors/Flot/jquery.flot.time.js"></script>
+    <script src="/static/cttp/vendors/Flot/jquery.flot.stack.js"></script>
+    <script src="/static/cttp/vendors/Flot/jquery.flot.resize.js"></script>
+    <!-- Flot plugins -->
+    <script src="/static/cttp/vendors/flot.orderbars/js/jquery.flot.orderBars.js"></script>
+    <script src="/static/cttp/vendors/flot-spline/js/jquery.flot.spline.min.js"></script>
+    <script src="/static/cttp/vendors/flot.curvedlines/curvedLines.js"></script>
+    <!-- DateJS -->
+    <script src="/static/cttp/vendors/DateJS/build/date.js"></script>
+    <!-- bootstrap-daterangepicker -->
+    <script src="/static/cttp/vendors/moment/min/moment.min.js"></script>
+    <script src="/static/cttp/vendors/bootstrap-daterangepicker/daterangepicker.js"></script>
+
+    <!-- Custom Theme Scripts -->
+    <script src="/static/cttp/build/js/custom.min.js"></script>
+
+
+    <style>
+       .toggleRollBtn{
+        position: absolute;
+        top: 5px;
+        left: 95%;
+        z-index:1001;
+        -moz-opacity: 0.8;
+        opacity:.80;
+        filter: alpha(opacity=80);
+        width:60px;
+        height:20px;
+        overflow:auto;
+        margin-left: 20px;
+        display: block;
+        float: right;
+        background-color: #ffffff;
+    }
+</style>
+
+    <!--这个是jquery发送post的js文件-->
+    <script type="text/javascript">
+        function getUnitTest() {
+            //ajax 获取到UnitTest的子页面，然后加入到showDiv中
+//            $("#unitTestShowDiv").html("<table><tr>UnitTestPage</tr></table>")
+                        htmlobj=$.ajax({url:'/webportal/unitTestPage',async:false});
+            if(htmlobj.responseText == ""){
+                alert("错误的引用");
+                return;
+            }
+            $("#unitTestShowDiv").html(htmlobj.responseText)
+        }
+        function getRmiTest() {
+            //ajax 获取到UnitTest的子页面，然后加入到showDiv中
+//            $("#RMITestShowDiv").html("<table><tr>RmiTestPage</tr></table>")
+                        //ajax 获取到UnitTest的子页面，然后加入到showDiv中
+            htmlobj=$.ajax({url:'/webportal/rmiTestPage',async:false});
+            if(htmlobj.responseText == ""){
+                alert("错误的引用");
+                return;
+            }
+            $("#RMITestShowDiv").html(htmlobj.responseText)
+        }
+        function getActionTest() {
+            //ajax 获取到UnitTest的子页面，然后加入到showDiv中
+            htmlobj=$.ajax({url:'/webportal/httpTestPage',type:"GET",success:function (response){
+                if(response == ""){
+                alert("错误的引用");
+                return;
+                }
+                $("#actionTestShowDiv").html(response)
+            }});
+
+        }
+        function getActionTestCoverage() {
+            htmlobj=$.ajax({url:"/webportal/httpTestCoveragePage", type:"GET",success:function (response) {
+                if (response == ""){
+                    alert("错误的引用");
+                    return;
+                }
+                $("#actionTestCoverageShowDiv").html(response)
+            }
+            });
+        }
+        function getUITest() {
+            //ajax 获取到UnitTest的子页面，然后加入到showDiv中
+            htmlobj=$.ajax({url:'/webportal/uiTestPage',async:false});
+            if(htmlobj.responseText == ""){
+                alert("错误的引用");
+                return;
+            }
+            $("#UITestShowDiv").html(htmlobj.responseText)
+        }
+        function getCDCTest() {
+            //ajax 获取到UnitTest的子页面，然后加入到showDiv中
+            htmlobj=$.ajax({url:'/webportal/openApiTestPage',async:false});
+            if(htmlobj.responseText == ""){
+                alert("错误的引用");
+                return;
+            }
+            $("#CDCTestShowDiv").html(htmlobj.responseText)
+        }
+
+    </script>
+</head>
+<body style="background-color: white">
+<div class="x_content" style="padding-left: 10px;padding-right: 10px; min-width: 1883px">
+        <div class="" role="tabpanel" data-example-id="togglable-tabs">
+          <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist" style="margin-bottom: 10px">
+            <li role="presentation" class="active"><a name="RollLink" href="#unitTest" onclick="getUnitTest()" role="tab" data-toggle="tab" aria-expanded="true">单元测试概况</a>
+            </li>
+            <li role="presentation" class=""><a name="RollLink" href="#RMITest" onclick="getRmiTest()" role="tab" data-toggle="tab" aria-expanded="false">RMI接口测试概况</a>
+            </li>
+            <li role="presentation" class=""><a name="RollLink" href="#CDCTest" onclick="getCDCTest()" role="tab" data-toggle="tab" aria-expanded="false">OpenApi测试概况</a></li>
+
+            <li role="presentation" class=""><a name="RollLink" href="#actionTest" onclick="getActionTest()" role="tab" data-toggle="tab" aria-expanded="false">ACTION接口测试概况</a>
+            </li>
+            <li role="presentation" class=""><a name="RollLink" href="#actionTestCoverage" onclick="getActionTestCoverage()" role="tab" data-toggle="tab" aria-expanded="false">ACTION接口覆盖率概况</a>
+            </li>
+            <li role="presentation" class=""><a name="RollLink" href="#UITest" onclick="getUITest()" role="tab" data-toggle="tab" aria-expanded="false">UI测试概况</a>
+            </li>
+          </ul>
+          <div id="myTabContent" class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="unitTest" aria-labelledby="home-tab">
+                <div id="unitTestShowDiv"></div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="RMITest" aria-labelledby="profile-tab">
+              <div id="RMITestShowDiv"></div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="actionTest" aria-labelledby="profile-tab">
+              <div id="actionTestShowDiv"></div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="actionTestCoverage" aria-labelledby="profile-tab">
+              <div id="actionTestCoverageShowDiv"></div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="UITest" aria-labelledby="profile-tab">
+              <div id="UITestShowDiv"></div>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="CDCTest" aria-labelledby="profile-tab">
+              <div id="CDCTestShowDiv"></div>
+            </div>
+          </div>
+        </div>
+
+    </div>
+
+<div id="showDiv" class="toggleRollBtn">
+<a href="javascript:void(0);" onclick="toggleRollPlay( $(this) )">停止轮播</a>
+</div>
+
+   <script type="text/javascript">
+        var rollLinkList = $("[name='RollLink']");
+        rollLinkList.eq(0).click()//默认加载的页面
+        var timer = null; // 轮播图的定时器
+        var key = 0;// 控制播放的张数
+        var circle = rollLinkList.length;// 标签数量
+        var waitTime = {{ waitTime }} * 1000;//单位毫秒
+        timer = setInterval(autoplay,waitTime);// 自动轮播
+        function autoplay(){
+            /*自动轮播时,要对播放的张数key进行一个判断,如果播放的张数超过ulLis.length-1,
+            就要重头开始播放.  因为我们克隆了第一张并将其放在最后面,所以我们要从第二张图片开始播放*/
+            key++; // 先++
+            var rollIndex = key%circle;
+            rollLinkList.eq(rollIndex).click();
+        }
+        var whetherRollPlay = true;
+        window.clearInterval(timer);
+        function toggleRollPlay(thisObj) {
+            if (whetherRollPlay){
+                whetherRollPlay = false;
+                thisObj.text("开始轮播");
+                window.clearInterval(timer);// 自动轮播
+            }else{
+                whetherRollPlay = true;
+                thisObj.text("停止轮播");
+                timer = setInterval(autoplay,waitTime);// 自动轮播
+            }
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,37 @@
+{% include 'InterfaceTest/head.html'%}
+<!-- Main content starts -->
+<script type="text/javascript">
+
+</script>
+<div class="content">
+    <!-- Sidebar -->
+    {% include 'InterfaceTest/HTTPMenu.html' %}    <!-- Sidebar ends -->
+    <!-- Main bar -->
+    <!-- Main bar -->
+    <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                  <div class="col-xs-12 form-group pull-right top_search">
+                    <h3>{{ text.pageTitle }}</h3>
+                  </div>
+              </div>
+
+
+            </div>
+            <div class="clearfix"></div>
+            <h1>版本名称：{{ versionName }}</h1>
+             <div class="clearfix"></div>
+             <h1>计划封板时间：{{ closeTime }}</h1>
+            <div class="clearfix"></div>
+            <h1>版本描述：</h1>
+             <div class="clearfix"></div>
+             <h3>{{ versionDesc }}</h3>
+             <a style="color: #00CC33" href="{% url 'HTTP_ChangeVersion' %}">切回当前版本</a>
+          </div>
+    </div>
+
+</div>
+
+<!-- Content ends -->
+{% include 'InterfaceTest/foot.html'%}

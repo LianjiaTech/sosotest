@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>批量执行task接口参数说明</title>
+</head>
+<body>
+
+<span>[token] : 必填</span></br>
+<span>[httpConfKey] : 必填</span></br>
+<span>[taskList] : 可选 半角逗号分隔 例：HTTP_TASK_280,HTTP_TASK_281</span></br>
+
+<span>[businessLine] : 可选，当taskList不为空时失效</span></br>
+<span>[taskLevel] : 【高，中，低】 可选，默认为低，当taskList不为空时失效</span></br>
+<span>[caseLevel] : 【高，中，低】 可选，默认为低</span></br>
+<span>[isSendEmail] : 可选 0不发送 1发送 </span></br>
+<span>[isSaveHistory] : 可选 0不发送 1发送 </span></br>
+<span>[version] : 可选 ，默认为webportal显示的环境对应的版本 例 v1801 </span></br>
+</br>
+</br>
+</br>
+</br>
+<span>举例 : <br>http://0.0.0.0/batchTask/execute?httpConfKey=httpStage02&taskLevel=高&caseLevel=高&businessLine=SFA&token=XXX</span></br>
+
+</body>
+</html>

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+    .button {
+    background-color: #4CAF50; /* Green */
+    border: none;
+    color: white;
+    padding: 6px 15px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 10px;
+}
+</style>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+<body>
+
+
+    <div  style="width: 100%;position: fixed;background-color: white;z-index: 100">
+        <div style="width: 100%;height: 60px;display: none" id="titleDiv" >
+            <div  id="error" style="color: red;font-size: 30px;float: left;margin-left: 30%"></div>
+            <input type="button" value="关闭提示" id="errorBtn" class="button"  style="float: left;margin-left: 60px;margin-top: 6px"/>
+        </div>
+        <div style="width: 100%;">
+            <input type="text" placeholder="输入查找或者隐藏的字符串" id="filterText" style="font-size: 18px" />
+            <input type="button" value="查找" id="selectHref" class="button" />
+            <input type="button" value="隐藏" id="hideHref" class="button"  />
+            <input type="button" value="所有" id="allHref" class="button"  />
+            <input type="button" value="生成业务流" id="saveTestCase" class="button"  />
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <input type="button" value="清空" id="clear"class="button"  style="background-color: red" /> &nbsp;&nbsp;&nbsp;&nbsp; <span style="font-size: 18px">嗖嗖测自动化测试平台--自动生成HTTP接口用例插件--V2.0</span>
+        </div>
+    </div>
+        <div  style="width: 100%;position: relative;top: 30px;">
+        <table style="table-layout:fixed;width:100%;word-break:break-all;">
+            <thead>
+                <tr style="color: snow;height: 25px;" bgcolor="#2A3F54" align="left" >
+                    <th style="width:80px;"><input type="button" value="清空多选" id="clearCheckbox" class="button" style="background-color: red"  /></th>
+                    <th style="width:80px;">&nbsp;&nbsp;&nbsp;&nbsp;METHOD</th>
+                    <th style="width:100%;">&nbsp;&nbsp;&nbsp;&nbsp;REQUEST URL（点击链接添加到嗖嗖测）</th>
+                </tr>
+            </thead>
+            <tbody id="result">
+
+            </tbody>
+        </table>
+    </div>
+
+
+    <!--<div ></div>-->
+    <a id="jump" style="display:none" target="_blank"></a>
+    <script src="./jquery.min.js"></script>
+    <script src="./panel.js"></script>
+</body>
+</html>

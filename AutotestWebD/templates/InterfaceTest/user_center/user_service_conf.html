@@ -1,0 +1,227 @@
+{% include 'InterfaceTest/head.html'%}
+<!-- Main content starts -->
+<script type="text/javascript">
+
+</script>
+
+<div class="content">
+    <!-- Sidebar -->
+        {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Sidebar ends -->
+    <!-- Main bar -->
+    <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>数据配置：mysqldb-redis-mongodb配置</h2>
+{#                      <h2 class="subNavH2Style">#}
+{#                                    <a href="{% url 'HTTP_UserHttpConf' %}">#}
+{#                                        <button class="btn btn-info">#}
+{#                                           环境配置#}
+{#                                          </button>#}
+{#                                    </a>#}
+{#                                </h2>#}
+{#                      <h2 class="subNavH2Style">#}
+{#                                    <a href="{% url 'HTTP_UserUriConf' %}">#}
+{#                                        <button class="btn btn-info">#}
+{#                                           服务配置#}
+{#                                          </button>#}
+{#                                    </a>#}
+{#                                </h2>#}
+{#                        <h2 class="subNavH2Style">#}
+{#                                    <a href="{% url 'HTTP_UserEnvUriConf' %}">#}
+{#                                        <button class="btn btn-info">#}
+{#                                           请求地址配置#}
+{#                                          </button>#}
+{#                                    </a>#}
+{#                                </h2>#}
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <div class="form-group">
+                        <div  id="queryOption">
+                            <span class="cat-text" style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>
+                        </div>
+                    </div>
+                      <br>
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist" style="margin-bottom: 0px">
+                        <li role="presentation" class="active"><a href="#varName" role="tab" data-toggle="tab" aria-expanded="true">配置名称</a>
+                        </li>
+                          <li role="presentation" class=""><a href="#varDesc" role="tab" data-toggle="tab" aria-expanded="true">配置描述</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#serviceConf" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">配置信息</a>
+                        </li>
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade" id="varDesc" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="varDescInput" onkeypress="EnterPress(event)" placeholder="请输入配置描述" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="serviceConf" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="serviceConfInput" onkeypress="EnterPress(event)" placeholder="请输入配置信息">
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade active in" id="varName" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="varNameInput" onkeypress="EnterPress(event)" placeholder="请输入配置名称">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="EditVars" class="form-group" style="margin-top: 70px"></div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+
+          </div>
+    </div>
+</div>
+    <script type="text/javascript">
+
+        var queryArr = {"alias":"","serviceConfDesc":"","serviceConf":""};
+        var page = {{ page }};
+        
+        function queryDataInit() {
+            $("#addByInput").val("");
+            //查询条件
+            editQueryData();
+        }
+        queryDataInit();
+        //搜索条件出的回车事件监听
+        function EnterPress(event){ //传入 event
+            var e = event || window.event;
+            if(e.keyCode == 13){
+                editQueryData();
+            }
+        }
+        function queryUserConf(data) {
+            if(data == "all"){
+                $('#addByInput').val('');
+            }else {
+                $('#addByInput').val(data);
+            }
+            editQueryData()
+        }
+
+        //编辑查询条件
+        function editQueryData() {
+
+            if($("#varNameInput").val() == ""  ){
+                queryArr.alias = "";
+            }else{
+                queryArr.alias = $("#varNameInput").val();
+            }
+
+            if($("#varDescInput").val() == ""){
+                queryArr.serviceConfDesc = "";
+            }else {
+                queryArr.serviceConfDesc = $("#varDescInput").val();
+            }
+
+            if($("#serviceConfInput").val() == ""){
+                queryArr.serviceConf = "";
+            } else {
+                queryArr.serviceConf = $("#serviceConfInput").val();
+            }
+            selected();
+        }
+
+        //清空查询条件
+        function CleanQueryData() {
+            $("#varNameInput").val("");
+            $("#varDescInput").val("");
+            $("#serviceConfInput").val("");
+            editQueryData();
+
+        }
+
+        function delQueryOptions(key) {
+            if(key=='alias'){
+                $("#varNameInput").val('');
+            }
+            if(key=='serviceConfDesc'){
+                $("#varDescInput").val('');
+            }
+            if(key=='serviceConf'){
+                $("#serviceConfInput").val('');
+            }
+            editQueryData();
+        }
+
+        //查询条件
+        function QueryOption(){
+            var htmls = ' <span class="cat-text" style="font-size: 15px;float: left;">搜索条件:</span>';
+            var num =0;
+            var writeNum = 0;
+            for(var item in queryArr){
+                if(queryArr[item] != '' ){
+                    num ++;
+                }
+            }
+
+            for(var item in queryArr){
+                if(queryArr[item] != ''){
+                    var key = '';
+                    if(item == 'alias'){
+                        key = '配置名称';
+                    }
+                    if(item == 'serviceConfDesc'){
+                        key = '配置描述';
+                    }
+                    if(item == 'serviceConf'){
+                        key = '配置信息';
+                    }
+                    writeNum ++ ;
+                    htmls = htmls+'<span class="tag"><span>'+key+'：'+queryArr[item]+'&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delQueryOptions(\''+item+'\')">x</a></span> ';
+
+                }
+            }
+        htmls = htmls +'<span class="tag" style="float: right;background-color: #ff7575"><span>默认筛选&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="clearChecked()">x</a></span>';
+            $('#queryOption').html(htmls);
+        }
+
+
+    function inputVal(val) {
+        editQueryData();
+    }
+        //翻页
+        function pageCall(pageNum) {
+            page = pageNum;
+            selected();
+        }
+
+        function selected() {
+            console.log("called!!!");
+            QueryOption();
+            var data = {queryArr : encodeURI(JSON.stringify(queryArr)),page:page};
+            htmlobj=$.ajax({url:"{% url 'HTTP_UserServiceConfListCheck' %}",async:false,data:data,type:"POST"});
+            $("#EditVars").html(htmlobj.responseText);
+        }
+
+
+        window.onload = function() {
+            $("#surprise").click();
+            $("#surprise2").click();
+        };
+    </script>
+    <!-- Content ends -->
+{% include 'InterfaceTest/foot.html'%}

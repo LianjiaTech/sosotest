@@ -1,0 +1,9 @@
+1、从线上231拉取每日备份的数据，与线上一致。
+2、数据库重新创建。
+#DROP DATABASE `xsy_interface_test_platform`;
+#CREATE DATABASE `xsy_interface_test_platform` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+USE `xsy_interface_test_platform`;
+3、上传到119或者其他服务器，用source执行。
+
+#####
+4、如果有新字段改动，重新migrate。

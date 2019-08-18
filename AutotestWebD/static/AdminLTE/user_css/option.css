@@ -1,0 +1,14 @@
+span.tag {
+    -moz-border-radius: 2px;
+    -webkit-border-radius: 2px;
+    display: block;
+    float: left;
+    /*width: auto;*/
+    padding: 5px 9px;
+    background: #1ABB9C;
+    color: #F1F6F7;
+    margin-right: 5px;
+    font-weight: 500;
+    margin-bottom: 5px;
+    font-family: helvetica;
+}

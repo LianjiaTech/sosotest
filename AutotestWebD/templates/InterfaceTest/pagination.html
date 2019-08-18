@@ -1,0 +1,37 @@
+ {% if pageCount > 1 %}
+            {% for pageNum in pageCountList %}
+                 {% if forloop.first %}
+                        {% if page > 1 %}
+                         <li><a class="num" href="javascript:void(0);" onclick="pageCall({{ forloop.counter }})">首页</a></li>
+                     {% endif %}
+                 {% endif %}
+            {% endfor %}
+            {% if page != 1 %}
+                <li><a class="num" href="javascript:void(0);" onclick="pageCall({{ page|add:-1 }})">上一页</a></li>
+            {% endif %}
+            {% for pageNum in pageCountList %}
+                {% if pageNum < page %}
+                    {% if page <= 5 %}
+                        <li><a class="num" href="javascript:void(0);" onclick="pageCall({{ pageNum }})">{{ pageNum }}</a></li>
+                    {% else %}
+                        {% if pageNum > page|add:-5 %}
+                             <li><a class="num" href="javascript:void(0);" onclick="pageCall({{ pageNum }})">{{ pageNum }}</a></li>
+                        {% endif %}
+                    {% endif %}
+                {% elif pageNum == page %}
+                    <li><span class="current" style="background:#70bfef;">{{ pageNum }}</span></li>
+                {% elif pageNum > page %}
+                    {% if pageNum < page|add:5 %}
+                        <li><a class="num" href="javascript:void(0);" onclick="pageCall({{ pageNum }})">{{ pageNum }}</a></li>
+                    {% endif %}
+                {% endif %}
+            {% endfor %}
+            {% if page < pageCount %}
+                <li><a class="num" href="javascript:void(0);" onclick="pageCall({{ page|add:1 }})">下一页</a></li>
+            {% endif %}
+             {% for pageNum in pageCountList %}
+                 {% if forloop.last %}
+                         <li><a class="num" href="javascript:void(0);" onclick="pageCall({{ forloop.counter }})">共{{ forloop.counter }}页</a></li>
+                 {% endif %}
+            {% endfor %}
+        {% endif %}

@@ -1,0 +1,1821 @@
+{% include 'InterfaceTest/head.html'%}
+<!-- Main content starts -->
+<style>
+
+</style>
+<script type="text/javascript">
+    function initJudgeVersion() {
+        if ("{{ request.session.version }}" !== "CurrentVersion") {
+            alert("请注意！！！现在为历史版本[{{ request.session.version }}]页面！！！");
+        }
+    }
+    initJudgeVersion();
+    //弹出隐藏层
+    function openDiv(show_div,bg_div){
+        //弹出详情层
+        obshowdiv =  $('#'+show_div);
+        objclosediv = $('#'+show_div+'> label');
+        obbgdiv = $('#'+bg_div);
+        offtop=obshowdiv.offset().top;
+        offleft=obshowdiv.offset().left;
+        obshowdiv.css("top",offtop+40+"px");
+        objclosediv.css("top","40px");
+        objclosediv.css("left","90%%");
+        obshowdiv.show();
+        obbgdiv.show();
+        docheight = $(document).height();
+        obbgdiv.height(docheight);
+        $('html,body').animate({scrollTop:offtop}, 800);
+
+        $("#surprise3").click();
+        $("#openDivBtn").attr("disabled", true);
+        interfaceListIsChecked();
+
+    };
+    //关闭弹出层
+    function CloseDiv(show_div,bg_div){
+        $("#openDivBtn").attr("disabled", false);
+        $('#'+show_div).hide();
+        $('#'+bg_div).hide();
+    }
+
+    function syncText(element) {
+        if(element.is(':checked')){
+            element.next().html("&nbsp;&nbsp;同步");
+        }else {
+            element.next().html("&nbsp;&nbsp;不同步");
+        }
+
+    }
+
+    var page = '{{ page }}';
+    var checkVals =  eval('(' +'{"caseFounder":"{{ request.session.userName }}","interfaceId":"","title":"","casedesc":"","url":""}'+ ')');
+    function clearChecked() {
+        $("#caseFounderInput").val('');
+        $("#interfaceIdInput").val('') ;
+        $("#caseNameInput").val('') ;
+        $("#caseDescribeInput").val('');
+        $("#caseInterFaceInput").val('');
+        $("#caseModuleInput").val('');
+        $("#businessLineCheckTab").children().eq(0).children().eq(0).click();
+        editCheckVal();
+    }
+
+       function editBusinessLineCheckTab(name) {
+        checkVals["businessLine"] = name;
+        editCheckVal();
+    }
+
+
+    function editCheckVal() {
+
+        //接口创建人
+        if($("#caseFounderInput").val()==''){
+            checkVals['caseFounder'] = "";
+        }else if($("#caseFounderInput").val()=='all'){
+            checkVals['caseFounder'] = '';
+        }else{
+            checkVals['caseFounder'] =$("#caseFounderInput").val() ;
+        }
+
+        //接口Id
+        if($("#interfaceIdInput").val()==''){
+            checkVals['interfaceId'] = '';
+        }else {
+            checkVals['interfaceId'] =$("#interfaceIdInput").val() ;
+        }
+
+        //接口名称
+        if($("#caseNameInput").val()==''){
+            checkVals['title'] = '';
+        }else {
+            checkVals['title'] =$("#caseNameInput").val() ;
+        }
+
+
+        //接口描述
+        if ($("#caseDescribeInput").val()==''){
+            checkVals['casedesc']='';
+        }else {
+            checkVals['casedesc']=$("#caseDescribeInput").val();
+        }
+
+        //服务
+        if ($("#caseInterFaceInput").val()==''){
+            checkVals['url']='';
+        }else {
+            checkVals['url']=$("#caseInterFaceInput").val();
+        }
+
+        if ($("#caseModuleInput").val()==''){
+            checkVals['module']='';
+        }else {
+            checkVals['module']=$("#caseModuleInput").val();
+        }
+        selected();
+    }
+
+
+    function inputVal(val) {
+        $("#caseFounderInput").val(val);
+        editCheckVal();
+        interfaceListIsChecked();
+    }
+
+    function checkOptions() {
+
+        var htmls = ' <span class="cat-text"style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>';
+
+        for(var item in checkVals){
+            if(checkVals[item] != '' && typeof(checkVals[item]) != 'undefined'){
+                var key = '';
+                switch(item){
+                    case "caseFounder":
+                        key = '接口创建人';
+                        break;
+                    case "interfaceId":
+                        key = '接口编号';
+                        break;
+                    case "title":
+                        key = '接口名称';
+                        break;
+                    case "casedesc":
+                        key = '接口描述';
+                        break;
+                    case "url":
+                        key = '接口URL';
+                        break;
+                    case "module":
+                        key = '{{ groupLevel2 }}';
+                        break;
+                    case "businessLine":
+                        key = "{{ groupLevel1 }}";
+                        break;
+                }
+                htmls = htmls+'<span class="tag"><span>'+key+'：'+checkVals[item]+'&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delCheckOptions(\''+item+'\')">x</a></span> '
+
+            }
+        }
+        htmls = htmls +'<span class="tag" style="float: right;background-color: #ff7575"><span>默认筛选&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="clearChecked()">x</a></span>';
+        $('#checkOption').html(htmls);
+    }
+
+    function EnterPress(event){ //传入 event
+        var e = event || window.event;
+        if(e.keyCode == 13){
+            editCheckVal();
+
+        }
+    }
+
+      function pageCall(pageNum) {
+        page = pageNum;
+        selected();
+    }
+
+    function delCheckOptions(key) {
+        switch (key){
+            case "caseFounder":
+                $("#caseFounderInput").val('all');
+                break;
+            case "interfaceId":
+                $("#interfaceIdInput").val('');
+                break;
+            case "title":
+                $("#caseNameInput").val('');
+                break;
+            case "casedesc":
+                $("#caseDescribeInput").val('');
+                break;
+            case "url":
+                $("#caseInterFaceInput").val('');
+                break;
+            case "module":
+                $("#caseModuleInput").val('');
+                break;
+            case "businessLine":
+                $("#businessLineCheckTab").children().eq(0).children().eq(0).click();
+                break;
+        }
+        editCheckVal();
+    }
+
+
+    //创建时间排序
+    var orderBy = "i.modTime desc , i.id desc";
+    var addTimeFlag = '-1';
+    var interfaceNameFlag = "-1";
+
+    function interfaceOrderByName() {
+            if (interfaceNameFlag == '-1' || interfaceNameFlag == '0') {
+                interfaceNameFlag = '1';
+                addTimeFlag = '-1';
+                modTimeFlag = '-1';
+                //用例名称正序查
+                orderBy = 'i.title asc';
+            } else if (interfaceNameFlag == '1') {
+                interfaceNameFlag = '0';
+                //用例名称倒序查
+                orderBy = 'i.title desc';
+            }
+            selected();
+        }
+
+    function orderByAddTime() {
+        if (addTimeFlag == '-1' || addTimeFlag == '0') {
+            addTimeFlag = '1';
+            modTimeFlag = '-1';
+            interfaceNameFlag = '-1';
+            //创建时间正序查
+            orderBy = 'i.id asc';
+        } else if (addTimeFlag == '1') {
+            addTimeFlag = '0';
+            //创建时间倒序查
+            orderBy = 'i.id desc';
+        }
+        selected();
+    }
+    var modTimeFlag = '-1';
+    //修改时间排序
+    function orderByModTime() {
+        if(modTimeFlag == '-1' || modTimeFlag == '0'){
+            modTimeFlag = '1';
+            addTimeFlag = '-1';
+            interfaceNameFlag = '-1';
+            //修改时间正序查
+            orderBy = 'i.modTime asc , i.id asc';
+        }else if(modTimeFlag == '1' ){
+            modTimeFlag = '0';
+            //修改时间倒序查
+            orderBy = "i.modTime desc , i.id desc";
+        }
+        selected();
+    }
+    //排序样式显示
+    function orderByShow() {
+        if(addTimeFlag == '0'){
+            $("#addTimeBtn").text('创建时间▼');
+        }else if(addTimeFlag == '1'){
+            $("#addTimeBtn").text('创建时间▲');
+        }
+
+        if(modTimeFlag == '0'){
+            $("#modTimeBtn").text('修改时间▼');
+        }else if(modTimeFlag == '1'){
+            $("#modTimeBtn").text('修改时间▲');
+        }
+
+        if(interfaceNameFlag == '0'){
+            $("#interfaceNameBtn").text('接口名称▼');
+        }else if(interfaceNameFlag == '1'){
+            $("#interfaceNameBtn").text('接口名称▲');
+        }
+    }
+
+    function createPeopleTestcase(num) {
+        htmlobj=$.ajax({url:'{% url 'dubboDueryPeopleTestCase' %}?num='+num,async:false});
+        var value = JSON.parse(htmlobj.responseText).body;
+
+        var nameVal = "";
+        for(var i = 0;i<value.length;i++){
+            nameVal = nameVal + '<button type="button" class="btn btn-info btn-xs" onclick="inputVal(\''+value[i].userName+'\')" >'+value[i].userName+'('+value[i].count+')</button> '
+        }
+        if(value.length<3){
+            $("#names").html(nameVal);
+            $("#hover-a").attr('onclick','createPeopleTestcase('+(0)+')');
+            $("#names").show();
+            return;
+        }else {
+            $("#names").html(nameVal);
+        }
+
+        $("#hover-a").attr('onclick','createPeopleTestcase('+(num+1)+')');
+        $("#names").show();
+    }
+
+    function closeInterfaceList() {
+        $("#surprise3").click();
+        CloseDiv("getCaseList", "bgdiv");
+    }
+</script>
+
+{% include 'InterfaceTest/HTTPMenu.html' %}
+    <div class="content">
+    <!-- Sidebar -->
+
+        <!-- Sidebar ends -->
+    <!-- Main bar -->
+    <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+            <div class="page-title">
+              <div class="title_left">
+                <div class="col-xs-12 form-group pull-right top_search">
+                    <h3>{{ text.pageTitle }}</h3>
+                  </div>
+              </div>
+            </div>
+            <div class="clearfix"></div>
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>{{ text.subPageTitle }}</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <div  data-parsley-validate class="form-horizontal form-label-left">
+                      <div>
+                        <h2>基本信息</h2>
+                        <br>
+                      </div>
+                        {% if option != "add" %}
+                            {% if option != "copy" %}
+                                <div class="form-group" >
+                                    <label class="control-label col-md-min-1">用例编号</label>
+                                    <div class="col-lg-8">
+                                        <input type="text" id="caseIdInput" class="form-control col-md-7 col-xs-12" disabled value="">
+                                    </div>
+                                </div>
+                                {% else %}
+                            {% endif %}
+                        {% endif %}
+                      <div class="form-group">
+                        <label class="control-label col-md-min-1">用例名称 <span class="required">*</span>
+                        </label>
+                        <div class="col-lg-8">
+                          <input  id="name" placeholder="请输入用例名称" type="text"  required="required" class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+                      <div class="form-group">
+                        <label class="control-label col-md-min-1" for="last-name">用例描述 <span class="required">*</span>
+                        </label>
+                        <div class="col-lg-8">
+                            <textarea type="text" id="describe" required="required" class="form-control col-md-7 col-xs-12 Fixed-width"
+                            placeholder="请输入用例描述"
+                            ></textarea>
+                        </div>
+                      </div>
+                     <div class="form-group">
+                            <label class="control-label col-md-min-1">{{ groupLevel1 }}</label>
+                            <div class="col-lg-2" style="width: 13.5%">
+                                <select class="form-control" id="caseBusinessLine" onchange="switchModule($(this).val())">
+                                    {% for business in businessLine %}
+                                        <option value="{{ business.id }}">{{ business.bussinessLineName }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <label class="control-label col-md-min-1" style="width:4.3%;">{{ groupLevel2 }}</label>
+                            <div class="col-lg-2" style="width: 13.5%">
+                                <select class="form-control" id="caseModules">
+                                    {% for m in modules %}
+                                        <option value="{{ m.id }}">{{ m.moduleName }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <label class="control-label col-md-min-1" style="width:4.3%;">优先级</label>
+                            <div class="col-lg-2" style="width: 13.5%">
+                                <select class="form-control" id="testCaseLevel">
+                                    <option value="0">高</option>
+                                    <option value="5" selected>中</option>
+                                    <option value="9">低</option>
+                                </select>
+                            </div>
+                        </div>
+
+
+                      <div class="form-group" style="margin-bottom: 0px">
+                          <hr>
+                        <h2 style="width: 20%;float: left">步骤详情</h2>
+                           <button  id="showAllStepDiv" type="button" class="btn btn-primary btn-sm" style="border-color:#428bca;float: right;margin-right: 30%;margin-top: 5px" onclick="showAllStepDiv()">打开所有步骤</button>
+                      <button  id="openDivBtn" type="button" class="btn btn-primary btn-sm" style="margin-right: 1%;float: right;border-color:#428bca;margin-top: 5px"  onclick="openDiv('getCaseList','bgdiv')">选择单接口</button>
+                      </div>
+                     <table id="stepGroup"  width="71%">
+
+                      </table>
+
+
+                    </div>
+                    <div class="ln_solid"></div>
+                    <div style="width:65%;" class="col-lg-12">
+
+                  {% if option == "add" %}
+                        {% if 'add' in  permissionsList %}
+                            <button style="float: right" type="button" class="btn btn-success btn-lg" onclick="saveOrDebug('save')">保存</button>
+                        {% endif %}
+                    {% elif option == "check" %}
+                        {% if "edit" in permissionsList %}
+                            <a href="{% url 'dubbo_operationTestCase' %}?id={{ id }}&option=edit">
+                                <button style="float: right" type="button" class="btn btn-success btn-lg">编辑</button>
+                           </a>
+                        {% endif %}
+                        {% if "copy" in permissionsList %}
+                            <a href="{% url 'dubbo_operationTestCase' %}?id={{ id }}&option=copy">
+                                <button style="float: right" type="button" class="btn btn-success btn-lg">拷贝</button>
+                            </a>
+                        {% endif %}
+                      <button style="float: right" type="button" class="btn btn-success btn-lg" onclick="window.close()">关闭</button>
+                    {% elif option == "copy" %}
+                            <a href="javascript:void(0);">
+                                <button style="float: right" type="button" class="btn btn-success btn-lg" onclick="saveOrDebug('save')">保存</button>
+                            </a>
+                    {% elif option == "edit" %}
+                            {% if "edit" in permissionsList %}
+                                <button style="float: right" type="button" class="btn btn-success btn-lg" onclick="saveOrDebug('edit')">保存</button>
+                            {% else %}
+                                    <button style="float: right" type="button" class="btn btn-success btn-lg" onclick="window.close()">关闭</button>
+                            {% endif %}
+
+                    {% endif %}
+                    </div>
+                  </div>
+                </div>
+               <!--接口页面-->
+              <div id="getCaseList" class="white_content x_panel" style="display: none;width:85%;margin-top: -35px" >
+                  <div class="x_title">
+                    <h2>选择单接口</h2>
+
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    <div class="x_content">
+
+                    <div class="form-group">
+                        <div  id="checkOption">
+                            <span class="cat-text" style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>
+                        </div>
+
+                    </div>
+                      <br>
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist" style="margin-bottom: 0px">
+                        <li role="presentation" class="active"><a href="#caseFounder" role="tab" data-toggle="tab" aria-expanded="true">接口创建人</a>
+                        </li>
+                          <li role="presentation" class=""><a href="#caseId" role="tab" data-toggle="tab" aria-expanded="true">接口编号</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#caseName" role="tab" id="profile-tab" data-toggle="tab" aria-expanded="false">接口名称</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#caseDescribe" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">接口描述</a>
+                        </li>
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="caseFounder" aria-labelledby="home-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="caseFounderInput" onkeypress="EnterPress(event)" placeholder="请输入接口创建人">
+                            </div>
+                              <div class="col-lg-4" >
+                                  <span style="font-size: 15px;margin-top: 5px">快捷条件: </span>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="inputVal('all')">所有</button>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="inputVal('{{ request.session.userName }}')">{{ request.session.userName }}</button>
+                              <button id="hover-a" type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="createPeopleTestcase(0)">其他</button>
+                                  <div id="names" style="margin-top: 10px">
+                            </div>
+                                  </div>
+
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="caseName" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="caseNameInput" onkeypress="EnterPress(event)" placeholder="请输入接口名称" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="caseId" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="interfaceIdInput" onkeypress="EnterPress(event)" placeholder="请输入接口编号" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="caseDescribe" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="caseDescribeInput" onkeypress="EnterPress(event)" placeholder="请输入接口描述">
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="taskList" class="form-group"></div>
+                        <div class="widget-foot">
+                            <button class="btn btn-info pull-right" style="margin-left: 20px" onclick="closeInterfaceList()">关闭</button>
+                            <button class="btn btn-success pull-right" style="margin-left: 40px" onclick="selectInterfaceAddStep()">保存</button>
+                            <div class="clearfix" ></div>
+                        </div>
+                  </div>
+
+                  </div>
+                </div>
+              </div>
+              <!--调试-->
+              <div class="x_panel">
+                  <div class="x_title">
+                    <h2>接口调试</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+                    {% include "config/debugBtnPage.html" %}
+                      <div id="debugResult" style="display: none">
+                                                    <table class="table table-striped table-bordered table-hover"
+                                                           style="table-layout:fixed;width:100%;word-break:break-all;">
+                                                        <thead>
+                                                        <tr style="color: snow" bgcolor="#2A3F54">
+                                                            <th style="width:2%;">编号</th>
+                                                            <th style="width:3%;">测试结果</th>
+                                                            <th style="width:3%;">执行环境</th>
+                                                            <th style="width:3%;">步骤数量</th>
+                                                            <th style="width:15%;">断言结果</th>
+                                                            <th style="width:3%;">执行前耗时</th>
+                                                            <th style="width:3%;">执行耗时</th>
+                                                            <th style="width:3%;">执行后耗时</th>
+                                                            <th style="width:3%;">总耗时</th>
+                                                            <th style="width:3.5%;">操作</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody id="debugResultTbody">
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                  </div>
+                </div>
+            </div>
+
+          </div>
+    </div>
+    </div>
+<!-- Content ends -->
+<script type="text/javascript">
+            var stepArr = {};
+            stepArr.step = [];
+            var getTestCaseStepPage=$.ajax({url:"{% url 'dubbo_TestCaseStepPage' %}",async:false});
+            var response = getTestCaseStepPage.responseText;
+            var dataJsonString = "";
+            var data = {};
+            if('{{ option }}' != 'add'){
+                var getTestCaseData = $.ajax({url:"{% url 'dubbo_GetTestCaseDataForId' %}?id={{ id }}",async:false});
+                dataJsonString = JSON.parse(getTestCaseData.responseText)["body"];
+
+            }
+            var checkResultId = 0;
+            var table= '';
+
+            var interfaceList = Array();
+            //初始化页面
+            function InitStep() {
+
+                if(dataJsonString == ""){
+                    stepInput();
+                    switchModule($("#caseBusinessLine").val());
+                }else {
+//                    $("#test1").text(dataJsonString);
+                    data = JSON.parse(dataJsonString);
+                    $("#caseIdInput").val(data.caseId);
+                    $("#name").val(data.title);
+                    $("#describe").val(data.casedesc);
+                    $("#caseBusinessLine").find("option[value='"+data.businessLineId_id+"']").prop("selected",true).change();
+                    try {
+                        $("#caseModules").find("option[value='" + data.moduleId_id + "']").prop("selected", true).change();
+                    }catch (e){
+
+                    }
+                    $("#caseSources").find("option[value='"+data.sourceId_id+"']").prop("selected",true);
+                    $("#testCaseLevel").find("option[value='"+data.caselevel+"']").prop("selected",true);
+                    for (var stepNum = 0; stepNum <= data.step.length; stepNum++) {
+                        stepInput();
+
+
+                    }
+                    stepVal("write",data);
+                }
+            }
+            var businessLine_module_relation = $.ajax({
+      url: '{% url 'bmRelation' %}' ,
+      type: 'get',
+      async: false,
+     });
+    try{
+        var bmDict = JSON.parse(businessLine_module_relation.responseText).body;
+    }catch (e){
+        alert(bmDict);
+        alert("获取业务线模块关联失败")
+    }
+    switchModule($("#caseBusinessLine").val());
+
+
+    function switchModule(blId) {
+        $("#caseModules option").remove();
+        for(var index = 0; index < bmDict[blId].length;index ++){
+            jQuery("<option></option>").val(bmDict[blId][index]["id"]).text(bmDict[blId][index]["moduleName"]).appendTo("#caseModules");
+        }
+        $("#caseBusinessLine").select2();
+        $("#caseModules").select2();
+    }
+
+        function switchStepModule(blId,Num) {
+        $("[name='modules']").eq(Num).children().remove();
+        for(var index = 0; index < bmDict[blId].length;index ++){
+            jQuery("<option></option>").val(bmDict[blId][index]["id"]).text(bmDict[blId][index]["moduleName"]).appendTo($("[name='modules']").eq(Num));
+        }
+    }
+
+            $(document).ready(function(){
+
+                var fixHelperModified = function(e, tr) {
+                        var $originals = tr.children();
+                        var $helper = tr;
+                        $helper.children().each(function(index) {
+                            $(this).width($originals.eq(index).width())
+                        });
+                        return $helper;
+                    },
+                    updateIndex = function() {
+                        saveCaseList();
+                        stepArrSave("save");
+                        stepVal("write",stepArr);
+                    };
+                $("#stepGroup tbody").sortable({
+                    helper: fixHelperModified,
+                    stop: updateIndex
+                }).disableSelection();
+            });
+
+            function tableInitList(elementName, urlencodeList) {
+                var i;
+
+                for (i = 0; i < urlencodeList.length; i++) {
+                    if (i == (elementName.children().length - 1)) {
+                        addTableTr(elementName);
+                    }
+                    var element = elementName.children().eq(i).find('td');
+                    var headerKey = element.eq(0).children();
+                    var headerValue = element.eq(1).children().eq(0);
+                    headerKey.val(urlencodeList[i][0]);
+                    headerValue.val(urlencodeList[i][1]);
+                }
+                for (var j = 0; j < elementName.children().length; j++) {
+                    if (j > i) {
+                        elementName.children().eq(j - 1).remove();
+                    }
+                }
+
+            }
+
+            function tableInitDict(elementName, jsonDict) {
+                var flag = 0;
+                for (var key in jsonDict) {
+                    if (flag == (elementName.children().length - 1)) {
+                        addTableTr(elementName);
+                    }
+                    var element = elementName.children().eq(flag).find('td');
+                    var headerKey = element.eq(0).children();
+                    var headerValue = element.eq(1).children().eq(0);
+                    headerKey.val(key);
+                    headerValue.val(jsonDict[key]);
+                    flag++;
+                }
+                for (var j = 0; j < elementName.children().length; j++) {
+                    if (j > flag) {
+                        elementName.children().eq(j - 1).remove();
+                    }
+                }
+
+            }
+
+
+            var thisElementForPublicKey;
+
+            function resetGlobalElement(element) {
+                $("#publicKeyDiv").css("display","block");
+                var tipElementList = $("#publicKeyDiv").find('a');
+                tipElementList.each(function () {
+                    $(this).css("display", "none");
+                });
+
+                var elementName = element.attr("name");
+
+                   var commonTip = ["VAR", "GVAR", "TEXT", "LOGIN", "GET_TOKEN", "EXECUTE_INTERFACE", "JSON_GET", "JSON_PATH_EXIST","RE_FINDALL","BS_FIND","URL_ENCODE",
+                        "JSON_LIST_LEN", "GET_JSON_KEY_BY_INDEX","GET_LIST_KEY_VALUE_TO_STRING_WITH_SPLIT_TAG","TIMESTAMP", "DATETIME_FORMAT", "SPECIAL_TIMESTAMP", "TIMESTAMP_FORMAT", "RANDOM_INT", "RANDOM_CN",
+                        "RANDOM_EN", "SUB_STR", "EVAL", "CONST","Branch"];
+                var VARTip = ["VAR", "GVAR"];
+                var afterVal = ["INTERFACE_CONST","Branch"];
+                var expectTip = ["SQL_SELEC", "COMPARE","Branch"];
+                var timeSleep = ["TIME_SLEEP"];
+                var showTipNameDict =
+                    {
+                        "common": commonTip,
+                        "VAR": VARTip,
+                        "expect": expectTip,
+                        "afterVal": afterVal,
+                        "timeSleep":timeSleep
+                    };
+
+                var elementNameDict =
+                    {
+                        "common": ["commonValBefore","BeforeValInput", "commonValAfter","AfterValInput"],
+                        "VAR": ["headerKey", "headerValue", "paramsKey", "paramsValue", "bodyFormKey", "bodyFormValue", "urlEncodeKey", "urlEncodeValue", "body-raw-input", "x-www-form-urlencoded-input","URL"],
+                        "afterVal": ["afterValInput"],
+                        "timeSleep" : ["commonValBefore","BeforeValInput",  "commonValAfter","AfterValInput"]
+                    };
+
+
+                for (var elementKey in elementNameDict) {
+
+                    for(var thisElementIndex = 0;thisElementIndex<elementNameDict[elementKey].length;thisElementIndex++){
+                        if (elementName.indexOf(elementNameDict[elementKey][thisElementIndex]) != -1) {
+                              thisElementForPublicKey = element;
+                            for (var tipName = 0; tipName < showTipNameDict[elementKey].length; tipName++) {
+                                $("[name='publicKey-" + showTipNameDict[elementKey][tipName] + "']").css("display", "block");
+                            }
+                        }
+                    }
+                }
+            }
+
+            function resetPublicKey(key) {
+                thisElementForPublicKey.val(thisElementForPublicKey.val() + key);
+            }
+
+
+
+            function tableDataTourlencode(element) {
+                var tableTr = element.children();
+                var tableStr = "";
+                if (tableTr.length != 0) {
+                    for (var i = 0; i < tableTr.length; i++) {
+                        if (tableTr.eq(i).find("td").eq(0).children().val().trim() == "" && tableTr.eq(i).find("td").eq(1).children().val().trim() == "") {
+                            continue;
+                        }
+                        tableStr += tableTr.eq(i).find("td").eq(0).children().val().trim() + "=" + tableTr.eq(i).find("td").eq(1).children().val().trim();
+                        if (i != (tableTr.length - 2)) {
+                            tableStr += "&";
+                        }
+                    }
+                }
+                return tableStr;
+            }
+
+            function clickBodyRadio(element) {
+                element.parent().parent().parent().parent().parent().children().each(function () {
+                    if($(this).attr("name") == ("body-"+element.val())){
+                        $(this).css("display", "block");
+                    }else if(typeof($(this).attr("name")) != "undefined"){
+                         $(this).css("display", "none");
+                    }
+                });
+                if(element.val() == "raw"){
+                        element.parent().parent().next().css("display", "block");
+                    }else {
+                        element.parent().parent().next().css("display", "none");
+                    }
+            }
+
+
+
+            function formDataInput_file(element) {
+                if (element.val() == "text") {
+                    element.parent().next().find("input").eq(0).css("display", "block");
+                    element.parent().next().find("div").css("display", "none");
+                    element.parent().next().find("button").css("margin-top", "-32.5px")
+                } else {
+                    element.parent().next().find("div").css("display", "block");
+                    element.parent().next().find("input").eq(0).css("display", "none");
+                    element.parent().next().find("button").css("margin-top", "2px")
+                }
+            }
+            function changeHeader(element,codeType) {
+                 var headerJson = tableElementChildrenToDict(element);
+                  if (codeType == "" || codeType == "Text") {
+                    if (headerJson["Content-Type"]) {
+                        delete headerJson["Content-Type"];
+                    }
+                } else {
+                    headerJson["Content-Type"] = codeType
+                }
+                dictInitTable(element,headerJson);
+                element.parent().parent().parent().parent().parent().parent().find("[name='headerTab']").text("HEADER("+(element.children().length-1)+")")
+            }
+
+            function dictInitTable(element,jsonDict){
+
+                 if (JSON.stringify(jsonDict) != "{}") {
+                    var i = 0;
+                    for (var key in jsonDict) {
+                        if (i == (element.children().length - 1)) {
+                            addTableTr(element);
+                        }
+                        var onlyElement = element.children().eq(i).find('td');
+                        var headerKey = onlyElement.eq(0).children();
+                        var headerValue = onlyElement.eq(1).children().eq(0);
+                        headerKey.val(key);
+                        headerValue.val(jsonDict[key]);
+                        if (key != "" || jsonDict[key] != "") {
+                            i++;
+                        }
+                    }
+                    for (var j = 0; j < element.children().length; j++) {
+                        if (j > i) {
+                            element.children().eq(j - 1).remove();
+                        }
+                    }
+                } else {
+                    for (var i = 0; i < element.children().length - 1; i++) {
+                        element.children().eq(i).remove();
+                    }
+                }
+            }
+
+            function addTableTr(element) {
+                var lastElement = element.children().last();
+                var lastElementHtml = lastElement.prop("outerHTML");
+                lastElement.after(lastElementHtml);
+                tableStyle(element)
+            }
+
+            function changeSelectWidth(codeType) {
+                switch (codeType.val()) {
+                    case "Text":
+                        codeType.css("width", "80px");
+                        break;
+                    case "text/plain":
+                        codeType.css("width", "150px");
+                        break;
+                    case "application/json":
+                        codeType.css("width", "200px");
+                        break;
+                    case "application/javascript":
+                        codeType.css("width", "260px");
+                        break;
+                    case "application/xml":
+                        codeType.css("width", "200px");
+                        break;
+                    case "text/xml":
+                        codeType.css("width", "150px");
+                        break;
+                    case "text/html":
+                        codeType.css("width", "150px");
+                        break;
+                }
+            }
+
+            function tableStyle(element) {
+                var elementList = element.children();
+                for(var i=0;i<elementList.length;i++){
+                    var elementInput = elementList.eq(i).find("input");
+                    if(i != (elementList.length - 1)){
+                         elementInput.css("background-color", "");
+                         elementInput.attr("onclick", "");
+                         elementList.eq(i).find("button").css("display", "block");
+                         elementList.eq(i).find("select").attr("disabled", false);
+                         elementList.eq(i).find("select").css("background-color", "");
+                    }else {
+                         elementInput.css("background-color", "rgb(183, 186, 189)");
+                         elementList.eq(i).find("button").css("display", "none");
+                         elementList.eq(i).find("select").css("background-color", "rgb(183, 186, 189)");
+                         elementList.eq(i).find("select").attr("disabled", true);
+                    }
+                }
+            }
+
+
+            function tableElementChildrenToDict(element) {
+                var tableTr = element.children();
+                var tableJson = {};
+                for (var i = 0; i < tableTr.length; i++) {
+                    if (tableTr.eq(i).find("td").eq(0).children().val().trim() == "" && tableTr.eq(i).find("td").eq(1).children().val().trim() == "") {
+                        continue;
+                    }
+                    tableJson[tableTr.eq(i).find("td").eq(0).children().val().trim()] = tableTr.eq(i).find("td").eq(1).children().val().trim();
+                }
+                return tableJson;
+            }
+
+                function tableElementChildrenToList(element) {
+                var tableTr = element.children();
+                var tableJson = [];
+                for (var i = 0; i < tableTr.length; i++) {
+                    tableJson.push([]);
+                    if (tableTr.eq(i).find("td").eq(0).children().val().trim() == "" && tableTr.eq(i).find("td").eq(1).children().val().trim() == "") {
+                        continue;
+                    }
+                    tableJson[i][0] = tableTr.eq(i).find("td").eq(0).children().val();
+                    tableJson[i][1] = tableTr.eq(i).find("td").eq(1).children().val();
+                }
+                return tableJson;
+            }
+            function toggleUrlEncode(element) {
+                if (element.text().trim() == "原始") {
+                    element.parent().parent().parent().parent().css("display", "none");
+                    element.parent().parent().parent().parent().next().css("display", "block");
+                    var tableData = tableDataTourlencode(element.parent().parent().parent().next());
+                    element.parent().parent().parent().parent().next().children().val(tableData);
+                } else {
+                    element.parent().css("display", "none");
+                    element.parent().prev().attr("style", "table-layout: fixed;");
+                    tableInitList(element.parent().prev().find("tbody"), urlencodeToList(element.next().val()));
+                }
+            }
+
+
+            function urlencodeToList(str) {
+                if (str == "") {
+                    return []
+                }
+                if(typeof (str) == "undefined"){
+                     return []
+                }
+                var strList = str.split("&");
+                var retList = [];
+                for (var s in strList) {
+                    var sp = strList[s].split("=");
+                    if (sp.length == 1) {
+                        retList.push(["", sp[0]])
+                    } else {
+                        var strText = "";
+                        for (var i = 1; i < sp.length; i++) {
+                            if (i == sp.length - 1) {
+                                strText = strText + sp[i]
+                            } else {
+                                strText = strText + sp[i] + "="
+                            }
+                        }
+                        retList.push([sp[0], strText])
+                    }
+                }
+                return retList;
+            }
+
+
+            //循环输出步骤
+            function stepInput(){
+                $("#stepGroup").append( response );
+                stepArrSave("add");
+                $("[name='body_"+($("[name='testCaseStep']").length-1)+"']").eq(1).attr("checked",true);
+            }
+            //这个方法用于保存没次步骤改动后的数组
+            function stepArrSave(state) {
+
+                var stepNum = $("[name='testCaseStep']").length;
+                var testCaseStep = $("[name='testCaseStep']");
+                var stepDesc = $("[name='stepDesc']");
+                var stepDetailsNum = $("[name='stepDetailsNum']");
+                var stepDetailsEditBtn = $("[name='stepDetailsEditBtn']");
+                var stepDetailsDeleteBtn = $("[name='stepDetailsDeleteBtn']");
+                var stepLabel = $("[name='stepLabel']");
+
+                var border = $("[name='border']");
+
+                var isSync = $("[name='isSync']");
+                var fromInterfaceId = $("[name='fromInterfaceId']");
+
+                var masterTabBeforeVal = $("[name='masterTabBeforeVal']");
+                var masterTabDataInit = $("[name='masterTabDataInit']");
+
+                var masterTabRequestBody = $("[name='masterTabRequestBody']");
+
+                var masterTabAfterVal = $("[name='masterTabAfterVal']");
+                var masterTabExpectResultTab = $("[name='masterTabExpectResultTab']");
+                var masterTabDataRecoverTab = $("[name='masterTabDataRecoverTab']");
+
+                var masterTabContentBeforeVal = $("[name='masterTabContentBeforeVal']");
+                var masterTabContentDataInit = $("[name='masterTabContentDataInit']");
+                var masterTabContentRequestBody = $("[name='masterTabContentRequestBody']");
+                var masterTabContentAfterValTab = $("[name='masterTabContentAfterValTab']");
+                var masterTabContentExpectResultTab = $("[name='masterTabContentExpectResultTab']");
+                var masterTabContentDataRecoverTab = $("[name='masterTabContentDataRecoverTab']");
+
+//                var headerTab = $("[name='headerTab']");
+//                var paramsTab = $("[name='paramsTab']");
+//                var bodyTab = $("[name='bodyTab']");
+//
+//                var headerTabContent = $("[name='headerTabContent']");
+//                var paramsTabContent = $("[name='paramsTabContent']");
+//                var bodyTabContent = $("[name='bodyTabContent']");
+//
+//
+//                var radioParentDiv = $("[name='radioParentDiv']");
+//
+//                var dataContent = $("[name='dataContent']");
+//
+//                var uri = $("[name='URI']");
+                var dubboSystem = $("[name='SYSTEM_KEY']");
+                var dubboService = $("[name='SERVICE_PATH']");
+                var dubboMethod = $("[name='METHOD']");
+                var dubboParams = $("[name='parameters']");
+                var encoding = $("[name='encoding']");
+
+                var module = $("[name='modules']");
+                var businessLine = $("[name='businessLine']");
+//                var x_www_form_urlencodedTbody = $("[name='x-www-form-urlencodedTbody']");
+//                var body_form_Tbody = $("[name='body-form-Tbody']");
+                var val;
+                if(state === "add"){
+                    val = stepNum-2;
+                }else if(state === "save"){
+                    val = 0;
+                }
+                    for (val; val < stepNum; val++) {
+                    var value = val + 1;
+                    testCaseStep.eq(val).attr("id", "testCaseStep" + value);
+                    stepDesc.eq(val).removeAttr("onclick");
+                    stepDesc.eq(val).removeAttr("onfocus");
+                    stepDetailsNum.eq(val).attr('id', 'stepDetailsNum' + value);
+                    stepDetailsEditBtn.eq(val).attr('onclick', 'stepDetails(' + value + ')');
+                    stepDetailsDeleteBtn.eq(val).attr('onclick', 'deleteStep(' + value + ')');
+                    stepLabel.eq(val).text('步骤' + value);
+                    if (value !== stepNum) {
+
+                        border.eq(val).css("background-color", "");
+                        border.eq(val).children().eq(0).css("background-color", " #9999CC");
+                        if(fromInterfaceId.eq(val).text()=="无"){
+                            isSync.eq(val).css("visibility","hidden");
+                            isSync.eq(val).next().css("visibility","hidden");
+                        }
+                        isSync.eq(val).prop("disabled",false);
+
+                        stepDetailsEditBtn.eq(val).show();
+                        stepDetailsDeleteBtn.eq(val).show();
+
+                        masterTabBeforeVal.eq(val).attr("href","#beforeValTab_"+value);
+                        masterTabRequestBody.eq(val).attr("href","#requestBody_"+value);
+                        masterTabAfterVal.eq(val).attr("href","#afterValTab_"+value);
+
+                        masterTabContentBeforeVal.eq(val).attr("id","beforeValTab_"+value);
+                        masterTabContentRequestBody.eq(val).attr("id","requestBody_"+value);
+                        masterTabContentAfterValTab.eq(val).attr("id","afterValTab_"+value);
+
+                        dubboSystem.eq(val).attr("id","dubboSystem_"+value);
+                        dubboService.eq(val).attr("id","dubboService_"+value);
+                        dubboMethod.eq(val).attr("id","dubboMethod_"+value);
+                        dubboParams.eq(val).attr("id","dubboParams_"+value);
+                        encoding.eq(val).attr("id","encoding_"+value);
+
+                        module.eq(val).removeAttr("onclick");
+                        businessLine.eq(val).removeAttr("onclick");
+                        businessLine.eq(val).attr("onchange","switchStepModule($(this).val(),"+val+");");
+                        switchStepModule(businessLine.eq(val).val(),val);
+
+                        $("[name='onfocuscommonValBeforeHref']").eq(val).attr("href","#commonValBefore_" + value);
+                        $("[name='commonValBeforeDiv']").eq(val).attr("id","commonValBefore_" + value);
+
+                        $("[name='commonValAfterHref']").eq(val).attr("href","#commonValAfter_" + value);
+                        $("[name='commonValAfterDiv']").eq(val).attr("id","commonValAfter_" + value);
+
+                    } else {
+                        module.eq(val).attr("onclick","stepInput()");
+                        businessLine.eq(val).attr("onclick","stepInput()");
+                        $("[name='stepDesc']").eq(val).attr('onclick', 'stepInput()');
+                        $("[name='stepDesc']").eq(val).attr('onfocus', 'stepInput()');
+                        $("[name='border']").eq(val).css("background-color", "#9fa6ab");
+                        $("[name='border']").eq(val).children().eq(0).css("background-color", "");
+                        $("[name='stepDetailsEditBtn']").eq(val).hide();
+                        $("[name='stepDetailsDeleteBtn']").eq(val).hide();
+                    }
+                }
+
+
+                if('{{ option }}' == "check" || '{{ option }}' == "caseCheck"){
+                    $("select").attr("disabled",true);
+                    $("[type='text']").attr("readonly",true);
+                    $("[name='stepDetailsDeleteBtn']").hide();
+                    $("#openDivBtn").attr("disabled",true);
+                }
+            }
+
+            function  saveCaseList() {
+                var formData = new FormData();
+                stepArr.step = [];
+                var stepNum = $("[name='testCaseStep']").length;
+                for (var val = 0; val < stepNum-1 ; val++) {
+                    stepArr.step[val] = {};
+                    stepArr.step[val].fromInterfaceId = $("[name='fromInterfaceId']").eq(val).text();
+                    if($("[name='fromInterfaceId']").eq(val).text() !== "无"){
+                        stepArr.step[val].fromInterfaceId = $("[name='fromInterfaceId']").eq(val).text();
+                        if($("[name='isSync']").eq(val).is(":checked")){
+                            stepArr.step[val].isSync = 1;
+                        }else{
+                            stepArr.step[val].isSync = 0;
+                        }
+                    }else {
+                        stepArr.step[val].isSync = 0;
+                    }
+                    stepArr.step[val].confBefore = {};
+                    stepArr.step[val].confAfter  = {};
+
+                    stepArr.step[val].stepDesc = $("[name='stepDesc']").eq(val).val();
+                    stepArr.step[val].businessLineId = $("select[name='businessLine']").eq(val).val();
+                    stepArr.step[val].moduleId = $("select[name='modules']").eq(val).val();
+
+                    var varsPre = $("[name='commonValBefore']").eq(val).val();
+
+                    stepArr.step[val].varsPre = varsPre;
+
+                    stepArr.step[val].dubboSystem = $("select[name='SYSTEM_KEY']").eq(val).val();
+                    stepArr.step[val].dubboService = $("[name='SERVICE_PATH']").eq(val).val();
+                    stepArr.step[val].dubboMethod = $("[name='METHOD']").eq(val).val();
+                    stepArr.step[val].dubboParams = $("[name='parameter']").eq(val).val();
+                    stepArr.step[val].encoding = $("[name='encoding']").eq(val).val();
+
+                    var varsPost = $("[name='commonValAfter']").eq(val).val();
+                    stepArr.step[val].varsPost =varsPost;
+                }
+
+
+                return formData;
+            }
+
+
+
+            function loadFile(element) {
+                var file = element[0].files[0];
+                if (file.size > 1024*1024) {
+                    alert("文件大小不能超过1M");
+                    element.val('')
+                    return false;
+                }
+                element.parent().next().val(element.val());
+                element.parent().next().next().text('');
+
+            }
+
+            function Checkall() {
+                var checkbox = $("[name='interfaceCheckbox']");
+                if($("#checkboxAll").is(':checked')){
+
+                    checkbox.each(function () {
+                        if(!$(this).is(':checked')){
+                            interfaceList.push($(this).attr("id"));
+                            $(this).prop("checked",true);
+                        }
+                    })
+
+                }else {
+                    checkbox.each(function () {
+                        if($(this).is(':checked')){
+                            interfaceList.splice($.inArray($(this).attr("id"),interfaceList),1);
+                            $(this).prop("checked",false);
+                        }
+                    })
+                }
+                showInterfaceList();
+            }
+
+            function interfaceListIsChecked() {
+                for(var i=0;i<interfaceList.length;i++){
+                    $("#"+interfaceList[i]).prop("checked",true);
+                }
+                var allcheck = 1;
+                $("[name='interfaceCheckbox']").each(function () {
+                    if(!$(this).is(':checked')){
+                        allcheck = 0;
+                    }
+                });
+                if(allcheck == 1){
+                    $("#checkboxAll").prop("checked",true);
+                }
+            }
+
+
+            function chechBtn(interfaceId) {
+                if($("#"+interfaceId).is(':checked')){
+                    interfaceList.push(interfaceId);
+                }else {
+                    interfaceList.splice($.inArray(interfaceId,interfaceList),1);
+                }
+                var allFlag = true;
+                var interfaceCheckboxElements = $("[name='interfaceCheckbox']");
+                interfaceCheckboxElements.each(function () {
+                    if(!$(this).prop("checked")){
+                        allFlag = false;
+                    }
+                });
+                if(allFlag){
+                    $("#checkboxAll").prop("checked",true);
+                }else {
+                    $("#checkboxAll").prop("checked",false);
+                }
+                showInterfaceList();
+            }
+
+            function showInterfaceList() {
+                    $("#interfaceList").text("已选接口:"+interfaceList.join(" ， "));
+            }
+
+            function showAllStepDiv() {
+                var length = $("[name='stepDetailsNum']");
+                if($("#showAllStepDiv").text() == "打开所有步骤"){
+
+                    for(var i = 0;i<length.length-1;i++){
+                        length.eq(i).show();
+                    }
+                    $("#showAllStepDiv").text("关闭所有步骤");
+                }else {
+                    for(var i = 0;i<length.length-1;i++){
+                        length.eq(i).hide();
+                    }
+                    $("#showAllStepDiv").text("打开所有步骤");
+                }
+            }
+
+            function selectInterfaceAddStep() {
+                saveCaseList();
+                if(interfaceList.length == 0 ){
+                    alert("请选择接口才能保存！");
+                    return ;
+                }
+                var list = interfaceList.join(",");
+                var selectInterfaceAddStep =$.ajax({url:"{% url 'dubbo_SelectInterfaceAddStep' %}",async:false,data:{list:list},type:"POST"});
+                var result = JSON.parse(selectInterfaceAddStep.responseText)["body"];
+//                alert(selectInterfaceAddStep.responseText);
+                var num;
+                for(var i=0;i<result.length;i++){
+                    stepInput();
+                    num = getJsonLength(stepArr.step);
+                    stepArr.step[num] = result[i];
+                    stepArr.step[num].fromInterfaceId = result[i].interfaceId;
+                    stepArr.step[num].stepDesc = result[i].casedesc;
+                    stepVal("add",stepArr);
+                }
+                stepArrSave("save");
+                saveCaseList();
+                interfaceList= [];
+                $("#checkboxAll").prop("checked",false);
+                $("#interfaceList").text("已选接口:");
+                $("[name='interfaceCheckbox']").each(function () {
+                    if($(this).is(':checked')){
+                        interfaceList.splice($.inArray($(this).attr("id"),interfaceList),1);
+                        $(this).prop("checked",false);
+                    }
+                });
+                closeInterfaceList();
+            }
+
+            function changeBodyTab(element) {
+
+                if (element.val() == "GET" || element.val() == "HEAD") {
+                    element.parent().parent().next().find("[name='bodyTab']").parent().css("display", "none");
+                    element.parent().parent().next().find("[name='paramsTab']").click();
+                } else {
+                   element.parent().parent().next().find("[name='bodyTab']").parent().css("display", "block");
+                   element.parent().parent().next().find("[name='bodyTab']").click();
+                }
+
+            }
+
+
+            function getJsonLength(jsonData){
+                var jsonLength = 0;
+                for(var item in jsonData){
+                    jsonLength++;
+                }
+                return jsonLength;
+            }
+
+            function stepVal(state,arr) {
+
+                var stepNum = $("[name='testCaseStep']").length;
+                var stepDesc = $("[name='stepDesc']");
+
+                var fromInterfaceId = $("[name='fromInterfaceId']");
+                var isSync = $("[name='isSync']");
+
+                var businessLine = $("[name='businessLine']");
+                var modules = $("[name='modules']");
+                var sources = $("[name='sources']");
+                var timeout = $("[name='timeout']");
+                var commonValBefore = $("[name='commonValBefore']");
+
+                var dubboSystemSelected = $("[name='SYSTEM_KEY']");
+                var dubboService = $("[name='SERVICE_PATH']");
+                var dubboMethod = $("[name='METHOD']");
+                var parameter =  $("[name='parameter']");
+                var encoding = $("[name='encoding']");
+
+                var commonValAfter = $("[name='commonValAfter']");
+                var val;
+                if(state === "add"){
+                    val = stepNum-2;
+                }else{
+                    val = 0;
+                }
+                for (val; val < stepNum-1 ; val++) {
+                    stepDesc.eq(val).val(arr.step[val].stepDesc);
+                    if(arr.step[val].fromInterfaceId !== "无" && arr.step[val].fromInterfaceId !== ""){
+                        fromInterfaceId.eq(val).text(arr.step[val].fromInterfaceId);
+                        var idArray = arr.step[val].fromInterfaceId.split("_");
+                        console.log(arr.step[val])
+                        fromInterfaceId.eq(val).attr("href","{% url 'dubboOperationInterface' %}?id="+idArray[2]+"&option=check&addBy="+arr.step[val].addBy_id);
+                        isSync.eq(val).css("visibility","visible");
+                        isSync.eq(val).next().css("visibility","visible");
+                        isSync.eq(val).prop("disabled",false);
+                        if(arr.step[val].isSync == 0){
+                            isSync.eq(val).prop("checked",false);
+                            isSync.eq(val).next().html("&nbsp;&nbsp;不同步")
+                        }
+
+                    }else {
+                        fromInterfaceId.eq(val).attr("href","javascript:void(0)");
+                    }
+
+                    businessLine.eq(val).find("option[value='"+arr.step[val].businessLineId_id+"']").prop("selected",true).change();
+                    try {
+                        modules.eq(val).find("option[value='" + arr.step[val].moduleId_id + "']").prop("selected", true);
+                    }catch (e){
+
+                    }
+                    sources.eq(val).find("option[value='"+arr.step[val].sourceId_id+"']").prop("selected",true);
+                    timeout.eq(val).val(arr.step[val].timeout);
+                    commonValBefore.eq(val).val(arr.step[val].varsPre);
+
+
+                    dubboSystemSelected.eq(val).val(arr.step[val].dubboSystem);
+                    dubboService.eq(val).val(arr.step[val].dubboService);
+                    dubboMethod.eq(val).val(arr.step[val].dubboMethod);
+                    parameter.eq(val).val(arr.step[val].dubboParams);
+                    encoding.eq(val).val(arr.step[val].encoding);
+
+                    commonValAfter.eq(val).val(arr.step[val].varsPost);
+
+                }
+
+            }
+
+            function result() {
+                window.close();
+                window.opener.location.href='/InterfaceTest/HttpTestCaseCheck';
+            }
+
+
+            //跳到事件的地方
+            function ShowDiv(element){
+                obshowdiv =  element;
+                offtop=obshowdiv.offset().top-155;
+                offleft=obshowdiv.offset().left;
+                obshowdiv.show();
+                docheight = $(document).height();
+                $('html,body').animate({scrollTop:offtop}, 200);
+            }
+
+            function stepDetails(num) {
+                if( $("#stepDetailsNum"+num).css('display') == 'none'){
+                    $("#stepDetailsNum"+num).css('display','block');
+                    ShowDiv($("#stepDetailsNum"+num));
+                }else{
+                    ShowDiv($("#stepDetailsNum"+num));
+                    $("#stepDetailsNum"+num).css('display','none')
+                }
+            }
+
+
+            //删除步骤
+            function deleteStep(num) {
+                if(confirm("确认删除步骤"+num+"?")) {
+                    if ($("[name='testCaseStep']").length > 1) {
+                        $("#testCaseStep" + num).remove();
+                        stepArrSave("save")
+                    } else {
+                        alert("用例至少要有一个步骤!");
+                    }
+                }
+            }
+
+
+            function valLengthVerify() {
+                if($("#name").val() == ""){
+                    alert("用例名称不能为空");
+                    return false;
+                }
+                if($("#describe").val() == ""){
+                    alert("用例描述不能为空");
+                    return false;
+                }
+                var stepLength = getJsonLength(stepArr.step);
+                if(stepLength == 0){
+                    alert("步骤数量不能为0");
+                    return false;
+                }
+                var stepDesc = $("[name='stepDesc']");
+                //var URIInputDiv = $("[name='URIInputDiv']");
+                //var URL = $("[name='URL']");
+                var SERVICE_PATH = $("[name='SERVICE_PATH']");
+                var METHOD = $("[name='METHOD']");
+                for(var i=0;i<stepLength;i++){
+                    if(stepDesc.eq(i).val() == ""){
+                        alert("步骤描述不能为空");
+                        return false;
+                    }
+                    if(SERVICE_PATH.eq(i).val() == ""){
+                        alert("SERVICE_PATH名称不能为空");
+                        return false;
+                    }else if(SERVICE_PATH.eq(i).val().indexOf("?")!=-1){
+                        alert("SERVICE_PATH中不能包含问号");
+                        return false
+                    }
+
+                    if(METHOD.eq(i).val() == ""){
+                        alert("METHOD名称不能为空");
+                        return false;
+                    }else if(METHOD.eq(i).val().indexOf("?")!=-1){
+                        alert("METHOD中不能包含问号");
+                        return false
+                    }
+                }
+                return true;
+            }
+
+
+            function moreEnv() {
+                if($('#debugMoreEnv').css("display") == "none"){
+                    $('#debugMoreEnv').css("display","block");
+                }else{
+                    $('#debugMoreEnv').css("display","none");
+                }
+            }
+            function hideDiv() {
+
+            }
+            function checkStep(id) {
+                if($("[name='stepResule"+id+"']").css("display") == "none"){
+                    $("[name='stepResule"+id+"']").css("display","block");
+                }else {
+                    $("[name='stepResule"+id+"']").css("display","none");
+                }
+
+            }
+
+            function checkStepDetail(id){
+                if($("#stepDetail"+id+"").attr('hidden') == 'hidden'){
+                    $("#stepDetail"+id+"").show();
+                    $("#stepDetail"+id+"").removeAttr('hidden');
+                }else {
+                    $("#stepDetail"+id+"").hide();
+                    $("#stepDetail"+id+"").attr('hidden','hidden');
+                }
+
+            }
+
+            var thisTime = 0;
+            var debugFlag = false;
+
+            function saveOrDebug(opt,httpConfKey) {
+                 $("#publicKeyDiv").css("display","none");
+                var formData = saveCaseList();
+                if(!valLengthVerify()){
+                    return;
+                }
+                if("{{ option }}" == "edit" ){
+                    stepArr.caseId = $("#caseIdInput").val();
+                }else {
+                    stepArr.caseId = "";
+                }
+                stepArr.title = $("#name").val();
+                stepArr.casedesc = $("#describe").val();
+                stepArr.businessLineId = $("#caseBusinessLine option:selected").val();
+                stepArr.moduleId = $("#caseModules option:selected").val();
+                stepArr.caselevel = $("#testCaseLevel option:selected").val();
+
+                if(opt == "save") {
+                    formData.append("stepArr",JSON.stringify(stepArr));
+                    var testCaseAdd = $.ajax({
+                        url: '{% url 'dubbo_testCaseAdd' %}',
+                        type: 'POST',
+                        data: formData,
+                        async: false,
+                        cache: false,
+                        contentType: false,
+                        processData: false
+                    });
+                    if (JSON.parse(testCaseAdd.responseText)["code"] == 10000) {
+                        if("{{ option }}" == 'copy'){
+                            window.close();
+                            window.opener.location.reload();
+                        }else {
+                            location.href = '{% url 'dubboTestcaseList' %}';
+                        }
+                    } else {
+                        alert(JSON.parse(testCaseAdd.responseText)["message"]);
+                    }
+                }
+                else if (opt == "debug"){
+                    thisTime = 0;
+                    debugFlag = true;
+                    $("[name='debug']").attr("disabled", true);
+
+                    checkResultId ++;
+                    stepArr.httpConfKey = httpConfKey;
+
+                    formData.append("stepArr",JSON.stringify(stepArr));
+                    var testCaseDebugAdd = $.ajax({
+                        url: '{% url 'dubbo_TestCaseDebugAdd' %}',
+                        type: 'POST',
+                        data: formData,
+                        async: false,
+                        cache: false,
+                        contentType: false,
+                        processData: false
+                    });
+                    var runing =' <tr><td  colspan="10" align="center" style="font-size: 30px" >获取结果中...</td></tr>';
+                    $("#debugResultTbody").html(runing+table);
+                    $("#debugResult").show();
+                    $("#clearResult").show();
+                    try{
+                        if(JSON.parse(testCaseDebugAdd.responseText)["code"] == 10000){
+
+                            var testCasedDebug = $.ajax({url:"{% url 'dubbo_TestCaseDebug' %}",async:true,type:"POST",success:function () {
+                                if(JSON.parse(testCasedDebug.responseText)["code"] == 10000){
+                                    function debugResult() {
+                                    var url = "{% url 'dubbo_TestCaseDebugGetResult' %}";
+                                    var getCaseDebugResultStr = $.ajax({
+                                        url: url,async:true,
+                                        success:function() {
+                                            var getCaseDebugResult = JSON.parse(getCaseDebugResultStr.responseText);
+                                            if(getCaseDebugResult["code"]==16002){
+                                                thisTime += 1;
+                                                $("#debugResultTbody").children().first().children().first().html("获取结果中...已执行"+thisTime+
+                                                    "秒&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;点击<button class=\"btn btn-danger\" onclick=\"cancelDebug()\">取消</button>调试"
+                                                );
+                                                if(debugFlag){
+                                                    debugResult();
+                                                }else {
+                                                     $("#debugResultTbody").children().first().remove();
+                                                    table =  '<tr><td>' + checkResultId + '</td><td colspan="9" align="center"  style="font-size: 30px" >调试已取消</td></tr>' + table;
+                                                    $("#debugResultTbody").html( table);
+                                                }
+                                            }else{
+                                                thisTime = 0;
+                                                var result = getCaseDebugResult["body"];
+                                                var resultHtml='<tr >'
+                                                    +'<td>'+checkResultId+'</td>'
+                                                    +'<td>'+result.testResult+'</td>'
+                                                    +'<td>'+HTMLEncode(result.alias)+'</td>'
+                                                    +'<td>'+result.stepCount+'</td>'
+                                                    +'<td><textarea style="width:100%;height:30px;background:transparent;border-style:none; resize:none; "  readonly>'+HTMLEncode(result.assertResult)+'</textarea></td>'
+                                                    +'<td>'+result.beforeExecuteTakeTime+'</td>'
+                                                    +'<td>'+result.executeTakeTime+'</td>'
+                                                    +'<td>'+result.afterExecuteTakeTime+'</td>'
+                                                    +'<td>'+result.totalTakeTime+'</td>'
+                                                    +'<td><button class="btn btn-primary"  onclick="checkStep(\''+checkResultId+'\');ShowDiv($(this))" >查看步骤</button></td>'
+                                                    +'</tr>'+
+                                                    '<tr ><td colspan="10" style="margin: 0px;padding: 0px;padding-left: 8px;padding-right: 8px;">'+
+                                                    ' <table name="stepResule'+checkResultId+'" class="table table-striped table-bordered table-hover" style="border: 1px solid #c9c9c9;table-layout:fixed;width:100%;word-break:break-all;display:none;">'+
+                                                    '<thead>'+
+                                                    '<tr style="color: snow" bgcolor="#008b8b">'+
+                                                    '<th style="width:5%;">步骤</th>'+
+                                                    '<th style="width:10%;">步骤描述</th>'+
+                                                    '<th style="width:5%;">测试结果</th>'+
+                                                    '<th style="width:15%;">实际结果</th>'+
+                                                    '<th style="width:15%;display:none;">预期结果</th>'+
+                                                    '<th style="width:25%;">断言结果</th>'+
+                                                    '<th style="width:5%;">初始耗时</th>'+
+                                                    '<th style="width:5%;">执行耗时</th>'+
+                                                    '<th style="width:5%;">恢复耗时</th>'+
+                                                    '<th style="width:5%;">总耗时</th>'+
+                                                    '<th style="width:5%;">操作</th>'+
+                                                    '</tr>'+
+                                                    '</thead>'+
+                                                    '<tbody>';
+
+                                                for(var i = 0; i<result.step.length;i++){
+                                                    var HTTPRequestText = "系统：" + result.step[i].dubboSystem + "\n";
+                                                    HTTPRequestText = HTTPRequestText + "dubbo请求：invoke " + result.step[i].dubboService+"."+result.step[i].dubboMethod+"(";
+                                                    HTTPRequestText = HTTPRequestText +  result.step[i].dubboParams+")";
+
+                                                    var HTTPResultText = result.step[i].actualResult;
+
+
+                                                    resultHtml = resultHtml+'<tr bgcolor="#FF0000"><td>' +result.step[i].stepNum+ '</td>'+
+                                                        '<td><textarea style="width:100%;height:75px;background:transparent;border-style:none; resize:none; "  readonly>' +HTMLEncode(result.step[i].stepDesc)+ '</textarea></td>'+
+                                                        '<td>' +(result.step[i].testResult == "" ? "NOTRUN" : result.step[i].testResult)+ '</td>'+
+                                                        '<td><textarea style="width:100%;height:75px;background:transparent;border-style:none; resize:none; " ondblclick="OpenDetailDiv(\'实际结果\',$(this).val())" readonly>' +HTMLEncode(result.step[i].actualResult)+ '</textarea></td>'+
+                                                        '<td><textarea style="width:100%;height:75px;background:transparent;border-style:none; resize:none; " ondblclick="OpenDetailDiv(\'断言结果\',$(this).val())" readonly>'+HTMLEncode(result.step[i].assertResult)+'</textarea></td>'+
+                                                        '<td>' +result.step[i].beforeExecuteTakeTime+ '</td>'+
+                                                        '<td>' +result.step[i].executeTakeTime+ '</td>'+
+                                                        '<td>' +result.step[i].afterExecuteTakeTime+ '</td>'+
+                                                        '<td>' +result.step[i].totalTakeTime+ '</td>'+
+                                                        '<td><button class="btn btn-primary" style="background-color:#008b8b;border-color:#008b8b;" onclick="checkStepDetail(\''+checkResultId+'_'+result.step[i].stepNum+'\');ShowDiv($(this))" >查看详情</button></td></tr>'+
+
+                                                        '<tr><td colspan="10"   id="stepDetail'+checkResultId+'_'+result.step[i].stepNum+'" hidden>' +
+                                                        '<div ><table  class="table table-striped table-bordered table-hover" style="table-layout:fixed;width:100%;word-break:break-all;">'+
+                                                        '<thead>\n' +
+                                                        '                <tr>\n' +
+                                                        '                    <th style="width:50%;vertical-align: top"  >INVOKE请求</th>\n' +
+                                                        '                    <th style="width:50%;vertical-align: top" >响应</th>\n' +
+                                                        '                </tr>' +
+                                                        '<tr>\n' +
+                                                        '                    <th><textarea class="read-size" readonly="readonly" style="width:100%;height:210px;background:transparent;border-style:none;max-width: 100%;min-width: 100%;min-height: 210px" ondblclick="OpenDetailDiv(\'INVOKE请求\',$(this).val())">'+HTMLEncode(HTTPRequestText)+'</textarea></th>' +
+                                                        '                    <th><textarea class="read-size" readonly="readonly" style="width:100%;height:210px;background:transparent;border-style:none;max-width: 100%;min-width: 100%;min-height: 210px" ondblclick="OpenDetailDiv(\'响应\',$(this).val())">'+HTMLEncode(HTTPResultText)+'</textarea></th>' +
+                                                        '</tr></thead>'+
+                                                        '<tbody>' +
+                                                        '<tr>\n' +
+                                                        '                    <td>准备</td>\n' +
+                                                        '                    <td>断言恢复</td>\n' +
+                                                        '                </tr>'+
+                                                        '<tr><td><textarea class="read-size" readonly="readonly" style="width:100%;height:210px;background:transparent;border-style:none;max-width: 100%;min-width: 100%;min-height: 210px" ondblclick="OpenDetailDiv(\'准备\',$(this).val())">'+HTMLEncode(result.step[i].varsPre)+'</textarea></td>'+
+                                                        '<td><textarea class="read-size" readonly="readonly" style="width:100%;height:210px;background:transparent;border-style:none;max-width: 100%;min-width: 100%;min-height: 210px" ondblclick="OpenDetailDiv(\'断言恢复\',$(this).val())">'+HTMLEncode(result.step[i].varsPost)+'</textarea></td></tr>'+
+
+                                                        '</tbody>'+
+                                                        '</table></div>'+
+                                                        '</td></tr>'
+                                                    ;
+
+                                                }
+                                                resultHtml = resultHtml + '</tbody>'+
+                                                    '</table>'+
+                                                    '</td></tr>';
+                                                table = resultHtml+table;
+                                                $("#debugResultTbody").html(table);
+                                                $("[name='debug']").attr("disabled", false);
+                                            }
+
+                                        },
+                                        error:function () {
+                                            table = '<tr><td>'+checkResultId+'</td>'+checkResultId+'<td colspan="9" align="center"  style="font-size: 30px" >结果获取失败，服务器超时。</td></tr>'+table;
+                                            $("#debugResultTbody").html(table+resultHtml);
+                                            $("[name='debug']").attr("disabled", false);
+                                        }
+                                    });
+
+                                }
+                                debugResult();
+
+                                }else {
+                                      var runing =' <tr><td  colspan="10" align="center" style="font-size: 30px" >'+testCasedDebug.responseText+'</td></tr>';
+                                    $("#debugResultTbody").html(runing+table);
+                                    $("#debugResult").show();
+                                    $("#clearResult").show();
+                                    $("[name='debug']").attr("disabled", false);
+                                }
+                            }});
+                        }else {
+                                    var runing =' <tr><td  colspan="10" align="center" style="font-size: 30px" >'+testCaseDebugAdd.responseText+'</td></tr>';
+                                    $("#debugResultTbody").html(runing+table);
+                                    $("#debugResult").show();
+                                    $("#clearResult").show();
+                                    $("[name='debug']").attr("disabled", false);
+                        }
+                    }catch (err){
+                          var runing =' <tr><td  colspan="10" align="center" style="font-size: 30px" >'+testCaseDebugAdd.responseText+'</td></tr>';
+                                $("#debugResultTbody").html(runing+table);
+                                $("#debugResult").show();
+                                $("#clearResult").show();
+                                $("[name='debug']").attr("disabled", false);
+                    }
+                        $("#results").html(testCaseDebugAdd.responseText);
+
+                }
+                else if(opt == "edit"){
+                    var syncList = $("[name='isSync']");
+                    for (var i = 0;i<syncList.length-1;i++){
+                        if (syncList.eq(i).is(":checked")){
+                             if (!confirm("勾选同步的步骤不会被保存，以同步的接口数据为准，确认保存?")){
+                                return;
+                             }
+                            break;
+                        }
+
+                    }
+                    stepArr.id = data["id"];
+                    stepArr.caseId = $("#caseIdInput").val();
+
+                    formData.append("stepArr",JSON.stringify(stepArr));
+                    formData.append("id",data["id"]);
+                    var saveEditResult = $.ajax({
+                        url: '{% url 'dubbo_testCaseSaveEdit' %}',
+                        type: 'POST',
+                        data: formData,
+                        async: false,
+                        cache: false,
+                        contentType: false,
+                        processData: false
+                    });
+
+                    if(JSON.parse(saveEditResult.responseText)["code"] == 10000){
+                        if(confirm("保存成功，是否退出编辑？")) {
+                            window.close();
+                            window.opener.location.reload(); //='/InterfaceTest/HttpTestCaseCheck';
+                        }
+                    }else {
+                        alert(JSON.parse(saveEditResult.responseText)["message"]);
+                    }
+
+                }
+            }
+
+            function cancelDebug() {
+                thisTime = 0;
+                debugFlag = false;
+                $("[name='debug']").attr("disabled", false);
+            }
+
+            function clearResult() {
+                table = '';
+                checkResultId = 0;
+                $("#debugResult").hide();
+                $('#clearResult').hide();
+            }
+
+            function getCaseList() {
+//                    htmlobj=$.ajax({url:"/InterfaceTest/HttpTestCase/httpTestCaseAdd",async:false});
+                $("#getCaseList").css("display","block");
+            }
+            function selected() {
+                checkOptions();
+                var data = {checkArr : encodeURI(JSON.stringify(checkVals)),orderBy : orderBy,page:page};
+                htmlobj=$.ajax({url:"{% url 'dubbo_TestCaseSelectInterfaceListCheck' %}",async:false,data:data,type:"POST"});
+                $("#taskList").html(htmlobj.responseText);
+                orderByShow();
+                interfaceListIsChecked();
+            }
+            selected();
+
+            InitStep();
+            window.onload = function() {
+                $("#surprise").click();
+                $("#surprise2").click();
+            };
+
+            function HTMLEncode(html) {
+                var temp = document.createElement("div");
+                (temp.textContent != null) ? (temp.textContent = html) : (temp.innerText = html);
+                var output = temp.innerHTML;
+                temp = null;
+                return output;
+            }
+
+            window.onscroll = function () {
+               $("#publicKeyDiv").css("top", $(document).scrollTop()+125 )
+            }
+
+//DubboInfos 初始
+    var dubboServiceList = []
+    var dubboServiceDict = {}
+    function refreshDubboInfos(){
+        var system = $("[name = SYSTEM_KEY]").val();
+        var envKey = $("#ENVKEY_FOR_GETDUBBOINFO").val();
+        if (envKey == "") {
+            dubboServiceList = [];
+            dubboServiceDict = {};
+            return;
+        }
+        var ajaxResp = $.ajax({
+                      url: '{% url 'dubboGetServices' %}?env='+envKey+'&system='+system+'' ,
+                      type: 'GET',
+                      async: false
+                 });
+        console.log(ajaxResp.responseText);
+        if (JSON.parse(ajaxResp.responseText)["code"] == 10000) {
+            dubboServiceList = JSON.parse(ajaxResp.responseText)["body"]["serviceList"];
+            dubboServiceDict = JSON.parse(ajaxResp.responseText)["body"]["serviceDict"];
+//            alert(JSON.stringify(dubboServiceList));
+        } else {
+            alert(JSON.parse(ajaxResp.responseText)["message"]);
+        }
+    }
+
+    //Service自动联想
+        function inputServiceList(inputObj,listObj){
+            var valueList = dubboServiceList;
+            inputObj.bind('input propertychange', function() {
+                var key = inputObj.val();
+                var valueLen = valueList.length;
+                var html = "";
+                for(var i=0; i<valueLen; i++){
+                    if(valueList[i].indexOf(key)!=-1){
+                        //不等于-1表示该字符串包含子字符串。
+                      html += '<option value="'+ valueList[i] +'"></option>';
+                    }
+                }
+                listObj.html(html);
+            });
+        }
+        function inputMethodList(inputObj,listObj){
+            var tmpservice = $("#SERVICE_PATH").val();
+            var valueList = dubboServiceDict[tmpservice];
+//            alert(JSON.stringify(valueList));
+            inputObj.bind('input propertychange', function() {
+                var key = inputObj.val();
+                var valueLen = valueList.length;
+                var html = "";
+                for(var i=0; i<valueLen; i++){
+                    if(valueList[i].indexOf(key)!=-1){
+                        //不等于-1表示该字符串包含子字符串。
+                      html += '<option value="'+ valueList[i] +'"></option>';
+                    }
+                }
+                listObj.html(html);
+            });
+        }
+        </script>
+{% include 'fuzhu_page/publicKeyMain.html' %}
+{% include 'InterfaceTest/foot.html'%}

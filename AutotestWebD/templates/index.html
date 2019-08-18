@@ -1,0 +1,298 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1" />
+    <meta name="renderer" content="webkit" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <title>{{ SITE_NAME }}自动化测试平台</title>
+    <meta name="description" content="" />
+    <meta name="keywords" content="" />
+    <link rel="stylesheet" href="/static/index/css/style.css" />
+    <script src="/static/index/js/jquery.js"></script>
+    <script src="/static/index/js/lib.js"></script>
+</head>
+
+<body class="">
+    <!-- 头部 -->
+    <div class="header">
+        <div class="wp">
+            <div class="logo"><a href=""><img src="/static/index/images/logo.png" alt="" /></a></div>
+            <div class="logo logo2"><a href=""><img src="/static/index/images/logo2.png" alt="" /></a></div>
+            <span class="menuBtn"></span>
+            <ul class="nav">
+                <li class="on"><a href="" class="v1">首页</a></li>
+                <li class="">
+                    <a href="/interfaceTest/HTTP_InterfaceCheck" class="v1">HTTP测试</a>
+                </li>
+                <li class=""><a href="/dubbo/interfaceList" class="v1">DUBBO测试</a></li>
+                <li class=""><a href="/mockserver/HTTP_InterfaceCheck" class="v1">MOCK服务</a></li>
+            </ul>
+        </div>
+    </div>
+    <!-- 头部 end-->
+    <!-- 内容 -->
+    <div class="main">
+        <div class="banner">
+            <div class="swiper-wrapper">
+
+                <div class="swiper-slide">
+                    <div class="ban-q">
+                        <div class="wp">
+                            <div class="pic"><img src="/static/index/images/zMultiMode.png" alt="" /></div>
+                            <div class="txt">
+                                <h3>多模式支持<br />支持不同能力人员</h3>
+                                <p class="pt1">普通模式：类postman模式，适合入行小白<br>关键字模式：使用数据关键字生成数据<br>python模式：使用python完成复杂流程测试</p>
+                                <dl>
+                                    <dd>
+                                        <div class="img"><img src="/static/index/images/pic2.png" alt="" /></div>
+                                        <span>普通模式</span>
+                                    </dd>
+                                    <dd>
+                                        <div class="img"><img src="/static/index/images/pic3.png" alt="" /></div>
+                                        <span>高级模式</span>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="ban-q">
+                        <div class="wp">
+                            <div class="pic"><img src="/static/index/images/zDataBusiApart.png" alt="" /></div>
+                            <div class="txt">
+                                <h3>数据业务分离<br />数据驱动</h3>
+                                <p class="pt1">数据管理：全局变量+组合文本<br>业务管理：接口/业务流用例</p>
+                                <dl>
+                                    <dd>
+                                        <div class="img"><img src="/static/index/images/pic2.png" alt="" /></div>
+                                        <span>数据管理</span>
+                                    </dd>
+                                    <dd>
+                                        <div class="img"><img src="/static/index/images/pic3.png" alt="" /></div>
+                                        <span>业务管理</span>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="ban-q">
+                        <div class="wp">
+                            <div class="pic"><img src="/static/index/images/zci.png" alt="" /></div>
+                            <div class="txt">
+                                <h3>持续集成CI<br />结合CI工具完成</h3>
+                                <p class="pt1">invoke接口<br>CI shell脚本示例</p>
+                                <dl>
+                                    <dd>
+                                        <div class="img"><img src="/static/index/images/pic2.png" alt="" /></div>
+                                        <span>invoke接口</span>
+                                    </dd>
+                                    <dd>
+                                        <div class="img"><img src="/static/index/images/pic3.png" alt="" /></div>
+                                        <span>CI脚本</span>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="ban-q">
+                        <div class="wp">
+                            <div class="pic"><img src="/static/index/images/zpostmanlikeui2.png" alt="" /></div>
+                            <div class="txt">
+                                <h3>易上手<br />结构化请求报文</h3>
+                                <p class="pt1">准备+执行+断言恢复 （标准闭环）</p>
+                                <dl>
+                                    <dd>
+                                        <div class="img"><img src="/static/index/images/pic2.png" alt="" /></div>
+                                        <span>用户平台</span>
+                                    </dd>
+                                    <dd>
+                                        <div class="img"><img src="/static/index/images/pic3.png" alt="" /></div>
+                                        <span>管理后台</span>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="ban-q">
+                        <div class="wp">
+                            <div class="pic"><img src="/static/index/images/zimport.png" alt="" /></div>
+                            <div class="txt">
+                                <h3>多种录制方式<br />多种导入方式</h3>
+                                <p class="pt1">postman导入、日志导入<br>Chrome扩展、代理录制、报文录制</p>
+                                <dl>
+                                    <dd>
+                                        <div class="img"><img src="/static/index/images/pic2.png" alt="" /></div>
+                                        <span>导入</span>
+                                    </dd>
+                                    <dd>
+                                        <div class="img"><img src="/static/index/images/pic3.png" alt="" /></div>
+                                        <span>录制</span>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="swiper-slide">
+                    <div class="ban-q">
+                        <div class="wp">
+                            <div class="pic"><img src="/static/index/images/zmultiUriEnv.png" alt="" /></div>
+                            <div class="txt">
+                                <h3>多服务、多环境支持<br />多环境复用用例</h3>
+                                <p class="pt1">环境配置+数据配置(mysqldb-redis-mongodb)<br>服务配置+请求地址配置<br >多环境赋能开发人员有效使用测试用例自测</p>
+                                <dl>
+                                    <dd>
+                                        <div class="img"><img src="/static/index/images/pic2.png" alt="" /></div>
+                                        <span>服务配置</span>
+                                    </dd>
+                                    <dd>
+                                        <div class="img"><img src="/static/index/images/pic3.png" alt="" /></div>
+                                        <span>环境配置</span>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="swiper-slide">
+                    <div class="ban-q">
+                        <div class="wp">
+                            <div class="pic"><img src="/static/index/images/zpermission.png" alt="" /></div>
+                            <div class="txt">
+                                <h3>权限管理<br />管理权限/组权限</h3>
+                                <p class="pt1">管理员可以有效配置后台数据<br>组内人员可以互相编辑<br>离职人员的数据可以移交给在职人员</p>
+                                <dl>
+                                    <dd>
+                                        <div class="img"><img src="/static/index/images/pic2.png" alt="" /></div>
+                                        <span>管理员管理</span>
+                                    </dd>
+                                    <dd>
+                                        <div class="img"><img src="/static/index/images/pic3.png" alt="" /></div>
+                                        <span>组员管理</span>
+                                    </dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+
+        <div class="index-row2">
+            <div class="wp2">
+                <ul class="ul-imgtxt1">
+                    <li>
+                        <a href="/myadmin/login">
+                            <div class="pic">
+                                <img src="/static/index/images/pic1.jpg" alt="" />
+                                <div class="con">
+                                    <div class="txt">
+                                        <i class="icon1"></i>
+                                        <h3>后台管理系统</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/interfaceTest/HTTP_InterfaceCheck">
+                            <div class="pic">
+                                <img src="/static/index/images/pic2.jpg" alt="" />
+                                <div class="con">
+                                    <div class="txt">
+                                        <i class="icon2"></i>
+                                        <h3>接口测试</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/mockserver/HTTP_InterfaceCheck">
+                            <div class="pic">
+                                <img src="/static/index/images/pic3.jpg" alt="" />
+                                <div class="con">
+                                    <div class="txt">
+                                        <i class="icon3"></i>
+                                        <h3>MOCK服务</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="/interfaceTest/HTTP_UserCI">
+                            <div class="pic">
+                                <img src="/static/index/images/pic4.jpg" alt="" />
+                                <div class="con">
+                                    <div class="txt">
+                                        <i class="icon4"></i>
+                                        <h3>持续集成</h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!-- 内容 end-->
+    <!-- 底部 -->
+    <div class="footer">
+        <div class="wp2">
+            <div class="fd-copy">
+                <div class="wp">
+                    <p>Copyright © 2019 <a href="">{{ SITE_NAME }}</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 底部 end-->
+    <script type="text/javascript">
+        $(".fd-bot dd").each(function() {
+            if ($(this).hasClass('on')) {
+                $(this).parents('.footer-m').css('padding-bottom', '80px');
+            }
+        });
+    </script>
+    <script type="text/javascript" src="/static/index/js/swiper.js"></script>
+    <link rel="stylesheet" type="text/css" href="/static/index/css/swiper.css">
+    <script>
+        var swiper = new Swiper('.banner', {
+            slidesPerView: 1,
+            loop: true,
+            autoplay: {
+                delay: 5000,
+                stopOnLastSlide: false,
+                disableOnInteraction: true,
+            },
+            pagination: {
+                el: '.swiper-pagination',
+                type: 'bullets',
+            },
+        });
+    </script>
+</body>
+
+</html>

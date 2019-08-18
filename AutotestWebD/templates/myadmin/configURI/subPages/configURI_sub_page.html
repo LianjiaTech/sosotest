@@ -1,0 +1,70 @@
+<div class="box-body no-padding" >
+
+
+
+    <div class="box-header with-border">
+          <h3 class="box-title">URI列表</h3>
+
+{#          <div class="box-tools pull-right">#}
+{#            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>#}
+{#            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>#}
+{#          </div>#}
+        <button style="margin: auto; float: right;margin-right: 30px" onclick="addUriBtn()" type="button" class="btn bg-olive margin">添加URI</button>
+        </div>
+    <table class="table table-striped table-bordered">
+        <tbody>
+        <tr>
+            <th style="width: 2%"></th>
+            <th style="width: 15%">uriKey</th>
+            <th style="width: 15%">uri名称</th>
+            <th style="width: 25%">uri描述</th>
+            <th style="width: 5%">优先级</th>
+            <th style="width: 5%">协议</th>
+            <th style="width: 5%">是否有效</th>
+            <th style="width: 25%;">操作</th>
+        </tr>
+         {% if pageCount == 0 %}
+        <td colspan="8" align="center" >没有符合条件的搜索结果</td>
+    {% else %}
+        {% for pageData in pageDatas %}
+            <tr>
+                <td>{{ pageData.id }}</td>
+                <td id="uriKey_{{ pageData.id }}">{{ pageData.uriKey }}</td>
+                <td>{{ pageData.alias }}</td>
+                <td>{{ pageData.uriDesc }}</td>
+                <td>{{ pageData.level }}</td>
+                <td>{{ pageData.protocol }}</td>
+                {% if pageData.state == 1 %}
+                <td>有效</td>
+                {% else %}
+                <td>无效</td>
+                {% endif %}
+                <td>
+                    {% if pageData.state == 1 %}
+                    <button type="button" class="btn bg-olive"
+                            onclick="editConfigUriBtn('{{ pageData.uriKey }}')">编辑
+                    </button>
+                    <button  type="button" class="btn bg-red"
+                            onclick="deleteConfigUriBtn($(this), '{{ pageData.uriKey }}')">删除
+                    </button>
+                    {% else %}
+                    <button  type="button" class="btn bg-red"
+                            onclick="resetConfigUriBtn($(this), '{{ pageData.uriKey }}')">启用
+                    </button>
+                    {% endif %}
+
+                </td>
+
+            </tr>
+
+        {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+
+</div>
+<div class="box-footer clearfix">
+  <ul class="pagination pagination-sm no-margin pull-right">
+    {% include "myadmin/pagination.html" %}
+  </ul>
+</div>

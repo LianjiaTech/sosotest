@@ -1,0 +1,68 @@
+<div class="box-body no-padding" >
+
+
+
+    <div class="box-header with-border">
+          <h3 class="box-title">数据服务器列表</h3>
+
+{#          <div class="box-tools pull-right">#}
+{#            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>#}
+{#            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>#}
+{#          </div>#}
+        <button style="margin: auto; float: right;margin-right: 30px" onclick="addConfigServiceBtn()" type="button" class="btn bg-olive margin">添加数据服务器</button>
+        </div>
+    <table class="table table-striped table-bordered">
+        <tbody>
+        <tr>
+            <th style="width: 2%">#</th>
+            <th style="width: 10%">服务Key</th>
+            <th style="width: 12%">服务名</th>
+            <th style="width: 20%">服务描述</th>
+            <th style="width: 15%">配置文件</th>
+            <th style="width: 5%">是否有效</th>
+            <th style="width: 25%;">操作</th>
+        </tr>
+         {% if pageCount == 0 %}
+        <td colspan="8" align="center" >没有符合条件的搜索结果</td>
+    {% else %}
+        {% for pageData in pageDatas %}
+            <tr>
+                <td>{{ pageData.id }}</td>
+                <td id="serviceConfKey_{{ pageData.id }}">{{ pageData.serviceConfKey }}</td>
+                <td>{{ pageData.alias }}</td>
+                <td>{{ pageData.serviceConfDesc }}</td>
+                <td><textarea readonly="readonly" style="resize:none;white-space: pre;text-overflow: ellipsis;overflow: hidden; width:356px;height:60px;background:transparent;border-style:none;max-width: 100%;min-width: 100%;min-height: 60px" title="{{ pageData.serviceConf }}">{{ pageData.serviceConf }}</textarea></td>
+                {% if pageData.state == 1 %}
+                <td>有效</td>
+                {% else %}
+                <td>无效</td>
+                {% endif %}
+                <td>
+                    {% if pageData.state == 1 %}
+                    <button type="button" class="btn bg-olive"
+                            onclick="editConfigServiceBtn('{{ pageData.id }}')">编辑
+                    </button>
+                    <button  type="button" class="btn bg-red"
+                            onclick="deleteConfigServiceBtn($(this), '{{ pageData.id }}')">删除
+                    </button>
+                    {% else %}
+                    <button  type="button" class="btn bg-red"
+                            onclick="resetConfigServiceBtn($(this), '{{ pageData.id }}')">启用
+                    </button>
+                    {% endif %}
+
+                </td>
+
+            </tr>
+
+        {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+
+</div>
+<div class="box-footer clearfix">
+  <ul class="pagination pagination-sm no-margin pull-right">
+    {% include "myadmin/pagination.html" %}
+  </ul>
+</div>

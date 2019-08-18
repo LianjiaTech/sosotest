@@ -1,0 +1,68 @@
+<div>
+    <div class="pagination" style="float:right;" >{$page}</div>
+</div>
+
+<if condition="trim($page) eq '' ">
+    <table class="table table-striped table-bordered table-hover" style="table-layout:fixed;width:100%;word-break:break-all;margin-top:8px">
+
+        <else/>
+        <table class="table table-striped table-bordered table-hover" style="table-layout:fixed;width:100%;word-break:break-all;">
+
+</if>
+    <thead>
+    <tr style="color: snow" bgcolor="#2A3F54">
+        <th style="width:8%;">环境KEY</th>
+        <th >配置信息</th>
+        <th style="width:10%;">配置名称</th>
+        <th style="width:15%;">配置描述</th>
+        <th style="width:10%;">数据服务器</th>
+        <th style="width:8%;">创建人</th>
+        <th style="width:8%;">创建时间</th>
+        <th style="width:8%;">修改时间</th>
+        <th style="width:8%;">操作</th>
+    </tr>
+    </thead>
+    <tbody style="width: 100%">
+    <if condition="count($data) eq 0 ">
+
+        <td colspan="9" align="center" >没有符合条件的搜索结果</td>
+        <else/>
+        <volist name="data" id="vo">
+            <tr id="{$vo['id']}">
+                <td name="httpConfKey{$vo['id']}"><textarea class="table-fixed-write"  disabled>{$vo['httpConfKey']}</textarea></td>
+                <td name="httpConf{$vo['id']}"><textarea class="table-fixed-write"  disabled>{$vo['httpConf']}</textarea></td>
+                <td name="alias{$vo['id']}"><textarea class="table-fixed-write"  disabled>{$vo['alias']}</textarea></td>
+                <td name="httpConfDesc{$vo['id']}"><textarea class="table-fixed-write"  disabled>{$vo['httpConfDesc']}</textarea></td>
+                <td name="serviceAlias{$vo['id']}"><textarea class="table-fixed-write"  disabled>{$vo['serviceAlias']}</textarea></td>
+                <td></td>
+                <td>{$vo['addTime']}</td>
+                <td>{$vo['modTime']}</td>
+                <if condition="$vo['addBy'] eq $Think.session.loginName ">
+                    <!--<eq name="vo['addBy']" value="Think.session.loginName">-->
+                    <td>
+                        <button class="btn btn-primary" onclick="addVarsSort('{$vo['httpConfKey']}')">置顶</button>
+                        <button class="btn btn-success" onclick="editUserHttpConf({$vo['id']})">编辑</button>
+                        <button class="btn btn-danger" onclick="delUserHttpConf('{$vo['id']}','{$vo['httpConfKey']}');">删除</button>
+                    </td>
+                    <else/>
+                    <td>
+                        <button class="btn btn-primary" onclick="addVarsSort('{$vo['httpConfKey']}')">置顶</button>
+                    </td>
+                </if>
+            </tr>
+            <td id="hiddenTR{$vo['id']}" colspan="9" align="center"  style="display: none;">
+                <button class="btn btn-success" onclick="saveEdit({$vo['id']})">保存编辑</button>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button class="btn btn-danger" onclick="cancelEdit('{$vo['id']}');">取消编辑</button>
+            </td>
+        </volist>
+    </if>
+    </tbody>
+
+</table>
+<div>
+    <button type="button" class="button blue" style="visibility:hidden"><p style="font-size: 18px;">test</p></button>
+    <ul class="pagination" style="float:right;">
+        {$page}
+    </ul>
+</div>

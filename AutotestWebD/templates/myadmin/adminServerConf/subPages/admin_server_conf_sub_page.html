@@ -1,0 +1,77 @@
+<div class="box-body no-padding" >
+
+
+
+    <div class="box-header with-border">
+          <h3 class="box-title">服务列表</h3>
+        <button class="btn bg-olive" onclick="selected()" >刷新</button>
+{#          <div class="box-tools pull-right">#}
+{#            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>#}
+{#            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>#}
+{#          </div>#}
+{#        <button style="margin: auto; float: right;margin-right: 30px" onclick="addAdminUserBtn()" type="button" class="btn bg-olive margin">添加管理员</button>#}
+        </div>
+    <table class="table table-striped table-bordered">
+        <tbody>
+        <tr>
+            <th style="width: 2%">#</th>
+            <th  style="width: 5%">服务名称</th>
+            <th style="width: 5%">协议</th>
+            <th >服务IP</th>
+            <th style="width: 5%">服务端口</th>
+            <th style="width: 5%">服务最大进程数(任务)</th>
+            <th style="width: 5%">当前服务进程数(任务)</th>
+            <th style="width: 20%">服务任务列表</th>
+            <th style="width: 5%">服务最大进程数(调试)</th>
+            <th style="width: 5%">当前服务进程数(调试)</th>
+            <th style="width: 20%">服务调试列表</th>
+            <th style="width: 5%">服务状态</th>
+            <th style="width: 5%">服务信息</th>
+            <th style="width: 10%">操作</th>
+        </tr>
+         {% if pageCount == 0 %}
+        <td colspan="14" align="center" >没有符合条件的搜索结果</td>
+    {% else %}
+        {% for pageData in pageDatas %}
+            <tr>
+                <td>{{ pageData.id }}</td>
+                <td>{{ pageData.serviceName }}</td>
+                <td>{{ pageData.protocol }}</td>
+                <td>{{ pageData.serviceIp }}</td>
+                <td>{{ pageData.servicePort }}</td>
+                <td>{{ pageData.maxTaskProgressNum }}</td>
+                <td>{{ pageData.currentTaskProgressNum }}</td>
+                <td style="word-break:break-word;">{{ pageData.currentTaskList }}</td>
+                <td>{{ pageData.maxCaseProgressNum }}</td>
+                <td>{{ pageData.currentCaseProgressNum }}</td>
+                <td style="word-break:break-word;">{{ pageData.currentCaseList }}</td>
+                {% if pageData.status == 1 %}
+                <td>在线</td>
+                {% else %}
+                <td>离线</td>
+                {% endif %}
+                {% if pageData.state == 1 %}
+                <td>有效</td>
+                {% else %}
+                <td>无效</td>
+                {% endif %}
+                <td>
+                    <button type="button" class="btn bg-olive"
+                            onclick="editAdminServiceConfBtn('{{ pageData.id }}')">编辑
+                    </button>
+
+                </td>
+
+            </tr>
+
+        {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+
+</div>
+<div class="box-footer clearfix">
+  <ul class="pagination pagination-sm no-margin pull-right">
+    {% include "myadmin/pagination.html" %}
+  </ul>
+</div>

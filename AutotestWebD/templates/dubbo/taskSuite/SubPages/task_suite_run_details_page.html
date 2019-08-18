@@ -1,0 +1,197 @@
+<table class="table table-striped table-bordered table-hover" style="table-layout:fixed;width:100%;word-break:break-all;">
+    <thead>
+    <tr >
+        <th style="width:20%;">任务集编号</th>
+        <th style="width:80%;" id="taskIdSpan">{{ taskSuiteData.taskSuiteId }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>任务集名称</td>
+        <td id="taskNameSpan">{{ taskSuiteData.title }}</td>
+    </tr>
+    <tr>
+        <td>任务集描述</td>
+        <td id="taskDescribeSpan"><pre style='border: hidden;background-color: inherit'>{{ taskSuiteData.taskSuiteDesc }}</pre></td>
+    </tr>
+    <tr>
+        <td>创建人</td>
+        <td id="taskAddBySpan">{{ taskSuiteData.userName }}</td>
+    </tr>
+    <tr>
+        <td>任务数量</td>
+        <td id="taskNumSpan">{{ taskSuiteData.taskCount }}
+            <a href='javascript:void (0)' onclick='checkSelected("task","{{ taskSuiteData.id }}")' style=' margin-left:30px' class='label label-primary' >查看</a>
+        </td>
+    </tr>
+    <tr id="taskIdList"  style="display:none">
+        <td  colspan=2 align="center"  ><div style="margin-top: 2px " id="taskListSpan"></div></td>
+        <input type="hidden" id="taskCaseIdInput"/>
+    </tr>
+    <tr>
+        <td>创建时间</td>
+        <td id="addTimeSpan">{{ taskSuiteData.addTime }}</td>
+    </tr>
+    <tr>
+        <td>更新时间</td>
+        <td id="modTimeSpan">{{ taskSuiteData.modTime }}</td>
+    </tr>
+    {% if option == "run" %}
+        <tr id="retryCountTr" >
+            <td>重试次数</td>
+            <td>
+                <select id="retryCount">
+                    <option value="0">0</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
+                    <option value="6">6</option>
+                    <option value="7">7</option>
+                    <option value="8">8</option>
+                    <option value="9">9</option>
+                    <option value="10">10</option>
+                </select>
+            </td>
+        </tr>
+        <tr id="commentTr" >
+            <td>任务集执行备注</td>
+            <td>
+                <textarea type="text" class="form-control" id="execComments" placeholder="请输入任务执行备注"  style="max-width: 100%;width:100%;height: 60px"></textarea>
+            </td>
+        </tr>
+        <tr id="envTr">
+            <td>任务环境</td>
+            <td >
+
+        {% for hc in httpConf %}
+                <label style="margin-left: 30px" >
+                     <input  type="checkbox" name="httpConf"   value="{{ hc.httpConfKey }}" >
+                    {{ hc.alias }}
+                 </label>
+        {% endfor %}
+            </td>
+        </tr>
+        <tr id="emailTr" style="display: none;">
+            <td>是否记录到历史信息</td>
+            <td>
+                <label style="margin-left: 30px">
+                    <input type="radio" name="isSaveHistory"  value="1">
+                    是
+                </label>
+
+                <label style="margin-left: 50px">
+
+                    <input type="radio" name="isSaveHistory"  value="0" checked>
+                    否
+                </label>
+            </td>
+        </tr>
+          <tr>
+            <td>是否发送邮件</td>
+            <td>
+                <label style="margin-left: 30px">
+                    <input type="radio" name="taskEmail" onclick="$('#emailList').show();$('.sendEmailOptions').show()" value="1">
+                    是
+                </label>
+                <label style="margin-left: 50px">
+                    <input type="radio" name="taskEmail" onclick="$('#emailList').hide();$('.sendEmailOptions').hide()"  value="0" checked>
+                    否
+                </label>
+                <input class="form-control" style="width:80%;float: right;display: none" id="emailList" value="{{ taskSuiteData.emailList }}" onblur=" if ($(this).val().indexOf('，')>=0){alert('间隔符为半角逗号'); }"/>
+            </td>
+        </tr>
+        <tr class="sendEmailOptions" style="display:none;">
+            <td>是否发送附件</td>
+            <td>
+                <label style="margin-left: 30px">
+                    <input type="radio" name="emailFile"  value="1" checked>
+                    是
+                </label>
+                <label style="margin-left: 50px">
+                    <input type="radio" name="emailFile"   value="0">
+                    否
+                </label>
+            </td>
+        </tr>
+        <tr class="sendEmailOptions" style="display:none;">
+            <td>PASS是否发送邮件</td>
+            <td>
+                <label style="margin-left: 30px">
+                    <input type="radio" name="passSendEmail"  value="1" checked>
+                    是
+                </label>
+                <label style="margin-left: 50px">
+                    <input type="radio" name="passSendEmail"   value="0">
+                    否
+                </label>
+            </td>
+        </tr>
+       <tr class="sendEmailOptions" style="display:none;">
+            <td>FAIL是否发送邮件</td>
+            <td>
+                <label style="margin-left: 30px">
+                    <input type="radio" name="failSendEmail"  value="1" checked>
+                    是
+                </label>
+                <label style="margin-left: 50px">
+                    <input type="radio" name="failSendEmail"   value="0">
+                    否
+                </label>
+            </td>
+        </tr>
+       <tr class="sendEmailOptions" style="display:none;">
+            <td>ERROR是否发送邮件</td>
+            <td>
+                <label style="margin-left: 30px">
+                    <input type="radio" name="errorSendEmail"  value="1" checked>
+                    是
+                </label>
+                <label style="margin-left: 50px">
+                    <input type="radio" name="errorSendEmail"   value="0">
+                    否
+                </label>
+            </td>
+        </tr>
+       <tr class="sendEmailOptions" style="display:none;">
+            <td>EXCEPTION是否发送邮件</td>
+            <td>
+                <label style="margin-left: 30px">
+                    <input type="radio" name="exceptionSendEmail"  value="1" checked>
+                    是
+                </label>
+                <label style="margin-left: 50px">
+                    <input type="radio" name="exceptionSendEmail"   value="0">
+                    否
+                </label>
+            </td>
+        </tr>
+        <tr id="codeTr" style="display: none">
+            <td>是否生成代码覆盖率</td>
+            <td>
+                <label style="width:97px;"><input type="radio" name="taskCodeRate" value="1">
+                是
+                </label>
+                <label><input type="radio" name="taskCodeRate" value="0" checked>
+                    否
+                </label>
+            </td>
+        </tr>
+  {%  endif %}
+    </tbody>
+
+</table>
+
+    {% if option == 'run' %}
+        <div  class="div-height" style="margin-left:70%; padding-top: 8px;" >
+         <button style="float: right" type="button"  onclick="toggleShow()" class="btn btn-primary btn-lg">&nbsp;&nbsp;&nbsp;&nbsp;返回&nbsp;&nbsp;&nbsp;&nbsp;</button>
+        <button style="float: right" id="runTaskSuiteBtn" type="button"  onclick="addTaskSuiteRunForDB()" class="btn btn-primary btn-lg">&nbsp;&nbsp;&nbsp;&nbsp;立即执行&nbsp;&nbsp;&nbsp;&nbsp;</button>
+        </div>
+        {% else %}
+        <div  class="div-height" style="margin-left:70%; padding-top: 8px;" >
+         <button style="float: right" type="button"  onclick="toggleShow()" class="btn btn-primary btn-lg">&nbsp;&nbsp;&nbsp;&nbsp;返回&nbsp;&nbsp;&nbsp;&nbsp;</button>
+        <button style="float: right" type="button"  onclick="runTask('{{ taskData.taskId }}')" class="btn btn-primary btn-lg">&nbsp;&nbsp;&nbsp;&nbsp;执行&nbsp;&nbsp;&nbsp;&nbsp;</button>
+        </div>
+    {% endif %}
+

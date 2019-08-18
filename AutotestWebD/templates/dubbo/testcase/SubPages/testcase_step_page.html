@@ -1,0 +1,41 @@
+<tr name="testCaseStep" style="margin-top: -2px;" class="ui-sortable-handle" name1="newStep">
+    <td>
+    <div name="border" style="border: 1px solid #b7babd ;border-radius:3px;" >
+
+    <div name="headBG" style="border: 1px solid rgb(183, 186, 189);border-radius:3px;cursor: move;">
+        <div class="form-group" style="margin-bottom: 5px;margin-top: 5px;">
+            <label class="col-md-min-1 control-label" style="color: #0088cc;font-size: 15px" name="stepLabel">步骤描述</label>
+            <div class="toggle-button-wrapper " name="stepSwitchDiv" style="float:left;margin-top: 40px;margin-left: -50px;display: none;" title="执行时是否执行该步骤">
+                <input type="checkbox" class="stepSwitch" id="toggle-button" name="stepSwitch" checked style="display:none;">
+                <label for="toggle-button" class="button-label" name="stepSwitchFor">
+                    <span class="circle"></span>
+                    <span class="text on">ON</span>
+                    <span class="text off">OFF</span>
+                </label>
+
+            </div>
+            <div class="col-lg-7" style="padding-right: 0px">
+                <textarea type="text" name="stepDesc"
+                          style="max-width: 100%;height: 75px" class="form-control" placeholder="请输入步骤描述"></textarea>
+            </div>
+            <div class="col-lg-2" style="margin-top: 10px;width: 18%">
+                <div>
+                    <label style="color: #696969">来源:</label>
+                    <a href="javascript:void(0)" target="_blank" style="color: #696969;text-decoration: underline" name="fromInterfaceId">无</a>
+                </div>
+                <div>
+                    <input type="checkbox" style="visibility: visible;zoom: 1.5;margin-top: 2px;float: left;"  onclick="syncText($(this))" name="isSync" disabled>
+                    <label style="color: #0088cc;visibility: visible;line-height: 24px;margin: 0;">&nbsp;&nbsp;不同步</label>
+                </div>
+            </div>
+            <div>
+                <button type="button" name="stepCopy"  title="拷贝" onclick="copyStep($(this))" style="margin-top: 20px;display: none" class="btn btn-info btn-sm">&nbsp;<i class="fa fa-copy"></i></button>
+                <button type="button" name="stepDetailsEditBtn"  title="编辑" style="margin-top: 20px;display: none" class="btn btn-success btn-sm">&nbsp;<i class="fa fa-edit"></i></button>
+                <button type="button" name="stepDetailsDeleteBtn" onclick="deleteStep($(this))"  title="删除" style="margin-top: 20px;display: none" class="btn btn-danger btn-sm">&nbsp;<i class="fa fa-trash">&nbsp;</i></button>
+            </div>
+        </div>
+    </div>
+        <div name="stepDetail" onmousedown="textareaNotSort()" onmouseup="textareaSort()"></div>
+    </div>
+    </td>
+</tr>

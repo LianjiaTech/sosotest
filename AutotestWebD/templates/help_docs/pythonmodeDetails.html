@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>PYTHON MODE以及context的使用帮助</title>
+    <style>
+        .kwFont {
+            font-weight: bold;
+            color: #5B00AE;
+        }
+
+        .typeFont {
+            font-weight: bold;
+            color: #1aaef3;
+        }
+
+        .paramTable table{border-left:1px solid #6f6f6f;border-bottom:1px solid #6f6f6f;}
+        .paramTable table th{border-right:1px solid #6f6f6f;border-top:1px solid #6f6f6f;}
+        .paramTable table td{border-right:1px solid #6f6f6f;border-top:1px solid #6f6f6f;}
+
+        .title1{
+            color: #3b9e3b;
+        }
+        .title2{
+            color: #1aaef3;
+        }
+    </style>
+</head>
+<body>
+<div>快速索引：
+<h2 class="title1">系统类函数</h2>
+     <a href="#imports">imports 引入python代码</a>&nbsp;&nbsp;<a href="#log">log 输出日志</a>&nbsp;&nbsp;<a href="#call">call 调用数据关键字</a>&nbsp;&nbsp;
+
+<h2 class="title1">引用类函数</h2>
+    <a href="#var">var 变量声明引用</a>&nbsp;&nbsp;<a href="#gvar">gvar 全局变量引用</a>&nbsp;&nbsp;<a href="#const">const 获取常量</a>&nbsp;&nbsp;<a href="#text">text 引入组合文本</a>&nbsp;&nbsp;
+<br>
+
+<h2 class="title1">执行类函数</h2>
+<a href="#execute_current">execute_current 执行当前接口</a>
+    {% if menu.HttpInterface == 1 %}
+        <br><a href="#execute_interface">execute_interface 执行HTTP接口用例</a>&nbsp;&nbsp;
+        <a href="#execute_testcase">execute_testcase 执行HTTP业务流用例</a>&nbsp;&nbsp;
+    {% endif %}
+    {% if menu.DubboInterface == 1 %}
+        <br><a href="#execute_dubbo_interface">execute_dubbo_interface 执行DUBBO接口用例</a>&nbsp;&nbsp;
+    {% endif %}
+
+<h2 class="title1">断言类函数</h2>
+<a href="#asserts">asserts 断言</a>&nbsp;&nbsp;
+<a href="#assert_struct">assert_struct 断言结构</a>&nbsp;&nbsp;
+    &nbsp;<br><a href="#set_result">set_result 设置测试结果</a>&nbsp;&nbsp;
+
+<h2 class="title1">数据库函数</h2>
+<a href="#db_select">db_select 查询数据库</a>&nbsp;&nbsp;
+    &nbsp;<a href="#db_update">db_update 更新数据库</a>&nbsp;&nbsp;
+    &nbsp;<a href="#db_delete">db_delete 删除数据库</a>&nbsp;&nbsp;
+    &nbsp;<a href="#db_insert">db_insert 插入数据库</a>&nbsp;&nbsp;
+
+<br><a href="#redis_set">redis_set 设置缓存</a>&nbsp;&nbsp;
+    &nbsp;<a href="#redis_get">redis_get 获取缓存</a>&nbsp;&nbsp;
+    &nbsp;<a href="#redis_del">redis_del 删除缓存</a>&nbsp;&nbsp;
+
+<h2 class="title1">context属性函数</h2>
+<h3>公共</h3>
+<a href="#confHttpLayer">属性 confHttpLayer</a>&nbsp;&nbsp;
+<br><a href="#getRequestAddr">函数 getRequestAddr</a>&nbsp;&nbsp;
+<a href="#setResult">函数 setResult</a>&nbsp;&nbsp;
+<a href="#setVar">函数 setVar</a>&nbsp;&nbsp;
+
+<h3>HTTP</h3>
+<a href="#current_session">属性 current_session</a>&nbsp;&nbsp;
+<a href="#kw_LOGIN_ParamList">属性 kw_LOGIN_ParamList</a>&nbsp;&nbsp;
+<a href="#uri">属性 uri</a>&nbsp;&nbsp;
+<a href="#host">属性 host</a>&nbsp;&nbsp;
+<br><a href="#processedHeader">属性 processedHeader</a>&nbsp;&nbsp;
+<a href="#processedMethod">属性 processedMethod</a>&nbsp;&nbsp;
+<a href="#processedUrl">属性 processedUrl</a>&nbsp;&nbsp;
+<a href="#processedParams">属性 processedParams</a>&nbsp;&nbsp;
+<a href="#processedBodyContent">属性 processedBodyContent</a>&nbsp;&nbsp;
+
+    {% if menu.DubboInterface == 1 %}
+<h3>DUBBO</h3>
+<a href="#dubboSystem">属性 dubboSystem</a>&nbsp;&nbsp;
+<a href="#dubboTelnetHost">属性 dubboTelnetHost</a>&nbsp;&nbsp;
+<a href="#dubboTelnetPort">属性 dubboTelnetPort</a>&nbsp;&nbsp;
+<br>
+<a href="#processedDubboService">属性 processedDubboService</a>&nbsp;&nbsp;
+<a href="#processedDubboMethod">属性 processedDubboMethod</a>&nbsp;&nbsp;
+<a href="#processedDubboParam">属性 processedDubboParam</a>&nbsp;&nbsp;
+{% endif %}
+
+</div>
+<br>
+<br>
+
+<hr>
+<hr>
+
+
+<h1 class="title1">系统类函数</h1>
+<!--========================================================================================================================================-->
+<hr>
+<a name="imports"><h2 class="title2">引入python代码</h2></a>
+<h3>函数</h3>
+<span class="kwFont">imports</span>(codeKey)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>codeKey</td>
+        <td><a href="http://{{ host }}/datakeyword/listPage" target="_blank">KEYWORD/PYTHON模式</a>下的类型为PYTHON_CODE的KEY</td>
+        <td>imports("demo_python_code")</td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法：<br>
+imports("demo_python_code")<br>
+执行imports后，后续就可以使用对应的python code中声明的类和函数等<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="log"><h2 class="title2">输出日志</h2></a>
+<h3>函数</h3>
+<span class="kwFont">log</span>(logstr)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>logstr</td><td>要输出的日志内容</td>        <td>log("这是我的第一行日志")</td>
+
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法：<br>
+log("这是我的第一行日志")<br>
+执行结束后，在调试信息中可以看到对应的log日志。<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="call"><h2 class="title2">调用数据关键字</h2></a>
+<h3>函数</h3>
+<span class="kwFont">call</span>(dataKeywordStr)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>dataKeywordStr</td><td>要执行的关键字的字符串</td><td>"RANDOM_INT(1,10)"</td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法：<br>
+rInt = call("RANDOM_INT(1,10)")<br>
+执行后，可以得到一个1到10的随机数，返回的类型是str，如果使用int要转换。示例如下：<br>
+rInt = int(call("RANDOM_INT(1,10)"))<br>
+<br>
+
+<h1 class="title1">引用类函数</h1>
+<!--========================================================================================================================================-->
+<hr>
+<a name="var"><h2 class="title2">变量声明引用</h2></a>
+<h3>函数</h3>
+<span class="kwFont">var</span>(varkey, value = None)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>varkey</td><td>变量池中的变量key</td><td>varName</td>
+    </tr>
+    <tr>
+        <td>value</td><td>不传值是默认None，函数功能是取值，传值时功能是给变量赋值</td><td>Criss Wang</td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法：<br>
+name = var("name")<br>
+取变量池中的name的值，并赋值给python模式的变量name。<br><br>
+myName = "wang"<br>
+var("name",myName)<br>
+给变量池中增加一个name变量，值是wang。<br>
+<br>
+*注：建议python模式下，直接使用python的变量声明和引用即可，平台支持python模式和关键字模式的变量池互通。<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="gvar"><h2 class="title2">全局变量引用</h2></a>
+<h3>函数</h3>
+<span class="kwFont">gvar</span>(gvarkey)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>gvarkey</td><td>全局变量的key</td><td>globalVar1</td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法：<br>
+g1 = gvar("global1")<br>
+取全局变量global1的值，并赋值给python模式的变量g1。<br><br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="const"><h2 class="title2">获取常量</h2></a>
+<h3>函数</h3>
+<span class="kwFont">const</span>(constType)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>constType</td><td>常量类型</td><td>DUBBO_TEXT/RESP_TEXT/RESP_HEADER/RESP_STATUS</td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法：<br>
+dubboRes = const("DUBBO_TEXT")<br>
+获取DUBBO接口执行后的返回内容，并赋值给python模式的变量dubboRes。<br><br>
+
+httpRes = const("RESP_TEXT")<br>
+获取HTTP接口执行后的返回内容，并赋值给python模式的变量httpRes。<br><br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="text"><h2 class="title2">引入组合文本</h2></a>
+<h3>函数</h3>
+<span class="kwFont">text</span>(textKey)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>textKey</td><td>组合文本key</td><td>textKey1</td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法：<br>
+假设有组合文本text1,内容如下：<br>
+a = 1;<br>
+b = 2;<br>
+执行<br>
+text("text1")<br>
+执行后，python模式和变量池都都会有变量a=1,b=2。
+<br>适合数据业务分离时，批量引入变量。<br><br>
+<br>
+
+<h1 class="title1">执行类函数</h1>
+<!--========================================================================================================================================-->
+<hr>
+<a name="execute_current"><h2 class="title2">执行当前接口</h2></a>
+<h3>函数</h3>
+<span class="kwFont">execute_current</span>()<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+</div>
+<h3>使用示例</h3>
+在<span class="typeFont">准备</span>中使用，用于数据驱动。<br>
+<br>
+使用方法：<br>
+<pre>#python
+DEBUG_MODE = True
+IS_CONTINUE = False
+idlist = [1,2,3]
+passCount = 0
+failCount = 0
+for id in idlist:
+    execute_current() # 执行当前的接口
+    log("param: %s" % context.processedParams)
+    retContent = const("RESP_TEXT")
+    if "sosotest" in retContent:
+        passCount += 1
+        log("PASS")
+    else:
+        failCount += 1
+        log("FAIL")
+if failCount > 0:
+    set_result("FAIL","测试未通过，失败%d次。" % failCount)
+else:
+    set_result("PASS","测试通过.")</pre>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="execute_interface"><h2 class="title2">执行HTTP接口用例</h2></a>
+<h3>函数</h3>
+<span class="kwFont">execute_interface</span>(*args)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>*args</td><td>多个HTTP interfaceID,最后一个可以是IGNORE_开关</td>
+        <td>HTTP_INTERFACE_1,HTTP_INTERFACE_2 执行1和2<br>
+            HTTP_INTERFACE_1,IGNORE_FAIL 表示FAIL的时候忽略继续执行<br>
+            HTTP_INTERFACE_1,IGNORE_ERROR 表示ERROR的时候忽略继续执行<br>
+            HTTP_INTERFACE_1,IGNORE_FAIL_ERROR 表示FAIL/ERROR的时候忽略继续执行<br>
+            HTTP_INTERFACE_1,IGNORE_ALL 表示无论什么结构都忽略继续执行<br>
+        </td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法：<br>
+execute_interface("HTTP_INTERFACE_1") #执行HTTP_INTERFACE_1接口<br>
+execute_interface("HTTP_INTERFACE_1","HTTP_INTERFACE_2") #执行HTTP_INTERFACE_1和HTTP_INTERFACE_2接口<br>
+execute_interface("HTTP_INTERFACE_1","IGNORE_FAIL") #执行HTTP_INTERFACE_1接口,FAIL后继续执行后续步骤<br>
+execute_interface("HTTP_INTERFACE_1","HTTP_INTERFACE_2","IGNORE_FAIL") #执行HTTP_INTERFACE_1和HTTP_INTERFACE_2接口，FAIL后继续执行后续步骤<br>
+
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="execute_testcase"><h2 class="title2">执行HTTP业务流用例</h2></a>
+<h3>函数</h3>
+<span class="kwFont">execute_testcase</span>(*args)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>*args</td><td>多个HTTP TESTCASE ID,最后一个可以是IGNORE_开关</td>
+        <td>使用方法同execute_interface
+        </td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法同execute_interface<br>
+<br>
+
+{% if menu.DubboInterface == 1 %}
+<!--========================================================================================================================================-->
+<hr>
+<a name="execute_dubbo_interface"><h2 class="title2">执行DUBBO接口用例</h2></a>
+<h3>函数</h3>
+<span class="kwFont">execute_dubbo_interface</span>(*args)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>*args</td><td>多个DUBBO INTERFACE ID,最后一个可以是IGNORE_开关</td>
+        <td>使用方法同execute_interface
+        </td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法同execute_interface<br>
+<br>
+{% endif %}
+
+<h1 class="title1">断言类函数</h1>
+<!--========================================================================================================================================-->
+<hr>
+<a name="asserts"><h2 class="title2">断言</h2></a>
+<h3>函数</h3>
+<span class="kwFont">asserts</span>(assertStr)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>assertStr</td><td>要断言的字符串或者是一个python表达式</td><td>
+        1 == 1<br>
+        {"id":1}<br>
+        id
+        </td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法：<br>
+asserts( 1 == 1) #断言通过<br>
+asserts("id") #断言返回结果中包含id这个字符串<br>
+asserts('{"id":1}') #断言返回结果中包含id这个key，并且值等于1<br>
+asserts(""" $VAR[a] [==] 1""") #断言变量a等于1<br>
+<br>
+*注：建议python模式下，直接使用asserts进行断言，断言失败后，将退出剩余代码执行，如果不想退出，不要使用asserts。<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="assert_struct"><h2 class="title2">断言结构</h2></a>
+<h3>函数</h3>
+<span class="kwFont">assert_struct</span>(expectJson,actualJson = None)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>expectJson</td><td>要断言的jsonStr，必须是合法json</td><td>
+        {"code":1,"msg":"success"}
+        </td>
+    </tr>
+    <tr>
+        <td>actualJson</td><td>实际的jsonStr，可以不传值，不传值时为None，为None时使用接口执行的返回常量值。<br>必须是合法json或者None</td><td>
+        {"code":1,"msg":"success"}
+        </td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法：<br>
+assert_struct('{"id":1}','{"id":2}') #断言结构一致<br>
+assert_struct('{"id":1}') #断言结构与接口执行的返回结果一致<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="set_result"><h2 class="title2">设置测试结果</h2></a>
+<h3>函数</h3>
+<span class="kwFont">set_result</span>(testResult,assertMsg)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>testResult</td><td>测试结果，PASS/FAIL/ERROR</td><td>
+        PASS/FAIL/ERROR
+        </td>
+    </tr>
+    <tr>
+        <td>assertMsg</td><td>断言结果说明</td><td>
+        断言失败，用户名不正确！
+        </td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法：<br>
+set_result("PASS","测试通过") #设置结果测试通过<br>
+set_result("FAIL","测试不通过，用户名错误！") #设置结果测试不通过<br>
+<br>
+<h1 class="title1">数据库函数</h1>
+<!--========================================================================================================================================-->
+<hr>
+<a name="db_select"><h2 class="title2">查询数据库</h2></a>
+<h3>函数</h3>
+<span class="kwFont">db_select</span>(*args)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>*args</td><td>当args只有一个时，使用默认数据库。当args长度是2时，第一个参数是<a href="/interfaceTest/HTTP_UserServiceConf" target="_blank">数据配置</a>的key，第二个参数是sql。</td><td>
+        </td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法：<br>
+selectList = db_select("select username from dbname.tableName where id > 10") # 在默认库执行查询并把结果赋值给变量selectList<br>
+selectList = db_select("business","select username from dbname.tableName where id > 10") # 在key为business的库中执行查询并把结果赋值给变量selectList<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="db_update"><h2 class="title2">更新数据库</h2></a>
+<h3>函数</h3>
+<span class="kwFont">db_update</span>(*args)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>*args</td><td>当args只有一个时，使用默认数据库。当args长度是2时，第一个参数是<a href="/interfaceTest/HTTP_UserServiceConf" target="_blank">数据配置</a>的key，第二个参数是sql。</td><td>
+        </td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法同db_select，返回影响行数。<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="db_delete"><h2 class="title2">删除数据库</h2></a>
+<h3>函数</h3>
+<span class="kwFont">db_delete</span>(*args)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>*args</td><td>当args只有一个时，使用默认数据库。当args长度是2时，第一个参数是<a href="/interfaceTest/HTTP_UserServiceConf" target="_blank">数据配置</a>的key，第二个参数是sql。</td><td>
+        </td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法同db_update，返回影响行数。<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="db_insert"><h2 class="title2">插入数据库</h2></a>
+<h3>函数</h3>
+<span class="kwFont">db_insert</span>(*args)<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>*args</td><td>当args只有一个时，使用默认数据库。当args长度是2时，第一个参数是<a href="/interfaceTest/HTTP_UserServiceConf" target="_blank">数据配置</a>的key，第二个参数是sql。</td><td>
+        </td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法同db_update，返回影响行数。<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="redis_set"><h2 class="title2">设置缓存</h2></a>
+<h3>函数</h3>
+<span class="kwFont">redis_set</span>(rediskey,value, timeout = None,db = 0, service="default")<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>rediskey</td><td>要设置的缓存key</td><td></td>
+    </tr>
+        <tr>
+        <td>value</td><td>要设置的缓存value</td><td></td>
+    </tr>
+        <tr>
+        <td>timeout</td><td>超时时间，单位秒，默认None</td><td></td>
+    </tr>
+        <tr>
+        <td>db</td><td>db选择，默认0</td><td></td>
+    </tr>
+        <tr>
+            <td>service</td><td>配置好的要使用的缓存服务的key，详细见配置管理的<a href="/interfaceTest/HTTP_UserServiceConf" target="_blank">数据配置</a>，默认使用default</td><td></td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法：<br>
+redis_set("name","wang") # 向默认缓存默认db中设置name，值是wang。<br>
+redis_set("name","wang",service="business") # 向key为business的缓存默认db中设置name，值是wang。<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="redis_get"><h2 class="title2">获取缓存</h2></a>
+<h3>函数</h3>
+<span class="kwFont">redis_get</span>(rediskey, db = 0, service="default")<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>rediskey</td><td>要设置的缓存key</td><td></td>
+    </tr>
+        <tr>
+        <td>db</td><td>db选择，默认0</td><td></td>
+    </tr>
+        <tr>
+            <td>service</td><td>配置好的要使用的缓存服务的key，详细见配置管理的<a href="/interfaceTest/HTTP_UserServiceConf" target="_blank">数据配置</a>，默认使用default</td><td></td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法：<br>
+name = redis_get("name") # 向默认缓存默认db中获取key为name的缓存值，并赋值给变量name。<br>
+name = redis_get("name",service="business") # 向key为business的缓存默认db中获取key为name的缓存值，并赋值给变量name。<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="redis_del"><h2 class="title2">删除缓存</h2></a>
+<h3>函数</h3>
+<span class="kwFont">redis_del</span>(rediskey, db = 0, service="default")<br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>rediskey</td><td>要设置的缓存key</td><td></td>
+    </tr>
+        <tr>
+        <td>db</td><td>db选择，默认0</td><td></td>
+    </tr>
+        <tr>
+            <td>service</td><td>配置好的要使用的缓存服务的key，详细见配置管理的<a href="/interfaceTest/HTTP_UserServiceConf" target="_blank">数据配置</a>，默认使用default</td><td></td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法：<br>
+redis_del("name") # 向默认缓存默认db中删除key为name的缓存值。<br>
+redis_del("name",service="business") # 向key为business的缓存默认db中删除key为name的缓存值。<br>
+<br>
+
+<h1 class="title1">context属性函数</h1>
+<!--========================================================================================================================================-->
+<hr>
+<a name="confHttpLayer"><h2 class="title2">环境配置</h2></a>
+<h3>属性</h3>
+context.<span class="kwFont">confHttpLayer</span><br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>属性</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>confHttpLayer</td><td>当前执行环境相关的数据</td><td>
+        context.confHttpLayer.key  #是<a href="/interfaceTest/HTTP_UserHttpConf" target="_blank">环境配置</a>的key<br>
+        context.confHttpLayer.confServiceLayer.key  #是<a href="/interfaceTest/HTTP_UserServiceConf" target="_blank">数据配置</a>的key
+        </td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法：<br>
+context.confHttpLayer.key  #是<a href="/interfaceTest/HTTP_UserHttpConf" target="_blank">环境配置</a>的key<br>
+context.confHttpLayer.confServiceLayer.key  #是<a href="/interfaceTest/HTTP_UserServiceConf" target="_blank">数据配置</a>的key
+<br><br>
+*注：一般不应该人工去修改这个属性，只需读取使用，比如根据环境判断使用什么参数等。<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="getRequestAddr"><h2 class="title2">获取请求地址</h2></a>
+<h3>函数</h3>
+context.<span class="kwFont">getRequestAddr(uriKey)</span><br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>uriKey</td><td>服务key，HTTP协议就是context.uri,dubbo协议就是context.dubboSystem</td><td>
+        context.getRequestAddr(context.uri) # HTTP <br>
+        context.getRequestAddr(context.dubboSystem) # DUBBO <br>
+        </td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法：<br>
+context.getRequestAddr(context.uri) # HTTP <br>
+context.getRequestAddr(context.dubboSystem) # DUBBO <br>
+<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="setResult"><h2 class="title2">设置测试结果</h2></a>
+<h3>函数</h3>
+context.<span class="kwFont">setResult(result = "ERROR",errorMsg = "")</span><br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>result</td><td>测试结果 FAIL/ERROR/PASS/EXCEPTION</td><td>
+        context.setResult("PASS","测试通过") # 设置结果是PASS <br>
+        context.setResult("FAIL","测试失败，不符合预期。") # 设置结果是FAIL <br>
+        </td>
+    </tr>
+    <tr>
+        <td>errorMsg</td><td>结果提示信息</td><td>
+        context.setResult("PASS","测试通过") # 设置结果是PASS <br>
+        context.setResult("FAIL","测试失败，不符合预期。") # 设置结果是FAIL <br>
+        </td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法：<br>
+context.setResult("PASS","测试通过") # 设置结果是PASS <br>
+context.setResult("FAIL","测试失败，不符合预期。") # 设置结果是FAIL <br>
+<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="setVar"><h2 class="title2">设置变量</h2></a>
+<h3>函数</h3>
+context.<span class="kwFont">setVar(key,value)</span><br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>参数</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>key</td><td>变量key，必须是字母数字-_组合，且必须字母开头</td><td>
+        username password user1 user-1 user_1
+        </td>
+    </tr>
+    <tr>
+        <td>value</td><td>变量值</td><td>
+        任意字符串
+        </td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法：<br>
+context.setVar("a","1") # 设置变量a的值为1进入变量池 <br>
+<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="current_session"><h2 class="title2">上下文http请求的session</h2></a>
+<h3>属性</h3>
+context.<span class="kwFont">current_session</span><br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>属性</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>current_session</td><td>在http请求需要上下文的时候时候，例如登录等，任务执行时会进行上下文传递。</td><td>
+        context.current_session.get("/user/login?username=wang&password=123456")
+        </td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法：<br>
+ context.current_session.get("/user/login?username=wang&password=123456")<br>
+<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="kw_LOGIN_ParamList"><h2 class="title2">存放过程数据的空list</h2></a>
+<h3>属性</h3>
+context.<span class="kwFont">kw_LOGIN_ParamList</span><br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>属性</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>kw_LOGIN_ParamList</td><td>一个空list，存储登录等数据，防止重复操作的，任务执行时会进行上下文传递。</td><td>
+        context.kw_LOGIN_ParamList.append(username) <br>
+        context.kw_LOGIN_ParamList.append(password)
+        </td>
+    </tr>
+</table>
+</div>
+<h3>使用示例</h3>
+一般在<span class="typeFont">准备/断言恢复</span>中使用<br>
+<br>
+使用方法：<br>
+例如写一个登录关键字LOGIN，但是在一个任务中，我只想登录一次，下次就不用再登录了，就需要把登录成功的信息记录到kw_LOGIN_ParamList属性中，<br>
+下次再次执行LOGIN时，直接对比，如果一致，就不继续登录，实现登录一次后免登陆功能。<br>
+context.kw_LOGIN_ParamList.append(username) <br>
+context.kw_LOGIN_ParamList.append(password)<br>
+<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="uri"><h2 class="title2">http请求的<a href="/interfaceTest/HTTP_UriConf" target="_blank">服务配置</a>key</h2></a>
+<h3>属性</h3>
+context.<span class="kwFont">uri</span><br>
+<h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>属性</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>uri</td><td>http请求的<a href="/interfaceTest/HTTP_UriConf" target="_blank">服务配置</a>key</td><td>
+        http-test-domain
+        </td>
+    </tr>
+</table>
+</div>
+<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="host"><h2 class="title2">http请求的真实请求地址</h2></a>
+<h3>属性</h3>
+context.<span class="kwFont">host</span><br>
+    <h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>属性</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>host</td><td>http请求的真实请求地址</td><td>
+            http://test.domain.com
+        </td>
+    </tr>
+</table>
+    </div>
+<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="processedHeader"><h2 class="title2">http请求数据驱动时当次执行处理后的头信息JSON</h2></a>
+<h3>属性</h3>
+context.<span class="kwFont">processedHeader</span><br>
+    <h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>属性</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>processedHeader</td><td>http请求数据驱动时当次执行处理后的头信息JSON</td><td>
+            {"Content-Type":"application/json"}
+        </td>
+    </tr>
+</table>
+    </div>
+<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="processedMethod"><h2 class="title2">http请求数据驱动时当次执行处理后的请求方法</h2></a>
+<h3>属性</h3>
+context.<span class="kwFont">processedMethod</span><br>
+    <h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>属性</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>processedMethod</td><td>http请求数据驱动时当次执行处理后的请求方法</td><td>
+            GET/POST/DELETE
+        </td>
+    </tr>
+</table>
+    </div>
+<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="processedUrl"><h2 class="title2">http请求数据驱动时当次执行处理后的请求url</h2></a>
+<h3>属性</h3>
+context.<span class="kwFont">processedUrl</span><br>
+    <h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>属性</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>processedUrl</td><td>http请求数据驱动时当次执行处理后的请求url</td><td>
+           /user/login
+        </td>
+    </tr>
+</table>
+    </div>
+<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="processedParams"><h2 class="title2">http请求数据驱动时当次执行处理后的请求params字符串</h2></a>
+<h3>属性</h3>
+context.<span class="kwFont">processedParams</span><br>
+    <h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>属性</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>processedParams</td><td>http请求数据驱动时当次执行处理后的请求params字符串</td><td>
+          username=wang&password=123456
+        </td>
+    </tr>
+</table>
+    </div>
+<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="processedBodyContent"><h2 class="title2">http请求数据驱动时当次执行处理后的请求body</h2></a>
+<h3>属性</h3>
+context.<span class="kwFont">processedBodyContent</span><br>
+    <h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>属性</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>processedBodyContent</td><td>http请求数据驱动时当次执行处理后的请求body</td><td>
+          username=wang&password=123456 <br>
+        {"id":1,"name":"wang"}
+        </td>
+    </tr>
+</table>
+</div>
+<br>
+<br>
+
+{% if menu.DubboInterface == 1 %}
+<!--========================================================================================================================================-->
+<hr>
+<a name="dubboSystem"><h2 class="title2">dubbo请求的系统<a href="/interfaceTest/HTTP_UriConf" target="_blank">服务配置</a>key</h2></a>
+<h3>属性</h3>
+context.<span class="kwFont">dubboSystem</span><br>
+    <h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>属性</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>dubboSystem</td><td>dubbo请求的系统<a href="/interfaceTest/HTTP_UriConf" target="_blank">服务配置</a>key</td><td>
+          dubbo-testsystem
+        </td>
+    </tr>
+</table>
+</div>
+<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="dubboTelnetHost"><h2 class="title2">dubbo请求的地址</h2></a>
+<h3>属性</h3>
+context.<span class="kwFont">dubboTelnetHost</span><br>
+    <h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>属性</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>dubboTelnetHost</td><td>dubbo请求的地址</td><td>
+          10.10.10.88
+        </td>
+    </tr>
+</table>
+</div>
+<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="dubboTelnetPort"><h2 class="title2">dubbo请求的端口</h2></a>
+<h3>属性</h3>
+context.<span class="kwFont">dubboTelnetPort</span><br>
+    <h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>属性</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>dubboTelnetPort</td><td>dubbo请求的端口</td><td>
+          20880
+        </td>
+    </tr>
+</table>
+</div>
+<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="processedDubboService"><h2 class="title2">dubbo请求时数据驱动模式下的服务类service</h2></a>
+<h3>属性</h3>
+context.<span class="kwFont">processedDubboService</span><br>
+    <h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>属性</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>processedDubboService</td><td>dubbo请求时数据驱动模式下的服务类service</td><td>
+         com.test.domain.XxxFacade
+        </td>
+    </tr>
+</table>
+</div>
+<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="processedDubboMethod"><h2 class="title2">dubbo请求时数据驱动模式下的方法Method</h2></a>
+<h3>属性</h3>
+context.<span class="kwFont">processedDubboMethod</span><br>
+    <h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>属性</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>processedDubboMethod</td><td>dubbo请求时数据驱动模式下的方法Method</td><td>
+         getUser
+        </td>
+    </tr>
+</table>
+</div>
+<br>
+<br>
+<!--========================================================================================================================================-->
+<hr>
+<a name="processedDubboParam"><h2 class="title2">dubbo请求时数据驱动模式下的方法的参数列表</h2></a>
+<h3>属性</h3>
+context.<span class="kwFont">processedDubboParam</span><br>
+    <h3>参数说明</h3>
+<div class="paramTable">
+<table cellpadding="10">
+    <tr><th>属性</th><th>说明</th><th>举例</th></tr>
+    <tr>
+        <td>processedDubboParam</td><td>dubbo请求时数据驱动模式下的方法的参数列表</td><td>
+         "A00001",123456789
+        </td>
+    </tr>
+</table>
+</div>
+<br>
+<br>
+
+{% endif %}
+
+
+
+
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+<br>
+
+</body>
+</html>

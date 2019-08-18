@@ -1,0 +1,81 @@
+<div id="publicKeyPyDiv" class="" style="margin-left: 10px;margin-top: 10px;margin-bottom: 10px;overflow-y: auto;display: none;">
+<button style="float: right;width: 30px;height: 30px;" onclick="hideFuzhuBar()">
+    <i class="fa fa-angle-double-right"></i>
+</button>
+<button style="float: right;width: 30px;height: 30px;background-color: yellow;" onclick="ChangeFuzhuType('KW')">
+    <i class="fa fa-exchange"></i>
+</button>
+    <h2>python模式</h2>
+<a onclick="resetPublicKey('imports(\'pythonCodeKey\')\n')" name="publicKey-EXECUTE_INTERFACE" style="display:none;"
+       class="hover-blue orange-s" title="调用执行当前接口">imports导入</a>
+<a onclick="resetPublicKey('call(\'DataKeyword\')\n')" name="publicKey-EXECUTE_INTERFACE" style="display:none;"
+       class="hover-blue orange-s" title="调用执行当前接口">call调用数据关键字</a>
+<a onclick="resetPublicKey('log(\'logStr\')\n')" name="publicKey-EXECUTE_INTERFACE" style="display:none;"
+       class="hover-blue orange-s" title="调用执行当前接口">log打印日志</a>
+
+
+    <a onclick="resetPublicKey('gvar(\'global1\')\n')" name="publicKey-GVAR" style="display:none;"
+       class="hover-blue backgundred" title="全局变量的引用">全局变量引用</a>
+    <a onclick="resetPublicKey('text(\'text1\')\n')" name="publicKey-TEXT" style="display:none;"
+       class="hover-blue backgundred" title="组合文本的引用">组合文本导入</a>
+<a onclick="resetPublicKey('execute_current()\n')" name="publicKey-EXECUTE_INTERFACE" style="display:none;"
+       class="hover-blue orange-s" title="调用执行当前接口">执行当前接口</a>
+    <a onclick="resetPublicKey('execute_interface(\'HTTP_INTERFACE_1\')\n')" name="publicKey-EXECUTE_INTERFACE" style="display:none;"
+       class="hover-blue orange-s" title="调用执行其他接口">执行HTTP接口</a>
+    {% if menu.DubboInterface == 1 %}
+    <a onclick="resetPublicKey('execute_dubbo_interface(\'DUBBO_INTERFACE_1\')\n')" name="publicKey-EXECUTE_INTERFACE" style="display:none;"
+       class="hover-blue orange-s" title="调用执行其他DUBBO接口">执行DUBBO接口</a>
+    {% endif %}
+
+   <a onclick="resetPublicKey('const(\'RESP_TEXT\')\n')"  name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundgreen"
+       title="最近一个http请求返回的内容">RESP_TEXT</a>
+    {% if menu.DubboInterface == 1 %}
+    <a onclick="resetPublicKey('const(\'DUBBO_TEXT\')\n')"  name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundgreen" title="所测接口的DUBBO请求返回的内容">DUBBO_TEXT</a>
+    {% endif %}
+    <a onclick="resetPublicKey('db_select( \'servie\', \'select语句\' )\n')"  name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow"
+       title="查询数据，返回一个list josn">db_select</a>
+    <a onclick="resetPublicKey('db_delete( \'servie\', \'select语句\' )\n')"  name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow"
+       title="查询数据，返回一个list josn">db_delete</a>
+    <a onclick="resetPublicKey('db_update( \'servie\', \'select语句\' )\n')"  name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow"
+       title="查询数据，返回一个list josn">db_update</a>
+    <a onclick="resetPublicKey('db_insert( \'servie\', \'select语句\' )\n')"  name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow"
+       title="查询数据，返回一个list josn">db_insert</a>
+    <a onclick="resetPublicKey('redis_set( \'key\',\'value\',service=\'servicekey\')\n')"  name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow"
+       title="查询数据，返回一个list josn">redis_set</a>
+    <a onclick="resetPublicKey('redis_get( \'key\',service=\'servicekey\')\n')"  name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow"
+       title="查询数据，返回一个list josn">redis_get</a>
+    <a onclick="resetPublicKey('redis_del( \'key\',service=\'servicekey\')\n')"  name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow"
+       title="查询数据，返回一个list josn">redis_del</a>
+    <a onclick="resetPublicKey('asserts(\'assertString\')\n')" name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow" title="断言">断言</a>
+    <a onclick="resetPublicKey('assert_struct(\'assertJsonString\')\n')" name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow" title="断言结构">断言结构</a>
+<a onclick="resetPublicKey('set_result(\'FAIL/PASS\',\'原因\')\n')" name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow" title="设置测试结果">设置测试结果</a>
+<h2>context上下文</h2>
+<a onclick="resetPublicKey('context.setResult(\'FAIL/PASS\',\'原因\')\n')" name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow" title="设置测试结果">设置测试结果</a>
+<a onclick="resetPublicKey('context.setVar(\'a\',1)\n')" name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow" title="设置变量">设置变量</a>
+<a onclick="resetPublicKey('context.current_session')" name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow" title="上下文requests session">上下文requests session</a>
+<a onclick="resetPublicKey('context.processedUrl')" name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow" title="数据驱动processedUrl">数据驱动processedUrl</a>
+<a onclick="resetPublicKey('context.processedParams')" name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow" title="数据驱动processedParams">数据驱动processedParams</a>
+<a onclick="resetPublicKey('context.processedBodyContent')" name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow" title="数据驱动processedBodyContent">数据驱动processedBodyContent</a>
+{% if menu.DubboInterface == 1 %}
+<a onclick="resetPublicKey('context.processedDubboParam')" name="publicKey-CONST" style="display:none;"
+       class="hover-blue backgundyellow" title="数据驱动processedDubboParam">数据驱动processedDubboParam</a>
+{% endif %}
+</div>

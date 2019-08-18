@@ -1,0 +1,114 @@
+
+
+<div class="box-body no-padding" >
+
+
+
+    <div class="box-header with-border">
+          <h3 class="box-title">操作历史列表</h3>
+
+{#          <div class="box-tools pull-right">#}
+{#            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>#}
+{#            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-remove"></i></button>#}
+{#          </div>#}
+          </div>
+    <table width="100%" class="table table-striped table-bordered" style="table-layout: fixed;">
+        <tbody>
+        <tr>
+            <th style="width: 2%">#</th>
+            <th style="width: 3%">修改人</th>
+            <th style="width: 3%">被修改人</th>
+            <th style="width: 5%">修改前数据</th>
+            <th style="width: 5%">修改后数据</th>
+            <th style="width: 7%">修改数据</th>
+            <th style="width: 5%;">操作类型</th>
+            <th style="width: 5%;">数据版本</th>
+            <th style="width: 5%;">修改时间</th>
+            <th style="width: 7%;">影响数据</th>
+            <th style="width: 2%;">步骤ID</th>
+            <th style="width: 5%;">操作</th>
+        </tr>
+         {% if pageCount == 0 %}
+        <td colspan="8" align="center" >没有符合条件的搜索结果</td>
+    {% else %}
+        {% for pageData in pageDatas %}
+            <tr>
+                <td >{{ pageData.id }}</td>
+                <td id="loginName_{{ pageData.id }}">{{ pageData.loginName }}</td>
+                <td >{{ pageData.otherLoginName }}</td>
+                <td style=" white-space: nowrap;text-overflow: ellipsis;overflow: hidden;" title="{{ pageData.beforeChangeData }}" > {{ pageData.beforeChangeData }}</td>
+                <td style=" white-space: nowrap;text-overflow: ellipsis;overflow: hidden;" title="{{ pageData.afterChangeData }}" >{{ pageData.afterChangeData }}</td>
+                <td >{{ pageData.dataId }}</td>
+                <td >{{ pageData.type }}</td>
+                <td >{{ pageData.version }}</td>
+                <td >{{ pageData.modTime }}</td>
+                <td >{{ pageData.changeDataId }}</td>
+                <td >{{ pageData.testStepId }}</td>
+                <td>
+                     <button type="button" class="btn bg-olive"
+                            onclick="checkDetailsBtn('{{ pageData.id }}')">查看详情
+                    </button>
+                </td>
+
+            </tr>
+
+            <div id="fade" class="black_overlay" style="display: none; height: 974px;"></div>
+            <div class="box white_content" style="display: none;" id="checkDetailsSubPage">
+                <div class="box-header with-border">
+                    <h3 class="box-title" id="supPageCheckDetailsTitle"></h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" onclick="CloseDivCheckDetails('checkDetailsSubPage','bgdiv')"><i
+                                class="fa fa-remove"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="form-horizontal">
+                        <form action="" method="post" target="id_iframe">
+                            {% csrf_token %}
+                            <div class="box-body">
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">操作前数据</label>
+                                    <div class="col-sm-9">
+                                     <textarea id="beforeData" readonly="readonly" style="width:100%;height:75px;background:transparent;border-style:none;max-width: 100%;min-width: 100%;min-height: 75px">{{ pageData.beforeChangeData }}</textarea>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">操作后数据</label>
+                                    <div class="col-sm-9">
+                                      <textarea id="afterData" readonly="readonly" style="width:100%;height:75px;background:transparent;border-style:none;max-width: 100%;min-width: 100%;min-height: 75px">{{ pageData.afterChangeData }}</textarea>
+                                        </div>
+                                </div>
+
+                            </div>
+
+
+                            <!-- /.box-body -->
+
+                        </form>
+                        <iframe id="id_iframe_checkDetails" name="id_iframe" style="display: none;"></iframe>
+                        <!-- /.box-footer -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+
+                </div>
+            </div>
+
+        {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+
+</div>
+<div class="box-footer clearfix">
+  <ul class="pagination pagination-sm no-margin pull-right">
+    {% include "myadmin/pagination.html" %}
+  </ul>
+</div>
+

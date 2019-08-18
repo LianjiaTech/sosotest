@@ -1,0 +1,395 @@
+{% include 'InterfaceTest/head.html' %}
+<!-- Main content starts -->
+
+<div class="content">
+    <!-- Sidebar -->
+    {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Main bar -->
+    <div class="right_col" role="main" >
+
+        <div class="page-title">
+              <div class="title_left">
+                <div class="col-xs-12 form-group pull-right top_search">
+                    <h3>{{ text.pageTitle }}</h3>
+                  </div>
+              </div>
+            </div>
+
+            <div class="clearfix"></div>
+            <div class="row">
+
+              <div class="col-md-12 col-sm-12 col-xs-12">
+
+                <div class="x_panel">
+
+                  <div class="x_title">
+                    <h2>{{ text.subPageTitle }}</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+
+                  <div class="x_content">
+
+                    <div  data-parsley-validate class="form-horizontal ">
+
+                      <div>
+                        <h2>基本信息</h2>
+                      </div>
+
+                    {% if option != "add" and option != "copy" %}
+                    <div class="form-group" >
+                        <label class="control-label col-md-min-1">接口编号</label>
+                        <div class="col-lg-8">
+                            <input type="text" id="dataId" class="form-control col-md-7 col-xs-12" disabled value="">
+                        </div>
+                    </div>
+                    {% endif %}
+
+                      <div class="form-group">
+                        <label class="control-label col-md-min-1">概要 <span class="required">*</span>
+                        </label>
+                        <div class="col-lg-8">
+                          <input  id="title" placeholder="请输入概要" type="text"   class="form-control col-md-7 col-xs-12">
+                        </div>
+                      </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-min-1" for="last-name">描述 <span class="required">*</span>
+                        </label>
+                        <div class="col-lg-8">
+                            <textarea type="text" id="descText"  class="form-control col-md-7 col-xs-12 Fixed-width"
+                            placeholder="请输入描述"></textarea>
+                        </div>
+                      </div>
+                    
+                    <div class="form-group" id="keywordKeyDiv" style="display: none;">
+                        <label class="control-label col-md-min-1" for="last-name">KEY <span class="required">*</span>
+                        </label>
+                        <div class="col-lg-8">
+                            <input  id="keywordKey" placeholder="请输入codeKey" type="text"   class="form-control col-md-7 col-xs-12">
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <h2 id="typeTitleH2">数据关键字代码</h2>
+                    </div>
+
+                    <div id="advanceDiv" class="form-group" >
+                        <label class="control-label col-md-min-1" for="last-name"> PYTHON代码<span class="required">*</span>
+                        </label>
+                           <div class="col-lg-8">
+                                <textarea type="text" id="keywordCode" name="keywordCode"  class="form-control Fixed-width"
+                                placeholder="输入python代码">@keyword()
+@catch_exception
+def YOUR_KEYWORD_HERE(value,context,strTobeProcessed = ""):
+    #你调用关键字时传入的参数列表，
+    #例如DEMO_SELF_KEYWORD(a,b,c)，处理后的paramList就是列表['a','b','c']
+    paramList = getParamList(strTobeProcessed, context)
+    #例如DEMO_SELF_KEYWORD(p1,p2,k1 = v1,k2 = v2),处理后的paramList就是列表['p1','p2'],paramDict就是字典{'k1':'v1','k2':'v2'}
+    paramList,paramDict = getParamListAndKWParam(strTobeProcessed, context)
+
+    #你调用的关键字处理后的值，未分割
+    #例如DEMO_SELF_KEYWORD($VAR[a],b,c)，假设变量a=1，处理后的strTobeProcessed就是字符串1,b,c
+    strTobeProcessed = core.processor.KP.KP.getProcessedValue(strTobeProcessed, context)
+
+    #你的代码在这里面写↓
+    #return 是你想要的返回值，必须有，按照自己的要求写返回值类型是str
+    return int(paramList[0])+int(paramList[1])+int(paramList[2])
+
+                                </textarea>
+                            </div>
+
+                                          <div class="clearfix"></div>
+
+                            <div id="buttonDiv" style="width:65%;" class="col-lg-12">
+                    {% if option == "add" %}
+                        {% if 'add' in  permissionsList %}
+                        <button style="float: right" type="button" class="btn btn-success btn-lg" onclick="saveOrDebug('save')">&nbsp;&nbsp;&nbsp;&nbsp;保存&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                        {% endif %}
+                    {% elif option == "check" %}
+                        {% if 'edit' in  permissionsList %}
+                            <a href="{% url 'DATAKEYWORD_operationCheck' %}?id={{ id }}&option=edit">
+                                <button style="float: right" type="button" class="btn btn-success btn-lg">&nbsp;&nbsp;&nbsp;&nbsp;编辑&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                            </a>
+                        {% endif %}
+                        {% if 'copy' in  permissionsList %}
+                            <a href="{% url 'DATAKEYWORD_operationCheck' %}?id={{ id }}&option=copy">
+                                <button style="float: right" type="button" class="btn btn-success btn-lg">&nbsp;&nbsp;&nbsp;&nbsp;拷贝&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                            </a>
+                        {% endif %}
+                    {% elif option == "copy" %}
+                         {% if 'copy' in  permissionsList %}
+                            <a href="javascript:void(0);">
+                                <button style="float: right" type="button" class="btn btn-success btn-lg" onclick="saveOrDebug('save')">&nbsp;&nbsp;&nbsp;&nbsp;保存&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                            </a>
+                        {% endif %}
+                    {% elif option == "edit" %}
+                          {% if 'copy' in  permissionsList %}
+                                <button style="float: right" type="button" class="btn btn-success btn-lg" onclick="saveOrDebug('edit')">&nbsp;&nbsp;&nbsp;&nbsp;保存&nbsp;&nbsp;&nbsp;&nbsp;</button>
+
+                          {% endif %}
+                    {% endif %}
+                    </div><!--id="buttonDiv" -->
+
+
+                        <div class="col-lg-8">
+                            <H3>相关解释</H3>
+<pre id="keywordCodeAnnoPre">已经引入的第三方可用包如下：
+{{ importStr }}
+
+函数定义以及装饰器引用，必须跟预置内容一致。
+@keyword()
+@catch_exception
+def DEMO_SELF_KEYWORD(value,context,strTobeProcessed = ""):
+    #你调用关键字时传入的参数列表，
+    #例如DEMO_SELF_KEYWORD(a,b,c)，处理后的paramList就是列表['a','b','c']
+    paramList = getParamList(strTobeProcessed, context)
+    #例如DEMO_SELF_KEYWORD(p1,p2,k1 = v1,k2 = v2),处理后的paramList就是列表['p1','p2'],paramDict就是字典{'k1':'v1','k2':'v2'}
+    paramList,paramDict = getParamListAndKWParam(strTobeProcessed, context)
+
+    #你调用的关键字处理后的值，未分割
+    #例如DEMO_SELF_KEYWORD($VAR[a],b,c)，假设变量a=1，处理后的strTobeProcessed就是字符串1,b,c
+    strTobeProcessed = core.processor.KP.KP.getProcessedValue(strTobeProcessed, context)
+
+    #你的代码在这里面写↓
+    #return 是你想要的返回值，必须有，按照自己的要求写返回值类型是str
+    return int(paramList[0])+int(paramList[1])+int(paramList[2])
+</pre>
+                        </div>
+
+                       </div><!--id="advanceDiv" -->
+
+                    </div><!--form-horizontal-->
+
+                  </div><!--x_content-->
+
+                </div><!--x_panel-->
+
+              </div><!--class="col-md-12 col-sm-12 col-xs-12"-->
+
+            </div><!-- div class row end-->
+
+          </div>
+
+</div>
+<div style="display: none;" id="importStrDiv">{{ importStr }}</div>
+
+<script type="text/javascript">
+    var initoption = "{{ option }}";
+    var pythonCodeEditor = null;
+    pythonCodeEditor = CodeMirror.fromTextArea($("#keywordCode")[0], {
+        lineNumbers: true,
+        matchBrackets: true,
+        mode: "text/x-python",
+        indentUnit: 4,
+        indentWithTabs: false
+    });
+    pythonCodeEditor.on("focus",function(editor,change){
+        resetGlobalElement($("#keywordCode"),pythonCodeEditor);
+    });
+    pythonCodeEditor.setOption("extraKeys", {
+        Tab: newTab
+    });
+    function dataInit() {
+        if(getParam("type") == "PYTHON_CODE"){
+            $("#keywordKeyDiv").show();
+            $("#typeTitleH2").text("Python代码");
+            pythonCodeEditor.setValue("");
+            $("#keywordCodeAnnoPre").text("默认import的包、内置函数、变量以及使用方法，如下：\n" +
+                "默认引用包：\n" +
+                $("#importStrDiv").text()+
+                "\n\n" +
+                "内置函数：\n" +
+                "1、imports(codeKey)\n" +
+                "引用其他的python代码，参数是codeKey。\n" +
+                "2、log(logstr)\n" +
+                "打印函数执行中的输入，例如log('abc') 执行后会打印出abc。\n" +
+                "3、call(callStr)\n" +
+                "执行平台数据关键字，以及调用平台变量常量等，例如call('$VAR[key]')就是从获取平台变量key的值。\n" +
+                "4、var(varkey, value = None)\n" +
+                "一个参数时从平台的变量池取值，两个参数时为平台的变量池赋值。\n" +
+                "5、gvar(gvarkey)\n" +
+                "调用平台的全局变量。\n" +
+                "6、const(constkey)\n" +
+                "调用平台的常量，例如：\n" +
+                "const('RESP_STATUS')取http请求的返回响应码。\n" +
+                "const('RESP_HEADER')取http请求的返回响应头字典形式。\n" +
+                "const('RESP_TEXT')取http请求的返回响应体。\n" +
+                "const('DUBBO_TEXT')取dubbo请求的返回内容。\n" +
+                "7、text(textkey)\n" +
+                "调用平台的组合文本。\n" +
+                "8、execute_interface(*args)\n" +
+                "执行平台的HTTP接口用例，最后一个参数可以是IGNORE开头加_ALL _FAIL _ERROR _EXCEPTION的任意组合，忽略返回结果使用。\n" +
+                "9、execute_dubbo_interface(*arg)\n" +
+                "执行平台的DUBBO接口用例，最后一个参数可以是IGNORE开头加_ALL _FAIL _ERROR _EXCEPTION的任意组合，忽略返回结果使用。。\n" +
+                "10、execute_testcase(*arg)\n" +
+                "执行平台的HTTP业务流用例，最后一个参数可以是IGNORE开头加_ALL _FAIL _ERROR _EXCEPTION的任意组合，忽略返回结果使用。。\n" +
+                "11、asserts(assertStr)\n" +
+                "使用平台的ASSERT方式进行断言，例如 asserts('code')就是判断响应中有包含字符串code，类似于调用了平台的ASSERT(code)。\n" +
+                "12、set_result(testResult,assertMsg)\n" +
+                "设置用例测试结果，如果是FAIL，用例将终止执行，例如set_result('FAIL','出现错误！')。\n" +
+                "13、db_select(*args)\n" +
+                "数据库查询，第一个参数是service，不写默认default。\n" +
+                "例如：db_select('testproject','select id from db.tb where age=20')\n" +
+                "14、db_update(*args)\n" +
+                "数据库更新，第一个参数是service，不写默认default。\n" +
+                "15、db_delete(*args)\n" +
+                "数据库删除，第一个参数是service，不写默认default。\n" +
+                "16、db_insert(*args)\n" +
+                "数据库插入，第一个参数是service，不写默认default。\n" +
+                "17、redis_set(rediskey,value, timeout = None,db = 0, service=\"default\")\n" +
+                "redis设置值\n" +
+                "17、redis_get(rediskey, db = 0, service=\"default\")\n" +
+                "redis获取值\n" +
+                "17、redis_del(rediskey, db = 0, service=\"default\")\n" +
+                "redis删除值\n" +
+                "\n" +
+                "变量：\n" +
+                "IS_CONTINUE #默认True，True时执行完python代码继续执行，Fasle执行完python代码不继续执行后续内容。\n" +
+                "DEBUG_MODE  #默认False，True时执行完输出详细的代码以及执行完的过程数据，Fasle执行完只输入log，不输入详细内容。\n" +
+                "");
+        }
+        if (initoption != "add") {
+            loadData();
+        }
+    }
+    function loadData(){
+        if (initoption == "select" || initoption == "check") {
+            $("[type='text']").attr("disabled", true);
+            $("select").attr("disabled", true);
+            $("input").attr("onclick", "");
+            $("input").attr("disabled", true);
+            $("[type='radio']").attr("disabled", true);
+        }
+        var ajaxobj = $.ajax({
+            url: "{% url 'DATAKEYWORD_getDataById' %}?id={{ id }}", type: "GET", success: function () {
+                data = JSON.parse(JSON.parse(ajaxobj.responseText).body);
+                $("#dataId").val(data["id"]);
+                $("#title").val(data["title"]);
+                console.log(data["type"]);
+                if(data["type"] == "PYTHON_CODE") {
+                    $("#keywordKeyDiv").show();
+                    $("#keywordKey").val(data["keywordKey"]);
+                    if(initoption == "edit") {
+                        $("#keywordKey").prop("disabled", true);
+                    }
+                }
+                $("#descText").val(data["descText"]);
+                pythonCodeEditor.setValue(data["keywordCode"]);
+            }
+        });
+    }
+
+    function result() {
+        window.close();
+        window.opener.location.href = '/datakeyword/listPage';
+    }
+
+    function valLengthVerify(option) {
+        if ($("#title").val() == "") {
+            alert("概要不能为空");
+            return false;
+        }
+        if (getParam("type") == "PYTHON_CODE" && $("#keywordKey").val() == "") {
+            alert("codeKey不能为空");
+            return false;
+        }
+        var result = true;
+        return result;
+    }
+
+    function saveOrDebug(option, httpConfKey) {
+        if (valLengthVerify(option) == false){
+            return;
+        }
+
+        var formData = new FormData();
+
+        var dataId = '';
+        if (initoption != "add") {
+            dataId = $("#dataId").val();
+        }
+
+        var title = $("#title").val();
+        var descText = $("#descText").val();
+
+        var keywordCode = pythonCodeEditor.getValue();
+        if (keywordCode.indexOf("import ") != -1){
+            alert("不能执行import，如果有import需求，请联系管理员！");
+            return;
+        }
+        if (keywordCode == ""){
+            alert("code不能为空！");
+            return;
+        }
+
+        var postData = {
+            title: title,
+            descText: descText,
+            keywordKey: $("#keywordKey").val(),
+            keywordCode:keywordCode
+        };
+
+        if (option == "save") {
+            formData.append("postData",JSON.stringify(postData));
+             var dataAdd = $.ajax({
+                  url: '{% url 'DATAKEYWORD_addData' %}' ,
+                  type: 'POST',
+                  data: formData,
+                  async: false,
+                  cache: false,
+                  contentType: false,
+                  processData: false
+             });
+
+            var dataAddJson = JSON.parse(dataAdd.responseText);
+            if (dataAddJson["code"] == "10000") {
+                if (initoption == 'copy') {
+                    window.close();
+                    window.opener.location.reload();
+                } else {
+                    location.href = '{% url 'DATAKEYWORD_listPage' %}';
+                }
+            } else {
+                alert(dataAddJson['message']);
+            }
+        } else if (option == "edit") {
+            postData['id'] = $("#dataId").val();
+            formData.append("postData",JSON.stringify(postData));
+             var saveEditAjax = $.ajax({
+                  url: '{% url 'DATAKEYWORD_saveEditData' %}?id='+ postData['id'] ,
+                  type: 'POST',
+                  data: formData,
+                  async: false,
+                  cache: false,
+                  contentType: false,
+                  processData: false
+             });
+
+            if (JSON.parse(saveEditAjax.responseText)["code"] == 10000) {
+                if(confirm("保存成功，是否退出编辑？")){
+                    window.close();
+                    window.opener.location.reload();
+                }
+            } else {
+                alert(JSON.parse(saveEditAjax.responseText)["message"])
+            }
+        }
+    }
+
+
+    function pageInit() {
+        dataInit();
+    }
+    pageInit();
+
+
+
+</script>
+{% include 'fuzhu_page/publicKeyMain.html' %}
+
+<!-- Content ends -->
+{% include 'InterfaceTest/foot.html' %}

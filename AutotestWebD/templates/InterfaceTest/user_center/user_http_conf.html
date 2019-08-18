@@ -1,0 +1,636 @@
+{% include 'InterfaceTest/head.html'%}
+<!-- Main content starts -->
+<script type="text/javascript">
+
+</script>
+
+<div class="content">
+    <!-- Sidebar -->
+        {% include 'InterfaceTest/HTTPMenu.html' %}
+    <!-- Sidebar ends -->
+    <!-- Main bar -->
+    <div class="right_col" role="main" style="min-height: 1657px;">
+         <div class="">
+            <div class="row">
+              <div class="col-md-12 col-sm-12 col-xs-12">
+                <div class="x_panel">
+                  <div class="x_title">
+                    <h2>环境配置</h2>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <div class="form-group">
+                        <div  id="queryOption">
+                            <span class="cat-text" style="font-size: 15px;float: left;margin-right: 10px">搜索条件:</span>
+                        </div>
+
+
+{#                        <span class="tag"><span>sales&nbsp;&nbsp;</span><a href="#" title="Removing tag">x</a></span>#}
+{#                        <span class="tag"><span>sales&nbsp;&nbsp;</span><a href="#" title="Removing tag">x</a></span>#}
+                    </div>
+                      <br>
+                    <div class="" role="tabpanel" data-example-id="togglable-tabs">
+                      <ul id="myTab" class="nav nav-tabs bar_tabs" role="tablist" style="margin-bottom: 0px">
+                        <li role="presentation" class="active"><a href="#addBy" role="tab" data-toggle="tab" aria-expanded="true">创建人</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#varName" role="tab" data-toggle="tab" aria-expanded="true">配置名称</a>
+                        </li>
+                          <li role="presentation" class=""><a href="#varDesc" role="tab" data-toggle="tab" aria-expanded="true">配置描述</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#serviceConfKey" role="tab"  data-toggle="tab" aria-expanded="false">数据服务器</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#httpConfKey" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">环境KEY</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#httpConf" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">配置信息</a>
+                        </li>
+                        <li role="presentation" class=""><a href="#typeConf" role="tab" id="profile-tab2" data-toggle="tab" aria-expanded="false">协议配置</a>
+                        </li>
+                      </ul>
+                      <div id="myTabContent" class="tab-content">
+                        <div role="tabpanel" class="tab-pane fade active in" id="addBy" aria-labelledby="home-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="addByInput" onkeypress="EnterPress(event)" placeholder="请输入创建人">
+                            </div>
+                              <div class="col-lg-4" >
+                                  <span style="font-size: 15px;margin-top: 5px">快捷条件: </span>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="queryUserConf('all')">所有</button>
+                              <button type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="queryUserConf('{{ request.session.userName }}')">{{ request.session.userName }}</button>
+                              <button id="hover-a" type="button" class="btn btn-success btn-xs" style="margin-bottom: -1px" onclick="createPeople(0)">其他</button>
+                                  <div id="names" style="margin-top: 10px">
+                            </div>
+                                  </div>
+
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="varDesc" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="varDescInput" onkeypress="EnterPress(event)" placeholder="请输入配置描述" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="serviceConfKey" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="serviceConfKeyInput" onkeypress="EnterPress(event)" placeholder="数据服务器" >
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="httpConfKey" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+{#                                <input type="text" class="form-control" id="httpConfKeyInput" onkeypress="EnterPress(event)" placeholder="环境KEY">#}
+
+                                <select id="httpConfKeyInput" class="form-control" style="width: 300px;" onchange="editQueryData()">
+                                    <option value="" title="">全部环境</option>
+                                    {% for hc in envConfList %}
+                                        <option value="{{ hc.httpConfKey }}" title="{{ hc.httpConfDesc }}">{{ hc.httpConfKey }}({{ hc.alias }})</option>
+                                    {% endfor %}
+                                  </select>
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="httpConf" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="httpConfInput" onkeypress="EnterPress(event)" placeholder="请输入配置信息">
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="varName" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" id="varNameInput" onkeypress="EnterPress(event)" placeholder="请输入配置名称">
+                            </div>
+                          </div>
+                        </div>
+                        <div role="tabpanel" class="tab-pane fade" id="typeConf" aria-labelledby="profile-tab">
+                          <div class="form-group">
+                            <div class="col-lg-8" style="margin-left: 5%">
+                                {% if menu.HttpInterface == 1 %}
+                                    <label style="font-weight:normal;cursor:pointer"><input type="checkbox" onclick="editQueryData()" value="http" name="typeConfCheckbox" placeholder="请输入配置名称">http&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                {% endif %}
+                                {% if menu.UI == 1 %}
+                                    <label style="font-weight:normal;cursor:pointer"><input type="checkbox" onclick="editQueryData()" value="ui" name="typeConfCheckbox" placeholder="请输入配置名称">ui&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</label>
+                                {% endif %}
+                                {% if menu.DubboInterface == 1 %}
+                                    <label style="font-weight:normal;cursor:pointer"><input type="checkbox" onclick="editQueryData()" value="dubbo" name="typeConfCheckbox" placeholder="请输入配置名称">dubbo</label>
+                                {% endif %}
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div id="EditVars" class="form-group" style="margin-top: 70px"></div>
+                  </div>
+                </div>
+                <div class="x_panel">
+                  <div class="x_title">
+                    <a name="addEnvConfDiv">
+                      <h2>环境配置添加</h2>
+                    </a>
+                    <ul class="nav navbar-right panel_toolbox">
+                      <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                      </li>
+
+                    </ul>
+                    <div class="clearfix"></div>
+                  </div>
+                  <div class="x_content">
+
+                    <div data-parsley-validate="" class="form-horizontal form-label-left">
+                        <div class="form-group">
+                            <label class="control-label col-md-min-1">配置名称</label>
+                            <div class="col-lg-8">
+                                <input type="text" id="addHTTPConfAlias" class="form-control"  placeholder="请输入配置名称" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-min-1">配置描述</label>
+                            <div class="col-lg-8">
+                                 <textarea type="text" id="addHTTPConfDescribe"  class="form-control col-md-7 col-xs-12 Fixed-width" placeholder="请输入配置描述"></textarea>
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label class="control-label col-md-min-1">数据服务器</label>
+                            <div class="col-lg-8">
+                                <select class="form-control"  id="addServiceConfSelect" >
+                                   {% for s in services %}
+                                        <option value="{{ s.serviceConfKey }}">{{ s.alias }}</option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-md-min-1">环境KEY</label>
+                            <div class="col-lg-8">
+                                <input type="text" id="addHTTPConfKey" class="form-control"  placeholder="请输入KEY值" >
+                            </div>
+                        </div>
+                         <div class="form-group">
+                            <label class="col-lg-4 control-label"></label>
+                            <div class="col-lg-9" style="text-align:center">
+                                <button type="button"   class="btn btn-success" onclick="addHttpConf()">&nbsp;&nbsp;&nbsp;&nbsp;添加&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                                <button type="button"   class="btn btn-danger" onclick="resetAddHttpConf()">&nbsp;&nbsp;&nbsp;&nbsp;重置&nbsp;&nbsp;&nbsp;&nbsp;</button>
+                            </div>
+
+                        </div>
+
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    <br />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+    </div>
+</div>
+    <script type="text/javascript">
+        $("#httpConfKeyInput").select2();
+        var queryArr = {"alias":"","httpConfDesc":"","serviceConfKey":"","httpConfKey":"","httpConf":"","addBy":"","typeConf":""};
+        var page = {{ page }};
+        
+        function queryDataInit() {
+            $("#addByInput").val("");
+            //查询条件
+            editQueryData();
+        }
+
+        queryDataInit();
+
+
+        //搜索条件出的回车事件监听
+        function EnterPress(event){ //传入 event
+            var e = event || window.event;
+            if(e.keyCode == 13){
+                editQueryData();
+            }
+        }
+
+        function queryUserConf(data) {
+            if(data == "all"){
+                $('#addByInput').val('');
+            }else {
+                $('#addByInput').val(data);
+            }
+
+            editQueryData()
+        }
+
+        //编辑查询条件
+        function editQueryData() {
+            if($("#addByInput").val() == ""){
+                queryArr.addBy = "";
+            } else {
+                queryArr.addBy = $("#addByInput").val();
+            }
+
+            if($("#varNameInput").val() == ""  ){
+                queryArr.alias = "";
+            }else{
+                queryArr.alias = $("#varNameInput").val();
+            }
+
+            if($("#varDescInput").val() == ""){
+                queryArr.httpConfDesc = "";
+            }else {
+                queryArr.httpConfDesc = $("#varDescInput").val();
+            }
+
+            if($("#serviceConfKeyInput").val() == ""){
+                queryArr.serviceConfKey = "";
+            }else {
+                queryArr.serviceConfKey = $("#serviceConfKeyInput").val();
+            }
+
+            if($("#httpConfKeyInput").val() == ""){
+                queryArr.httpConfKey = "";
+            }else {
+                queryArr.httpConfKey = $("#httpConfKeyInput").val();
+            }
+
+            if($("#httpConfInput").val() == ""){
+                queryArr.httpConf = "";
+            } else {
+                queryArr.httpConf = $("#httpConfInput").val();
+            }
+            var confList = $("[name='typeConfCheckbox']");
+            var checkedConfList = []
+             for (var index = 0;index < confList.length;index ++){
+                    if (confList.eq(index).prop("checked")){
+                        checkedConfList.push(confList.eq(index).val());
+                    }
+                }
+            queryArr.typeConf = checkedConfList.join(",");
+
+            selected();
+        }
+
+        //清空查询条件
+        function CleanQueryData() {
+            $("#varNameInput").val("");
+            $("#varDescInput").val("");
+            $("#serviceConfKeyInput").val("");
+            $("#httpConfKeyInput").val("");
+            $("#httpConfInput").val("");
+            $("#addByInput").val("");
+
+            editQueryData();
+
+        }
+
+        function delQueryOptions(key) {
+            if(key=='addBy'){
+                $("#addByInput").val('');
+            }
+            if(key=='alias'){
+                $("#varNameInput").val('');
+            }
+            if(key=='httpConfDesc'){
+                $("#varDescInput").val('');
+            }
+            if(key=='serviceConfKey'){
+                $("#serviceConfKeyInput").val('');
+            }
+            if(key=='httpConfKey'){
+                $("#httpConfKeyInput").val('');
+            }
+            if(key=='httpConf'){
+                $("#httpConfInput").val('');
+            }
+            editQueryData();
+        }
+
+        //查询条件
+        function QueryOption(){
+            var htmls = ' <span class="cat-text" style="font-size: 15px;float: left;">搜索条件:</span>';
+            var num =0;
+            var writeNum = 0;
+            for(var item in queryArr){
+                if(queryArr[item] != '' ){
+                    num ++;
+                }
+            }
+
+            for(var item in queryArr){
+                if(queryArr[item] != ''){
+                    var key = '';
+                    if(item == 'addBy'){
+                        key = '创建人';
+                    }
+                    if(item == 'alias'){
+                        key = '配置名称';
+                    }
+                    if(item == 'httpConfDesc'){
+                        key = '配置描述';
+                    }
+                    if(item == 'serviceConfKey'){
+                        key = '数据服务器';
+                    }
+                    if(item == 'httpConfKey'){
+                        key = '环境KEY';
+                    }
+                    if(item == 'httpConf'){
+                        key = '配置信息';
+                    }
+
+
+                    writeNum ++ ;
+                    htmls = htmls+'<span class="tag"><span>'+key+'：'+queryArr[item]+'&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="delQueryOptions(\''+item+'\')">x</a></span> ';
+
+                }
+            }
+        htmls = htmls +'<span class="tag" style="float: right;background-color: #ff7575"><span>默认筛选&nbsp;&nbsp;</span><a href="javascript:void(0);" title="Removing tag" onclick="clearChecked()">x</a></span>';
+            $('#queryOption').html(htmls);
+        }
+
+
+        //查询条件处的其他人员按钮
+        function QueryPeopleConf(num) {
+            htmlobj=$.ajax({url:'/Config/UserHttpConf/queryPeopleConf?num='+num,async:false});
+
+            if(htmlobj.responseText == "[]"){
+                alert("暂无其他用户");
+                return;
+            }
+            var value = JSON.parse(htmlobj.responseText);
+
+            var nameVal = "";
+            for(var i = 0;i<value.length;i++){
+                nameVal = nameVal + ' &nbsp <a href="#" id="hover-a" onclick="queryUserConf(\''+value[i].userName+'\')"  style="font-size: 15px;text-decoration:none">['+value[i].userName+'('+value[i].count+')]</a>'
+            }
+            if(value.length<3){
+                $("#names").html(nameVal);
+                $("#hover-a").attr('onclick','createPeople('+(1)+')');
+                $("#names").show();
+                return;
+            }else {
+                $("#names").html(nameVal);
+            }
+
+            $("#hover-a").attr('onclick','createPeople('+(num+1)+')');
+            $("#names").show();
+        }
+
+    function inputVal(val) {
+        $("#addByInput").val(val);
+        editQueryData();
+    }
+
+    function createPeople(num) {
+        var htmlobj=$.ajax({url:'{% url 'queryPeopleInterfaceByTableName' %}?tbName=tb_config_http&num='+num,async:false});
+        var value = JSON.parse(htmlobj.responseText).body;
+        var nameVal = "";
+        for(var i = 0;i<value.length;i++){
+            nameVal = nameVal + ' &nbsp <a href="javascript:void(0);" id="hover-a" onclick="inputVal(\''+value[i].userName+'\')"  style="font-size: 15px;text-decoration:none">['+value[i].userName+'('+value[i].count+')]</a>'
+        }
+        if(value.length<3){
+            $("#names").html(nameVal);
+            $("#hover-a").attr('onclick','createPeople('+(0)+')');
+            $("#names").show();
+            return;
+        }else {
+            $("#names").html(nameVal);
+        }
+        $("#hover-a").attr('onclick','createPeople('+(num+1)+')');
+        $("#names").show();
+    }
+
+
+        //翻页
+        function pageCall(pageNum) {
+            page = pageNum;
+            selected();
+        }
+
+        function resetUpToTopInfo(){
+            page = 1;
+            htmlobj=$.ajax({url:"{% url 'HTTP_DelAllUserHttpConf' %}",async:false,type:"GET"});
+            var ajaxResult = JSON.parse(htmlobj.responseText)
+            if(ajaxResult["code"] != 10000){
+                alert(ajaxResult['message']);
+            }
+            selected();
+        }
+        //弹出隐藏层
+        function ShowDiv(){
+            obshowdiv =  $("#EditVars");
+            offtop=obshowdiv.offset().top-60;
+            offleft=obshowdiv.offset().left;
+            obshowdiv.show();
+            docheight = $(document).height();
+            $('html,body').animate({scrollTop:offtop}, 200);
+        }
+
+
+        function selected() {
+            console.log("called!!!");
+            QueryOption();
+            var data = {queryArr : encodeURI(JSON.stringify(queryArr)),page:page};
+            htmlobj=$.ajax({url:"{% url 'HTTP_UserHttpConfListCheck' %}",async:false,data:data,type:"POST"});
+            $("#EditVars").html(htmlobj.responseText);
+        }
+
+
+        function addVarsSort(varId) {
+            htmlobj=$.ajax({url:"{% url 'HTTP_UserHttpConfAddUserHttpConf' %}",async:false,data:{httpConfKey:varId},type:"POST"});
+            var ajaxResult = JSON.parse(htmlobj.responseText)
+            if(ajaxResult["code"] != 10000){
+                alert(ajaxResult['message']);
+            }
+            selected();
+
+        }
+
+        function delUserHttpConf(id,httpConfKey) {
+            if(confirm("确认删除配置 "+$("[name='alias"+id+"']").text()+" ?")){
+                if(confirm("一旦删除无法恢复，确认删除?")){
+
+                    htmlobj=$.ajax({url:"{% url 'HTTP_HttpConfDel' %}?id="+id,async:false});
+                    if(JSON.parse(htmlobj.responseText)["code"] != 10000){
+                        alert(htmlobj.responseText);
+                    }
+                    selected();
+
+                }
+
+            }
+        }
+
+        function checkVars(id) {
+            if ($("#hiddenTR" + id).attr("style") == "") {
+                 $("#hiddenTR" + id).attr("style", "display:none");
+                 return;
+             }
+            $("[name='alias"+id+"']").html("<pre><textarea id='aliasText"+id+"' style='max-width: 100%;width: 100%'>"+$("[name='alias"+id+"']").text()+"</textarea></pre>");
+            $("[name='httpConfDesc"+id+"']").html("<pre><textarea  id='httpConfDescText"+id+"' style='max-width: 100%;width: 100%'>"+$("[name='httpConfDesc"+id+"']").text()+"</textarea></pre>");
+            var uriInput = $("#hiddenTR"+id).find("[name='UriConf']");
+            uriInput.attr("disabled",false);
+            var getData = JSON.parse($.ajax({url:"{% url 'getHttpConfData' %}?id="+id,async:false}).responseText).body;
+            for(var serviceIndex = 0; serviceIndex<getData.length;serviceIndex++){
+                 uriInput.each(function () {
+                       if($(this).parent().attr("name") == getData[serviceIndex]["httpConfKey"]){
+                            $(this).val(getData[serviceIndex]["httpConfValue"])
+                       }
+                 });
+            }
+            var dubboInput = $("#hiddenTR"+id).find("[name='dubboUriConf']");
+            for(var serviceIndex = 0; serviceIndex<getData.length;serviceIndex++){
+                 dubboInput.each(function () {
+                       if($(this).parent().attr("name") == getData[serviceIndex]["httpConfKey"]){
+                            $(this).val(getData[serviceIndex]["httpConfValue"])
+                       }
+                 });
+            }
+
+
+            htmlobj = $.ajax({url:"{% url 'getServiceConf' %}",async:false});
+            var result =htmlobj.responseText;
+            var resultArr = JSON.parse(result);
+            var htmls = '<select class="form-control" id="serviceSelect'+id+'">';
+            for (var i=0;i<resultArr.length;i++){
+                if(resultArr[i]["alias"] ==  $("[name='serviceAlias"+id+"']").text()){
+                    htmls =htmls+ ' <option selected value ="'+resultArr[i]["serviceConfKey"]+'">'+resultArr[i]["alias"]+'</option>';
+                    continue ;
+                }
+                htmls =htmls+ ' <option value ="'+resultArr[i]["serviceConfKey"]+'">'+resultArr[i]["alias"]+'</option>';
+            }
+            htmls = htmls + '</select>';
+            $("[name='serviceAlias"+id+"']").html(htmls);
+            $("#hiddenTR"+id).attr("style","");
+            $("#hiddenTR"+id).find("button").hide();
+         }
+
+        function editUserHttpConf(id,httpConfKey) {
+            $("[name='alias"+id+"']").html("<pre><textarea id='aliasText"+id+"' style='max-width: 100%;width: 100%'>"+$("[name='alias"+id+"']").text()+"</textarea></pre>");
+            $("[name='httpConfDesc"+id+"']").html("<pre><textarea  id='httpConfDescText"+id+"' style='max-width: 100%;width: 100%'>"+$("[name='httpConfDesc"+id+"']").text()+"</textarea></pre>");
+            htmlobj = $.ajax({url:"{% url 'getServiceConf' %}",async:false});
+            var result =htmlobj.responseText;
+            var resultArr = JSON.parse(result);
+            var htmls = '<select class="form-control" id="serviceSelect'+id+'">';
+            for (var i=0;i<resultArr.length;i++){
+                if(resultArr[i]["alias"] ==  $("[name='serviceAlias"+id+"']").text()){
+                    htmls =htmls+ ' <option selected value ="'+resultArr[i]["serviceConfKey"]+'">'+resultArr[i]["alias"]+'</option>';
+                    continue ;
+                }
+                htmls =htmls+ ' <option value ="'+resultArr[i]["serviceConfKey"]+'">'+resultArr[i]["alias"]+'</option>';
+            }
+            htmls = htmls + '</select>';
+            $("[name='serviceAlias"+id+"']").html(htmls);
+
+            $("#opration"+id).html('<button class="btn btn-success optionButtionSize"  onclick="saveEdit(\''+id+'\',\''+httpConfKey+'\')" title="保存"><i class="fa fa-save"></i> </button>' +
+                '<button class="btn btn-danger optionButtionSize" onclick="cancelEdit(\''+id+'\',\''+httpConfKey+'\')" title="取消"><i class="fa fa-ban"></i> </button>');
+
+
+        }
+
+        function cancelEdit(id,httpConfKey) {
+            $("[name='alias"+id+"']").html($("[name='alias"+id+"']").text());
+            $("[name='httpConfDesc"+id+"']").html($("[name='httpConfDesc"+id+"']").text());
+            $("[name='serviceAlias"+id+"']").html($("[name='serviceAlias"+id+"']").find("option:selected").text());
+            $("[name='httpConf"+id+"']").html($("[name='httpConf"+id+"']").text());
+            $("#opration"+id).html('<button class="btn btn-info optionButtionSize"  onclick="addVarsSort(\''+httpConfKey+'\')"><i class="fa fa-eject"></i></button>\n' +
+                '<button class="btn btn-success optionButtionSize" onclick="editUserHttpConf(\''+id+'\',\''+httpConfKey+'\')"><i class="fa fa-edit"></i></button>\n' +
+                ' <button class="btn btn-danger optionButtionSize" onclick="delUserHttpConf(\''+id+'\',\''+httpConfKey+'\');"><i class="fa fa-trash"></i></button>');
+        }
+
+        function saveEdit(id) {
+            var data = {
+                "id": id,
+                "alias": $("#aliasText" + id).val(),
+                "httpConfDesc": $("#httpConfDescText" + id).val(),
+                "serviceConfKey_id": $("#serviceSelect" + id).find("option:selected").val()
+            };
+            htmlobj = $.ajax({
+                url: "{% url 'HTTP_HttpConfEdit' %}?id="+id,
+                data: {"data": JSON.stringify(data)},
+                async: false,
+                type: "POST"
+            });
+            try{
+                if (JSON.parse(htmlobj.responseText)["code"] === 10000) {
+                    selected();
+                } else {
+                    alert(htmlobj.responseText);
+                    location.reload();
+                }
+            }catch (e){
+                alert(htmlobj.responseText);
+                location.reload();
+            }
+
+        }
+
+        function resetAddHttpConf() {
+            if(confirm("重置后输入的值会消失")){
+                $("#addHTTPConfAlias").val("");
+                $("#addHTTPConfDescribe").val("");
+                $("#addServiceConfSelect option:first").prop("selected", 'selected');
+                $("#addHTTPConfKey").val("");
+                $("#addHTTPConfKey").val("");
+                $("#addHTTPConfValue").val("[HTTP]\nxsyDomain = \n\n[SSH]");
+            }
+        }
+
+        function addHttpConf() {
+            if (confirm("添加后Key值不可更改，是否继续保存")) {
+                var alias = $("#addHTTPConfAlias").val();
+                var httpConfDesc = $("#addHTTPConfDescribe").val();
+                var serviceConfKey = $("#addServiceConfSelect").find("option:selected").val();
+                var httpConfKey = $("#addHTTPConfKey").val();
+                if(httpConfKey.length > 25){
+                    alert("Key长度不可超过25！");
+                    return;
+                }
+                var regex=/^[A-Za-z0-9_-]+$/ig;
+                var me=httpConfKey.match(regex);
+                if(me == null){
+                    alert("只能是字母数字-_");
+                    return;
+                }
+                var data = {
+                    "alias": alias,
+                    "httpConfDesc": httpConfDesc,
+                    "serviceConfKey": serviceConfKey,
+                    "httpConfKey": httpConfKey,
+                };
+                htmlobj = $.ajax({
+                    url: "{% url 'HTTP_HttpConfAdd' %}",
+                    data: {"data": encodeURI(JSON.stringify(data))},
+                    async: false,
+                    type: "POST"
+                });
+
+                if (JSON.parse(htmlobj.responseText)["code"] !== 10000) {
+                    alert(htmlobj.responseText);
+                }
+            }
+            selected();
+        }
+
+        window.onload = function() {
+            $("#surprise").click();
+            $("#surprise2").click();
+        };
+    </script>
+    <!-- Content ends -->
+{% include 'InterfaceTest/foot.html'%}

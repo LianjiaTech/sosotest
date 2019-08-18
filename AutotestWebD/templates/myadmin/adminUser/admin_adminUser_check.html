@@ -1,0 +1,284 @@
+{% include "myadmin/header.html" %}
+{% include "myadmin/menu.html" %}
+
+<!-- Content Wrapper. Contains page content -->
+<div class="content-wrapper">
+    <style>
+        .black_overlay {
+
+            display: none;
+            position: absolute;
+            top: 0%;
+            left: 0%;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 1001;
+            -moz-opacity: 0.8;
+            opacity: .80;
+            filter: alpha(opacity=80);
+        }
+
+        .white_content {
+            display: none;
+            position: absolute;
+            top: 15%;
+            left: 20%;
+            width: 60%;
+            height: auto;
+            border: 16px solid lightblue;
+            background-color: white;
+            z-index: 1002;
+            overflow: auto;
+        }
+
+        .gray_content {
+            width: 100%;
+            height: 100%;
+            z-index: 1001;
+            background-color: grey;
+        }
+
+        .white_content_small {
+            display: none;
+            position: absolute;
+            top: 20%;
+            left: 30%;
+            width: 40%;
+            height: 50%;
+            border: 16px solid lightblue;
+            background-color: white;
+            z-index: 1002;
+            overflow: auto;
+        }
+    </style>
+    <!-- Content Header (Page header) -->
+    <section class="content-header">
+        <h1>
+             管理员管理
+        </h1>
+        <ol class="breadcrumb">
+            <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+            <li class="active">管理员管理</li>
+        </ol>
+    </section>
+
+    <!-- Main content -->
+    <section class="content" style="padding-bottom: 0px">
+
+        <!-- Small boxes (Stat box) -->
+        <!-- /.row -->
+        <!-- Main row -->
+        <div class="row">
+            <div class="box" style="margin-bottom: auto">
+                <section class="content-header" style="padding-bottom: 15px;">
+                    <div style="height: 30px" id="queryStyle">
+                        <span style="font-size: 15px;float:left;padding-top: 4px;margin-right: 10px">搜索条件:</span>
+
+                    </div>
+
+
+
+
+                    <div class="nav-tabs-custom" style="cursor: move;margin-top: 10px">
+                        <!-- Tabs within a box -->
+                        <ul style="margin-left: 20px;" class="nav nav-tabs  ui-sortable-handle">
+                            <li class="active" style="margin-top: 10px"><a href="#userNameTab"
+                                                                           style="padding: 5px 15px 5px 15px;"
+                                                                           data-toggle="tab"
+                                                                           aria-expanded="true">管理员名称</a>
+                            </li>
+                            <!--<li class="" style="margin-top: 10px"><a href="#sales-chart" data-toggle="tab"-->
+                                                                     <!--style="padding: 5px 15px 5px 15px;"-->
+                                                                     <!--aria-expanded="false">用户类型</a></li>-->
+                        </ul>
+
+
+                        <div class="tab-content no-padding">
+                            <!-- Morris chart - Sales -->
+                            <div class="chart tab-pane active" id="userNameTab">
+                                <div class="box-body">
+                                    <div class="form-horizontal">
+                                        <div class="box-body">
+                                            <div class="form-group">
+                                                <div class="col-sm-10">
+                                                    <input type="text" class="form-control" id="queryUserName"
+                                                           placeholder="Account" onkeypress="EnterPress(event)">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /.box-footer -->
+                                    </div>
+                                    <!-- /.row -->
+                                </div>
+
+                            </div>
+                            <div class="chart tab-pane" id="sales-chart">
+                                <div class="box-body">
+                                    <div class="form-horizontal">
+                                        <div class="box-body">
+                                            <div class="form-group">
+                                                <div class="col-sm-10">
+                                                    <select class="form-control" id="queryType"
+                                                            onchange="queryRequest()">
+                                                        <option value="">&nbsp;</option>
+                                                        <option value="0">未选择</option>
+                                                        <option value="1">开发人员</option>
+                                                        <option value="2">测试人员</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- /.box-footer -->
+                                    </div>
+                                    <!-- /.row -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+
+            </div>
+            <div class="box" id="adminUserSubPage">
+                <!-- /.box-header -->
+
+                <!-- /.box-body -->
+            </div>
+            <div id="fade" class="black_overlay" style="display: none; height: 974px;"></div>
+            <div class="box white_content" style="display: none;" id="adminUserAddSubPage">
+                <div class="box-header with-border">
+                    <h3 class="box-title" id="supPageTitle"></h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" onclick="CloseDiv('adminUserAddSubPage','bgdiv')"><i
+                                class="fa fa-remove"></i></button>
+                    </div>
+                </div>
+                <!-- /.box-header -->
+                <div class="box-body">
+                    <div class="form-horizontal">
+                        <form action="" method="post" target="id_iframe">
+                            {% csrf_token %}
+                            <div class="box-body">
+
+                                <div class="form-group">
+                                    <label  class="col-sm-2 control-label">账号</label>
+
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="account" placeholder="Account"
+                                               required="required">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">密码</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="passWord" placeholder="Password"
+                                               required="required">
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">确认密码</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="passWord1" placeholder="Password"
+                                               required="required">
+
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class="col-sm-2 control-label">用户名</label>
+                                    <div class="col-sm-9">
+                                        <input type="text" class="form-control" id="userName" placeholder="UserName"
+                                               required="required">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label  class="col-sm-2 control-label">邮箱</label>
+
+                                    <div class="col-sm-9">
+                                        <input type="email" class="form-control" id="email" placeholder="Email"
+                                               required="required">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label  class="col-sm-2 control-label">超级管理员</label>
+
+                                    <div class="col-sm-9">
+                                        <select class="form-control" id="superManager">
+                                            <option value="0">否</option>
+                                            <option value="1">是</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <!-- /.box-body -->
+                            <div class="box-footer">
+                                <button type="button" class="btn btn-default" onclick="CloseDiv('adminUserAddSubPage','bgdiv')">取消</button>
+                                <input type="submit" id="submit" class="btn btn-info pull-right" onclick="addAdminUser()"
+                                       value="保存">
+                            </div>
+                        </form>
+                        <iframe id="id_iframe" name="id_iframe" style="display: none;"></iframe>
+                        <!-- /.box-footer -->
+                    </div>
+                    <!-- /.row -->
+                </div>
+                <!-- /.box-body -->
+                <div class="box-footer">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="box" id="userPermissionSubPage" style="display: none">
+            </div>
+         <div id="userAutorizeSubPage" class="box white_content" >
+             <div class="box-header with-border">
+                    <h3 class="box-title">授权</h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" onclick="CloseDiv('userAutorizeSubPage','bgdiv')"><i class="fa fa-remove"></i></button>
+                    </div>
+                </div>
+
+                <div class="ue-container" style="margin-left: 150px; margin-right: 150px">
+                    <select style="padding: 30px 30px; height: 400px" multiple="multiple" size="10" name="doublebox" class="demo" >
+                    </select>
+                </div>
+                <div class="box-footer">
+                    <button type="button" class="btn btn-default" onclick="CloseDiv('userAutorizeSubPage','bgdiv')">取消</button>
+                    <input type="submit" id="userAuthorize" class="btn btn-info pull-right" onclick="userAuthorize()"
+                                       value="保存">
+                </div>
+        </div>
+{#         <div id="userAutorizeSubPage" class="box white_content" >#}
+{#                <div class="box-tools pull-right">#}
+{#                    <button type="button" class="btn btn-box-tool" onclick="CloseDiv('userAutorizeSubPage','bgdiv')"><i#}
+{#                                class="fa fa-remove"></i></button>#}
+{#                </div>#}
+{#                <div class="ue-container">#}
+{#                    <select style="height: 400px" multiple="multiple" size="8" name="doublebox" class="demo" >#}
+{#                    </select>#}
+{#                </div>#}
+{#                <div class="box-footer">#}
+{#                    <button type="button" class="btn btn-default" onclick="CloseDiv('userAutorizeSubPage','bgdiv')">取消</button>#}
+{#                    <input type="submit" id="userAuthorize" class="btn btn-info pull-right" onclick="userAuthorize()"#}
+{#                                       value="保存">#}
+{#                </div>#}
+{#        </div>#}
+
+        <!-- /.row (main row) -->
+    </section>
+    <!-- /.content -->
+</div>
+{% include "myadmin/footer.html" %}
+<script src="/static/myadmin/js/doublebox-bootstrap-change.js"></script>
+<link rel="stylesheet" href="/static/myadmin/css/doubleBox.css">
+<script src="/static/myadmin/js/adminUser/adminUser_check.js"></script>
+
