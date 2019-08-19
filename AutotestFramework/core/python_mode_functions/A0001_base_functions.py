@@ -325,7 +325,7 @@ def execute_testcase(*args):
     return testCaseTobeExecuteList[0] if len(testCaseTobeExecuteList) == 1 else testCaseTobeExecuteList
 
 #使用平台方式进行断言
-def asserts(assertStr):
+def asserts(assertStr,actual = None):
     '''
     断言函数
     :param assertStr:可以是一个非json，进行包含断言，可以是json，进行递归断言，可以是bool类型的，直接断言。也可以调用平台的[==]等进行断言
@@ -356,17 +356,26 @@ def asserts(assertStr):
         #开始处理断言语热天句
         tmpAssertString = str(assertStr).strip()
         if tmpAssertString == "":
-            return "<断言结果为空，不进行断言。>"
+            context.testResult = "ERROR"
+            retStr = "<ERROR: 断言的string不能是空字符串！>"
+            context.assertResult += retStr + "\n"
+            return retStr
         else:
             tmpAssertString = core.processor.KP.KP.getProcessedValue(tmpAssertString, context)
-            if context.protocol == "HTTP":
-                #如果不是dubbo就是http的
-                assertText = getRespTextByResponse(context.interface_response)
-            elif context.protocol=="DUBBO":
-                #如果是dubbo，就用dubbo的actualResult
-                assertText = context.actualResult
+            if actual is None:
+                if context.protocol == "HTTP":
+                    #如果不是dubbo就是http的
+                    assertText = getRespTextByResponse(context.interface_response)
+                elif context.protocol=="DUBBO":
+                    #如果是dubbo，就用dubbo的actualResult
+                    assertText = context.actualResult
+                else:
+                    context.testResult = "ERROR"
+                    retStr = "错误的协议类型：%s" % context.protocol
+                    context.assertResult += retStr + "\n"
+                    return retStr
             else:
-                assertText = "错误的协议类型：%s" % context.protocol
+                assertText = actual
 
             retList = Assert.assertExpectText(tmpAssertString, assertText)
             retStr = retList[1].strip() + "\n\n"
@@ -394,6 +403,7 @@ def assert_struct(expectJson,actual = None):
     '''
     try:
         #开始处理断言语句
+        retStr = ""
         standardJson = expectJson.strip()
         if actual:
             actualJson = actual
@@ -405,28 +415,39 @@ def assert_struct(expectJson,actual = None):
                 #如果是dubbo，就用dubbo的actualResult
                 actualJson = context.actualResult
             else:
-                actualJson = "错误的协议类型：%s" % context.protocol
-                set_result("ERROR", actualJson)
-                return actualJson
+                context.testResult = "ERROR"
+                retStr = "错误的协议类型：%s" % context.protocol
+                context.assertResult += retStr + "\n"
+                return retStr
 
         if isJson(standardJson) == False:
-            retMsg = "<ERROR:assert_struct执行时预期结构不是json>"
-            set_result("ERROR", retMsg)
-            return retMsg
+            context.testResult = "ERROR"
+            retStr =  "<ERROR:assert_struct执行时预期结构不是json>"
+            context.assertResult += retStr + "\n"
+            return retStr
         if isJson(actualJson) == False:
-            retMsg = "<ERROR:assert_struct执行时实际结构不是json>"
-            set_result("ERROR", retMsg)
-            return retMsg
+            context.testResult = "FAIL"
+            retStr = "FAIL: assert_struct执行时返回的内容不是JSON。"
+            context.assertResult += retStr + "\n"
+            return retStr
 
         # 开始进行结构断言
         retList = Assert.assertStruct(standardJson, actualJson)
         retStr = retList[1].strip() + "\n\n"
-        set_result(retList[0],retStr)
+        context.testResult = retList[0]
+        context.assertResult += retStr
         return retStr
 
     except:
+        log(traceback.format_exc())
         retStr = traceback.format_exc()
-        set_result("ERROR",retStr)
+        context.testResult = "ERROR"
+        context.assertResult += retStr
+    finally:
+        retResList = retStr.strip().split("\n")
+        log("断言结束，断言结果：%s" % retResList[0] if len(retResList) == 1 else retResList[0]+"...(超出部分详见断言结果)")
+        if context.testResult in context.exitExecStatusList:
+            raise MyAssertError(context.testResult,retStr)
         return retStr
 
 #使用平台方式进行断言
