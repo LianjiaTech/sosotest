@@ -595,10 +595,10 @@ def db_update(*args):
     db.setCursorDict(True)
 
     # 判断影响行数
-    if db.get_effected_rows_count(sqlstring.strip()) > 10:
+    if db.get_effected_rows_count(sqlstring.strip()) > 100:
         db.release()
-        set_result("ERROR", "<ERROR:DB_UPDATE一次更新数据不得超过10行，请检查where子句。>")
-        return "<ERROR:DB_UPDATE一次更新数据不得超过10行，请检查where子句。>"
+        set_result("ERROR", "<ERROR:DB_UPDATE一次更新数据不得超过100行，请检查where子句。>")
+        return "<ERROR:DB_UPDATE一次更新数据不得超过100行，请检查where子句。>"
 
     res = db.execute_update_sql(sqlstring.strip())
     db.release()
@@ -662,10 +662,10 @@ def db_delete(*args):
     db.setCursorDict(True)
 
     # 判断影响行数
-    if db.get_effected_rows_count(sqlstring.strip()) > 10:
+    if db.get_effected_rows_count(sqlstring.strip()) > 100:
         db.release()
-        set_result("ERROR",  "<ERROR:DB_DELETE一次删除数据不得超过10行，请检查where子句。>")
-        return "<ERROR:DB_DELETE一次删除数据不得超过10行，请检查where子句。>"
+        set_result("ERROR",  "<ERROR:DB_DELETE一次删除数据不得超过100行，请检查where子句。>")
+        return "<ERROR:DB_DELETE一次删除数据不得超过100行，请检查where子句。>"
 
     res = db.execute_update_sql(sqlstring.strip())
     db.release()

@@ -216,7 +216,7 @@ function toggleRetryCaseTrs(baseLineId){
             htmlFile.write("""</tbody></table>""")
 
         if len(task.testcaseStepInterfaceCountDict) != 0:
-            htmlFile.write("<br><h3>用例执行接口统计：</h3>")
+            htmlFile.write("<br><h3>业务流执行接口统计：</h3>")
 
             htmlFile.write("""<table class="table table-bordered" style="word-break:break-all; word-wrap:break-all;width:90%">""")
             htmlFile.write(""" <thead>
@@ -356,7 +356,7 @@ function toggleRetryCaseTrs(baseLineId){
    <input type="radio" name="options" id="optionPerformanceNA" value="select" onChange="changeCaseStatus()" > 性能N/A
 </label>""")
         if len(interfaceList) != 0 and len(testcaseList) != 0:
-            htmlFile.write("""                   <button class="btn btn-primary" onclick="toggleShowType()">接口/用例</button>""")
+            htmlFile.write("""                   <button class="btn btn-primary" onclick="toggleShowType()">接口/业务流</button>""")
         htmlFile.write("""</div>""")
         #######################################选择按钮部分 结束 ############################
 

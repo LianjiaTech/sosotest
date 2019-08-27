@@ -375,3 +375,8 @@ print(djangoSettingSplitString)
 REDIS_HOST = confDict[redisKey]['host']
 REDIS_PORT = confDict[redisKey]['port']
 REDIS_PWD = confDict[redisKey]['password']
+
+EMAIL_SENDER = confDict[emailKey]["sender"]
+EMAIL_SERVER = confDict[emailKey]["smtpserver"]
+EMAIL_USERNAME = confDict[emailKey]["username"]
+EMAIL_PASSWORD = confDict[emailKey]["password"]

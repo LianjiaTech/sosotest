@@ -1180,14 +1180,14 @@
                       contentType: false,
                       processData: false
                  });
-
-                if (JSON.parse(saveEditAjax.responseText)["code"] == 10000) {
-                    if(confirm("保存成功，是否退出编辑？")) {
+                var retdict = JSON.parse(saveEditAjax.responseText);
+                if (retdict["code"] == 10000) {
+                    if(confirm(retdict["message"] + "，是否退出编辑？")) {
                         window.close();
                         window.opener.location.reload();
                     }
                 } else {
-                    alert(JSON.parse(saveEditAjax.responseText)["message"])
+                    alert(retdict["message"]);
                 }
             }
         else if (option == "debug"){

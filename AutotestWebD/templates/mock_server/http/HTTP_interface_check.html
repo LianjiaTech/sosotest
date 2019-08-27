@@ -318,6 +318,12 @@
         window.open("{% url 'HTTP_InterfaceAddPage' %}?option=addbymock&mockid="+mockId);
     }
 
+    function followMock(mockId, oprate){
+        var htmlobj=$.ajax({url:'{% url 'MOCK_follow' %}?mockId='+mockId+'&oprate='+oprate,async:false});
+        alert(JSON.parse(htmlobj.responseText).message);
+        location.reload();
+    }
+
 </script>
 <div class="content">
     <!-- Sidebar -->

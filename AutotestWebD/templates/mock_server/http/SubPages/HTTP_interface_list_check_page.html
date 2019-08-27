@@ -72,6 +72,16 @@
                             <i class="fa fa-video-camera"></i>
                         </button>
                     {% endif %}
+
+                    {% if pageData.followed == 1 %}
+                        <button class="btn btn-grey optionButtionSize" onclick="followMock('{{ pageData.mockId }}', 'cancel');" title="取消关注">
+                            <i class="fa fa-envelope-o"></i>
+                        </button>
+                    {% else %}
+                        <button class="btn btn-warning optionButtionSize" onclick="followMock('{{ pageData.mockId }}', 'follow');" title="关注mock信息">
+                            <i class="fa fa-envelope-o"></i>
+                        </button>
+                    {% endif %}
                 </div>
                 </td>
 

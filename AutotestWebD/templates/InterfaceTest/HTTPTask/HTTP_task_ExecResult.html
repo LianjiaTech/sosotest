@@ -728,9 +728,9 @@
         htmlText += '\
             <tr><td>所含{{ groupLevel1 }}</td><td>'+data.businessLineGroup+'</td></tr>\
             <tr><td>所含{{ groupLevel2 }}</td><td>'+data.modulesGroup+'</td></tr>\
-            <tr style="'+(data.interfaceCount==0?"display:none":"")+';"><td>接口数量</td><td>'+data.interfaceCount+'<a href="javascript:void(0)" onclick="checkDetails(\'interface\',\''+id+'\')" style=" margin-left:30px" class="label label-primary" >查看</a></td></tr>\
+            <tr style="'+(data.interfaceCount==0?"display:none":"")+';"><td>接口用例数量</td><td>'+data.interfaceCount+'<a href="javascript:void(0)" onclick="checkDetails(\'interface\',\''+id+'\')" style=" margin-left:30px" class="label label-primary" >查看</a></td></tr>\
             <tr id="interfaceIdList"  style="display:none;"><td  id="interfaceListSpan" colspan=2 align="center" ></td></tr>\
-            <tr style="'+(data.caseCount==0?"display:none":"")+';"><td>用例数量</td><td>'+data.caseCount+'<a href="javascript:void(0)" onclick="checkDetails(\'testCase\',\''+id+'\')" style=" margin-left:30px" class="label label-primary" >查看</a></td></tr>\
+            <tr style="'+(data.caseCount==0?"display:none":"")+';"><td>业务流用例数量</td><td>'+data.caseCount+'<a href="javascript:void(0)" onclick="checkDetails(\'testCase\',\''+id+'\')" style=" margin-left:30px" class="label label-primary" >查看</a></td></tr>\
             <tr id="taskCaseIdList" style="display: none"><td id="taskCaseListSpan" colspan=2 align="center" ></td></tr>\
             <tr style="'+(data.interfaceCount==0?"display:none":"")+'"><td>所含接口和用例中的接口总数量</td><td>'+data.interfaceNum+'</td></tr>\
             <tr><td>执行环境</td><td>'+data.alias+'</td></tr>\

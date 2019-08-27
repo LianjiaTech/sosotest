@@ -19,4 +19,5 @@ urlpatterns = [
     url(r'^mockserver/HTTP_InterfaceSaveEdit$', http_interface.interfaceSaveEdit, name="MOCK_HTTP_InterfaceSaveEdit"),
     url(r'^mockserver/RunContrackTask$', http_interface.runContrackTask, name="MOCK_RunContrackTask"),
     url(r'^mockserver/getContrackTaskRecentExecInfos$', http_interface.getContrackTaskRecentExecInfos, name="MOCK_getContrackTaskRecentExecInfos"),
+    url(r'^mockserver/follow$', http_interface.follow, name="MOCK_follow"),
 ]

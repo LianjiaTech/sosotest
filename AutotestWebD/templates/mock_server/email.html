@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>layui</title>
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <link rel="stylesheet" href="/static/css/layui.css" media="all" />
+    <style>
+        .headtable {
+            background: #d8ddd8;
+        }
+
+        .back {
+            background: #e1e6e1;
+        }
+
+        .childback {
+            background: #edf2ed;
+            width: 130;
+        }
+
+        .table {
+            table-layout: fixed;
+            word-break: break-all;
+            word-wrap: break-word;
+        }
+    </style>
+    <!-- 注意：如果你直接复制所有代码到本地，上述css路径需要改成你本地的 --></head>
+  <body>
+  <p>HI：</p>
+  <p class='mgl25'>以下为【{{title}}】mock信息更新后的内容！</p>
+      <table border="1" cellspacing="0" cellpadding="2" style="border-collapse:collapse" width="70%" bordercolor="#B0B3B2">
+      <tbody>
+      <tr>
+          <th colspan="2" class='headtable' height="45">{{title}}</th>
+      </tr>
+      <tr>
+          <td align="center" height="35" class="childback"><b>MOCK ID</b></td>
+          <td>{{mockId}}</td>
+      </tr>
+      <tr>
+          <td align="center" height="35" class="childback"><b>描述</b></td>
+          <td>{{describe}}</td>
+      </tr>
+      <tr>
+          <td align="center" height="35" class="childback"><b>tagKey</b></td>
+          <td>{{tagKey}}</td>
+      </tr>
+      <tr>
+          <td align="center" height="35" class="childback"><b>服务key</b></td>
+          <td>{{uriKey}}</td>
+      </tr>
+      <tr>
+          <td align="center" height="35" class="childback"><b>METHOD</b></td>
+          <td>{{reqMethod}}</td>
+      </tr>
+      <tr>
+          <td align="center" height="35" class="childback"><b>URL</b></td>
+          <td>{{reqUrl}}</td>
+      </tr>
+      <tr>
+          <td align="center" height="35" class="childback"><b>PARAM</b></td>
+          <td>{{reqParam}}</td>
+      </tr>
+      <tr>
+          <td align="center" height="35" class="childback"><b>请求体</b></td>
+          <td>{{reqBody}}</td>
+      </tr>
+      <tr>
+          <td align="center" height="35" class="childback"><b>响应体</b></td>
+          <td>{{respBody}}</td>
+      </tr>
+      <tr>
+          <td align="center" height="35" class="childback"><b>modBy</b></td>
+          <td>{{modBy}}</td>
+      </tr>
+      <tr>
+          <td align="center" height="35" class="childback"><b>modTime</b></td>
+          <td>{{modTime}}</td>
+      </tr>
+
+      </tbody>
+      </table>
+    <p> Best Regards </p>
+    <p> 基础平台中心质量部 </p>
+  </body>
+</html>

@@ -81,7 +81,7 @@
         <td id="taskAddBySpan">{{ taskData.userName }}</td>
     </tr>
     <tr style="display:{$data['interfaceCount']==0?'none':''};">
-        <td>接口数量</td>
+        <td>接口用例数量</td>
         <td id="taskInterfaceNumSpan">{{ taskData.interfaceCount }}
             <a href='javascript:void (0)' onclick='checkSelected("interface","{{ taskData.id }}")' style=' margin-left:30px' class='label label-primary' >查看</a>
         </td>
@@ -91,7 +91,7 @@
     </tr>
     </tr>
     <tr style="display:{$data['caseCount']==0?'none':''};">
-        <td>用例数量</td>
+        <td>业务流用例数量</td>
         <td id="taskCaseNumSpan">{{ taskData.caseCount }}
             <a href='javascript:void (0)' onclick='checkSelected("testCase","{{ taskData.id }}")' style=' margin-left:30px' class='label label-primary' >查看</a>
         </td>
@@ -101,7 +101,7 @@
         <input type="hidden" id="taskCaseIdInput"/>
     </tr>
     <tr style="display:{$data['interfaceCount']==0?'none':''}{$data['caseCount']==0?'none':''};">
-        <td>包含的接口和用例中的接口总数量</td>
+        <td>包含的接口用例和业务流用例的接口总数量</td>
         <td id="interfaceNumSpan">{{ taskData.interfaceNum }}</td>
     </tr>
     <tr>

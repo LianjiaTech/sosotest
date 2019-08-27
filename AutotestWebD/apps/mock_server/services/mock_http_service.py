@@ -6,6 +6,7 @@ from django.forms.models import model_to_dict
 from apps.common.func.CommonFunc import *
 from all_models_for_mock.models import *
 from apps.common.model.Config import Config
+from apps.common.func.send_mail import send_mail
 
 class MockHttpService(object):
 
@@ -149,8 +150,30 @@ class MockHttpService(object):
         if interfaceObj:
             if interfaceObj[0].addBy == "" or interfaceObj[0].addBy == None:
                 interfaceData['addBy'] = interfaceData['modBy']
-        interfaceSaveEditResule = interfaceObj.update(**interfaceData)
-        return interfaceSaveEditResule
+        whether_change = False
+        for tmpk in interfaceData:
+            dstValue = interfaceData[tmpk]
+            srcValue = getattr(interfaceObj[0], tmpk)
+            if str(dstValue) != str(srcValue):
+                whether_change = True
+        if whether_change:
+            interfaceData["modTime"] = datetime.datetime.now()
+            interfaceData["modBy"] = request.session.get("loginName")
+            interfaceObj.update(**interfaceData)
+            # 发邮件给相关人员
+            follower_email = ""
+            sql = "select user.email from tb4_mock_follower follower LEFT JOIN tb_user user on follower.follower=user.loginName where follower.mockId='%s'" % interfaceData["mockId"]
+            res= executeSqlGetDict(sql)
+            for tmpemail in res:
+                follower_email += "%s;" % tmpemail["email"]
+            follower_email = follower_email.strip(";")
+            if follower_email != "":
+                subject = "【%s】【%s】已更新，请关注！" % (interfaceData["mockId"], interfaceData["reqUrl"])
+                emailhtml = render(None, "mock_server/email.html", interfaceData).content.decode("utf8")
+                send_mail(follower_email, subject, emailhtml, sub_type="html")
+            return "更新成功"
+        else:
+            return "没有变更"
 
     @staticmethod
     def interfaceVersionSaveEdit(interfaceData):
@@ -170,3 +193,26 @@ class MockHttpService(object):
             return reqHost
         else:
             return ""
+
+    @staticmethod
+    def follow(mockid, operate, follower):
+        if operate == "follow":
+            followinfo = Tb4MockFollower.objects.filter(mockId=mockid,follower=follower).all()
+            if followinfo:
+                followinfo = followinfo[0]
+            else:
+                followinfo = Tb4MockFollower(mockId=mockid, follower=follower)
+            followinfo.state = 1
+            followinfo.save()
+            return 10000, "关注成功！"
+        elif operate == "cancel":
+            followinfo = Tb4MockFollower.objects.filter(mockId=mockid,follower=follower).all()
+            if followinfo:
+                followinfo = followinfo[0]
+            else:
+                return False, "施主，未曾关注，何必取消？"
+            followinfo.state = 0
+            followinfo.save(force_update=True)
+            return 10000, "取消关注成功！"
+        else:
+            return 10012, "错误的操作！"

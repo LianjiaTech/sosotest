@@ -115,10 +115,13 @@ def http_interfaceListCheck(request):
     execSql += """ ORDER BY %s""" % orderBy
     print(checkList)
     context = pagination(sqlStr=execSql, attrList=checkList, page=page, pageNum=commonWebConfig.interFacePageNum,request=request)
-
-
-
     context["host"] = request.get_host()
+    for tmppagedata in context["pageDatas"]:
+        followinfo = Tb4MockFollower.objects.filter(mockId=tmppagedata["mockId"], follower=request.session.get("loginName"), state=1).all()
+        if followinfo:
+            tmppagedata["followed"] = 1
+        else:
+            tmppagedata["followed"] = 0
     response = render(request, "mock_server/http/SubPages/HTTP_interface_list_check_page.html", context)
     addUserLog(request, "MOCK管理->查看HTTP MOCK->获取数据->成功", "PASS")
     return response
@@ -269,19 +272,16 @@ def interfaceAdd(request):
 @single_data_permission(Tb4MockHttp,Tb4MockHttp)
 def interfaceSaveEdit(request):
     postLoad = json.loads(request.POST.get("interfaceData"))
-    postLoad["modTime"] = datetime.datetime.now()
-    postLoad["modBy"] = request.session.get("loginName")
     try:
         if 'advancedPythonCode' in postLoad.keys():
             retB,retS = verifyPythonMode(postLoad['advancedPythonCode'])
             if retB == False:
                 retMsg = "高级模式python代码非法：%s" % retS
                 return HttpResponse(ApiReturn(ApiReturn.CODE_ERROR, retMsg, retMsg).toJson())
-
-        print(postLoad)
-        MockHttpService.interfaceSaveEdit(request,postLoad)
+        retm = MockHttpService.interfaceSaveEdit(request,postLoad)
         addUserLog(request, "MOCK服务->更新MOCK[%s]->成功。" % id, "PASS")
-        return HttpResponse(ApiReturn(ApiReturn.CODE_OK).toJson())
+        return HttpResponse(ApiReturn(ApiReturn.CODE_OK, message=retm).toJson())
+
     except Exception as e:
         logger.error(traceback.format_exc())
         return HttpResponse(ApiReturn(ApiReturn.CODE_INTERFACE_ERROR, '保存编辑失败！%s' % e).toJson())
@@ -459,3 +459,12 @@ def getContrackTaskRecentExecInfos(request):
             pageData["isSendEmailText"] = "否"
 
     return HttpResponse(ApiReturn(code=ApiReturn.CODE_OK,message="ok",body=retList).toJson())
+
+def follow(request):
+    operate = request.GET.get("oprate", "follow")
+    mockId = request.GET.get("mockId", "")
+    follower = request.session.get("loginName")
+    if mockId == "":
+        return HttpResponse(ApiReturn(code=ApiReturn.CODE_ERROR,message="mockId必传").toJson())
+    retcode, retmsg = MockHttpService.follow(mockId,operate,follower)
+    return HttpResponse(ApiReturn(code=retcode,message=retmsg).toJson())

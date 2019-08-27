@@ -128,30 +128,17 @@ class Tb4MockHttpInvokeHistory(models.Model):
         db_table = 'tb4_mock_http_invoke_history'
 
 
-# class Tb4HttpApi(models.Model):
-#     title = models.CharField(db_column='title', max_length=500, default="", verbose_name="标题")
-#     businessLineId = models.IntegerField(db_column='businessLineId', default=1, verbose_name="业务线id")
-#     moduleId = models.IntegerField(db_column='moduleId', default=1, verbose_name="模块id")
-#
-#     uriKey = models.CharField(db_column='uriKey', max_length=50, default="", verbose_name="mock的服务")
-#
-#     #api 用到的信息，主要是用来表明参数名、是否必填、参数示例、备注
-#     apiMethod = models.CharField(db_column='apiMethod', max_length=20, default="GET", verbose_name="请求Method")
-#     apiReqUrl = models.CharField(db_column='apiReqUrl', max_length=255, default="/", verbose_name="api请求Url")
-#     apiReqUrlParamJson = models.TextField(db_column='apiReqUrlParamJson', default="{}", verbose_name="api请求UrlParam的解释json")
-#     apiReqStatus = models.CharField(db_column='apiReqStatus', max_length=255, default="未完成", verbose_name="api状态，未完成，已完成")
-#     apiReqParamJson = models.TextField(db_column='apiReqParamJson',  default="{}", verbose_name="api请求参数的解释")
-#     apiReqHeaderJson = models.TextField(db_column='apiReqHeaderJson',  default="{}", verbose_name="api请求Header的json解释")
-#     apiReqBody = models.TextField(db_column='apiReqBody', default="", verbose_name="api请求体")
-#     apiReqBodyParamJson = models.TextField(db_column='apiReqBodyParamJson', default="{}", verbose_name="api请求体相关的param的解释")
-#     #api响应
-#     apiRespStatusCode = models.CharField(db_column='apiRespStatusCode', max_length=5, default="", verbose_name="api响应状态码")
-#     apiRespStatusReason = models.CharField(db_column='apiRespStatusReason', max_length=50, default="", verbose_name="api响应状态文本")
-#     apiRespHeaderJson = models.TextField(db_column='apiReqHeaderJson', default="{}", verbose_name="api响应的Header的json解释")
-#     apiRespBody = models.TextField(db_column='apiReqBody', default="", verbose_name="api请求体")
-#     apiRespBodyParamJson = models.TextField(db_column='apiReqBodyParamJson', default="{}",verbose_name="api请求体相关的param的解释")
-#
-#     apiComments = models.TextField(db_column='apiComments', default="",verbose_name="备注")
-#     class Meta:
-#         db_table = 'tb4_http_api'
+class Tb4MockFollower(models.Model):
+    mockId = models.CharField(db_column='mockId', max_length=50, default="", verbose_name="mock的ID")
+    follower = models.CharField(max_length=25,db_column='follower',null = True, verbose_name="关注者邮箱前缀")
+    followTime = models.DateTimeField(db_column='followTime', null=True, verbose_name="关注时间")
 
+    # 通用基本信息
+    state = models.IntegerField(default=1, verbose_name="状态 0删除 1有效")
+    addBy = models.CharField(max_length=25, db_column='addBy', null=True, verbose_name="添加者登录名")
+    modBy = models.CharField(max_length=25, db_column='modBy', null=True, verbose_name="修改者登录名")
+    addTime = models.DateTimeField(db_column='addTime', auto_now_add=True, verbose_name="创建时间")
+    modTime = models.DateTimeField(db_column='modTime', auto_now=True, verbose_name="修改时间")
+
+    class Meta:
+        db_table = 'tb4_mock_follower'
