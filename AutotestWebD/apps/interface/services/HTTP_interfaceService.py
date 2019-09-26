@@ -148,7 +148,7 @@ class HTTP_interfaceService(object):
 
     @staticmethod
     def getInterfaceForInterfaceId(interfaceId):
-        return TbHttpInterface.objects.filter(interfaceId=interfaceId)[0]
+        return TbHttpInterface.objects.filter(interfaceId=interfaceId, state=1)[0]
 
     @staticmethod
     def getVersionInterfaceForInterfaceId(interfaceId,versionName):

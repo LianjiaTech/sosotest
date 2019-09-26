@@ -142,7 +142,7 @@ class DubboTestcaseService(object):
 
     @staticmethod
     def getTestCaseForTestCaseId(testCaseId):
-        return Tb2DubboTestcase.objects.filter(caseId=testCaseId)[0]
+        return Tb2DubboTestcase.objects.filter(caseId=testCaseId, state=1)[0]
 
     @staticmethod
     def getVersionTestCaseForTestCaseId(testCaseId,versionName):

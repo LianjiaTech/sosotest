@@ -182,8 +182,8 @@ def addMockInvokeHistory(request,mostPipeiMockInfo,reqUrl,reqParam,reqBody,proce
     mockHistory.mockMode = mostPipeiMockInfo.mockMode
     mockHistory.advancedPythonCode = mostPipeiMockInfo.advancedPythonCode
 
-    mockHistory.actualReqUrl = reqUrl
-    mockHistory.actualReqParam = reqParam
+    mockHistory.actualReqUrl = reqUrl[0:255] if len(reqUrl) > 255 else reqUrl
+    mockHistory.actualReqParam = reqParam[0:255] if len(reqParam) > 255 else reqParam
     mockHistory.actualReqHeader = processedReqHeader
     mockHistory.actualReqBody = reqBody
     mockHistory.actualRespStatusCode = respStatusCode
@@ -443,8 +443,10 @@ def mock(request,service,tagKey,httpConfKey,url):
         headerDict = json.loads(respHeader)
         for ck,cv in headerDict.items():
             resp[ck] = cv
-
-    addMockInvokeHistory(request,mostPipeiMockInfo,reqUrl,reqParam,reqBody,processedReqHeader,respStatusCode,respStatusReason,respContentType,respCharset,respContent,respCookie)
+    try:
+        addMockInvokeHistory(request,mostPipeiMockInfo,reqUrl,reqParam,reqBody,processedReqHeader,respStatusCode,respStatusReason,respContentType,respCharset,respContent,respCookie)
+    except:
+        print(traceback.format_exc())
     return resp
 
 @csrf_exempt

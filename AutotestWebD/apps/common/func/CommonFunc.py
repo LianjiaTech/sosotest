@@ -10,6 +10,7 @@ from all_models.models import *
 from collections import OrderedDict
 from copy import deepcopy
 import apps.myadmin.service.UserPermissionService
+logger = logging.getLogger("django")
 
 
 def isWindowsSystem():
@@ -162,7 +163,7 @@ def md5lower(str):
 @catch_exception
 def send_tcp_request(reqstr):
     #链接服务端ip和端口
-    logging.debug("TCPHOST&PORT:%s:%s" %(TCP_HOST,TCP_PORT) )
+    logger.info("TCPHOST&PORT:%s:%s" %(TCP_HOST,TCP_PORT) )
     print(TCP_HOST,TCP_PORT)
     maxTryTimes = 10
     for i in range(0,maxTryTimes):
@@ -170,21 +171,30 @@ def send_tcp_request(reqstr):
         try:
             #TCP发送
             #生成一个接口调试请求
-            sk = socket.socket()
+            logger.info("开始创建tcp对象")
+            sk = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+            sk.settimeout(3)
+            logger.info("创建成功")
             #请求连接服务端
             sk.connect(ip_port)
+            logger.info("连接成功")
             #发送数据
             sk.sendall(bytes(reqstr,'utf8'))
+            logger.info("发送成功")
             #接受数据
             server_reply = sk.recv(1024)
+            logger.info("接收成功")
             #打印接受的数据
             if str(server_reply,'utf8') == "ok":
+                logger.info("@@@@tcp发送ok：%s" % reqstr)
                 return ApiReturn(ApiReturn.CODE_OK,str(server_reply,'utf8'))
             else:
+                logger.warning("@@@@tcp发送ERROR：%s == %s" % (reqstr, str(server_reply,'utf8')))
                 return ApiReturn(ApiReturn.CODE_TCP_RETURN_NOT_OK,str(server_reply,'utf8'))
         except Exception as e:
-            logging.error("第%d次尝试发送tcp消息\n%s\n到%s:%s发生异常。异常信息：\n%s"% ((i+1),reqstr,TCP_HOST,TCP_PORT,traceback.format_exc()))
+            logger.error("第%d次尝试发送tcp消息\n%s\n到%s:%s发生异常。异常信息：\n%s"% ((i+1),reqstr,TCP_HOST,TCP_PORT,traceback.format_exc()))
             ransleepint = random.randint(500,5000)
+            logger.info("休息%s秒后重试" % (float(ransleepint)/1000.0))
             time.sleep(float(ransleepint)/1000.0)
             if i == maxTryTimes - 1:
                 return ApiReturn(ApiReturn.CODE_TCP_EXCEPTION,"尝试%d次发送tcp消息\n%s\n到Server发生异常。异常信息：\n%s" % (maxTryTimes,reqstr,str(e)))
@@ -203,7 +213,7 @@ def send_tcp_request_to_uiport(reqstr):
         try:
             #TCP发送
             #生成一个接口调试请求
-            sk = socket.socket()
+            sk = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
             #请求连接服务端
             sk.connect(ip_port)
             #发送数据

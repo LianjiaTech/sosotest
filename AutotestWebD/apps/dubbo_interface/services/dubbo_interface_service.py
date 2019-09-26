@@ -227,7 +227,7 @@ class DubboInterfaceService(object):
 
     @staticmethod
     def getInterfaceForInterfaceId(interfaceId):
-        return Tb2DubboInterface.objects.filter(interfaceId=interfaceId)[0]
+        return Tb2DubboInterface.objects.filter(interfaceId=interfaceId, state=1)[0]
 
     @staticmethod
     def getInterfaceForId(id):

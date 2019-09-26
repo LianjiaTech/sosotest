@@ -392,11 +392,7 @@ def getTaskData(request):
                     del addBy["id"]
                     del addBy["state"]
                     taskData["interfaceList"][i].update(addBy)
-                    # print( taskData["interfaceList"][i])
                 except Exception as e:
-                    # print(addBy)
-                    # taskData["interfaceList"][i].update(addBy)
-                    taskData["interfaceList"].append('')
                     continue
         taskData["testCaseList"] = []
         if taskData["taskTestcases"]:
@@ -410,7 +406,6 @@ def getTaskData(request):
                     del addBy["state"]
                     taskData["testCaseList"][i].update(addBy)
                 except Exception as e:
-                    taskData["interfaceList"].append('')
                     continue
         return HttpResponse(ApiReturn(ApiReturn.CODE_OK,body=taskData).toJson())
     else:
@@ -715,6 +710,10 @@ def getTaskResultList(request):
         elif key == "httpConfKey":
             checkList.append("%s" % checkArr[key])
             execSql += """ and tch.alias = %s """
+            continue
+        elif key == "taskId":
+            checkList.append("%s" % checkArr[key])
+            execSql += """ and t.taskId = %s """
             continue
         checkList.append("%%%s%%" % checkArr[key])
         execSql += """ and t.%s """ % key

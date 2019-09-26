@@ -206,7 +206,7 @@ def startMainServer(taskQueueList,serviceList,taskStatusList,debugStatusList,ser
             ip_port = (TcpServerConf.ip, TcpServerConf.port)
             # 生成句柄
             socketServer = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
+            socketServer.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)  # 就是它，在bind前加
             socket.setdefaulttimeout(timeConf.socketDefaultTime)
 
             # socketServer.setblocking(0)

@@ -155,7 +155,7 @@ class HTTP_test_caseService(object):
 
     @staticmethod
     def getTestCaseForTestCaseId(testCaseId):
-        return TbHttpTestcase.objects.filter(caseId=testCaseId)[0]
+        return TbHttpTestcase.objects.filter(caseId=testCaseId, state=1)[0]
 
     @staticmethod
     def getVersionTestCaseForTestCaseId(testCaseId,versionName):
