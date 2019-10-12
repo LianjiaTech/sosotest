@@ -75,7 +75,7 @@ def DB_SELECT(value,context,strTobeProcessed = ""):
     for tmpObj in res:
         tmpDict = {}
         for tmpK,tmpV in tmpObj.items():
-            if type(tmpV) == type(datetime.datetime(1984, 1, 2)):
+            if isinstance(tmpV, datetime.datetime) or isinstance(tmpV, datetime.date):
                 # 如果是datetime类型的，无法转换为json，要先转换为字符串
                 tmpDict[tmpK] = str(tmpV)
             elif isinstance(tmpV,decimal.Decimal):

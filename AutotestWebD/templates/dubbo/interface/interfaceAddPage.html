@@ -680,6 +680,8 @@ if("{{ text.subPageTitle }}" == "添加DUBBO接口"){
             $("#interfaceTab").children().eq(0).attr("class","active");
             $("#interfaceTabContent").children().eq(0).attr("class","tab-pane fade");
             $("#interfaceTabContent").children().eq(0).attr("class","tab-pane fade active in");
+            $("#debugSug").attr("disabled",false);
+            $("[data-id='debugSug']").attr("class","btn dropdown-toggle btn-default bs-placeholder");
             var ajaxobj = $.ajax({
                 url: "{% url 'dubboGetInterfaceDataById' %}?id={{ id }}", type: "GET", success: function () {
                     data = JSON.parse(JSON.parse(ajaxobj.responseText).body);
@@ -815,10 +817,16 @@ if("{{ text.subPageTitle }}" == "添加DUBBO接口"){
 
 
     }
+
+    function selectOnchang(option,obj) {
+        var value = obj.options[obj.selectedIndex].value;
+        var alias = obj.options[obj.selectedIndex].textContent;
+        saveOrDebug(option,value,alias);
+    }
     var thisTime = 0;
     var debugFlag = false;
 
-    function saveOrDebug(option, httpConfKey) {
+    function saveOrDebug(option, httpConfKey, alias) {
         $("#publicKeyDiv").css("display","none");
         if (valLengthVerify(option) == false){
             return;
@@ -900,6 +908,10 @@ if("{{ text.subPageTitle }}" == "添加DUBBO接口"){
             }
         }
         else if (option == "debug") {
+            if(alias&&httpConfKey){
+                setHistoryItems(httpConfKey, alias);
+                getHistoryItems('button');
+            }
             thisTime = 0;
             debugFlag = true;
             checkResultId++;
@@ -1177,6 +1189,9 @@ if("{{ text.subPageTitle }}" == "添加DUBBO接口"){
             $("#useCustomUriBtn").html('<i class="fa fa-hand-o-left"></i>使用服务配置地址');
         }
     }
+    $(document).ready(function() {
+        getHistoryItems('button');
+    });
 </script>
 {% include 'fuzhu_page/publicKeyMain.html' %}
 <!-- Content ends -->

@@ -20,7 +20,7 @@ class TaskProgress(multiprocessing.Process):
 
     @catch_exception
     @take_time
-    @set_logging
+    # @set_logging
     def run(self):
         tmpExecuteId = "%s_%s" % (self.task.protocol, self.task.taskExecuteId)
         if tmpExecuteId in self.serverDataDict[Do.KEY_RUN_SERVICE_CURRENT_TASK_LIST]:

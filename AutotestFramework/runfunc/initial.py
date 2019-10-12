@@ -35,7 +35,7 @@ def init_logging(logFilePath = "test.log",level = logging.DEBUG):
     Rthandler.setLevel(level)
     formatter = logging.Formatter('%(asctime)s %(filename)s[line:%(lineno)d] %(levelname)s %(message)s')
     Rthandler.setFormatter(formatter)
-    logging.getLogger('').addHandler(Rthandler)
+    logging.root.addHandler(Rthandler)
     #################################################################################################
 
 # @catch_exception

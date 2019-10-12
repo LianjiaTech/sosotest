@@ -865,3 +865,24 @@ def mergeTask(request):
     except Exception as e:
         return HttpResponse(ApiReturn(code=ApiReturn.CODE_ERROR, message="任务合并出错，请联系管理员").toJson())
     return HttpResponse(ApiReturn().toJson())
+
+
+def executeIdforTask(request):
+    taskId = request.GET.get("taskId", "")
+    date = request.GET.get("date", "")
+    # 如果date为空，默认查询1天内数据
+    if date == "":
+        dateTo = datetime.date.today()
+        dateFrom = dateTo - datetime.timedelta(days=1)
+    else:
+        try:
+            dateFrom = datetime.datetime.strptime(date, '%Y-%m-%d')
+            dateTo = dateFrom + datetime.timedelta(days=1)
+        except Exception as e:
+            return HttpResponse(ApiReturn(code=ApiReturn.CODE_ERROR, message="date格式不正确").toJson())
+    executeId = HTTP_taskService.getExecuteIdByTaskId(taskId,dateFrom,dateTo)
+    if executeId:
+        executeResult = dbModelToDict(executeId)
+    else:
+        return HttpResponse(ApiReturn(code=ApiReturn.CODE_ERROR, message="任务"+taskId+"不存在").toJson())
+    return HttpResponse(ApiReturn(code=ApiReturn.CODE_ERROR, message="",body={'result':executeResult['testResultMsg']}).toJson())

@@ -1585,11 +1585,18 @@ function Checkall() {
         $("#debugResult").hide();
         $('#clearResult').hide();
     }
+
+    function selectOnchang(option,obj) {
+        var value = obj.options[obj.selectedIndex].value;
+        var alias = obj.options[obj.selectedIndex].textContent;
+        saveOrDebug(option,value,alias);
+    }
     var thisTime = 0;
     var debugFlag = false;
 
-    function saveOrDebug(opt,httpConfKey) {
+    function saveOrDebug(opt,httpConfKey,alias) {
         $("#publicKeyDiv").css("display","none");
+
         var formData = allStepRead();
         if (formData === false){
             return;
@@ -1636,6 +1643,10 @@ function Checkall() {
             }
         }
         else if (opt == "debug") {
+            if(alias&&httpConfKey){
+                setHistoryItems(httpConfKey, alias);
+                getHistoryItems('button');
+            }
             thisTime = 0;
             debugFlag = true;
             $("[name='debug']").attr("disabled", true);
@@ -2011,6 +2022,9 @@ function Checkall() {
         debugFlag = false;
         $("[name='debug']").attr("disabled", false);
     }
+    $(document).ready(function() {
+        getHistoryItems('button');
+    })
 </script>
 {% include 'fuzhu_page/publicKeyMain.html' %}
 {% include 'InterfaceTest/foot.html'%}

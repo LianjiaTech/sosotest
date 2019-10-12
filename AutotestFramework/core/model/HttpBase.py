@@ -77,8 +77,6 @@ class HttpBase(CommonAttr):
         #全局使用的，上下文关联的
         self.host = ""
         self.serviceDB = DBTool()
-        self.serviceDBDict = {}
-        self.serviceDBDict['default'] = self.serviceDB
 
         self.response = requests.models.Response()  # 最近HTTP请求返回的response对象，提供给各个方法使用
         self.interface_response = requests.models.Response()  # 要测试的接口返回的response，供断言使用。
@@ -99,18 +97,22 @@ class HttpBase(CommonAttr):
         Returns:
             无。
         """
-        logging.debug("#########################HTTP_BASE执行开始[%s]#########################" % (self.addBy))
+        logging.info("#########################HTTP_BASE执行开始[%s]interfaceId[%s]traceId[%s]#########################" % (self.addBy, self.interfaceId,self.traceId))
         try:
+            logging.info("★1===traceId[%s]★★★★★" % self.traceId)
             if self.processBeforeExecute() == False:
                 return
+            logging.info("★★2===traceId[%s]★★★★★" % self.traceId)
             #DONE 5、处理 url method header parmas中的变量替换、关键字处理
             self.processExecuteAttrAndRun(True)
+            logging.info("★★★3===traceId[%s]★★★★★" % self.traceId)
             if self.testResult in self.exitExecStatusList :
                 self.assertResult = "执行HTTP请求时出现错误或者异常：\n%s" % self.assertResult
                 return
-
+            logging.info("★★★★4===traceId[%s]★★★★★" % self.traceId)
             if self.processAfterExecute() == False:
                 return
+            logging.info("★★★★★5===traceId[%s]★★★★★" % self.traceId)
 
         except Exception as e:
             logging.error(traceback.format_exc())
@@ -118,7 +120,7 @@ class HttpBase(CommonAttr):
             self.releaseDB() #释放数据库连接，防止mysql连接过多错误
             logging.debug("测试结果： %s" % self.testResult)
             logging.debug("单接口或步骤执行时间： %f" % self.totalTakeTime)
-            logging.debug("#########################HTTP_BASE执行结束[%s]#########################"  % self.addBy)
+            logging.info("#########################HTTP_BASE执行结束[%s]interfaceId[%s]traceId[%s]#########################"  % (self.addBy, self.interfaceId, self.traceId))
 
     def initRequestHostAndResults(self):
         """

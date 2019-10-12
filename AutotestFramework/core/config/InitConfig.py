@@ -93,7 +93,7 @@ class LogConfig(object):
         FILE_UILOG = "%s/UIAutotestFrameworkRelease.log" % logRoot#release环境
         FILE_DUBBOLOG = "%s/DubboAutotestFrameworkRelease.log" % logRoot#release环境
     else:
-        LEVEL = logging.INFO #测试环境
+        LEVEL = logging.DEBUG #测试环境
         FILE = "%s/AutotestFramework%s.log" % (logRoot,confDict['DIR']['useTag'])  # 测试环境
         MainFILE = "%s/AutotestFrameworkMain%s.log" % (logRoot,confDict['DIR']['useTag'])  # 测试环境
         FILE_UILOG = "%s/UIAutotestFramework%s.log" % (logRoot,confDict['DIR']['useTag'])  # 测试环境

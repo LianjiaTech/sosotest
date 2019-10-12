@@ -138,7 +138,7 @@ class TaskBase(CommonAttr):
             无
         """
         try:
-            logging.debug("$$$$$$$$$$$TaskBase.py###在环境httpConfKey[%s]执行人[%s]$$$$$$$$$$$$$" % (self.httpConfKey, self.addBy))
+            logging.info("$$$$$$$$$$$TaskBase.py###在环境httpConfKey[%s]执行人[%s]taskExecuteId[%s]$$$$$$$$$$$$$执行开始" % (self.httpConfKey, self.addBy, self.taskExecuteId))
             taskStartTime = time.time()
 
             self.initTaskBeforeExecute()
@@ -161,7 +161,7 @@ class TaskBase(CommonAttr):
             logging.debug(traceback.format_exc())
         finally:
             self.globalDB.release() #最终释放连接
-            logging.debug("$$$$$$$$$$$$$$TaskBase.py####结束执行$$$$$$$$$$$$$$$$$$$$$$$$" )
+            logging.info("$$$$$$$$$$$TaskBase.py###在环境httpConfKey[%s]执行人[%s]taskExecuteId[%s]$$$$$$$$$$$$$执行结束" % (self.httpConfKey, self.addBy, self.taskExecuteId))
 
     @catch_exception
     def initTaskBeforeExecute(self):

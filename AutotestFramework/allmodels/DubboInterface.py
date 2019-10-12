@@ -47,6 +47,7 @@ class DubboInterface(DubboBase):
                 self.interfaceId = tmpInterface['interfaceId']
             else:
                 self.interfaceId = ""
+            self.traceId = md5("%s-%s" % (self.interfaceId, get_current_time()))
 
             self.execStatus = tmpInterface['execStatus']
 
@@ -115,6 +116,7 @@ class DubboInterface(DubboBase):
                 self.interfaceId = tmpInterface['interfaceId']
             else:
                 self.interfaceId = ""
+            self.traceId = md5("%s-%s" % (self.interfaceId, get_current_time()))
 
             self.execStatus = tmpInterface['execStatus']
 
@@ -167,6 +169,8 @@ class DubboInterface(DubboBase):
             执行结果
         """
         # colstr = "id, httpConfKey, serviceConfKey, alias, httpConfDesc, httpConf, state, addBy, modBy, addTime, modTime"
+        self.traceId = md5("%s-%s" % (self.interfaceId, get_current_time()))
+
         if self.version == "CurrentVersion":
             sql = """ SELECT * FROM tb2_dubbo_interface where interfaceId = '%s' and state = 1 """ % (self.interfaceId)
         else:
@@ -215,6 +219,8 @@ class DubboInterface(DubboBase):
         tmpInterface = interfaceDict
         self.id = tmpInterface['id']
         self.interfaceId = tmpInterface['interfaceId']
+        self.traceId = md5("%s-%s" % (self.interfaceId, get_current_time()))
+
         self.title = tmpInterface['title']
         self.desc = tmpInterface['casedesc']
         self.state = tmpInterface['state']

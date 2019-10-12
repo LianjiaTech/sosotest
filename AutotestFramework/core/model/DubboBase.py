@@ -68,7 +68,6 @@ class DubboBase(CommonAttr):
         ###数据库相关的
         self.serviceDB = DBTool()
         self.serviceDBDict = {}
-        self.serviceDBDict['default'] = self.serviceDB
         self.calledInterfaceRecurDict = {} #存放循环的dict。
 
         #Task/Testcase/Step/Interface/HttpBase全局传递变量
@@ -235,7 +234,8 @@ class DubboBase(CommonAttr):
                 else:
                     return "TELNET_ERROR: Telnet请求时发生网络问题或者接口错误，请确认。",0
             finally:
-                if type(tn) != type(""): tn.close()
+                if type(tn) != type(""):
+                    tn.close()
 
     @catch_exception
     def processExecuteAttrAndRun(self,whetherSetResult = True):

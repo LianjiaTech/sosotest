@@ -7,6 +7,7 @@ from django.shortcuts import HttpResponse
 def getDebugBtn(request):
     context = {}
     httpConf = HttpConfService.queryHttpConfSort(request)
+    context['httpConf'] = httpConf
     httpConfList = []
     httpConfList.append([])
     if len(httpConf) <= commonWebConfig.debugBtnCount:

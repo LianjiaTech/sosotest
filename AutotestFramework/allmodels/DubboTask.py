@@ -111,7 +111,7 @@ class DubboTask(DubboTaskBase):
             tmpResTaskInfo = resTaskExec[0]
             self.id = tmpResTaskInfo['id']  # tb_task的主键id
             self.taskId = tmpResTaskInfo['taskId']
-
+            self.traceId = md5("%s-%s" % (self.taskId, get_current_time()))
             self.title = tmpResTaskInfo['title']
             self.taskDesc = tmpResTaskInfo['taskdesc']
             self.protocol = tmpResTaskInfo['protocol']

@@ -1,14 +1,27 @@
+<div>
+    <div>
+    <span>快速筛选</span>
+    <select id="debugSug" name="debug" class="selectpicker" data-style="btn-default" data-dropup-auto="false" data-live-search="true"
+            title="请选择环境" data-actions-box="true" onchange="selectOnchang('debug',this)">
+        {% for hc in httpConf %}
+            <option value={{ hc.httpConfKey }}>{{ hc.alias }}</option>
+        {% endfor %}
+    </select>
+    </div>
+</div>
+<div id="history"></div>
 {% for hcl in httpConfList %}
     {% if forloop.counter == 1 %}
         <div class="form-group">
+         <span>查看全部</span>
         {% for hc in hcl %}
-            <button type="button" name="debug" onclick="saveOrDebug('debug','{{ hc.httpConfKey }}')" class="btn btn-info btn-lg">{{ hc.alias }}</button>
+            <button type="button" name="debug" onclick="saveOrDebug('debug','{{ hc.httpConfKey }}','{{ hc.alias}}')" class="btn btn-info">{{ hc.alias }}</button>
         {% endfor %}
-
-        <button id="clearResult" type="button" class="btn btn-info btn-lg" style="float:right;display: none;" onclick="clearResult()">清空调试信息</button>
+        <button id="clearResult" type="button" class="btn btn-info btn" style="float:right;display: none;" onclick="clearResult()">清空调试信息</button>
         {% if httpConfListPage == "open" %}
-            <button type="button" id="more" onclick="moreEnv()" class="btn btn-info btn-lg">更多</button>
+            <button type="button" id="more" onclick="moreEnv()" class="btn btn-info">更多</button>
         {% endif %}
+            <a href="/interfaceTest/HTTP_UserHttpConf" style="float: right;margin-top: 20px;">置顶环境将优先展示，可点击此处修改</a>
         </div>
     {% endif %}
 {% endfor %}
@@ -17,7 +30,7 @@
         {% if forloop.counter > 1 %}
             <div class="form-group">
                 {% for hc in hcl %}
-                    <button type="button" name="debug" onclick="saveOrDebug('debug','{{ hc.httpConfKey }}')" class="btn btn-info btn-lg">{{ hc.alias }}</button>
+                    <button type="button" name="debug" onclick="saveOrDebug('debug','{{ hc.httpConfKey }}','{{ hc.alias}}')" class="btn btn-info">{{ hc.alias }}</button>
                 {% endfor %}
             </div>
         {% endif %}

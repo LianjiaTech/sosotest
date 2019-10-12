@@ -61,7 +61,7 @@ class HttpTestcaseStep(HttpBase):
             self.caseId = caseStepDebugInfo['caseId']
             self.stepNum = caseStepDebugInfo['stepNum']
             self.interfaceId = "%s-%s" % (self.caseId, self.stepNum)
-
+            self.traceId = md5("%s-%s" % (self.interfaceId, get_current_time()))
             self.execStatus = caseStepDebugInfo['execStatus']
 
             self.title = caseStepDebugInfo['title']
@@ -120,6 +120,7 @@ class HttpTestcaseStep(HttpBase):
             # self.id = caseStepDebugInfo['id']
             self.stepNum = caseStepDebugInfo['stepNum']
             self.interfaceId = "%s-%s" % (self.caseId, self.stepNum)
+            self.traceId = md5("%s-%s" % (self.interfaceId, get_current_time()))
 
             self.execStatus = caseStepDebugInfo['execStatus']
 
@@ -176,6 +177,7 @@ class HttpTestcaseStep(HttpBase):
         self.caseId = stepDict['caseId']
         self.stepNum = stepDict['stepNum']
         self.interfaceId = "%s-%s" % (self.caseId, self.stepNum)
+        self.traceId = md5("%s-%s" % (self.interfaceId, get_current_time()))
 
         self.title = stepDict['title']
         self.desc = stepDict['stepDesc']

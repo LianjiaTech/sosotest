@@ -170,6 +170,8 @@ function tableInitList(elementName,urlencodeList) {
         headerKey.val(urlencodeList[i][0]);
         headerValue.val(urlencodeList[i][1]);
     }
+    $("#debugSug").attr("disabled",false);
+    $("[data-id='debugSug']").attr("class","btn dropdown-toggle btn-default bs-placeholder");
 }
 
 function loadFile(element) {
@@ -923,15 +925,19 @@ function valLengthVerify(option) {
     return result;
 
 }
+function selectOnchang(option,obj) {
+    var value = obj.options[obj.selectedIndex].value;
+    var alias = obj.options[obj.selectedIndex].textContent;
+    saveOrDebug(option,value,alias);
+}
 var thisTime = 0;
 var debugFlag = false;
 
-function saveOrDebug(option, httpConfKey) {
+function saveOrDebug(option, httpConfKey, alias) {
        $("#publicKeyDiv").css("display","none");
     if (valLengthVerify(option) == false){
         return;
     }
-
     var formData = new FormData();
 
     var interfaceId = '';
@@ -1110,6 +1116,10 @@ function saveOrDebug(option, httpConfKey) {
         }
     }
     else if (option == "debug") {
+        if(alias&&httpConfKey){
+            setHistoryItems(httpConfKey, alias);
+            getHistoryItems('button');
+        }
         thisTime = 0;
         debugFlag = true;
         checkResultId++;
@@ -1453,4 +1463,5 @@ window.onload = function () {
 };
 $(document).ready(function() {
    $("#loading").css("display", "none");
-} );
+   getHistoryItems('button');
+});

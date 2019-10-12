@@ -115,6 +115,7 @@ urlpatterns = [
         name="queryPeopleTaskExecute"),
     url(r'^interfaceTest/getTaskExecuteResult$', http_task.getTaskResultList, name="getTaskExecuteResult"),
     url(r'^interfaceTest/getTaskExecuteResultData$', http_task.getTaskRestltDetail, name="getTaskExecuteResultData"),
+    url(r'^interfaceTest/getTaskExecuteId$', http_task.executeIdforTask, name="getTaskExecuteId"),
     url(r'^interfaceTest/getInterfaceListData$', http_task.getInterfeceListData, name="getInterfaceListData"),
     url(r'^interfaceTest/getTestCaseListData$', http_task.getTestCaseListData, name="getTestCaseListData"),
     url(r'^interfaceTest/HTTP_TaskAgainRunTask$', http_task.againRunTask, name="HTTP_TaskAgainRunTask"),

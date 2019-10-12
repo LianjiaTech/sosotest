@@ -48,6 +48,7 @@ class ConfigServiceForDubbo(object):
                     httpConfList[i].append(httpConf[j])
 
         context["httpConfList"] = httpConfList
+        context["httpConf"] = httpConf
         if len(httpConfList) > 1:
             context["httpConfListPage"] = "open"
         else:

@@ -28,6 +28,14 @@ class HTTP_taskService(object):
             return False
 
     @staticmethod
+    def getExecuteIdByTaskId(taskId,datefrom,dateto):
+        try:
+            return TbTaskExecute.objects.filter(taskId=taskId,execFinishTime__range=(datefrom,dateto)).\
+                filter(state=1, execStatus=3).order_by('execFinishTime').last()
+        except Exception as e:
+            return False
+
+    @staticmethod
     def getVersionTaskForId(id,versionName):
         return TbVersionTask.objects.filter(id=id,versionName_id=versionName).filter(state=1)[0]
 

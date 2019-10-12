@@ -112,6 +112,8 @@ class Task(TaskBase):
             tmpResTaskInfo = resTaskExec[0]
             self.id = tmpResTaskInfo['id'] #tb_task的主键id
             self.taskId = tmpResTaskInfo['taskId']
+            self.traceId = md5("%s-%s" % (self.taskId, get_current_time()))
+
             self.taskSuiteExecuteId = tmpResTaskInfo["taskSuiteExecuteId"]
 
             self.title = tmpResTaskInfo['title']

@@ -34,6 +34,8 @@ class CommonAttr(object):
         self.protocol = ""
         self.objType = ObjTypeConst.UNKNOWN
 
+        self.traceId = ""
+
         self.globalDB = DBTool()
         self.serviceDB = DBTool()
         self.serviceDBDict = {}
@@ -101,15 +103,16 @@ class CommonAttr(object):
         Returns:
             无。
         """
-        # 初始化平台db
-        self.globalDB.initGlobalDBConf()
-        self.globalDB.setCursorDict(False)
         # 初始化serviceDB
         if "DB" in self.confHttpLayer.confServiceLayer.confDict.keys():
+            logging.debug("○○21★1===traceId[%s]★★★★★" % self.traceId)
             serviceDBDict = self.confHttpLayer.confServiceLayer.confDict['DB']
             # 加载被测各个单点系统的数据库
             for tmpDbKey in serviceDBDict.keys():
+                logging.debug("○○21★★2===traceId[%s] %s★★★★★" % (self.traceId, serviceDBDict[tmpDbKey]))
+                logging.debug("○○21★★★3===traceId[%s] tmpDbKey[%s]★★★★★" % (self.traceId, tmpDbKey))
                 tmpHost = serviceDBDict[tmpDbKey]["host"]
+                logging.debug("○○21★★★★4===traceId[%s] tmpDbKey[%s]★★★★★" % (self.traceId, tmpDbKey))
                 if tmpHost != "0.0.0.0" and tmpHost != "":
                     tmpPort = int(serviceDBDict[tmpDbKey]["port"])
                     tmpUsername = serviceDBDict[tmpDbKey]["username"]
@@ -152,10 +155,16 @@ class CommonAttr(object):
         """
         # 初始化平台db
         # 初始化serviceDB
+
         if "MONGO" in self.confHttpLayer.confServiceLayer.confDict.keys():
+            logging.debug("○○23★1 mongo===traceId[%s]★★★★★" % self.traceId)
+
             serviceDBDict = self.confHttpLayer.confServiceLayer.confDict['MONGO']
+            logging.debug("○○23★★2 mongo===traceId[%s]★★★★★" % self.traceId)
+
             # 加载被测各个单点系统的数据库
             for tmpDbKey in serviceDBDict.keys():
+                logging.debug("○○23★★★3 mongo===traceId[%s] %s ★★★★★" % (self.traceId, serviceDBDict[tmpDbKey]))
                 if serviceDBDict[tmpDbKey]['host'] != "0.0.0.0" and serviceDBDict[tmpDbKey]['host'] != "":
                     self.serviceMongoDBDict[tmpDbKey] = MongoTool(host=serviceDBDict[tmpDbKey]['host'],
                                             port=int(serviceDBDict[tmpDbKey]['port']),
@@ -502,13 +511,33 @@ class CommonAttr(object):
 
     @catch_exception
     def processBeforeExecute(self):
+        logging.debug("○1===traceId[%s]★★★★★" % self.traceId)
         self.initRequestHostAndResults()  # 初始化uri，供全局使用
+        logging.debug("○○2===traceId[%s]★★★★★" % self.traceId)
+
         if self.testResult in self.exitExecStatusList:
             self.assertResult = "处理initRequestHostAndResults时出现错误：\n%s" % self.assertResult
             return False
-        self.initDB()  # 初始化数据库，共全局使用
-        self.initRedis() #初始化redis
-        self.initMongoDB() #初始化mongodb
+
+        self.globalDB.initGlobalDBConf()
+        self.globalDB.setCursorDict(False)
+
+        logging.debug("★★★★★★★★★★★★★★★★★★★★★ %s" % self.serviceDBDict)
+        if self.serviceDBDict == {}:
+            self.initDB()  # 初始化数据库，共全局使用
+            logging.debug("○○21===traceId[%s]★★★★★" % self.traceId)
+
+        if self.serviceRedisDict == {}:
+            self.initRedis() #初始化redis
+            logging.debug("○○22===traceId[%s]★★★★★" % self.traceId)
+
+        if self.serviceMongoDBDict == {}:
+            self.initMongoDB() #初始化mongodb
+            logging.debug("○○23===traceId[%s]★★★★★" % self.traceId)
+
+
+        logging.debug("○○○3===traceId[%s]★★★★★" % self.traceId)
+
         if self.testResult in self.exitExecStatusList:
             # y应该不会出现，出现了就是程序见鬼了
             self.assertResult = "初始化时出现错误或者异常。\n%s" % self.assertResult
@@ -528,7 +557,10 @@ class CommonAttr(object):
         logging.debug("EXECUTE_HTTP_STEP_2: 处理[准备]阶段。")
         dataInitStartTime = time.time()
         self.pythonModeExecuteLog = ""
+        logging.debug("○○○○4===traceId[%s]★★★★★" % self.traceId)
         self.isPythonModePre,isContinue = self.processVarsstring(self.varsPre)
+        logging.debug("○○○○○5===traceId[%s]★★★★★" % self.traceId)
+
         if self.isPythonModePre:
             self.pythonLogVarsPre = self.pythonModeExecuteLog #TODO 这里是临时方案，这个到时候考虑放到某个地方展示。
             if isContinue == False:
@@ -539,6 +571,8 @@ class CommonAttr(object):
 
                 self.checkAllInfosAfterTest()
                 return False
+        logging.debug("○○○○○○6===traceId[%s]★★★★★" % self.traceId)
+
         dataInitEndTime = time.time()
         if self.generateVarsStringByVarsPoolAndVarsKeyList().strip() != "":
             self.varsPre = self.generateVarsStringByVarsPoolAndVarsKeyList().strip() + self.appendPythonModeLog(
@@ -546,7 +580,10 @@ class CommonAttr(object):
         else:
             self.varsPre = self.appendPythonModeLog(self.isPythonModePre,
                                                     self.pythonLogVarsPre).strip()  # 对生成的varsPool和varKey重新赋值给varsPre
+
         self.beforeExecuteTakeTime = int((dataInitEndTime - dataInitStartTime) * 1000)
+        logging.debug("○○○○○○○7===traceId[%s]★★★★★" % self.traceId)
+
         if self.testResult in self.exitExecStatusList:
             self.checkAllInfosAfterTest()
             self.assertResult = "%s: 处理[准备]阶段时出现错误：\n%s" % (self.testResult,self.assertResult)
@@ -667,6 +704,14 @@ class CommonAttr(object):
 
         param2.context_data_list = param1.context_data_list
         param2.context_data_dict = param1.context_data_dict
+
+        param2.serviceDBDict = param1.serviceDBDict
+        param2.serviceRedisDict = param1.serviceRedisDict
+        param2.serviceMongoDBDict = param1.serviceMongoDBDict
+
+        param2.serviceMongoDBDict = param1.serviceMongoDBDict
+        param2.serviceMongoDBDict = param1.serviceMongoDBDict
+        param2.serviceMongoDBDict = param1.serviceMongoDBDict
 
         if isTrans_calledInterfaceRecurDict:
             param2.calledInterfaceRecurDict = param1.calledInterfaceRecurDict

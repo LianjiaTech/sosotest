@@ -11,6 +11,7 @@ import time
 import pymysql
 import socket
 import ftplib
+import hashlib
 from core.tools.TypeTool import TypeTool
 from core.config.InitConfig import *
 from copy import deepcopy
@@ -5792,14 +5793,13 @@ def performanceTime(execTime,thisPerformanceTime):
 
 def sendTcp(ip,port,tcpStr):
     # 链接服务端ip和端口
-    logging.debug("TCPHOST&PORT:%s:%s  %s" % (ip, port,tcpStr))
     maxTryTimes = 5
     for i in range(0, maxTryTimes):
         ip_port = (ip, port)
         try:
             # TCP发送
             # 生成一个接口调试请求
-            sk = socket.socket()
+            sk = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
             sk.settimeout(2)
             # 请求连接服务端
             sk.connect(ip_port)
@@ -5912,6 +5912,17 @@ def validatePythoCodeFromUser(pythonCode):
 
     return True,"匹配通过"
 
+
+def md5(basestr, case="lower"):
+    """
+    求字符串的md5值，默认是小写，如果是大写第二个参数传递upper等。
+    """
+    md = hashlib.md5()  # 创建md5对象
+    md.update(basestr.encode(encoding='utf-8'))
+    if case == "lower":
+        return md.hexdigest().lower()
+    else:
+        return md.hexdigest().upper()
 
 if __name__ == '__main__':
     jsonString = """
