@@ -12,10 +12,12 @@ redis==2.10.6
 pymongo==3.8.0
 kafka-python==1.4.4
 requests==2.18.4
-python-ldap==3.1.0
-django-auth-ldap==1.7.0
 openpyxl==2.5.3
 xlrd==1.1.0
+
+# ldap is not necessary, when you need ldap install it.
+# python-ldap==3.1.0
+# django-auth-ldap==1.7.0
 # uWSGI is not necessary, when you need publish to prod env, you can install this.
 # uWSGI==2.0.17
 ############################################################################################
