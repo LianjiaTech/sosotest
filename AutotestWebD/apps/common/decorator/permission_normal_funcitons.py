@@ -44,7 +44,7 @@ def single_add_page_permission(func):
             for index in tb_url_permission_key:
                 tb_user_permission = TbUserPermissionRelation.objects.filter(loginName=loginName,permissionKey=index.permissionKey,state=1)
                 if len(tb_user_permission) > 0:
-                    return func(request, ["add"])
+                    return func(request, context)
         return render(request, "permission/not_permission.html")
     return __deco
 
