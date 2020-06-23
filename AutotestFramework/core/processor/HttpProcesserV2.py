@@ -363,6 +363,14 @@ class HttpProcesserV2(object):
                     return self.sess.request(method = self.method, url =self.host + self.url+paramStr, headers=self.headers, files=self.bodyContent,timeout=self.timeout, verify=False, allow_redirects = self.allow_redirects)
                 elif self.bodyType in self.bodyTypeList or self.bodyType == None:
                     # x-www-form-urlencode  ==raw json text xml  ==binary
+
+                    # 如果类型为 raw,且头信息为json,则使用此分支,解决了json乱码的问题
+                    if self.bodyType == self.bodyTypeList[2] and self.headers.get("Content-Type") == self.rawTypeList[4]:
+                        return self.sess.request(method=self.method, url=self.host + self.url + paramStr,
+                                                 headers=self.headers,
+                                                 json=json.loads(self.bodyContent.decode('utf-8')),
+                                                 timeout=self.timeout,
+                                                 verify=False, allow_redirects=self.allow_redirects)
                     return self.sess.request(method = self.method, url =self.host + self.url+paramStr, headers=self.headers, data= self.bodyContent,timeout=self.timeout, verify=False, allow_redirects = self.allow_redirects)
                 else:
                     return ValueError(u"EXCEPTION: 不支持的bodyType类型[%s],目前仅支持%s." % (self.bodys['type'], self.bodyTypeList))
