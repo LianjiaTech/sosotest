@@ -57,6 +57,7 @@ def addConfigUri(request):
     try:
         if len(searchResult) == 0:
             result = TbConfigUri()
+            result.id = len(searchResult) + 1
             result.uriKey = configUriData["uriKey"]
             result.alias = configUriData["alias"]
             result.uriDesc = configUriData["uriDesc"]
