@@ -4,13 +4,10 @@
   "minimum_chrome_version": "10.0",
   "description": "测试平台接口数据自动填充",
   "devtools_page": "devtools.html",
-  "permissions": [
-    "http://*/*",
-    "https://*/*"
-  ],
-    "browser_action": {
+  "host_permissions": ["http://*/*","https://*/*"],
+    "action": {
        "default_icon": "index.jpg"
     },
 
-  "manifest_version": 2
+  "manifest_version": 3
 }
